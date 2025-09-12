@@ -161,7 +161,11 @@
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
               <span>Panier</span>
-              <div class="cart-badge">{{ cartCount }}</div>
+              
+              <div class="cart-badge"><div v-if="cartCount > 99" class="cart-count">99+</div>
+                  <div v-else >
+                   {{ cartCount }}
+                   </div></div>
             </div>
           </div>
         </div>
@@ -179,7 +183,7 @@
             
             <div class="logo-container">
               <router-link to="/">
-                <img src="../../assets/logo.png" alt="AliExpress" class="logo" />
+                <img src="../../assets/logo.png" alt="Daq Auto logo" class="logo" />
               </router-link>
             </div>
             
@@ -190,7 +194,12 @@
                   <circle cx="20" cy="21" r="1"/>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
                 </svg>
-                <div class="cart-badge">{{ cartCount }}</div>
+                <div class="cart-badge">
+                  <div v-if="cartCount > 99" class="cart-count">99+</div>
+                  <div v-else >
+                   {{ cartCount }}
+                   </div>
+                  </div>
               </button>
             </div>
           </div>
@@ -1347,7 +1356,7 @@ export default {
 
 .logo {
   height: 40px;
-  width: 150px;
+  width: 100%;
   object-fit: cover;
 
 }
@@ -1372,6 +1381,7 @@ export default {
   background: white;
   height: 40px;
   border-radius: 20px 0 0 20px;
+  color: #333;
 }
 
 .search-input::placeholder {
@@ -1582,19 +1592,17 @@ export default {
   border: none;
   cursor: pointer;
   color: #666;
-  padding: 6px;
   border-radius: 50%;
   transition: all 0.2s ease;
   z-index: 10;
 }
 
 .search-image-btn:hover {
-  background: #f5f5f5;
   color: #fe7900;
 }
 
 .search-btn {
-  background: linear-gradient(135deg, #fe7900, #ff6b6b);
+  background: linear-gradient(135deg, #fe7900, #fe4810);
   color: white;
   border: none;
   padding: 0 20px;
@@ -1608,7 +1616,7 @@ export default {
 }
 
 .search-btn:hover {
-  background: linear-gradient(135deg, #ff3333, #ff5757);
+  background: linear-gradient(135deg, #fe5900, #f93d0a);
 }
 
 .user-actions {
@@ -1623,7 +1631,7 @@ export default {
   align-items: center;
   gap: 6px;
   cursor: pointer;
-  padding: 8px 12px;
+  padding: 8px 22px;
   border-radius: 8px;
   transition: all 0.2s ease;
   color: #333;
@@ -1648,8 +1656,8 @@ export default {
 
 .cart-badge {
   position: absolute;
-  top: -2px;
-  right: 4px;
+  top: -8px;
+  right: 0px;
   background: linear-gradient(135deg, #fe7900, #ff6b6b);
   color: white;
   border-radius: 50%;
@@ -1661,6 +1669,13 @@ export default {
   font-size: 11px;
   font-weight: bold;
   box-shadow: 0 2px 4px rgba(255, 71, 71, 0.3);
+}
+
+.cart-count {
+  padding-left: 6px;
+  padding-right: 4px;
+  width: 30px;
+
 }
 
 /* Version Mobile */
