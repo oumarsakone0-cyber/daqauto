@@ -479,7 +479,7 @@
           <div class="mobile-section-title">Recherches récentes</div>
           <div class="mobile-recent-searches">
             <div v-for="(search, index) in recentSearches" :key="index" class="mobile-recent-item" @click="selectSuggestion(search)">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg width="20" height="20"  viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
                 <circle cx="12" cy="12" r="10"/>
                 <polyline points="12,6 12,12 16,14"/>
               </svg>
@@ -1735,6 +1735,7 @@ export default {
   align-items: center;
   gap: 12px;
   background: #f5f5f5;
+  color: #666;
   border-radius: 25px;
   padding: 12px 16px;
   transition: background 0.2s ease;
@@ -1854,6 +1855,7 @@ export default {
   flex: 1;
   overflow-y: auto;
   padding: 16px;
+  margin-bottom: 55px;
 }
 
 .mobile-search-loading {
@@ -2037,6 +2039,7 @@ export default {
   display: flex;
   flex-direction: column;
   gap: 8px;
+  color: #333 ;
 }
 
 .mobile-recent-item, .mobile-popular-item {
