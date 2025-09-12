@@ -20,10 +20,9 @@
         <div class="desktop-navbar">
           <div class="logo-container">
             <router-link to="/">
-              <img src="../../assets/logo.png" alt="AliExpress" class="logo" />
+              <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
             </router-link>
           </div>
-          
           <div class="search-container">
             <input 
               type="text" 
@@ -663,7 +662,7 @@
 </template>
 
 <script>
-import { ref, computed, watch, onMounted, onUnmounted, nextTick } from 'vue';
+import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { categoriesApi, productsApi } from '../../services/api.js';
 
@@ -1141,7 +1140,7 @@ export default {
       const match = suggestion.substring(index, index + query.length);
       const after = suggestion.substring(index + query.length);
       
-      return `${before}<strong style="color: #fb542f; font-weight: 600;">${match}</strong>${after}`;
+      return `${before}<strong style="color: #fe7900; font-weight: 600;">${match}</strong>${after}`;
     };
 
     const setActiveCategory = (category) => {
@@ -1348,7 +1347,9 @@ export default {
 
 .logo {
   height: 40px;
-  object-fit: contain;
+  width: 150px;
+  object-fit: cover;
+
 }
 
 .search-container {
@@ -1364,7 +1365,7 @@ export default {
 .search-input {
   flex: 1;
   padding: 10px 20px;
-  border: 2px solid #fb542f;
+  border: 2px solid #fe7900;
   border-right: none;
   font-size: 14px;
   outline: none;
@@ -1404,7 +1405,7 @@ export default {
 
 .loading-spinner-small {
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #fb542f;
+  border-top: 2px solid #fe7900;
   border-radius: 50%;
   width: 16px;
   height: 16px;
@@ -1434,7 +1435,7 @@ export default {
 
 .clear-search-btn:hover {
   background: #f0f0f0;
-  color: #fb542f;
+  color: #fe7900;
 }
 
 .search-result-item {
@@ -1506,8 +1507,8 @@ export default {
 .view-all-btn {
   width: 100%;
   background: none;
-  border: 1px solid #fb542f;
-  color: #fb542f;
+  border: 1px solid #fe7900;
+  color: #fe7900;
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
@@ -1516,7 +1517,7 @@ export default {
 }
 
 .view-all-btn:hover {
-  background: #fb542f;
+  background: #fe7900;
   color: white;
 }
 
@@ -1589,11 +1590,11 @@ export default {
 
 .search-image-btn:hover {
   background: #f5f5f5;
-  color: #fb542f;
+  color: #fe7900;
 }
 
 .search-btn {
-  background: linear-gradient(135deg, #fb542f, #ff6b6b);
+  background: linear-gradient(135deg, #fe7900, #ff6b6b);
   color: white;
   border: none;
   padding: 0 20px;
@@ -1630,7 +1631,7 @@ export default {
 
 .app-download:hover, .language-selector:hover, .user-account:hover, .cart:hover {
   background: #f8f8f8;
-  color: #fb542f;
+  color: #fe7900;
 }
 
 .flag {
@@ -1649,7 +1650,7 @@ export default {
   position: absolute;
   top: -2px;
   right: 4px;
-  background: linear-gradient(135deg, #fb542f, #ff6b6b);
+  background: linear-gradient(135deg, #fe7900, #ff6b6b);
   color: white;
   border-radius: 50%;
   width: 20px;
@@ -1799,7 +1800,7 @@ export default {
 }
 
 .mobile-search-input:focus {
-  border-color: #fb542f;
+  border-color: #fe7900;
   background: white;
 }
 
@@ -1817,7 +1818,7 @@ export default {
 
 .mobile-clear-btn:hover {
   background: #f0f0f0;
-  color: #fb542f;
+  color: #fe7900;
 }
 
 .mobile-camera-search-btn {
@@ -1851,7 +1852,7 @@ export default {
 
 .loading-spinner {
   border: 3px solid #f3f3f3;
-  border-top: 3px solid #fb542f;
+  border-top: 3px solid #fe7900;
   border-radius: 50%;
   width: 32px;
   height: 32px;
@@ -1931,8 +1932,8 @@ export default {
 .mobile-view-all-btn {
   width: 100%;
   background: none;
-  border: 1px solid #fb542f;
-  color: #fb542f;
+  border: 1px solid #fe7900;
+  color: #fe7900;
   padding: 12px 16px;
   border-radius: 25px;
   cursor: pointer;
@@ -1943,7 +1944,7 @@ export default {
 }
 
 .mobile-view-all-btn:hover {
-  background: #fb542f;
+  background: #fe7900;
   color: white;
 }
 
@@ -2044,7 +2045,7 @@ export default {
 }
 
 .mobile-popular-rank {
-  background: #fb542f;
+  background: #fe7900;
   color: white;
   font-size: 12px;
   font-weight: bold;
@@ -2116,7 +2117,7 @@ export default {
   align-items: center;
   gap: 16px;
   padding: 20px 16px;
-  background: linear-gradient(135deg, #fb542f, #ff6b6b);
+  background: linear-gradient(135deg, #fe7900, #ff6b6b);
   color: white;
 }
 
@@ -2187,7 +2188,7 @@ export default {
   align-items: center;
   gap: 12px;
   padding: 12px;
-  color: #fb542f;
+  color: #fe7900;
   cursor: pointer;
   border-radius: 12px;
   transition: background 0.2s ease;
@@ -2313,7 +2314,7 @@ export default {
 }
 
 .all-categories:hover {
-  color: #fb542f;
+  color: #fe7900;
 }
 
 /* Unified Categories Dropdown */
@@ -2367,8 +2368,8 @@ export default {
 
 .category-item.active .category-info {
   background: white;
-  color: #fb542f;
-  border-right: 3px solid #fb542f;
+  color: #fe7900;
+  border-right: 3px solid #fe7900;
 }
 
 .category-info {
@@ -2381,7 +2382,7 @@ export default {
 
 .category-item:hover .category-info {
   background: white;
-  color: #fb542f;
+  color: #fe7900;
 }
 
 .category-icon {
@@ -2442,7 +2443,7 @@ export default {
 }
 
 .subcategory-title:hover {
-  color: #fb542f;
+  color: #fe7900;
 }
 
 .sub-subcategories-list {
@@ -2463,7 +2464,7 @@ export default {
 }
 
 .sub-subcategory-item:hover {
-  color: #fb542f;
+  color: #fe7900;
   background: rgba(255, 71, 71, 0.05);
   transform: translateX(5px);
 }
@@ -2519,7 +2520,7 @@ export default {
 }
 
 .nav-item:hover {
-  color: #fb542f;
+  color: #fe7900;
   background: rgba(255, 71, 71, 0.05);
 }
 
@@ -2528,7 +2529,7 @@ export default {
   position: absolute;
   top: 8px;
   right: 8px;
-  background: #fb542f;
+  background: #fe7900;
   color: white;
   font-size: 10px;
   padding: 2px 6px;
@@ -2616,7 +2617,7 @@ export default {
 }
 
 .upload-area:hover {
-  border-color: #fb542f;
+  border-color: #fe7900;
   background: rgba(255, 71, 71, 0.02);
 }
 
@@ -2639,7 +2640,7 @@ export default {
 }
 
 .upload-btn {
-  background: linear-gradient(135deg, #fb542f, #ff6b6b);
+  background: linear-gradient(135deg, #fe7900, #ff6b6b);
   color: white;
   border: none;
   border-radius: 24px;
@@ -2681,7 +2682,7 @@ export default {
   align-items: center;
   justify-content: center;
   padding: 20px;
-  color: #fb542f;
+  color: #fe7900;
   text-align: center;
 }
 
@@ -2691,8 +2692,8 @@ export default {
 
 .retry-btn {
   background: none;
-  border: 1px solid #fb542f;
-  color: #fb542f;
+  border: 1px solid #fe7900;
+  color: #fe7900;
   padding: 8px 16px;
   border-radius: 20px;
   cursor: pointer;
