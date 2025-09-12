@@ -226,8 +226,8 @@
   
   .see-all-btn {
     background: none;
-    border: 1px solid #ff6b35;
-    color: #ff6b35;
+    border: 1px solid #fe7900;
+    color: #fe7900;
     padding: 6px 12px;
     border-radius: 16px;
     font-size: 12px;
@@ -270,18 +270,18 @@
   }
   
   .view-all {
-    color: #ff4747;
+    color: #fe7900;
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
     transition: all 0.3s ease;
     padding: 8px 16px;
     border-radius: 20px;
-    border: 2px solid #ff4747;
+    border: 2px solid #fe7900;
   }
   
   .view-all:hover {
-    background: #ff4747;
+    background: #fe7900;
     color: white;
     transform: translateX(4px);
   }
@@ -360,7 +360,7 @@
   
   .retry-button {
     padding: 10px 20px;
-    background: #ff4747;
+    background: #fe7900;
     color: white;
     border: none;
     border-radius: 6px;
@@ -370,7 +370,7 @@
   }
   
   .retry-button:hover {
-    background: #e63946;
+    background: #fe7900;
   }
   
   /* Responsive */

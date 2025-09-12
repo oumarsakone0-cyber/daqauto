@@ -2542,7 +2542,7 @@ export default {
 .nav-item.featured::after {
   content: 'New';
   position: absolute;
-  top: 8px;
+  top: 4px;
   right: 8px;
   background: #fe7900;
   color: white;

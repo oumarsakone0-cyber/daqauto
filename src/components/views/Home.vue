@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="home-page">
     <!-- Header Mobile (affiché seulement sur mobile) -->
     <!--
@@ -171,13 +171,13 @@
   </template>
   
   <script setup>
-  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-  import { useRouter } from 'vue-router'
-  import MarketingBanner from '../bannieres/AccueilBanniere.vue'
-  import { categoriesApi, productsApi } from '../../services/api.js'
-  import CategoriesSection from '../home/CategoriesSection.vue'
+  import { computed, onBeforeUnmount, onMounted, ref } from 'vue'
+import { useRouter } from 'vue-router'
+import { categoriesApi, productsApi } from '../../services/api.js'
+import MarketingBanner from '../bannieres/AccueilBanniere.vue'
+import CategoriesSection from '../home/CategoriesSection.vue'
+import DealsSection from '../home/DealsSection.vue'
 //  import FeaturedSupplierSection from '../home/FeaturedSupplierSection.vue'
-  import DealsSection from '../home/DealsSection.vue'
   import RecommendedProductsSection from '../home/RecommendedProductsSection.vue'
   
   // Router pour la navigation
@@ -739,6 +739,7 @@
 </script>
 
 <style scoped>
+
 .home-page {
   width: 100%;
   background: #ffffff;
@@ -751,6 +752,7 @@
 
 .hero-section {
   margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .section-content {
@@ -785,7 +787,7 @@
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #fb542f;
+  background: #fe7900;
   color: white;
   display: flex;
   align-items: center;
@@ -842,11 +844,12 @@
   border: none;
   border-radius: 25px;
   font-size: 14px;
+  color: #333;
 }
 
 .newsletter-form button {
   padding: 12px 24px;
-  background: #fb542f;
+  background: #fe7900;
   color: white;
   border: none;
   border-radius: 25px;
@@ -856,7 +859,7 @@
 }
 
 .newsletter-form button:hover {
-  background: #e63946;
+  background: #fe4c00;
   transform: translateY(-2px);
 }
 
