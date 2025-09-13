@@ -36,7 +36,7 @@
           </div>
         </div>
         
-        <div class="chat-input">
+        <div class="chat-input"> 
           <div class="input-container">
             <input 
               type="text" 

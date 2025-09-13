@@ -125,7 +125,7 @@
     <nav class="mobile-bottom-nav mobile-only">
       <div class="nav-item active">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
+          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6l-3-4z"/>
           <polyline points="9,22 9,12 15,12 15,22"/>
         </svg>
         <span>Accueil</span>
@@ -139,7 +139,7 @@
       </div>
       <div class="nav-item">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/>
+          <path d="M6 2L3 6v14a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2V6l-3-4z"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
@@ -161,24 +161,108 @@
       </div>
     </nav>
   
-    <!-- Bouton Flottant Mobile -->
-    <button class="floating-chat-btn mobile-only">
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+    <!-- Bouton Flottant Mobile 
+    <button 
+      class="floating-chat-btn mobile-only"
+      @click="openChatModal"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
         <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
       </svg>
     </button>
+
+    <!-- Bouton Flottant Desktop 
+    <button 
+      class="floating-chat-btn-desktop desktop-only"
+      @click="toggleDesktopChat"
+    >
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
+        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
+      </svg>
+      <span class="chat-btn-text">Chat</span>
+    </button>
+
+    <!-- Modal mobile (existante) 
+    <ChatModal
+      v-if="isChatModalOpen"
+      :supplier="currentSupplier"
+      :chat-messages="chatMessages"
+      @close="closeChatModal"
+      @send-message="handleSendMessage"
+    />
+
+    <!-- Fenêtre de chat desktop 
+    <ChatWindow
+      :is-open="isDesktopChatOpen"
+      :supplier="currentSupplier"
+      :chat-messages="chatMessages"
+      @close="closeDesktopChat"
+      @send-message="handleSendMessage"
+    />
+    -->
+
   </div>
-  </template>
+</template>
   
-  <script setup>
-  import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
-  import { useRouter } from 'vue-router'
-  import MarketingBanner from '../bannieres/AccueilBanniere.vue'
-  import { categoriesApi, productsApi } from '../../services/api.js'
-  import CategoriesSection from '../home/CategoriesSection.vue'
-//  import FeaturedSupplierSection from '../home/FeaturedSupplierSection.vue'
-  import DealsSection from '../home/DealsSection.vue'
-  import RecommendedProductsSection from '../home/RecommendedProductsSection.vue'
+<script setup>
+import ChatModal from '../product/modals/ChatModal2.vue'
+import ChatWindow from '../product/modals/ChatWindow.vue' // Import du nouveau composant desktop
+import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
+import { useRouter } from 'vue-router'
+import MarketingBanner from '../bannieres/AccueilBanniere.vue'
+import { categoriesApi, productsApi } from '../../services/api.js'
+import CategoriesSection from '../home/CategoriesSection.vue'
+// import FeaturedSupplierSection from '../home/FeaturedSupplierSection.vue'
+import DealsSection from '../home/DealsSection.vue'
+import RecommendedProductsSection from '../home/RecommendedProductsSection.vue'
+
+const isChatModalOpen = ref(false)
+const isDesktopChatOpen = ref(false) // État pour le chat desktop
+const chatMessages = ref([
+  {
+    id: 1,
+    message: "Bonjour ! Comment puis-je vous aider aujourd'hui ?",
+    sender: 'bot',
+    timestamp: new Date()
+  }
+])
+
+const currentSupplier = ref({
+  name: 'Support Client',
+  logo: '/placeholder.svg?height=40&width=40'
+})
+
+const openChatModal = () => {
+  isChatModalOpen.value = true
+}
+
+const closeChatModal = () => {
+  isChatModalOpen.value = false
+}
+
+const toggleDesktopChat = () => {
+  isDesktopChatOpen.value = !isDesktopChatOpen.value
+}
+
+const closeDesktopChat = () => {
+  isDesktopChatOpen.value = false
+}
+
+const handleSendMessage = (message) => {
+  // Ajouter le message de l'utilisateur
+  chatMessages.value.push(message)
+  
+  // Simuler une réponse automatique après 1 seconde
+  setTimeout(() => {
+    const botResponse = {
+      id: Date.now() + 1,
+      message: "Merci pour votre message ! Un agent va vous répondre sous peu.",
+      sender: 'bot',
+      timestamp: new Date()
+    }
+    chatMessages.value.push(botResponse)
+  }, 1000)
+}
   
   // Router pour la navigation
   const router = useRouter()
@@ -405,8 +489,6 @@
   const setImage = (productIndex, imageIndex) => {
   dealProducts.value[productIndex].currentImageIndex = imageIndex
   }
-  
-  
   
   // Timer
   let countdownInterval = null
@@ -978,6 +1060,36 @@
 
 .floating-chat-btn:active {
   transform: scale(0.95);
+}
+
+/* Styles pour le bouton de chat desktop */
+.floating-chat-btn-desktop {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  background: linear-gradient(135deg, #667eea, #764ba2);
+  border: none;
+  border-radius: 50px;
+  color: white;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 16px 24px;
+  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
+  z-index: 999;
+  transition: all 0.3s ease;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+}
+
+.floating-chat-btn-desktop:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
+}
+
+.chat-btn-text {
+  white-space: nowrap;
 }
 
 /* Styles mobiles cachés par défaut */
