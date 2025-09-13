@@ -60,7 +60,7 @@
               >
                 <a href="#" class="amazon-category-link">
                   <div class="category-card-content">
-                    <img :src="category.image" :alt="category.name" class="amazon-product-image" />
+                    <img :src="category.image" :alt="`${category.name} image`" class="amazon-product-image" />
                     <div class="category-info">
                       <h3 class="category-name">{{ category.name }}</h3>
                       <p class="category-count">{{ category.count }}+ produits</p>
@@ -239,6 +239,7 @@
     font-weight: 600;
   }
   
+  
   .categories-grid-mobile {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -307,16 +308,19 @@
   }
   
   .amazon-discover-link {
-    color: #007185;
+     color: #fe7900;
     text-decoration: none;
+    font-weight: 600;
     font-size: 14px;
-    font-weight: 500;
-    transition: all 0.15s ease;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #fe7900;
   }
   
   .amazon-discover-link:hover {
-    color: #fe7900;
-    text-decoration: underline;
+    color: white;
+    background-color: #fe7900;
   }
   
   .amazon-carousel-container {
@@ -366,10 +370,11 @@
     box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
   }
   
-  .amazon-product-image {
+  .amazon-product-image{
     width: 100%;
     height: 180px;
     object-fit: cover;
+    color:#fe7900
   }
   
   .category-info {
