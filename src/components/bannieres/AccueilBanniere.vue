@@ -1,13 +1,13 @@
 <template>
-  <div class="relative w-full bg-gradient-to-br from-purple-600 via-blue-600 to-indigo-700 overflow-hidden">
+  <div class="relative w-full bg-gradient-to-br from-gray-600 via-orange-600 to-gray-600 overflow-hidden">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
       <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full -translate-x-48 -translate-y-48"></div>
       <div class="absolute bottom-0 right-0 w-96 h-96 bg-white rounded-full translate-x-48 translate-y-48"></div>
     </div>
 
-    <div class="relative max-w-7xl mx-auto px-4 py-8">
-      <div class="grid lg:grid-cols-3 gap-8 items-center">
+    <div class="relative max-w-7xl mx-auto px-4 py-8 ">
+      <div class="grid lg:grid-cols-3 gap-8">
         <!-- Section Gauche - Timer et Offre Principale -->
         <div class="text-white space-y-6">
           <div class="space-y-2">
@@ -98,7 +98,7 @@
                     class="w-20 h-20 object-cover rounded-lg"
                     @error="$event.target.src = 'https://images.unsplash.com/photo-1572569511254-d8f925fe2cbb?w=200&h=200&fit=crop&auto=format'"
                   />
-                  <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full" style="background-color: #fb542f;">
+                  <div class="absolute -top-2 -right-2 text-white text-xs px-2 py-1 rounded-full" style="background-color: #fe7900;">
                     {{ product.badge }}
                   </div>
                 </div>
@@ -111,7 +111,7 @@
                     <span class="text-xs text-gray-600">{{ product.rating.toFixed(1) }}</span>
                   </div>
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-purple-600">{{ formatPrice(product.price) }}</span>
+                    <span class="font-bold " style="color: #fe7900;">{{ formatPrice(product.price) }}</span>
                     <span class="text-xs text-gray-500 line-through">{{ formatPrice(product.originalPrice) }}</span>
                   </div>
                 </div>
@@ -162,7 +162,7 @@
                     class="w-20 h-20 object-cover rounded-lg"
                     @error="$event.target.src = 'https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=200&h=200&fit=crop&auto=format'"
                   />
-                  <div class="absolute -top-2 -right-2 bg-red-500 text-white text-xs px-2 py-1 rounded-full" style="background-color: #fb542f;">
+                  <div class="absolute -top-3 -right-4  text-white text-xs px-2 py-1 rounded-full" style="background-color: #fe7900;">
                     {{ product.badge }}
                   </div>
                 </div>
@@ -175,7 +175,7 @@
                     <span class="text-xs text-gray-600">{{ product.rating.toFixed(1) }}</span>
                   </div>
                   <div class="flex items-center gap-2">
-                    <span class="font-bold text-purple-600">{{ formatPrice(product.price) }}</span>
+                    <span class="font-bold " style="color: #fe7900;">{{ formatPrice(product.price) }}</span>
                     <span class="text-xs text-gray-500 line-through">{{ formatPrice(product.originalPrice) }}</span>
                   </div>
                 </div>
@@ -324,9 +324,10 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+
 .offer-button{
-  background-color: #fe7900;
-  color: white;
+  background-color: white;
+  color: #fe7900 ;
 
 }
 .offer-button:hover {
