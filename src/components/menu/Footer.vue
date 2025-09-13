@@ -89,20 +89,20 @@
     </div>
 
     <!-- Bottom Footer -->
-    <div class="border-t border-gray-800 py-4 md:py-6">
+    <div class="border-t border-gray-800 py-18 md:py-6">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <div class="flex items-center gap-2">
-            <div class="w-6 h-6 md:w-8 md:h-8 bg-orange-500 rounded"></div>
+            <div class="w-6 h-6 md:w-8 md:h-8  rounded" style="background-color: #fe7900;"></div>
             <span class="font-bold text-lg md:text-xl">DAQ AUTO</span>
           </div>
           <div class="text-xs md:text-sm text-gray-400 text-center md:text-left">
             DAQ are responsible for Daq offers.
           </div>
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-4">
             <button 
               @click="openChat"
-              class="flex items-center gap-1 text-xs md:text-sm hover:text-orange-500 transition-colors"
+              class="flex items-center gap-1 hover:scale-105 text-xs md:text-sm transition-colors bg-degrade"
             >
               💬 Chat
             </button>
@@ -116,15 +116,15 @@
   <button 
     v-if="!isChatOpen && isMobile"
     @click="openChat"
-    class="fixed bottom-4 right-4 w-14 h-14 bg-gradient-to-r from-blue-500 to-purple-600 rounded-full shadow-lg z-50 flex items-center justify-center text-white hover:scale-105 transition-transform md:hidden"
+    class="fixed bottom-18 right-2 w-14 h-14  rounded-full shadow-lg z-50 flex items-center justify-center text-white hover:scale-105 transition-transform md:hidden bg-degrade"
   >
     <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
     </svg>
     <!-- Badge de notification -->
     <span 
-      v-if="unreadCount > 0" 
-      class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold"
+       v-if="unreadCount > 0"
+      class="absolute -top-2 -right-2 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold " style="background-color: #fe7900;"
     >
       {{ unreadCount > 9 ? '9+' : unreadCount }}
     </span>
@@ -134,7 +134,7 @@
   <button 
     v-if="!isDesktopChatOpen && !isMobile"
     @click="openDesktopChat"
-    class="fixed bottom-6 right-6 bg-gradient-to-r from-blue-500 to-purple-600 text-white px-4 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 hover:scale-105 transition-transform hidden md:flex"
+    class="fixed bottom-6 right-4  text-white px-4 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 hover:scale-105 transition-transform  md:flex bg-degrade"
   >
     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
@@ -143,7 +143,8 @@
     <!-- Badge de notification -->
     <span 
       v-if="unreadCount > 0" 
-      class="absolute -top-2 -right-2 bg-red-500 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold"
+      class="absolute -top-2 -right-2  text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold" 
+      style="background-color: #fe7900;"
     >
       {{ unreadCount > 9 ? '9+' : unreadCount }}
     </span>
@@ -377,6 +378,10 @@ onBeforeUnmount(() => {
   transition: color 0.2s ease-in-out;
 }
 
+.bg-degrade {
+  background: linear-gradient(90deg, #fe7900, #f96204);
+}
+
 /* Styles pour le bouton flottant */
 .hover\:scale-105:hover {
   transform: scale(1.05);
@@ -487,7 +492,7 @@ onBeforeUnmount(() => {
   position: absolute;
   top: -5px;
   right: -5px;
-  background: #e74c3c;
+  background: #fe7900;
   color: white;
   border-radius: 50%;
   width: 20px;
