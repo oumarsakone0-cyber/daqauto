@@ -34,33 +34,34 @@
             </div>
             <div class="flex gap-3">
               <div class="text-center">
-                <div class="bg-white text-purple-600 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
+                <div class="bg-white text-orange-400 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
                   {{ timeLeft.hours.toString().padStart(2, '0') }}
                 </div>
                 <div class="text-xs mt-1 text-blue-200">Heures</div>
               </div>
               <div class="text-center">
-                <div class="bg-white text-purple-600 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
+                <div class="bg-white text-orange-400 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
                   {{ timeLeft.minutes.toString().padStart(2, '0') }}
                 </div>
                 <div class="text-xs mt-1 text-blue-200">Minutes</div>
               </div>
               <div class="text-center">
-                <div class="bg-white text-purple-600 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
+                <div class="bg-white text-orange-400 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
                   {{ timeLeft.seconds.toString().padStart(2, '0') }}
                 </div>
                 <div class="text-xs mt-1 text-blue-200">Secondes</div>
               </div>
             </div>
           </div>
-
-          <button class="bg-yellow-400 hover:bg-yellow-500 text-black font-semibold px-8 py-3 rounded-full transition-colors flex items-center">
-            Voir toutes les offres
-            <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <line x1="5" y1="12" x2="19" y2="12"></line>
-              <polyline points="12,5 19,12 12,19"></polyline>
-            </svg>
-          </button>
+         
+            <button class="offer-button font-semibold px-8 py-3 rounded-full transition-colors flex items-center">
+              Voir toutes les offres
+              <svg class="w-4 h-4 ml-2 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+                <polyline points="12,5 19,12 12,19"></polyline>
+              </svg>
+            </button>
+         
         </div>
 
         <!-- Section Centre - Produits Populaires -->
@@ -323,9 +324,18 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+.offer-button{
+  background-color: #fe7900;
+  color: white;
+
+}
+.offer-button:hover {
+  background-color: #e66e00;
+}
 .line-clamp-2 {
   display: -webkit-box;
   -webkit-line-clamp: 2;
+  line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
 }

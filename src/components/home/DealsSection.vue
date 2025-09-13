@@ -459,7 +459,7 @@
   }
   
   .countdown-mobile {
-    background: #ff4757;
+    background: #fe7900;
     color: white;
     padding: 4px 8px;
     border-radius: 12px;
@@ -469,8 +469,8 @@
   
   .see-all-btn {
     background: none;
-    border: 1px solid #ff6b35;
-    color: #ff6b35;
+    border: 1px solid #fe7900;
+    color: #fe7900;
     padding: 6px 12px;
     border-radius: 16px;
     font-size: 12px;
@@ -514,7 +514,7 @@
     position: absolute;
     top: 8px;
     left: 8px;
-    background: #ff4757;
+    background: #fe7900;
     color: white;
     font-size: 10px;
     font-weight: bold;
@@ -529,7 +529,7 @@
   .mobile-product-price {
     font-size: 14px;
     font-weight: 700;
-    color: #ff4757;
+    color: #fe7900;
     margin-bottom: 4px;
   }
   
@@ -592,7 +592,7 @@
   }
   
   .countdown-unit {
-    background: #fb542f;
+    background: #fe7900;
     color: white;
     padding: 4px 8px;
     border-radius: 4px;
@@ -614,22 +614,22 @@
   .countdown-separator {
     font-size: 18px;
     font-weight: 700;
-    color: #fb542f;
+    color: #fe7900;
   }
   
   .view-all {
-    color: #fb542f;
+    color: #fe7900;
     text-decoration: none;
     font-weight: 600;
     font-size: 14px;
     transition: all 0.3s ease;
     padding: 8px 16px;
     border-radius: 20px;
-    border: 2px solid #fb542f;
+    border: 2px solid #fe7900;
   }
   
   .view-all:hover {
-    background: #fb542f;
+    background: #fe7900;
     color: white;
     transform: translateX(4px);
   }
@@ -772,7 +772,7 @@
     position: absolute;
     top: 8px;
     left: 8px;
-    background: #fb542f;
+    background: #fe7900;
     color: white;
     padding: 4px 8px;
     border-radius: 12px;
@@ -783,8 +783,9 @@
   
   .alibaba-card-content {
     padding: 16px;
+    padding-bottom: 50px;
     position: relative;
-    height: 230px;
+    height: calc(100% - 200px);
   }
   
   .alibaba-title {
@@ -795,12 +796,13 @@
     line-height: 1.4;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
   }
   
   .product-pricing {
-    margin-bottom: 12px;
+    padding-bottom: 12px;
   }
   
   .unit-price {
@@ -813,7 +815,7 @@
   .current-price {
     font-size: 16px;
     font-weight: 700;
-    color: #ff4757;
+    color: #fe7900;
   }
   
   .original-price {
@@ -925,7 +927,7 @@
   .alibaba-chat-btn {
     flex: 1;
     padding: 8px 12px;
-    border: 1px solid #fb542fe8;
+    border: 1px solid #fe7900e8;
     border-radius: 4px;
     font-size: 12px;
     font-weight: 500;
@@ -935,22 +937,22 @@
   
   .alibaba-contact-btn {
     background: white;
-    color: #fb542f;
+    color: #fe7900;
   }
   
   .alibaba-contact-btn:hover {
-    background: #fb542fe8;
+    background: #fe7900e8;
     color: white;
   }
   
   .alibaba-chat-btn {
-    background: #fb542fe8;
+    background: #fe7900e8;
     color: white;
   }
   
   .alibaba-chat-btn:hover {
     background: white;
-    color: #fb542fe8;
+    color: #fe7900e8;
   }
   
   .alibaba-ad-badge {

@@ -1,4 +1,4 @@
-<template>
+  <template>
   <div class="home-page">
     <!-- Header Mobile (affiché seulement sur mobile) -->
     <!--
@@ -203,21 +203,25 @@
 
   </div>
 </template>
-  
 <script setup>
-import ChatModal from '../product/modals/ChatModal2.vue'
-import ChatWindow from '../product/modals/ChatWindow.vue' // Import du nouveau composant desktop
 import { ref, onMounted, onBeforeUnmount, computed } from 'vue'
 import { useRouter } from 'vue-router'
-import MarketingBanner from '../bannieres/AccueilBanniere.vue'
 import { categoriesApi, productsApi } from '../../services/api.js'
+
+// Composants UI
+import MarketingBanner from '../bannieres/AccueilBanniere.vue'
 import CategoriesSection from '../home/CategoriesSection.vue'
-// import FeaturedSupplierSection from '../home/FeaturedSupplierSection.vue'
 import DealsSection from '../home/DealsSection.vue'
+// import FeaturedSupplierSection from '../home/FeaturedSupplierSection.vue'
 import RecommendedProductsSection from '../home/RecommendedProductsSection.vue'
 
+// Chat
+import ChatModal from '../product/modals/ChatModal2.vue'
+import ChatWindow from '../product/modals/ChatWindow.vue' // Composant desktop
+
+// État du chat
 const isChatModalOpen = ref(false)
-const isDesktopChatOpen = ref(false) // État pour le chat desktop
+const isDesktopChatOpen = ref(false)
 const chatMessages = ref([
   {
     id: 1,
@@ -232,6 +236,7 @@ const currentSupplier = ref({
   logo: '/placeholder.svg?height=40&width=40'
 })
 
+// Fonctions pour gérer le chat
 const openChatModal = () => {
   isChatModalOpen.value = true
 }
@@ -249,10 +254,7 @@ const closeDesktopChat = () => {
 }
 
 const handleSendMessage = (message) => {
-  // Ajouter le message de l'utilisateur
   chatMessages.value.push(message)
-  
-  // Simuler une réponse automatique après 1 seconde
   setTimeout(() => {
     const botResponse = {
       id: Date.now() + 1,
@@ -263,7 +265,6 @@ const handleSendMessage = (message) => {
     chatMessages.value.push(botResponse)
   }, 1000)
 }
-  
   // Router pour la navigation
   const router = useRouter()
   
@@ -821,6 +822,7 @@ const handleSendMessage = (message) => {
 </script>
 
 <style scoped>
+
 .home-page {
   width: 100%;
   background: #ffffff;
@@ -833,6 +835,7 @@ const handleSendMessage = (message) => {
 
 .hero-section {
   margin-bottom: 16px;
+  margin-top: 16px;
 }
 
 .section-content {
@@ -867,7 +870,7 @@ const handleSendMessage = (message) => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #fb542f;
+  background: #fe7900;
   color: white;
   display: flex;
   align-items: center;
@@ -924,11 +927,12 @@ const handleSendMessage = (message) => {
   border: none;
   border-radius: 25px;
   font-size: 14px;
+  color: #333;
 }
 
 .newsletter-form button {
   padding: 12px 24px;
-  background: #fb542f;
+  background: #fe7900;
   color: white;
   border: none;
   border-radius: 25px;
@@ -938,7 +942,7 @@ const handleSendMessage = (message) => {
 }
 
 .newsletter-form button:hover {
-  background: #e63946;
+  background: #fe4c00;
   transform: translateY(-2px);
 }
 
