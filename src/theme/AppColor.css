@@ -1,0 +1,29 @@
+
+:root {
+  --primary-orange: #fe7900; 
+  --background-light: #f8f9fa; 
+  --shadow-black: rgba(0, 0, 0, 0.1); 
+  --text-dark: #333; 
+  --text-grey: #999; 
+  --border-grey: #e0e0e0; 
+  --text-medium: #666; 
+  --accent-orange: #ff6b35; 
+  --accent-orange-light: #ff8c42; 
+  --primary-blue: #667eea; 
+  --primary-purple: #764ba2; 
+  --danger-red: #e63946; 
+  --alert-red: #ff4757; 
+  --white: #ffffff; 
+  --main-orange: #F65A11; 
+  --main-orange-dark: #e54a0a; 
+  --main-orange-accent: #ea580c; 
+  --main-orange-bg: rgba(246, 90, 17, 0.1);
+  --main-brown: #9a3412; 
+  --accent-deep: #FF5722; 
+  --main-orange-ring: rgba(246, 90, 17, 0.5); 
+}
+
+/* Exemple d'utilisation :
+   background: var(--primary-orange);
+   color: var(--text-dark);
+*/

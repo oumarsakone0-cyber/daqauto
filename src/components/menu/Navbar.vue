@@ -1324,6 +1324,7 @@ export default {
 </script>
 
 <style scoped>
+
 .navbar-container {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
   width: 100%;
@@ -1341,6 +1342,7 @@ export default {
   max-width: 1500px;
   margin: 0 auto;
   padding: 12px 20px;
+  background: var(--primary-orange)
 }
 
 /* Version Desktop */
