@@ -10,6 +10,7 @@ import DetailProduct from "../components/views/ProductDetail.vue"
 import Boutique from "../components/views/Boutique.vue"
 import Dashboard from "../components/views/Dashboard.vue"
 import CategoriesManagement from "../components/views/categories-management.vue"
+import ChatsManagement from "../components/views/chat-management.vue"
 import CommandesManagement from "../components/views/commandes-management.vue"
 import ProduitsManagement from "../components/views/produits-management.vue"
 import BoutiquesManagement from "../components/views/boutiques-management.vue"
@@ -53,6 +54,15 @@ const routes = [
     path: "/dashboard-admin/categories",
     name: "dashboard-categories",
     component: CategoriesManagement,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/dashboard-admin/chats",
+    name: "dashboard-chats",
+    component: ChatsManagement,
     meta: {
       requiresAuth: false,
       hideNavigation: false,
