@@ -2406,6 +2406,7 @@ export default {
 }
 
 .category-icon {
+  flex: 1;
   font-size: 20px;
   width: 24px;
   text-align: center;
