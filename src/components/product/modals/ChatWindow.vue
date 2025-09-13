@@ -11,12 +11,12 @@
       </div>
       <div class="chat-actions">
         <button @click="toggleMinimize" class="minimize-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="16" height="16" viewBox="0 0 24 24"  stroke="currentColor" stroke-width="4" fill="none">
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
         </button>
         <button @click="$emit('close')" class="close-btn">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
@@ -165,7 +165,7 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
 }
 
 .chat-header {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(160deg,#6878e2, #70499e);
   color: white;
   padding: 16px;
   display: flex;
@@ -207,10 +207,9 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
   background: rgba(255, 255, 255, 0.2);
   border: none;
   color: white;
-  width: 32px;
-  height: 32px;
+  height: auto;
   border-radius: 50%;
-  display: block;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
@@ -256,7 +255,7 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
 }
 
 .user-message .message-content {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(160deg, #6878e2, #70499e);
   color: white;
 }
 
@@ -309,6 +308,7 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
   display: flex;
   gap: 8px;
   align-items: center;
+  border: none;
 }
 
 .message-input {
@@ -318,19 +318,19 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
   border-radius: 25px;
   font-size: 14px;
   outline: none;
+  color: #333;
   transition: border-color 0.2s;
 }
 
 .message-input:focus {
-  border-color: #667eea;
+  border: 1px solid #333
 }
 
 .send-btn {
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  background: linear-gradient(135deg, #6878e2, #70499e);
   border: none;
   color: white;
-  width: 40px;
-  height: 40px;
+  height: auto;
   border-radius: 50%;
   display: flex;
   align-items: center;
