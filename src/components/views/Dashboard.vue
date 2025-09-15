@@ -41,22 +41,24 @@
           <!-- Export dropdown -->
           <div class="relative">
             <button 
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 hover:opacity-80 bg-degrade-orange"
             >
-              <DownloadIcon class="w-4 h-4 mr-2" />
-              <span class="hidden sm:inline">Exporter</span>
-              <span class="sm:hidden">Export</span>
+              <span class="mr-2">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
+              </span>
+
+              <span >Exporter</span>
             </button>
           </div>
 
           <!-- Refresh button -->
           <button 
-            style="background: #7d3aec;"
-            class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-colors hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 hover:opacity-80 bg-degrade-ring"
           >
-            <RefreshIcon class="w-4 h-4 mr-2" />
-            <span class="hidden sm:inline">Actualiser</span>
-            <span class="sm:hidden">Actualiser</span>
+            <span class="mr-2">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>
+              </span>
+            <span >Actualiser</span>
           </button>
         </div>
       </div>
@@ -169,13 +171,13 @@
           <!-- Header avec style du dashboard client -->
           <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-gray-50">
             <div class="flex flex-wrap gap-1 sm:gap-2">
-              <button class="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg">
+              <button class="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg  duration-200 text-xs sm:text-sm font-medium  shadow-lg bg-degrade-orange ">
                 Revenus ({{ formatCurrency(2847650) }})
               </button>
-              <button class="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium text-gray-600 hover:text-orange-500 hover:bg-orange-50">
+              <button class="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium  hover:text-orange-500 hover:bg-orange-50 ">
                 Commissions ({{ formatCurrency(427148) }})
               </button>
-              <button class="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium text-gray-600 hover:text-orange-500 hover:bg-orange-50">
+              <button class="px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium  hover:text-orange-500 hover:bg-orange-50">
                 Contacts (8,456)
               </button>
             </div>
@@ -630,9 +632,6 @@ const TrendDownIcon = {
   template: `<svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 17 13.5 8.5 8.5 13.5 2 7"></polyline><polyline points="16 17 22 17 22 11"></polyline></svg>`
 }
 
-const DownloadIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>`
-}
 
 const MessageCircleIcon = {
   template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7.9 20A9 9 0 1 0 4 16.1L2 22Z"></path></svg>`
@@ -658,9 +657,6 @@ const HomeIcon = {
   template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`
 }
 
-const RefreshIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path><path d="M21 3v5h-5"></path><path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path><path d="M3 21v-5h5"></path></svg>`
-}
 
 const MoreHorizontalIcon = {
   template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-more-horizontal"><circle cx="12" cy="12" r="1"></circle><circle cx="19" cy="12" r="1"></circle><circle cx="5" cy="12" r="1"></circle></svg>`
@@ -682,14 +678,12 @@ export default {
     ClockIcon,
     TrendUpIcon,
     TrendDownIcon,
-    DownloadIcon,
     MessageCircleIcon,
     MailIcon,
     PhoneIcon,
     SmartphoneIcon,
     ShirtIcon,
     HomeIcon,
-    RefreshIcon,
     MoreHorizontalIcon
   }
 }
@@ -709,6 +703,15 @@ export default {
 }
 
 /* Ajouter les styles du dashboard client pour les couleurs orange */
+.bg-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+}
+
+.bg-degrade-ring {
+  background: linear-gradient(90deg, #7d3aec, #620cec);
+  color: white;
+}
 .bg-orange-500 {
   background-color: #F65A11;
 }

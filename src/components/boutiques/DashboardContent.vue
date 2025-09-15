@@ -51,21 +51,20 @@
           <div class="relative">
             <button 
               @click="showExportDropdown = !showExportDropdown"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
             >
               <DownloadIcon class="w-4 h-4 mr-2" />
-              <span class="hidden sm:inline">Exporter</span>
-              <span class="sm:hidden">Export</span>
+              <span >Exporter</span>
               <ChevronDownIcon class="w-4 h-4 ml-2" />
             </button>
-            <div v-if="showExportDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
-              <div class="py-1" role="menu">
-                <button @click="exportToPDF" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 mr-3 text-red-500" />
+            <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 ">
+              <div role="menu">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem" >
+                  <FileTextIcon class="w-4 h-4 mr-2 text-red-600" />
                   Exporter en PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 mr-3 text-green-500" />
+                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
+                  <FileTextIcon class="w-4 h-4 mr-1 text-green-500" />
                   Exporter en Excel
                 </button>
               </div>
@@ -74,13 +73,12 @@
 
           <!-- Add product button -->
           <button 
-          style="background: #7d3aec;"
             @click="showAddProductModal = true"
             :disabled="!canAddMoreProducts()"
             :class="[
-              'w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-colors',
+              'w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2  rounded-lg shadow-sm text-sm font-medium  transition-colors ',
               canAddMoreProducts()
-                ? 'bg-orange-500 hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500'
+                ?'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 btn-degrade-ring'
                 : 'bg-gray-400 cursor-not-allowed'
             ]"
           >
@@ -90,21 +88,19 @@
           </button>
 
           <!-- Premium button -->
-          <div class="relative">
             <button 
+           
               @click="handleLogout()"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-red-500 to-orange-600 hover:from-purple-600 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500 transition-all"
+              class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium btn-degrade-purple"
             >
             <LogoutIcon class="w-4 h-4 mr-2 text-white-500 cursor-pointer" />
-              <span class="hidden sm:inline">Déconnexion</span>
-              <span class="sm:hidden">Déconnexion</span>
+              <span >Déconnexion</span>
             </button>
-          </div>
         </div>
       </div>
 
       <!-- Section Premium Status -->
-      <div class="bg-gradient-to-r from-purple-600 to-pink-600 rounded-lg p-6 mb-6 text-white">
+      <div class=" rounded-lg p-6 mb-6 text-white bg-degrade-orange">
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-semibold mb-2">
@@ -137,7 +133,7 @@
           <div>
             <button
               @click="openPremiumModal"
-              class="bg-white text-purple-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors"
+              class="text-purple-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors text-sm btn-degrade-orange"
             >
               {{ hasActiveSubscription() ? 'Gérer l\'abonnement' : 'Passer au Premium' }}
             </button>
@@ -312,8 +308,8 @@
               :class="[
                 'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium',
                 activeFilter === tab.value 
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg' 
-                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50'
+                  ? 'shadow-lg btn-degrade-orange' 
+                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50 btn-degrade-purple'
               ]"
             >
               <span class="hidden sm:inline">{{ tab.label }} ({{ filterCounts[tab.value] }})</span>
@@ -332,16 +328,16 @@
               <input 
                 v-model="searchQuery"
                 type="text" 
-                class="w-full pl-8 sm:pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base" 
+                class="w-full pl-8 sm:pl-10 pr-4 py-2 bg-gray-50 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base" 
                 placeholder="Rechercher un produit..."
               >
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-              <button type="button" class="flex items-center gap-1 sm:gap-2 p-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all">
+              <button type="button" class="flex items-center gap-1 sm:gap-2 p-2  rounded-lg h btn-degrade-purple">
                 <ArrowUpDownIcon class="w-4 h-4" />
                 <span class="hidden sm:inline text-sm">Trier</span>
               </button>
-              <button type="button" class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all">
+              <button type="button" class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2  rounded-lg  btn-degrade-purple">
                 <FilterIcon class="w-4 h-4" />
                 <span class="hidden sm:inline text-sm">Filtrer</span>
               </button>
@@ -528,7 +524,7 @@
             <select 
               v-model="itemsPerPage"
               @change="handleItemsPerPageChange"
-              class="bg-white border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 p-1 sm:p-1.5"
+              class="bg-white border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 p-4 py-2 sm:p-3 w-15"
             >
               
               <option value="25">25</option>
@@ -1205,7 +1201,7 @@ const selectedProductForBoost = ref(null)
 const selectedBoostOption = ref(null)
 const activeActionMenu = ref(null)
 const searchQuery = ref('')
-const activeFilter = ref('all')
+const activeFilter = ref('active')
 const selectedPeriod = ref('all')
 const notification = ref({ show: false, message: '' })
 
@@ -2390,6 +2386,41 @@ onUnmounted(() => {
 
 <style scoped>
 /* Couleurs personnalisées */
+.bg-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #7d3aec);
+}
+
+.btn-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+  transition: background 0.3s;
+}
+.btn-degrade-orange:hover {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+}
+
+
+.btn-degrade-ring{
+background: linear-gradient(90deg, #fe7900, #7d3aec);
+color: white ;
+transition: background 0.3s;
+}
+.btn-degrade-ring:hover{
+background: linear-gradient(90deg, #7d3aec, #fe7900);
+}
+
+
+.btn-degrade-purple {
+  background: linear-gradient(90deg, #8b51e8, #7d3aec);
+  color: #fff;
+  transition: background 0.3s;
+}
+.btn-degrade-purple:hover {
+  background: linear-gradient(90deg, #7d3aec, #8b51e8);
+}
+
+
 .bg-orange-500 {
   background-color: #F65A11;
 }
