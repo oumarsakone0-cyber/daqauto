@@ -18,7 +18,7 @@
       <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center btn-degrade-orange">
               <PlusIcon class="w-5 h-5 text-white" />
             </div>
             <div>
@@ -26,12 +26,8 @@
               <p class="text-sm text-gray-600 hidden sm:block">Créez un nouveau produit pour votre boutique</p>
             </div>
           </div>
-          <button 
-            @click="closeModal"
-            class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-          >
-            <XIcon class="w-5 h-5 text-gray-500" />
-          </button>
+          
+          <XIcon @click="closeModal" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
 
         <!-- Messages d'état -->
@@ -81,7 +77,7 @@
                     currentStep > index 
                       ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
                       : currentStep === index 
-                        ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white' 
+                        ? 'btn-degrade-orange shadow-lg' 
                         : 'bg-gray-200 text-gray-500'
                   ]"
                 >
@@ -134,9 +130,8 @@
                     v-model="productData.name"
                     type="text"
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="w-full px-4 py-3  rounded-lg text-black transition-all text-sm sm:text-base border focus:border-orange-500 ring-0"
                     placeholder="Ex: T-shirt Premium Coton"
-                    style="color: black;"
                   >
                 </div>
 
@@ -149,9 +144,8 @@
                     id="description"
                     v-model="productData.description"
                     rows="3"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base resize-none"
+                    class="w-full px-4 py-3  rounded-lg text-black transition-all text-sm sm:text-base border focus:border-orange-500 ring-0 resize-none"
                     placeholder="Décrivez votre produit..."
-                    style="color: black;"
                   ></textarea>
                 </div>
 
@@ -162,7 +156,8 @@
                       v-model="productData.hasDetailedDescription"
                       id="detailed-description-toggle"
                       type="checkbox"
-                      class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                    style="color: #fe7900;"
+                      class="w-5 h-5 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
                     >
                     <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                       <EditIcon class="w-4 h-4 text-orange-600 mr-1" />
@@ -181,7 +176,7 @@
                         <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces">•</button>
                         <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée">1.</button>
                         <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-2 py-1">
+                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
                           <option value="">Titre</option>
                           <option value="h1">Titre 1</option>
                           <option value="h2">Titre 2</option>
@@ -193,7 +188,7 @@
                         ref="wysiwygEditor"
                         contenteditable="true"
                         @input="updateDetailedDescription"
-                        class="min-h-[200px] p-4 focus:outline-none"
+                        class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
                         style="white-space: pre-wrap;"
                         placeholder="Décrivez votre produit en détail..."
                       ></div>
@@ -204,7 +199,7 @@
                 <!-- Catégorie -->
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                    Catégorie <span class="text-red-500">*</span>
+                    Catégorie <span style="color:#fe7900">*</span>
                   </label>
                   <select
                     id="category"
@@ -212,7 +207,7 @@
                     @change="updateSubcategories"
                     required
                     :disabled="categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all text-sm sm:text-base disabled:bg-gray-100 focus:ring-0 focus:border-orange-500"
                     style="color: black"
                   >
                     <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
@@ -225,7 +220,7 @@
                 <!-- Sous-catégorie -->
                 <div>
                   <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                    Sous-catégorie <span class="text-red-500">*</span>
+                    Sous-catégorie <span style="color:#fe7900">*</span>
                   </label>
                   <select
                     id="subcategory"
@@ -233,7 +228,7 @@
                     @change="updateSubSubcategories"
                     required
                     :disabled="!productData.category_id || categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all text-sm sm:text-base disabled:bg-gray-100 focus:ring-0 focus:border-orange-500"
                     style="color: black"
                   >
                     <option value="">Sélectionner une sous-catégorie</option>
@@ -253,7 +248,7 @@
                     v-model="productData.subsubcategory_id"
                     @change="updateSubSubSubcategories"
                     :disabled="!productData.subcategory_id || categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
                     style="color: black"
                   >
                     <option value="">Sélectionner une sous-sous-catégorie (optionnel)</option>
@@ -272,7 +267,7 @@
                     id="subsubsubcategory"
                     v-model="productData.subsubsubcategory_id"
                     :disabled="!productData.subsubcategory_id || categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0  focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
                     style="color: black"
                   >
                     <option value="">Sélectionner une sous-sous-sous-catégorie (optionnel)</option>
@@ -291,7 +286,7 @@
                     id="tags"
                     v-model="productData.tags"
                     type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0  focus:border-orange-500 transition-all text-sm sm:text-base"
                     placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
                     style="color: black;"
                   >
@@ -603,7 +598,7 @@
                     </button>
                     <div 
                       v-if="index === 0"
-                      class="absolute bottom-2 left-2 px-2 py-1 bg-orange-500 text-white text-xs rounded-md"
+                      class="absolute bottom-2 left-2 px-2 py-1 bg-orange-500 text-white text-xs rounded-md "
                     >
                       Principal
                     </div>
@@ -1440,6 +1435,18 @@ onMounted(() => {
 
 <style scoped>
 /* Couleurs personnalisées */
+.btn-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+  transition: background 0.3s;
+}
+.btn-degrade-orange:hover {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+}
+
+
+
 .bg-orange-500 {
   background-color: #F65A11;
 }
