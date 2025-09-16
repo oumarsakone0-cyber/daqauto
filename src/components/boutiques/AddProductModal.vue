@@ -50,13 +50,13 @@
             </div>
           </div>
 
-          <div v-if="isLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg flex items-center space-x-2">
-            <div class="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <div v-if="isLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-orange-400 rounded-lg flex items-center space-x-2">
+            <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full flex-shrink-0"></div>
             <span class="text-sm">{{ loadingMessage }}</span>
           </div>
 
-          <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg flex items-center space-x-2">
-            <div class="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-orange-400 rounded-lg flex items-center space-x-2">
+            <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full flex-shrink-0"></div>
             <span class="text-sm">Chargement des catégories...</span>
           </div>
         </div>
@@ -75,7 +75,7 @@
                   :class="[
                     'w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-all duration-200',
                     currentStep > index 
-                      ? 'bg-gradient-to-r from-green-500 to-green-600 text-white' 
+                      ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' 
                       : currentStep === index 
                         ? 'btn-degrade-orange shadow-lg' 
                         : 'bg-gray-200 text-gray-500'
@@ -97,7 +97,7 @@
                 v-if="index < steps.length - 1"
                 :class="[
                   'flex-1 h-0.5 mx-2 sm:mx-4 transition-colors',
-                  currentStep > index ? 'bg-green-500' : 'bg-gray-200'
+                  currentStep > index ? 'bg-green-400' : 'bg-gray-200'
                 ]"
               ></div>
             </div>
@@ -113,7 +113,7 @@
           <div v-show="currentStep === 0" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
                   <InfoIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Informations de base</h3>
@@ -123,14 +123,14 @@
                 <!-- Nom du produit -->
                 <div class="sm:col-span-2">
                   <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                    Nom du produit <span class="text-red-500">*</span>
+                    Nom du produit <span class="primary-color">*</span>
                   </label>
                   <input
                     id="name"
                     v-model="productData.name"
                     type="text"
                     required
-                    class="w-full px-4 py-3  rounded-lg text-black transition-all text-sm sm:text-base border focus:border-orange-500 ring-0"
+                    class=" text-sm sm:text-base  input-style"
                     placeholder="Ex: T-shirt Premium Coton"
                   >
                 </div>
@@ -144,7 +144,7 @@
                     id="description"
                     v-model="productData.description"
                     rows="3"
-                    class="w-full px-4 py-3  rounded-lg text-black transition-all text-sm sm:text-base border focus:border-orange-500 ring-0 resize-none"
+                    class="text-sm sm:text-base  input-style resize-none"
                     placeholder="Décrivez votre produit..."
                   ></textarea>
                 </div>
@@ -156,25 +156,24 @@
                       v-model="productData.hasDetailedDescription"
                       id="detailed-description-toggle"
                       type="checkbox"
-                    style="color: #fe7900;"
-                      class="w-5 h-5 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                      class="checkbox-style"
                     >
                     <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                      <EditIcon class="w-4 h-4 text-orange-600 mr-1" />
+                      <EditIcon class="w-4 h-4  mr-1" style="color:#fe7900" />
                       Activer la description détaillée (WYSIWYG)
                     </label>
                   </div>
                   
                   <div v-if="productData.hasDetailedDescription">
-                    <div class="border border-gray-300 rounded-lg focus-within:ring-2 focus-within:ring-orange-500 focus-within:border-orange-500 transition-all duration-200">
+                    <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
                       <!-- Barre d'outils WYSIWYG -->
                       <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras">B</button>
-                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique">I</button>
-                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné">U</button>
+                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
+                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
+                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné" style="background-color: lightgray; color: black;">U</button>
                         <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces">•</button>
-                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée">1.</button>
+                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
+                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
                         <div class="w-px h-6 bg-gray-300 mx-1"></div>
                         <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
                           <option value="">Titre</option>
@@ -199,7 +198,7 @@
                 <!-- Catégorie -->
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                    Catégorie <span style="color:#fe7900">*</span>
+                    Catégorie <span class="primary-color">*</span>
                   </label>
                   <select
                     id="category"
@@ -207,8 +206,7 @@
                     @change="updateSubcategories"
                     required
                     :disabled="categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all text-sm sm:text-base disabled:bg-gray-100 focus:ring-0 focus:border-orange-500"
-                    style="color: black"
+                    class="text-sm sm:text-base input-style"
                   >
                     <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
                     <option v-for="category in categories" :key="category.id" :value="category.id">
@@ -220,7 +218,7 @@
                 <!-- Sous-catégorie -->
                 <div>
                   <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                    Sous-catégorie <span style="color:#fe7900">*</span>
+                    Sous-catégorie <span class="primary-color">*</span>
                   </label>
                   <select
                     id="subcategory"
@@ -228,8 +226,8 @@
                     @change="updateSubSubcategories"
                     required
                     :disabled="!productData.category_id || categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg transition-all text-sm sm:text-base disabled:bg-gray-100 focus:ring-0 focus:border-orange-500"
-                    style="color: black"
+                    class="text-sm sm:text-base input-style"
+                    
                   >
                     <option value="">Sélectionner une sous-catégorie</option>
                     <option v-for="subcategory in availableSubcategories" :key="subcategory.id" :value="subcategory.id">
@@ -248,8 +246,8 @@
                     v-model="productData.subsubcategory_id"
                     @change="updateSubSubSubcategories"
                     :disabled="!productData.subcategory_id || categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
-                    style="color: black"
+                    class="text-sm sm:text-base input-style"
+                    
                   >
                     <option value="">Sélectionner une sous-sous-catégorie (optionnel)</option>
                     <option v-for="subsubcategory in availableSubSubcategories" :key="subsubcategory.id" :value="subsubcategory.id">
@@ -267,7 +265,7 @@
                     id="subsubsubcategory"
                     v-model="productData.subsubsubcategory_id"
                     :disabled="!productData.subsubcategory_id || categoriesLoading"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0  focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                    class="text-sm sm:text-base input-style"
                     style="color: black"
                   >
                     <option value="">Sélectionner une sous-sous-sous-catégorie (optionnel)</option>
@@ -286,9 +284,9 @@
                     id="tags"
                     v-model="productData.tags"
                     type="text"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-0  focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="text-sm sm:text-base input-style"
                     placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
-                    style="color: black;"
+                   
                   >
                 </div>
               </div>
@@ -299,7 +297,7 @@
           <div v-show="currentStep === 1" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+                <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 rounded-lg flex items-center justify-center">
                   <DollarSignIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
@@ -309,7 +307,7 @@
                 <!-- Prix unitaire -->
                 <div>
                   <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                    Prix unitaire (FCFA) <span class="text-red-500">*</span>
+                    Prix unitaire (FCFA) <span class="primary-color">*</span>
                   </label>
                   <input
                     id="unit_price"
@@ -318,16 +316,17 @@
                     min="0"
                     step="1"
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="text-sm sm:text-base input-style"
                     placeholder="15000"
-                    style="color: black;"
+                    
+
                   >
                 </div>
 
                 <!-- Stock initial -->
                 <div>
                   <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                    Stock initial <span class="text-red-500">*</span>
+                    Stock initial <span class="primary-color">*</span>
                   </label>
                   <input
                     id="stock"
@@ -336,9 +335,9 @@
                     min="0"
                     step="1"
                     required
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="text-sm sm:text-base input-style"
                     placeholder="50"
-                    style="color: black;"
+                  
                   >
                 </div>
 
@@ -350,7 +349,7 @@
                   <select
                     id="unit_type"
                     v-model="productData.unit_type"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="text-sm sm:text-base input-style"
                     style="color: black;"
                   >
                     <option v-for="unit in availableUnitTypes" :key="unit.value" :value="unit.value">
@@ -367,10 +366,10 @@
                     v-model="productData.hasWholesalePrice"
                     id="wholesale-price"
                     type="checkbox"
-                    class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                    class="checkbox-style"
                   >
                   <label for="wholesale-price" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                    <ZapIcon class="w-4 h-4 text-orange-600 mr-1" />
+                    <ZapIcon class="w-4 h-4  mr-1" />
                     Activer le prix de gros
                   </label>
                 </div>
@@ -385,9 +384,8 @@
                       v-model.number="productData.wholesale_price"
                       type="number"
                       min="0"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                      class="text-sm sm:text-base input-style"
                       placeholder="12000"
-                      style="color: black;"
                     >
                   </div>
                   <div>
@@ -399,9 +397,8 @@
                       v-model.number="productData.wholesale_min_qty"
                       type="number"
                       min="1"
-                      class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                      class="text-sm sm:text-base input-style"
                       placeholder="10"
-                      style="color: black;"
                     >
                   </div>
                 </div>
@@ -703,7 +700,7 @@
               type="button"
               @click.prevent="handlePreviousStep"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3  rounded-lg text-sm font-medium text-gray-700 touch-manipulation btn-cancel"
             >
               <ChevronLeftIcon class="w-4 h-4 mr-2 inline" />
               Précédent
@@ -716,7 +713,7 @@
               type="button"
               @click.prevent="handleCloseModal"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors active:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed touch-manipulation"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium  touch-manipulation btn-cancel"
             >
               Annuler
             </button>
@@ -1434,7 +1431,18 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
 /* Couleurs personnalisées */
+.primary-color-text {
+  color: #fe7900;
+}
+.primary-background {
+  background-color: #fe7900;
+}
+.bg-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+ 
+}
 .btn-degrade-orange {
   background: linear-gradient(90deg, #fe7900, #ff5a01);
   color: white;
@@ -1445,6 +1453,35 @@ onMounted(() => {
   color: white;
 }
 
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.5rem; 
+  padding: 0.80rem 0.75rem; 
+  transition: border-color 0.2s, box-shadow 0.2s; 
+}
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
+}
+
+.checkbox-style {
+  width: 1.25rem; 
+  height: 1.25rem; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.25rem; 
+  color: #fe7900 ;
+  transition: background-color 0.2s, border-color 0.2s; 
+}
+.checkbox-style:focus {
+  box-shadow: 0 0 0 1px #fe7900;
+  border-color: #fe7900; 
+}
+.checkbox-style:checked {
+  background-color: #fe7900; 
+  border-color: #fe7900; 
+}
 
 
 .bg-orange-500 {
@@ -1487,6 +1524,16 @@ onMounted(() => {
 /* Amélioration pour les interactions tactiles */
 .touch-manipulation {
   touch-action: manipulation;
+}
+.btn-cancel {
+  background-color: #d5dee7;
+  color: #374151;
+  border: 1px solid #d1d5db;      /* Bordure gris */
+  transition: background 0.2s, color 0.2s;
+}
+.btn-cancel:hover {
+  background-color: #cbd5e1;      /* Gris plus foncé au survol */
+  color: #1f2937;                 /* Texte plus foncé au survol */
 }
 
 /* Styles pour l'éditeur WYSIWYG */
