@@ -43,7 +43,7 @@
               <span class="text-sm">{{ categoriesError }}</span>
               <button 
                 @click="fetchCategories" 
-                class="ml-2 px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors"
+                class="ml-2 px-2 py-1 text-xs btn-degrade-orange"
               >
                 Réessayer
               </button>
@@ -411,8 +411,8 @@
             <!-- Couleurs -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
-                  <PaletteIcon class="w-4 h-4 text-white" />
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
+                  <PaletteIcon class="w-4 h-4 text-white " />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Couleurs</h3>
               </div>
@@ -447,17 +447,17 @@
                     v-model="customColor.name"
                     type="text" 
                     placeholder="Nom de la couleur"
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm"
+                    class="flex-1  text-sm input-style"
                   >
                   <input 
                     v-model="customColor.value"
                     type="color" 
-                    class="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                    class="w-12 h-10 border text-orange-500  border-gray-300 rounded-lg cursor-pointer"
                   >
                   <button 
                     @click="addCustomColor"
                     type="button"
-                    class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 font-medium text-sm"
+                    class="px-4 py-2 font-medium text-sm btn-degrade-orange"
                   >
                     Ajouter
                   </button>
@@ -468,7 +468,7 @@
             <!-- Tailles -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-degrade-orange">
                   <RulerIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
@@ -480,8 +480,7 @@
                 <select 
                   v-model="productData.sizeType"
                   @change="updateAvailableSizes"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
-                  style="color: black;"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Sélectionner le type de taille</option>
                   <option v-for="sizeType in sizeTypes" :key="sizeType.value" :value="sizeType.value">
@@ -499,8 +498,8 @@
                   :class="[
                     'px-3 py-2 sm:px-4 sm:py-3 rounded-lg border-2 transition-all duration-200 text-xs sm:text-sm font-medium',
                     productData.sizes.includes(size)
-                      ? 'border-orange-500 bg-orange-50 text-orange-700'
-                      : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
+                      ? ' btn-degrade-orange'
+                      : 'border-gray-300  text-gray-700 hover:border-orange-400 bg-lightgray'
                   ]"
                 >
                   {{ size }}
@@ -515,12 +514,12 @@
                     v-model="customSize"
                     type="text" 
                     :placeholder="getSizePlaceholder(productData.sizeType)"
-                    class="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm"
+                    class="flex-1  text-sm input-style"
                   >
                   <button 
                     @click="addCustomSize"
                     type="button"
-                    class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all duration-200 font-medium text-sm"
+                    class="font-medium text-sm btn-degrade-orange"
                   >
                     Ajouter
                   </button>
@@ -534,7 +533,7 @@
             <!-- Images -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-degrade-orange">
                   <ImageIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Images du produit</h3>
@@ -556,7 +555,7 @@
                 <button
                   type="button"
                   @click="$refs.fileInput.click()"
-                  class="inline-flex items-center px-4 py-2 border border-orange-500 rounded-lg text-sm font-medium text-orange-600 hover:bg-orange-50 transition-colors"
+                  class="inline-flex items-center  text-sm font-medium    btn-degrade-orange"
                 >
                   Parcourir les fichiers
                 </button>
@@ -607,7 +606,7 @@
             <!-- Vidéo -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
                   <VideoIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vidéo (optionnel)</h3>
@@ -655,7 +654,7 @@
                   v-model="productData.is_active"
                   id="is-active"
                   type="checkbox"
-                  class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                  class="checkbox-style "
                 >
                 <label for="is-active" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                   <CheckCircleIcon class="w-4 h-4 text-green-600 mr-1" />
@@ -666,7 +665,7 @@
               <!-- Résumé -->
               <div class="bg-gray-50 rounded-lg p-4">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <FileTextIcon class="w-5 h-5 text-blue-600 mr-2" />
+                  <FileTextIcon class="w-5 h-5  mr-2 primary-color" />
                   Résumé du produit
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
@@ -700,7 +699,7 @@
               type="button"
               @click.prevent="handlePreviousStep"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3  rounded-lg text-sm font-medium text-gray-700 touch-manipulation btn-cancel"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-cancel"
             >
               <ChevronLeftIcon class="w-4 h-4 mr-2 inline" />
               Précédent
@@ -713,7 +712,7 @@
               type="button"
               @click.prevent="handleCloseModal"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium  touch-manipulation btn-cancel"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-cancel"
             >
               Annuler
             </button>
@@ -723,7 +722,7 @@
               type="button"
               @click.prevent="handleNextStep"
               :disabled="!canProceedToNextStep || isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-transparent rounded-lg text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-transparent rounded-lg text-sm font-medium  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400  disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation btn-degrade-orange"
             >
               Suivant ({{ currentStep + 1 }}/{{ steps.length }})
               <ChevronRightIcon class="w-4 h-4 ml-2 inline" />
@@ -1433,7 +1432,7 @@ onMounted(() => {
 <style scoped>
 
 /* Couleurs personnalisées */
-.primary-color-text {
+.primary-color {
   color: #fe7900;
 }
 .primary-background {
@@ -1481,6 +1480,14 @@ onMounted(() => {
 .checkbox-style:checked {
   background-color: #fe7900; 
   border-color: #fe7900; 
+}
+
+.bg-lightgray {
+  background-color: #F9FAFB;
+}
+.bg-lightgray:hover {
+  background-color: #F3F4F6;
+  border: 1px solid #D1D5DB;
 }
 
 
