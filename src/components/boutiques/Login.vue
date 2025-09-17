@@ -3,7 +3,7 @@
       <div class="max-w-md w-full space-y-8">
         <!-- Header -->
         <div class="text-center">
-          <div class="mx-auto h-16 w-16 bg-orange rounded-full flex items-center justify-center mb-4">
+          <div class="mx-auto h-16 w-16  rounded-full flex items-center justify-center mb-4 primary-background">
             <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
             </svg>
@@ -55,7 +55,7 @@
                   type="text"
                   required
                   :class="[
-                    'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                    ' input-style',
                     validationErrors.identifier ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   ]"
                   :placeholder="loginType === 'email' ? 'exemple@email.com' : '+225 XX XX XX XX XX'"
@@ -87,7 +87,7 @@
                   :type="showPassword ? 'text' : 'password'"
                   required
                   :class="[
-                    'block w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                    'input-style',
                     validationErrors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   ]"
                   placeholder="Votre mot de passe"
@@ -95,12 +95,12 @@
                 <button
                   type="button"
                   @click="showPassword = !showPassword"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  class="absolute inset-y-0 right-0 pr-3 flex items-center bg-degrade-orange"
                 >
-                  <svg v-if="showPassword" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg v-if="showPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
                   </svg>
-                  <svg v-else class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg v-else class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                   </svg>
@@ -118,7 +118,7 @@
                   id="remember-me"
                   v-model="loginData.rememberMe"
                   type="checkbox"
-                  class="h-4 w-4 text-orange focus:ring-orange border-gray-300 rounded"
+                  class="checkbox-style"
                 >
                 <label for="remember-me" class="ml-2 block text-sm text-gray-700">
                   Se souvenir de moi
@@ -128,7 +128,8 @@
               <button
                 type="button"
                 @click="showForgotPassword = true"
-                class="text-sm text-orange hover:text-orange-600 font-medium"
+
+                class="text-sm font-medium bg-lightgray"
               >
                 Mot de passe oublié ?
               </button>
@@ -138,7 +139,7 @@
             <button
               type="submit"
               :disabled="isLoading"
-              class="w-full flex justify-center py-3 px-4 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white bg-orange hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+              class="shadow-sm text-sm   disabled:opacity-50 disabled:cursor-not-allowed btn-degrade-orange"
             >
               <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -197,7 +198,7 @@
               <button
                 type="button"
                 @click="handleSignup"
-                class="font-medium text-orange hover:text-orange-600"
+                class="bg-lightgray"
               >
                 Créer un compte
               </button>
@@ -214,25 +215,34 @@
             Entrez votre email ou numéro de téléphone pour recevoir un lien de réinitialisation.
           </p>
           <form @submit.prevent="handleForgotPassword">
-            <input
+           <div class="relative justify-center items-center">
+            <<div class="absolute inset-y-0 left-0 pl-3 pt-2 flex items-center pointer-events-none">
+                  <svg  class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207"/>
+                  </svg>
+                 
+                </div>
+              <input
               v-model="forgotPasswordData.identifier"
               type="text"
               required
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange mb-4"
+              class="mb-4 input-style"
               placeholder="Email ou numéro de téléphone"
             >
+           </div> 
+           
             <div class="flex space-x-3">
               <button
                 type="button"
                 @click="showForgotPassword = false"
-                class="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
+                class="flex-1 bg-lightgray"
               >
                 Annuler
               </button>
               <button
                 type="submit"
                 :disabled="isLoadingForgot"
-                class="flex-1 py-2 px-4 bg-orange text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
+                class="flex-1 disabled:opacity-50 btn-degrade-orange"
               >
                 {{ isLoadingForgot ? 'Envoi...' : 'Envoyer' }}
               </button>
@@ -472,6 +482,77 @@ const handleForgotPassword = async () => {
   </script>  
   
   <style scoped>
+
+/* Couleurs personnalisées */
+.primary-color {
+  color: #fe7900;
+}
+.primary-background {
+  background-color: #fe7900;
+}
+.bg-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+
+ 
+}
+.btn-degrade-orange {
+  display: flex;
+  width: 100%;
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+  transition: background 0.3s;
+  font-weight: 500;
+  padding: 0.8rem 0.75rem; 
+  justify-content: center;
+}
+.btn-degrade-orange:hover {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+}
+
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.5rem; 
+  padding: 0.80rem 0.75rem; 
+  padding-left: 2.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s; 
+}
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
+}
+
+.checkbox-style {
+  width: 1.25rem; 
+  height: 1.25rem; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.25rem; 
+  color: #fe7900 ;
+  transition: background-color 0.2s, border-color 0.2s; 
+}
+.checkbox-style:focus {
+  box-shadow: 0 0 0 1px #fe7900;
+  border-color: #fe7900; 
+}
+.checkbox-style:checked {
+  background-color: #fe7900; 
+  border-color: #fe7900; 
+}
+
+.bg-lightgray {
+  background-color: #F9FAFB;
+  color: #fe7900;
+  font-weight: 500;
+}
+.bg-lightgray:hover {
+  background-color: #F3F4F6;
+  border: 1px solid #D1D5DB;
+}
+
+
+
   .bg-orange {
     background-color: #F65A11;
   }
