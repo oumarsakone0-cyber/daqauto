@@ -274,7 +274,7 @@
     }
     
     // Fonction pour formater les prix en FCFA
-    const formatPrice = (price, currency = 'XOF') => {
+    const formatPrice = (price, currency = 'USD') => {
       if (!price) return '0 FCFA'
     
       const exchangeRates = {
@@ -291,7 +291,7 @@
     
       let priceInFcfa
     
-      if (currency === 'XOF') {
+      if (currency === 'USD') {
         priceInFcfa = price
       } else {
         priceInFcfa = convertToFcfa(price, currency)
@@ -299,7 +299,7 @@
     
       return new Intl.NumberFormat('fr-FR', {
         style: 'currency',
-        currency: 'XOF',
+        currency: 'USD',
         minimumFractionDigits: 0
       }).format(priceInFcfa)
     }

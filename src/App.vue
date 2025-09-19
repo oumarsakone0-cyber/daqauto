@@ -2,20 +2,23 @@
   <div class="bg-cream">
     <!-- Main Layout -->
     <div class="flex-1 flex flex-col">
-      <!-- Navbar - masquée sur les pages d'authentification et dashboard admin -->
+      <!-- Auto Translator - Position fixe en haut à droite -->
+      <div class="fixed top-4 right-4 z-50">
+        <AutoTranslator />
+      </div>
+      
+      <!-- Navbar -->
       <Navbar 
         v-if="!hideNavbar"
         style="position: fixed; width: 100%; z-index: 1000; height: 121px;"
       />
       
       <!-- Main Content -->
-      <div :class="[
-        'flex-1'
-      ]" :style="contentPadding">
+      <div :class="['flex-1']" :style="contentPadding">
         <router-view />
       </div>
 
-       <Footer 
+      <Footer 
         v-if="!hideNavbar"
         style="width: 100%; z-index: 1000"
       />
@@ -23,38 +26,53 @@
   </div>
 </template>
 
-<script setup>
-import { computed, ref, watch } from 'vue'
+<script>
+import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from './components/menu/Navbar.vue'
 import Footer from './components/menu/Footer.vue'
+import AutoTranslator from './components/traduction/AutoTranslator.vue'
 
-const route = useRoute()
+export default {
+  name: 'App',
+  components: {
+    Navbar,
+    Footer,
+    AutoTranslator
+  },
+  setup() {
+    const route = useRoute()
+    const hideNavbar = ref(false)
 
-// Computed pour vérifier si on est sur une page d'authentification ou dashboard admin
-const shouldHideNavbar = computed(() => {
-  const isAuthPage = route.name === 'login' || route.name === 'register'
-  const isDashboardAdmin = route.path.startsWith('/dashboard-admin/')
-  const isBoutiquedAdmin = route.path.startsWith('/boutique-admin/')
-  
-  return isAuthPage || isDashboardAdmin || isBoutiquedAdmin
-})
+    const shouldHideNavbar = computed(() => {
+      const isAuthPage = route.name === 'login' || route.name === 'register'
+      const isDashboardAdmin = route.path.startsWith('/dashboard-admin/')
+      const isBoutiquedAdmin = route.path.startsWith('/boutique-admin/')
+      
+      return isAuthPage || isDashboardAdmin || isBoutiquedAdmin
+    })
 
-// Computed pour le padding du contenu
-const contentPadding = computed(() => {
-  if (shouldHideNavbar.value) {
-    return 'padding: 0px;'
+    const contentPadding = computed(() => {
+      if (hideNavbar.value) {
+        return 'padding: 0px;'
+      }
+      return 'padding: 123px 0px 0px 0px;'
+    })
+
+    onMounted(() => {
+      hideNavbar.value = shouldHideNavbar.value
+    })
+
+    watch(shouldHideNavbar, (newValue) => {
+      hideNavbar.value = newValue
+    }, { immediate: true })
+
+    return {
+      hideNavbar,
+      contentPadding
+    }
   }
-  return 'padding: 123px 0px 0px 0px;'
-})
-
-// Use a ref to store the hideNavbar value, so it's reactive
-const hideNavbar = ref(shouldHideNavbar.value)
-
-// Watch the route and update hideNavbar
-watch(shouldHideNavbar, (newValue) => {
-  hideNavbar.value = newValue
-})
+}
 </script>
 
 <style scoped>

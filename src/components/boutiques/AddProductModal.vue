@@ -307,7 +307,7 @@
                 <!-- Prix unitaire -->
                 <div>
                   <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                    Prix unitaire (FCFA) <span class="primary-color">*</span>
+                    Prix unitaire ($) <span class="primary-color">*</span>
                   </label>
                   <input
                     id="unit_price"
@@ -1009,6 +1009,7 @@ const availableColors = ref([
 
 const availableUnitTypes = ref([
   { value: 'quantity', label: 'Quantité (unités)' },
+  { value: 'weight_t', label: 'Poids (T)' },
   { value: 'weight_kg', label: 'Poids (kg)' },
   { value: 'weight_g', label: 'Poids (g)' },
   { value: 'volume_l', label: 'Volume (L)' },

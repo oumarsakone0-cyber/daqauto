@@ -192,7 +192,7 @@
   const dealProducts = ref([
     {
       id: 1,
-      name: 'Écouteurs sans fil Bluetooth 5.0 avec réduction de bruit active et étui de charge rapide',
+      name: 'Shacman Cylinder Head 612600040284',
       slug: 'ecouteurs-sans-fil-bluetooth-5-0-reduction-bruit',
       market: 'Guangzhou, Chine',
       shopName: 'TechWorld Electronics Co.',
@@ -204,16 +204,16 @@
       rating: 4.5,
       reviews: 2453,
       images: [
-        'https://images.unsplash.com/photo-1606400082777-ef05f3c5d38c?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1599669454699-248893623440?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop&auto=format'
+        'https://image.made-in-china.com/202f0j00LBqlpKihfSgZ/Weichai-Diesel-Engine-Shacman-Truck-Cylinder-Head-612600040150.jpg',
+        'https://image.made-in-china.com/2f0j00DKWljQeFbLpG/612600040150-Shacman-F3000-X3000-X5000-Wp10-Wp12-Cylinder-Head.webp',
+        'https://image.made-in-china.com/2f0j00PsihKOecEDzf/612600040150-Shacman-F3000-X3000-X5000-Wp10-Wp12-Cylinder-Head.webp'
       ],
       currentImageIndex: 0,
       freeShipping: true
     },
     {
       id: 2,
-      name: 'Montre connectée étanche IP68 avec moniteur de fréquence cardiaque et GPS intégré',
+      name: 'Volvo Truck I-Shift Electric Motor Kit Conversion',
       slug: 'montre-connectee-etanche-ip68-gps',
       market: 'Shenzhen, Chine',
       shopName: 'SmartWatch Pro Ltd.',
@@ -225,16 +225,16 @@
       rating: 4.2,
       reviews: 1287,
       images: [
-        'https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1434493789847-2f02dc6ca35d?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1508685096489-7aacd43bd3b1?w=300&h=300&fit=crop&auto=format'
+        'https://www.yvonnickgazeau.com/medias/images/volvotruck_ishiftelect.jpg',
+        'https://image.made-in-china.com/202f0j00zevcCSZEkOkH/Truck-Type-Electric-Car-Kit-Electric-Engine-Conversion-for-Bus.webp',
+        'https://image.made-in-china.com/202f0j00lRLcbgVWViuT/400V-60kw-EV-Motor-Conversion-Kits-2-in-1-Suitable-for-1-5t-Electric-Commercial-Vehicle.webp'
       ],
       currentImageIndex: 0,
       freeShipping: true
     },
     {
       id: 3,
-      name: 'Chargeur sans fil 15W compatible iPhone Samsung avec indicateur LED',
+      name: 'Rear tipper for export - large volume transport - Cif Bennes',
       slug: 'chargeur-sans-fil-15w-iphone-samsung',
       market: 'Dongguan, Chine',
       shopName: 'PowerTech Solutions',
@@ -246,15 +246,16 @@
       rating: 4.7,
       reviews: 856,
       images: [
-        'https://images.unsplash.com/photo-1609592806787-3d9c1b8e5e8e?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop&auto=format'
+        'https://www.cif-bennes.com/wp-content/uploads/2022/09/cif-bennes-benne-entrepreneur-ptac-5t-16t.jpg',
+        'https://www.cif-bennes.com/wp-content/uploads/2022/06/cif-bennes-benne-entrepreneur-26T-export-polybenne-compressed.jpg',
+        'https://www.cif-bennes.com/wp-content/uploads/2022/06/cif-bennes-benne-entrepreneur-export-blanc-polybenne-compressed-e1657871811469.jpg',
       ],
       currentImageIndex: 0,
       freeShipping: false
     },
     {
       id: 4,
-      name: 'Caméra de surveillance WiFi 1080P avec vision nocturne infrarouge',
+      name: 'Factory Semi Truck Container Flatbed Trailer For Sale',
       slug: 'camera-surveillance-wifi-1080p-vision-nocturne',
       market: 'Hangzhou, Chine',
       shopName: 'SecureCam International',
@@ -266,15 +267,15 @@
       rating: 4.3,
       reviews: 1542,
       images: [
-        'https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1567593810070-7a3d471af022?w=300&h=300&fit=crop&auto=format'
+        'https://www.chengdatrailer.com/uploads/202212156/3-axle-flatbed-semi-trailers-40ft-flatbed41213108634.jpg',
+        'https://image.made-in-china.com/318f0j00IEoGjOFzaHpf/orange-flatbed-mp4.webp'
       ],
       currentImageIndex: 0,
       freeShipping: true
     },
     {
       id: 5,
-      name: 'Enceinte Bluetooth portable 20W avec basses profondes et résistance à l\'eau IPX7',
+      name: 'Tractor Truck Trailer Head Tractor Head Heavy Duty Trucks - China Tractor Truck, Sinotruk',
       slug: 'enceinte-bluetooth-portable-20w-ipx7',
       market: 'Xiamen, Chine',
       shopName: 'AudioMax Trading Co.',
@@ -286,8 +287,8 @@
       rating: 4.6,
       reviews: 2156,
       images: [
-        'https://images.unsplash.com/photo-1608043152269-423dbba4e7e1?w=300&h=300&fit=crop&auto=format',
-        'https://images.unsplash.com/photo-1545454675-3531b543be5d?w=300&h=300&fit=crop&auto=format'
+        'https://cdn.globalso.com/qingtetrailers/18.png',
+        'https://image.made-in-china.com/202f0j00MhIilSvKEqRP/Tractor-Truck-Trailer-Head-Tractor-Head-Heavy-Duty-Trucks.webp'
       ],
       currentImageIndex: 0,
       freeShipping: true
@@ -336,7 +337,7 @@
   }
   
   // Fonction pour formater les prix en FCFA
-  const formatPrice = (price, currency = 'XOF') => {
+  const formatPrice = (price, currency = 'USD') => {
     if (!price) return '0 FCFA'
   
     const exchangeRates = {
@@ -353,7 +354,7 @@
   
     let priceInFcfa
   
-    if (currency === 'XOF') {
+    if (currency === 'USD') {
       priceInFcfa = price
     } else {
       priceInFcfa = convertToFcfa(price, currency)
@@ -361,7 +362,7 @@
   
     return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'XOF',
+      currency: 'USD',
       minimumFractionDigits: 0
     }).format(priceInFcfa)
   }
