@@ -122,7 +122,7 @@
           <!-- État d'erreur -->
           <div v-else-if="error" class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-white/20 text-center">
             <p class="text-red-600 text-sm">{{ error }}</p>
-            <button @click="fetchMostViewedProducts" class="mt-2 text-purple-600 text-sm hover:underline">
+            <button @click="fetchMostViewedProducts" class="mt-2 text-sm " style="background-color: lightgray; color: black;">
               Réessayer
             </button>
           </div>
@@ -186,7 +186,7 @@
           <!-- État d'erreur -->
           <div v-else-if="error" class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-white/20 text-center">
             <p class="text-red-600 text-sm">{{ error }}</p>
-            <button @click="fetchMostViewedProducts" class="mt-2 text-purple-600 text-sm hover:underline">
+            <button @click="fetchMostViewedProducts" class="mt-2" style="background-color: lightgray; color: black;">
               Réessayer
             </button>
           </div>

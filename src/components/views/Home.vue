@@ -92,7 +92,7 @@
       <RecommendedProductsSection />
 
       <!-- Section newsletter compacte (Desktop uniquement) -->
-      <section class="newsletter-section desktop-only">
+      <section class="newsletter-section desktop-only degrade-fond">
         <div class="section-content">
           <div class="newsletter-container">
             <div class="newsletter-content">
@@ -894,7 +894,7 @@ const handleSendMessage = (message) => {
 /* Section newsletter */
 .newsletter-section {
   padding: 40px 0;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(160deg, black , #fc4618 , black);
 }
 
 .newsletter-container {
