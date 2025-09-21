@@ -91,7 +91,7 @@
             <button 
            
               @click="handleLogout()"
-              class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium btn-degrade-purple"
+              class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium btn-deconnexion"
             >
             <LogoutIcon class="w-4 h-4 mr-2 text-white-500 cursor-pointer" />
               <span >Déconnexion</span>
@@ -133,7 +133,7 @@
           <div>
             <button
               @click="openPremiumModal"
-              class="text-purple-600 px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors text-sm btn-degrade-orange"
+              class="  px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors text-sm btn-premium-style "
             >
               {{ hasActiveSubscription() ? 'Gérer l\'abonnement' : 'Passer au Premium' }}
             </button>
@@ -309,7 +309,7 @@
                 'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium',
                 activeFilter === tab.value 
                   ? 'shadow-lg btn-degrade-orange' 
-                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50 btn-degrade-purple'
+                  : ' btn-degrade-purple'
               ]"
             >
               <span class="hidden sm:inline">{{ tab.label }} ({{ filterCounts[tab.value] }})</span>
@@ -2387,7 +2387,7 @@ onUnmounted(() => {
 <style scoped>
 /* Couleurs personnalisées */
 .bg-degrade-orange {
-  background: linear-gradient(90deg, #fe7900, #7d3aec);
+ background: linear-gradient(160deg, black , #fc4618 , black);
 }
 
 .btn-degrade-orange {
@@ -2398,26 +2398,49 @@ onUnmounted(() => {
 .btn-degrade-orange:hover {
   background: linear-gradient(90deg, #ff5a01, #fe7900);
   color: white;
+  border-color: #ff5a01;
 }
 
 
 .btn-degrade-ring{
-background: linear-gradient(90deg, #fe7900, #7d3aec);
+background: #02b602;
 color: white ;
 transition: background 0.3s;
 }
 .btn-degrade-ring:hover{
-background: linear-gradient(90deg, #7d3aec, #fe7900);
+background:#029602;
+border-color:#029602;
 }
 
+.btn-deconnexion{
+  background: #ec0202;
+  color: white ;
+  transition: background 0.3s;
+  }
+  .btn-deconnexion:hover{
+  background:#ff0000;
+  border-color:#ff0000;
+  }
 
 .btn-degrade-purple {
-  background: linear-gradient(90deg, #8b51e8, #7d3aec);
+  background: #8f8f8f;
   color: #fff;
   transition: background 0.3s;
 }
 .btn-degrade-purple:hover {
-  background: linear-gradient(90deg, #7d3aec, #8b51e8);
+  background: #b7b6b6;
+  border-color: #b7b6b6;
+}
+
+.btn-premium-style{
+  background: white;
+  color: #fe7900;
+  transition: background 0.3s;
+}
+.btn-premium-style:hover{
+  background: #f8f7f7;
+  color: #fe7900;
+  border-color: white;
 }
 
 

@@ -92,7 +92,7 @@
       <RecommendedProductsSection />
 
       <!-- Section newsletter compacte (Desktop uniquement) -->
-      <section class="newsletter-section desktop-only degrade-fond">
+      <section class="newsletter-section desktop-only">
         <div class="section-content">
           <div class="newsletter-container">
             <div class="newsletter-content">

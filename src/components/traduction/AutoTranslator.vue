@@ -5,7 +5,7 @@
       :disabled="isTranslating"
       class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg shadow-xl border-2 border-white transition-all duration-200 flex items-center gap-2 min-w-[120px] justify-center"
     >
-      <span class="text-sm font-bold" style="color: black">
+      <span class="text-sm font-bold" style="color: white">
         {{ isTranslating ? '⏳ Traduction...' : (currentLanguage === 'fr' ? '🇫🇷 Français' : '🇬🇧 English') }}
       </span>
     </button>
