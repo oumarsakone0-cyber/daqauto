@@ -293,8 +293,195 @@
             </div>
           </div>
 
-          <!-- Étape 2: Prix et Stock -->
+          <!-- Étape 2: Spécifications Véhicule -->
           <div v-show="currentStep === 1" class="space-y-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-blue-400 to-blue-500">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Spécifications Véhicule</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Condition -->
+                <div>
+                  <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
+                    État du véhicule
+                  </label>
+                  <select
+                    id="vehicle_condition"
+                    v-model="productData.vehicle_condition"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Tous les états</option>
+                    <option value="new">Neuf</option>
+                    <option value="used">Occasion</option>
+                    <option value="refurbished">Reconditionné</option>
+                  </select>
+                </div>
+
+                <!-- Make -->
+                <div>
+                  <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
+                    Marque
+                  </label>
+                  <input
+                    id="vehicle_make"
+                    v-model="productData.vehicle_make"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Mercedes, Volvo, Scania"
+                  >
+                </div>
+
+                <!-- Model -->
+                <div>
+                  <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
+                    Modèle
+                  </label>
+                  <input
+                    id="vehicle_model"
+                    v-model="productData.vehicle_model"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Actros, FH, R-Series"
+                  >
+                </div>
+
+                <!-- Drive Type -->
+                <div>
+                  <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type de transmission
+                  </label>
+                  <select
+                    id="drive_type"
+                    v-model="productData.drive_type"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Tous les types</option>
+                    <option value="4x2">4X2</option>
+                    <option value="6x2">6X2</option>
+                    <option value="6x4">6X4</option>
+                    <option value="6x6">6X6</option>
+                    <option value="8x4">8X4</option>
+                    <option value="8x6">8X6</option>
+                    <option value="8x8">8X8</option>
+                  </select>
+                </div>
+
+                <!-- Year -->
+                <div>
+                  <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
+                    Année
+                  </label>
+                  <input
+                    id="vehicle_year"
+                    v-model="productData.vehicle_year"
+                    type="number"
+                    min="1990"
+                    :max="new Date().getFullYear() + 1"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 2020"
+                  >
+                </div>
+
+                <!-- Fuel Type -->
+                <div>
+                  <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type de carburant
+                  </label>
+                  <select
+                    id="fuel_type"
+                    v-model="productData.fuel_type"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Tous les carburants</option>
+                    <option value="diesel">Diesel</option>
+                    <option value="electric">Électrique</option>
+                    <option value="hybrid">Hybride</option>
+                    <option value="cng">CNG</option>
+                    <option value="lng">LNG</option>
+                    <option value="hydrogen">Hydrogène</option>
+                    <option value="unknown">Inconnu</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Étape 3: Caractéristiques Techniques -->
+          <div v-show="currentStep === 2" class="space-y-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br from-green-400 to-green-500">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Caractéristiques Techniques</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Transmission -->
+                <div>
+                  <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Transmission
+                  </label>
+                  <select
+                    id="transmission_type"
+                    v-model="productData.transmission_type"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Toutes les transmissions</option>
+                    <option value="automatic">Automatique</option>
+                    <option value="manual">Manuelle</option>
+                  </select>
+                </div>
+
+                <!-- Engine Brand -->
+                <div>
+                  <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Marque du moteur
+                  </label>
+                  <select
+                    id="engine_brand"
+                    v-model="productData.engine_brand"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Sélectionnez une marque</option>
+                    <option value="weichai">Weichai</option>
+                    <option value="yuchai">Yuchai</option>
+                    <option value="sinotruck">Sinotruck</option>
+                    <option value="man">MAN</option>
+                  </select>
+                </div>
+
+                <!-- Mileage -->
+                <div class="sm:col-span-2">
+                  <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
+                    Kilométrage (km)
+                  </label>
+                  <input
+                    id="vehicle_mileage"
+                    v-model="productData.vehicle_mileage"
+                    type="number"
+                    min="0"
+                    max="200000"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 150000"
+                  >
+                  <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Étape 4: Prix et Stock -->
+          <div v-show="currentStep === 3" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8 bg-gradient-to-br from-green-400 to-green-500 rounded-lg flex items-center justify-center">
@@ -406,8 +593,8 @@
             </div>
           </div>
 
-          <!-- Étape 3: Variantes -->
-          <div v-show="currentStep === 2" class="space-y-6">
+          <!-- Étape 5: Variantes -->
+          <div v-show="currentStep === 4" class="space-y-6">
             <!-- Couleurs -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -528,8 +715,8 @@
             </div>
           </div>
 
-          <!-- Étape 4: Images -->
-          <div v-show="currentStep === 3" class="space-y-6">
+          <!-- Étape 6: Images -->
+          <div v-show="currentStep === 5" class="space-y-6">
             <!-- Images -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -800,6 +987,8 @@ const cloudinaryConfig = {
 
 const steps = [
   { title: 'Informations' },
+  { title: 'Spécifications' }, // Added vehicle specifications step
+  { title: 'Techniques' },     // Added technical characteristics step  
   { title: 'Prix & Stock' },
   { title: 'Variantes' },
   { title: 'Images' }
@@ -815,8 +1004,8 @@ const productData = reactive({
   subsubcategory_id: '',
   subsubsubcategory_id: '', // Nouveau champ pour le 4ème niveau
   tags: '',
-  unit_price: null,
-  stock: null,
+  unit_price: '', // Changed to string to handle empty input better
+  stock: '',     // Changed to string to handle empty input better
   unit_type: 'quantity',
   hasWholesalePrice: false,
   wholesale_price: null,
@@ -828,7 +1017,16 @@ const productData = reactive({
   imageUrls: [],
   video: null,
   videoUrl: '',
-  is_active: true
+  is_active: true,
+  vehicle_condition: '',
+  vehicle_make: '',
+  vehicle_model: '',
+  drive_type: '',
+  vehicle_year: null,
+  fuel_type: '',
+  transmission_type: '',
+  engine_brand: '',
+  vehicle_mileage: null
 })
 
 // Types de tailles
@@ -904,13 +1102,16 @@ const availableSubSubSubcategories = computed(() => {
   return []
 })
 
-// Validation améliorée pour l'étape 2
 const canProceedToNextStep = computed(() => {
   switch (currentStep.value) {
     case 0:
       return !!(productData.name && productData.category_id && productData.subcategory_id)
     case 1:
-      // Validation plus stricte pour l'étape 2
+      return true // Vehicle specifications are optional
+    case 2:
+      return true // Technical characteristics are optional
+    case 3:
+      // Validation for price and stock step (moved from step 1)
       const hasValidPrice = productData.unit_price !== null && 
                            productData.unit_price !== '' && 
                            productData.unit_price !== undefined && 
@@ -921,19 +1122,11 @@ const canProceedToNextStep = computed(() => {
                            productData.stock !== undefined && 
                            Number(productData.stock) >= 0
       
-      console.log('Validation étape 2:', {
-        unit_price: productData.unit_price,
-        stock: productData.stock,
-        hasValidPrice,
-        hasValidStock,
-        canProceed: hasValidPrice && hasValidStock
-      })
-      
       return hasValidPrice && hasValidStock
-    case 2:
-      return true // Les variantes sont optionnelles
-    case 3:
-      return true // Les images sont optionnelles
+    case 4:
+      return true // Variants are optional
+    case 5:
+      return true // Images are optional
     default:
       return false
   }
@@ -1199,7 +1392,7 @@ const handleNextStep = async () => {
   error.value = null
   
   if (!canProceedToNextStep.value) {
-    if (currentStep.value === 1) {
+    if (currentStep.value === 3) { // Check for the price/stock step
       error.value = 'Veuillez remplir correctement le prix unitaire et le stock avant de continuer'
     } else {
       error.value = 'Veuillez remplir tous les champs obligatoires'
@@ -1360,7 +1553,6 @@ const prepareDataForSubmission = () => {
     subcategory_id: productData.subcategory_id,
     subsubcategory_id: productData.subsubcategory_id,
     subsubsubcategory_id: productData.subsubsubcategory_id,
-    subsubsubcategory_id: productData.subsubsubcategory_id,
     unit_price: parseFloat(productData.unit_price),
     stock: parseInt(productData.stock),
     unit_type: productData.unit_type,
@@ -1368,7 +1560,17 @@ const prepareDataForSubmission = () => {
     is_active: productData.is_active,
     colors: productData.colors,
     sizes: productData.sizes,
-    size_type: productData.sizeType
+    size_type: productData.sizeType,
+    // Vehicle specific fields
+    vehicle_condition: productData.vehicle_condition,
+    vehicle_make: productData.vehicle_make,
+    vehicle_model: productData.vehicle_model,
+    drive_type: productData.drive_type,
+    vehicle_year: productData.vehicle_year,
+    fuel_type: productData.fuel_type,
+    transmission_type: productData.transmission_type,
+    engine_brand: productData.engine_brand,
+    vehicle_mileage: productData.vehicle_mileage
   }
   
   // N'inclure la description détaillée que si elle est activée

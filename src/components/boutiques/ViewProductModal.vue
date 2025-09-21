@@ -16,7 +16,7 @@
       </div>
 
       <!-- Header fixe -->
-      <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
+      <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:py-6 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
             <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
@@ -50,6 +50,21 @@
               <InfoIcon class="w-4 h-4 sm:w-5 sm:h-5" />
               <span class="hidden sm:inline">Détails du produit</span>
               <span class="sm:hidden">Détails</span>
+            </button>
+            <!-- Ajout de l'onglet Spécifications Véhicule -->
+            <button
+              v-if="hasVehicleSpecs"
+              @click="activeTab = 'vehicle'"
+              :class="[
+                'flex-1 flex items-center justify-center space-x-2 py-2 sm:py-3 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200',
+                activeTab === 'vehicle'
+                  ? 'bg-orange-500 text-white shadow-lg transform scale-[1.02]'
+                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+              ]"
+            >
+              <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5" />
+              <span class="hidden sm:inline">Spécifications</span>
+              <span class="sm:hidden">Specs</span>
             </button>
             <button
               @click="activeTab = 'media'"
@@ -382,6 +397,139 @@
               <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">Ce produit n'a pas d'images ou de vidéos associées. Vous pouvez en ajouter en modifiant le produit.</p>
             </div>
           </div>
+
+          <!-- Onglet 3: Spécifications Véhicule -->
+          <div v-else-if="activeTab === 'vehicle'" class="space-y-4 sm:space-y-8">
+            <!-- Informations générales du véhicule -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                Informations Véhicule
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-if="product.vehicle_condition" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">État</div>
+                  <div class="font-semibold text-gray-900 capitalize">
+                    <span v-if="product.vehicle_condition === 'new'" class="text-green-600">Neuf</span>
+                    <span v-else-if="product.vehicle_condition === 'used'" class="text-blue-600">Occasion</span>
+                    <span v-else-if="product.vehicle_condition === 'refurbished'" class="text-orange-600">Reconditionné</span>
+                    <span v-else>{{ product.vehicle_condition }}</span>
+                  </div>
+                </div>
+                <div v-if="product.vehicle_make" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Marque</div>
+                  <div class="font-semibold text-gray-900">{{ product.vehicle_make }}</div>
+                </div>
+                <div v-if="product.vehicle_model" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Modèle</div>
+                  <div class="font-semibold text-gray-900">{{ product.vehicle_model }}</div>
+                </div>
+                <div v-if="product.vehicle_year" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Année</div>
+                  <div class="font-semibold text-gray-900">{{ product.vehicle_year }}</div>
+                </div>
+                <div v-if="product.vehicle_mileage !== null && product.vehicle_mileage !== undefined" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Kilométrage</div>
+                  <div class="font-semibold text-gray-900">
+                    {{ formatMileage(product.vehicle_mileage) }}
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Caractéristiques techniques -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <SettingsIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                Caractéristiques Techniques
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Type de transmission</div>
+                  <div class="font-semibold text-gray-900">{{ product.drive_type }}</div>
+                </div>
+                <div v-if="product.fuel_type" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Type de carburant</div>
+                  <div class="font-semibold text-gray-900 capitalize flex items-center">
+                    <div class="w-3 h-3 rounded-full mr-2" :class="getFuelTypeColor(product.fuel_type)"></div>
+                    {{ getFuelTypeLabel(product.fuel_type) }}
+                  </div>
+                </div>
+                <div v-if="product.transmission_type" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Boîte de vitesses</div>
+                  <div class="font-semibold text-gray-900 capitalize">
+                    {{ product.transmission_type === 'automatic' ? 'Automatique' : 'Manuelle' }}
+                  </div>
+                </div>
+                <div v-if="product.engine_brand" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Marque du moteur</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_brand }}</div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Spécifications avancées -->
+            <div v-if="hasAdvancedSpecs" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <CogIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                Spécifications Avancées
+              </h4>
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <!-- Graphique de performance (simulé) -->
+                <div class="bg-gradient-to-br from-blue-50 to-indigo-50 rounded-xl p-6">
+                  <h5 class="font-semibold text-gray-900 mb-4">Performance</h5>
+                  <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm text-gray-600">Efficacité énergétique</span>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div class="h-full bg-green-500 rounded-full" :style="{ width: getEfficiencyPercentage() + '%' }"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">{{ getEfficiencyPercentage() }}%</span>
+                      </div>
+                    </div>
+                    <div class="flex justify-between items-center">
+                      <span class="text-sm text-gray-600">Durabilité</span>
+                      <div class="flex items-center space-x-2">
+                        <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
+                          <div class="h-full bg-blue-500 rounded-full" :style="{ width: getDurabilityPercentage() + '%' }"></div>
+                        </div>
+                        <span class="text-sm font-medium text-gray-900">{{ getDurabilityPercentage() }}%</span>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Résumé des caractéristiques -->
+                <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6">
+                  <h5 class="font-semibold text-gray-900 mb-4">Résumé</h5>
+                  <div class="space-y-2 text-sm">
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Âge du véhicule</span>
+                      <span class="font-medium">{{ getVehicleAge() }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Catégorie</span>
+                      <span class="font-medium">{{ getVehicleCategory() }}</span>
+                    </div>
+                    <div class="flex justify-between">
+                      <span class="text-gray-600">Usage recommandé</span>
+                      <span class="font-medium">{{ getRecommendedUsage() }}</span>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Message si aucune spécification véhicule -->
+            <div v-if="!hasVehicleSpecs" class="text-center py-12 sm:py-16">
+              <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
+                <TruckIcon class="w-8 h-8 sm:w-12 sm:h-12 text-gray-400" />
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Aucune spécification véhicule</h3>
+              <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">Ce produit n'a pas de spécifications véhicule associées.</p>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -482,7 +630,10 @@ import {
   Copy as CopyIcon,
   Trash as TrashIcon,
   ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  Truck as TruckIcon,
+  Settings as SettingsIcon,
+  Cog as CogIcon
 } from 'lucide-vue-next'
 
 const props = defineProps(['product'])
@@ -635,6 +786,105 @@ const handleBackdropClick = (event) => {
   if (event.target === event.currentTarget) {
     emit('close')
   }
+}
+
+const hasVehicleSpecs = computed(() => {
+  return props.product && (
+    props.product.vehicle_condition ||
+    props.product.vehicle_make ||
+    props.product.vehicle_model ||
+    props.product.drive_type ||
+    props.product.vehicle_year ||
+    props.product.fuel_type ||
+    props.product.transmission_type ||
+    props.product.engine_brand ||
+    (props.product.vehicle_mileage !== null && props.product.vehicle_mileage !== undefined)
+  )
+})
+
+const hasAdvancedSpecs = computed(() => {
+  return props.product && (
+    props.product.fuel_type ||
+    props.product.vehicle_year ||
+    props.product.engine_brand
+  )
+})
+
+const formatMileage = (mileage) => {
+  if (mileage === 0) return 'Neuf (0 km)'
+  if (mileage >= 200000) return '200,000+ km'
+  return new Intl.NumberFormat('fr-FR').format(mileage) + ' km'
+}
+
+const getFuelTypeLabel = (fuelType) => {
+  const labels = {
+    'diesel': 'Diesel',
+    'electric': 'Électrique',
+    'hybrid': 'Hybride',
+    'cng': 'GNC',
+    'lng': 'GNL',
+    'hydrogen': 'Hydrogène',
+    'unknown': 'Inconnu'
+  }
+  return labels[fuelType] || fuelType
+}
+
+const getFuelTypeColor = (fuelType) => {
+  const colors = {
+    'diesel': 'bg-gray-500',
+    'electric': 'bg-green-500',
+    'hybrid': 'bg-blue-500',
+    'cng': 'bg-yellow-500',
+    'lng': 'bg-purple-500',
+    'hydrogen': 'bg-cyan-500',
+    'unknown': 'bg-gray-400'
+  }
+  return colors[fuelType] || 'bg-gray-400'
+}
+
+const getVehicleAge = () => {
+  if (!props.product?.vehicle_year) return 'N/A'
+  const currentYear = new Date().getFullYear()
+  const age = currentYear - props.product.vehicle_year
+  if (age === 0) return 'Neuf'
+  if (age === 1) return '1 an'
+  return `${age} ans`
+}
+
+const getVehicleCategory = () => {
+  if (!props.product?.drive_type) return 'Standard'
+  if (props.product.drive_type.includes('8X')) return 'Poids lourd'
+  if (props.product.drive_type.includes('6X')) return 'Camion moyen'
+  if (props.product.drive_type.includes('4X')) return 'Camion léger'
+  return 'Véhicule utilitaire'
+}
+
+const getRecommendedUsage = () => {
+  if (!props.product?.drive_type) return 'Usage général'
+  if (props.product.drive_type.includes('8X')) return 'Transport lourd'
+  if (props.product.drive_type.includes('6X')) return 'Livraison urbaine'
+  if (props.product.drive_type.includes('4X')) return 'Distribution'
+  return 'Usage polyvalent'
+}
+
+const getEfficiencyPercentage = () => {
+  if (!props.product) return 70
+  let efficiency = 70
+  if (props.product.fuel_type === 'electric') efficiency += 20
+  if (props.product.fuel_type === 'hybrid') efficiency += 15
+  if (props.product.vehicle_year && props.product.vehicle_year > 2020) efficiency += 10
+  if (props.product.engine_brand === 'weichai') efficiency += 5
+  return Math.min(efficiency, 95)
+}
+
+const getDurabilityPercentage = () => {
+  if (!props.product) return 75
+  let durability = 75
+  if (props.product.vehicle_condition === 'new') durability += 20
+  if (props.product.vehicle_condition === 'refurbished') durability += 10
+  if (props.product.engine_brand === 'man') durability += 10
+  if (props.product.vehicle_mileage && props.product.vehicle_mileage < 50000) durability += 5
+  return Math.min(durability, 95)
 }
 </script>
 

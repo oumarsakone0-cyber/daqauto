@@ -85,9 +85,9 @@
       <FeaturedSupplierSection />
       -->
 
-      <!-- 3. Section Deal du Jour -->
+      <!-- 3. Section Deal du Jour 
       <DealsSection />
-
+       -->
       <!-- 4. Section Produits Recommandés -->
       <RecommendedProductsSection />
 

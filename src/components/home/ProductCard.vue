@@ -43,6 +43,10 @@
           <span class="stars">⭐⭐⭐⭐⭐</span>
           <span class="rating-count">({{ product.views || product.reviews || 0 }})</span>
         </div>
+        <div class="alibaba-action-buttons">
+          <button class="alibaba-contact-btn" @click.stop="handleContactClick">Contacter</button>
+          <button class="alibaba-chat-btn" @click.stop="handleChatClick">Chat now</button>
+        </div>
       </div>
     </div>
     
@@ -775,5 +779,40 @@
         height: 50px; /* au lieu de 30px */
         margin: 5px
     }
+
+    .mobile-grid-product .alibaba-action-buttons {
+  display: flex;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+.mobile-grid-product .alibaba-contact-btn,
+.mobile-grid-product .alibaba-chat-btn {
+  flex: 1;
+  padding: 8px;
+  font-size: 12px;
+  border-radius: 4px;
+  border: 1px solid #fe7900e8;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.mobile-grid-product .alibaba-contact-btn {
+  background-color: white;
+  color: #fe7900e8;
+}
+
+.mobile-grid-product .alibaba-chat-btn {
+  background-color: #fe7900e8;
+  color: white;
+}
+
+.mobile-grid-product .alibaba-action-buttons {
+  display: flex;
+  flex-direction: row; /* ou column si tu veux vertical */
+  gap: 8px;
+  margin-top: 12px;
+  position: static; /* important pour éviter les problèmes d'absolute */
+}
     
     </style>
