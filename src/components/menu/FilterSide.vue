@@ -728,8 +728,8 @@ export default {
 }
 
 .checkbox-item input[type="checkbox"]:checked + .checkmark {
-  background: #1890ff;
-  border-color: #1890ff;
+  background: #fe9700;
+  border-color: #fe9700;
 }
 
 .checkbox-item input[type="checkbox"]:checked + .checkmark::after {
@@ -752,7 +752,7 @@ export default {
   width: 6px;
   height: 6px;
   border-radius: 50%;
-  background: #1890ff;
+  background: #fe9700;
 }
 
 .checkbox-label, .radio-label {
@@ -786,13 +786,13 @@ export default {
 }
 
 .sort-btn:hover {
-  border-color: #1890ff;
-  color: #1890ff;
+  border-color: #fe9700;
+  color: #fe9700;
 }
 
 .sort-btn.active {
-  background: #1890ff;
-  border-color: #1890ff;
+  background: #fe9700;
+  border-color: #fe9700;
   color: white;
 }
 
@@ -801,14 +801,16 @@ export default {
 }
 
 .price-inputs {
-  display: flex;
+  display: inline-block;
   align-items: center;
   gap: 8px;
 }
 
 .price-input {
   flex: 1;
+  color: black;
   padding: 6px 8px;
+  margin-bottom: 0.75rem;
   border: 1px solid #d9d9d9;
   border-radius: 4px;
   font-size: 12px;
@@ -817,7 +819,7 @@ export default {
 
 .price-input:focus {
   outline: none;
-  border-color: #1890ff;
+  border-color: #fe9700;
 }
 
 .price-separator {
@@ -843,13 +845,13 @@ export default {
 }
 
 .preset-btn:hover {
-  border-color: #1890ff;
-  color: #1890ff;
+  border-color: #fe9700;
+  color: #fe9700;
 }
 
 .preset-btn.active {
-  background: #1890ff;
-  border-color: #1890ff;
+  background: #fe9700;
+  border-color: #fe9700;
   color: white;
 }
 
@@ -916,7 +918,7 @@ export default {
   width: 14px;
   height: 14px;
   border: 2px solid #f3f3f3;
-  border-top: 2px solid #1890ff;
+  border-top: 2px solid #fe9700;
   border-radius: 50%;
   animation: spin 0.8s linear infinite;
 }

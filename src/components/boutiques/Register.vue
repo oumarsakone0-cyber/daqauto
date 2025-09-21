@@ -10,7 +10,7 @@
             </svg> -->
           </div>
           <h2 class="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h2>
-          <p class="text-gray-600">Rejoignez Ali Adjamé dès aujourd'hui</p>
+          <p class="text-gray-600">Rejoignez Daq Auto dès aujourd'hui</p>
         </div>
   
         <!-- Form -->
@@ -577,7 +577,7 @@
         <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
           <h3 class="text-lg font-medium text-gray-900 mb-4">Conditions d'utilisation</h3>
           <div class="text-sm text-gray-600 space-y-4">
-            <p>En utilisant Ali Adjamé, vous acceptez les conditions suivantes...</p>
+            <p>En utilisant Daq Auto, vous acceptez les conditions suivantes...</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <!-- Ajoutez ici le contenu complet des conditions -->
           </div>
