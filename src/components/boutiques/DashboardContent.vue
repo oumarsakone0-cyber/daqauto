@@ -91,7 +91,7 @@
             <button 
            
               @click="handleLogout()"
-              class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium btn-deconnexion"
+              class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-deconnexion"
             >
             <LogoutIcon class="w-4 h-4 mr-2 text-white-500 cursor-pointer" />
               <span >Déconnexion</span>
@@ -2261,7 +2261,9 @@ const handleLogout = async () => {
       {
         confirmButtonText: 'Oui',
         cancelButtonText: 'Annuler',
-        type: 'warning'
+        type: 'warning',
+        confirmButtonColor: "#fe9700",
+
       }
     )
 
@@ -2386,6 +2388,23 @@ onUnmounted(() => {
 
 <style scoped>
 /* Couleurs personnalisées */
+.btn-confirm-custom {
+  background: var(--primary-color, #fe7900);
+  color: #fff;
+  border: none;
+}
+.btn-confirm-custom:hover {
+  background: #ff5a01;
+}
+
+.btn-cancel-custom {
+  background: #e8e8e8;
+  color: #333;
+  border: none;
+}
+.btn-cancel-custom:hover {
+  background: #d1d5db;
+}
 .bg-degrade-orange {
  background: linear-gradient(160deg, black , #fc4618 , black);
 }

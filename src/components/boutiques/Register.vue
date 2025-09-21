@@ -3,10 +3,11 @@
       <div class="max-w-md w-full space-y-8">
         <!-- Header -->
         <div class="text-center">
-          <div class="mx-auto h-16 w-16 bg-orange rounded-full flex items-center justify-center mb-4">
-            <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M18 9v3m0 0v3m0-3h3m-3 0h-3m-2-5a4 4 0 11-8 0 4 4 0 018 0zM3 20a6 6 0 0112 0v1H3v-1z"/>
-            </svg>
+          <div class="mx-auto h-16 w-38  rounded-full flex items-center justify-center mb-4 ">
+            <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
+            <!-- <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+            </svg> -->
           </div>
           <h2 class="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h2>
           <p class="text-gray-600">Rejoignez Ali Adjamé dès aujourd'hui</p>
@@ -122,7 +123,7 @@
                     type="text"
                     required
                     :class="[
-                      'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                      'input-style',
                       validationErrors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="Votre nom complet"
@@ -150,7 +151,7 @@
                     type="email"
                     required
                     :class="[
-                      'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                      'input-style',
                       validationErrors.email ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="exemple@email.com"
@@ -179,7 +180,7 @@
                     type="tel"
                     required
                     :class="[
-                      'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                      'input-style',
                       validationErrors.phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="+225 XX XX XX XX XX"
@@ -210,7 +211,7 @@
                     type="text"
                     required
                     :class="[
-                      'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                      'input-style',
                       validationErrors.storeName ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="Nom de votre magasin"
@@ -231,7 +232,7 @@
                   v-model="registerData.businessType"
                   required
                   :class="[
-                    'block w-full px-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                    'input-style',
                     validationErrors.businessType ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   ]"
                 >
@@ -269,7 +270,7 @@
                     v-model="registerData.market"
                     required
                     :class="[
-                      'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors appearance-none',
+                      'input-style',
                       validationErrors.market ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                   >
@@ -310,7 +311,7 @@
                     required
                     rows="3"
                     :class="[
-                      'block w-full pl-10 pr-3 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors resize-none',
+                      'input-style',
                       validationErrors.storeAddress ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="Adresse précise dans le marché (ex: Allée 3, Boutique 25)"
@@ -330,7 +331,8 @@
               <!-- Mot de passe -->
               <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                  Mot de passe *
+                  Mot de passe 
+                  <span style="color: #fe9700;">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -344,7 +346,7 @@
                     :type="showPassword ? 'text' : 'password'"
                     required
                     :class="[
-                      'block w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                      'input-style',
                       validationErrors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="Votre mot de passe"
@@ -352,7 +354,7 @@
                   <button
                     type="button"
                     @click="showPassword = !showPassword"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange-500"
                   >
                     <svg v-if="showPassword" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
@@ -388,7 +390,7 @@
               <!-- Confirmation du mot de passe -->
               <div>
                 <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
-                  Confirmer le mot de passe *
+                  Confirmer le mot de passe <span style="color: #fe9700;">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -402,7 +404,7 @@
                     :type="showConfirmPassword ? 'text' : 'password'"
                     required
                     :class="[
-                      'block w-full pl-10 pr-10 py-3 border rounded-lg focus:outline-none focus:ring-2 focus:ring-orange focus:border-orange transition-colors',
+                      'input-style',
                       validationErrors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
                     placeholder="Confirmez votre mot de passe"
@@ -433,16 +435,16 @@
                     id="acceptTerms"
                     v-model="registerData.acceptTerms"
                     type="checkbox"
+                    class="checkbox-style"
                     required
-                    class="mt-1 h-4 w-4 text-orange focus:ring-orange border-gray-300 rounded"
                   >
                   <label for="acceptTerms" class="ml-2 block text-sm text-gray-700">
                     J'accepte les 
-                    <button type="button" @click="showTerms = true" class="text-orange hover:text-orange-600 font-medium">
+                    <button type="button" @click="showTerms = true" class="text-orange hover:text-orange-600 font-medium " style="background-color: transparent;border: none;">
                       conditions d'utilisation
                     </button>
                     et la 
-                    <button type="button" @click="showPrivacy = true" class="text-orange hover:text-orange-600 font-medium">
+                    <button type="button" @click="showPrivacy = true" class="text-orange hover:text-orange-600 font-medium" style="background-color: transparent;border: none;">
                       politique de confidentialité
                     </button>
                   </label>
@@ -453,7 +455,7 @@
                     id="acceptMarketing"
                     v-model="registerData.acceptMarketing"
                     type="checkbox"
-                    class="mt-1 h-4 w-4 text-orange focus:ring-orange border-gray-300 rounded"
+                    class="checkbox-style"
                   >
                   <label for="acceptMarketing" class="ml-2 block text-sm text-gray-700">
                     J'accepte de recevoir des emails marketing et des notifications (optionnel)
@@ -482,6 +484,7 @@
                 v-if="currentStep > 0"
                 @click="currentStep--"
                 type="button"
+                style="background-color: lightgrey; border: none; color: white;"
                 class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
               >
                 Précédent
@@ -504,8 +507,11 @@
               <button 
                 v-else
                 type="submit"
-                :disabled="isLoading"
-                class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+
+                :disabled="isLoading || !registerData.acceptTerms"
+                
+                style="background-color: #10b981;"
+                class="px-6 py-2  text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -942,16 +948,49 @@
   </script>
   
   <style scoped>
+
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.5rem; 
+  padding: 0.80rem 0.75rem; 
+  padding-left: 2.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s; 
+  resize: none;
+}
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
+}
+
+.checkbox-style {
+  width: 1.25rem; 
+  height: 1.25rem; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.25rem; 
+  color: #fe7900 ;
+  transition: background-color 0.2s, border-color 0.2s; 
+}
+.checkbox-style:focus {
+  box-shadow: 0 0 0 1px #fe7900;
+  border-color: #fe7900; 
+}
+.checkbox-style:checked {
+  background-color: #fe7900; 
+  border-color: #fe7900; 
+}
+  
   .bg-orange {
-    background-color: #F65A11;
+    background-color: #fe7900;
   }
   
   .text-orange {
-    color: #F65A11;
+    color: #fe7900;
   }
   
   .border-orange {
-    border-color: #F65A11;
+    border-color: #fe7900;
   }
   
   .hover\:bg-orange-600:hover {
@@ -967,7 +1006,7 @@
   }
   
   .focus\:border-orange:focus {
-    border-color: #F65A11;
+    border-color: #fe7900;
   }
   
   /* Style pour le select avec icône */
