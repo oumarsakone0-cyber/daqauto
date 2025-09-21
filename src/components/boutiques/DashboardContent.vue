@@ -2403,13 +2403,13 @@ onUnmounted(() => {
 
 
 .btn-degrade-ring{
-background: #02b602;
+background: #18bd85;
 color: white ;
 transition: background 0.3s;
 }
 .btn-degrade-ring:hover{
-background:#029602;
-border-color:#029602;
+background:#10976a;
+border-color:#10976a;
 }
 
 .btn-deconnexion{
