@@ -197,11 +197,11 @@
   }
   
   .tab-button:hover {
-    color: #1890ff;
+    color: #fe9700;
   }
   
   .tab-button.active {
-    color: #1890ff;
+    color: #fe9700;
     font-weight: 600;
   }
   
@@ -212,7 +212,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: #1890ff;
+    background: #fe9700;
   }
   
   .tab-content {
@@ -314,7 +314,7 @@
   .average-rating {
     font-size: 48px;
     font-weight: 700;
-    color: #ff4d4f;
+    color: #fe9700;
     line-height: 1;
     margin-bottom: 8px;
   }
@@ -329,7 +329,7 @@
   }
   
   .star.filled {
-    color: #fadb14;
+    color: #fe9700;
   }
   
   .total-reviews {
@@ -354,7 +354,7 @@
     align-items: center;
     gap: 8px;
     padding: 10px 20px;
-    background: #1890ff;
+    background: #fe9700;
     color: white;
     border: none;
     border-radius: 6px;
@@ -365,7 +365,7 @@
   }
   
   .write-review-btn:hover {
-    background: #40a9ff;
+    background: #fe9800e6;
   }
   
   .shipping-info-section,
@@ -410,7 +410,7 @@
   .method-cost {
     font-size: 15px;
     font-weight: 600;
-    color: #ff4d4f;
+    color: #fe9700;
   }
   
   .payment-methods {

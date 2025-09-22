@@ -83,6 +83,7 @@
     margin-bottom: 4px;
     display: -webkit-box;
     -webkit-line-clamp: 2;
+    line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
     text-overflow: ellipsis;
@@ -91,7 +92,7 @@
   .store-product-price {
     font-size: 14px;
     font-weight: 600;
-    color: #ff4d4f;
+    color: #fe9700;
   }
   
   @media (max-width: 992px) {

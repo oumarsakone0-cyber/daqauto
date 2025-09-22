@@ -522,9 +522,8 @@ const handleForgotPassword = async () => {
 }
 .input-style:focus {
   border-color: #fe7900; 
- zz box-shadow: 0 0 0 0.5px #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
 }
-
 .checkbox-style {
   width: 1.25rem; 
   height: 1.25rem; 

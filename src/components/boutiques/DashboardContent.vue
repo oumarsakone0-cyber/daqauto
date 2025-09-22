@@ -2418,6 +2418,7 @@ onUnmounted(() => {
   background: linear-gradient(90deg, #ff5a01, #fe7900);
   color: white;
   border-color: #ff5a01;
+  opacity: 0.8;
 }
 
 

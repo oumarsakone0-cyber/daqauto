@@ -41,7 +41,7 @@
           <!-- Export dropdown -->
           <div class="relative">
             <button 
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 hover:opacity-80 bg-degrade-orange"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2  bg-degrade-orange"
             >
               <span class="mr-2">
                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="7 10 12 15 17 10"></polyline><line x1="12" x2="12" y1="15" y2="3"></line></svg>
@@ -706,11 +706,23 @@ export default {
 .bg-degrade-orange {
   background: linear-gradient(90deg, #fe7900, #ff5a01);
   color: white;
+  transition: background 0.3s;
+}
+
+.bg-degrade-orange:hover{
+  background-color: #ff5a01;
+  border: none;
+  opacity: 0.8;
 }
 
 .bg-degrade-ring {
-  background: linear-gradient(90deg, #7d3aec, #620cec);
-  color: white;
+  background: #18bd85;
+  color: white ;
+transition: background 0.3s;
+}
+.bg-degrade-ring:hover{
+  background:#10976a;
+border-color:#10976a;
 }
 .bg-orange-500 {
   background-color: #F65A11;
