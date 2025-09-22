@@ -130,7 +130,7 @@
     
     <div class="trade-assurance">
       <div class="trade-assurance-icon">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
           <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
         </svg>
       </div>
@@ -262,7 +262,7 @@ const prevThumbnailSet = () => {
 }
 
 .main-image-container:hover {
-  border-color: #1890ff;
+  border-color: #fe9700;
 }
 
 .image-container {
@@ -384,13 +384,13 @@ const prevThumbnailSet = () => {
 }
 
 .thumbnail:hover {
-  border-color: #1890ff;
+  border-color: #fe9700;
   transform: translateY(-2px);
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
 .thumbnail.active {
-  border-color: #1890ff;
+  border-color: #fe9700;
   box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.2);
 }
 
@@ -415,8 +415,8 @@ const prevThumbnailSet = () => {
 }
 
 .thumbnail-nav:hover:not(:disabled) {
-  border-color: #1890ff;
-  color: #1890ff;
+  border-color: #fe9700;
+  color: #fe9700;
   transform: scale(1.1);
 }
 
@@ -447,8 +447,8 @@ const prevThumbnailSet = () => {
 }
 
 .gallery-action-btn:hover {
-  border-color: #1890ff;
-  color: #1890ff;
+  border-color: #fe9700;
+  color: #fe9700;
 }
 
 .gallery-action-btn.is-favorite {
@@ -524,7 +524,7 @@ const prevThumbnailSet = () => {
 }
 
 .mobile-thumbnail.active {
-  border-color: #1890ff;
+  border-color: #fe9700;
 }
 
 .mobile-thumbnail img {
@@ -551,7 +551,7 @@ const prevThumbnailSet = () => {
   height: 40px;
   background: rgba(24, 144, 255, 0.1);
   border-radius: 50%;
-  color: #1890ff;
+  color: #fe9700;
 }
 
 .trade-assurance-title {

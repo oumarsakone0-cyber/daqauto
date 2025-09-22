@@ -872,7 +872,7 @@ export default {
 .clear-all-btn {
   background: none;
   border: none;
-  color: #ff6b35;
+  color: #fe9700;
   cursor: pointer;
   font-size: 12px;
   text-decoration: underline;

@@ -290,7 +290,7 @@
   }
   
   .star.filled {
-    color: #fadb14;
+    color: #fe9700;
   }
   
   .rating-value {
@@ -313,7 +313,7 @@
   .price-value {
     font-size: 20px;
     font-weight: 700;
-    color: #ff4d4f;
+    color: #fe9700;
     margin-bottom: 8px;
   }
   
@@ -453,6 +453,7 @@
   .quantity-input {
     width: 80px;
     height: 44px;
+    color: black;
     border: 1px solid #d9d9d9;
     border-left: none;
     border-right: none;
@@ -481,7 +482,7 @@
   .total-item.total {
     font-size: 16px;
     font-weight: 700;
-    color: #ff4d4f;
+    color: #fe9700;
     padding-top: 8px;
     border-top: 1px solid #e8e8e8;
   }

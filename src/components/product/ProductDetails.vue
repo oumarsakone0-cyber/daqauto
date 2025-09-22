@@ -300,7 +300,7 @@
   
   .badge.hot {
     background: #fff2e8;
-    color: #fa541c;
+    color: #fe9700;
   }
   
   .badge.ready {
@@ -339,7 +339,7 @@
   }
   
   .star.filled {
-    color: #fadb14;
+    color: #fe9700 ;
   }
   
   .rating-value {
@@ -390,7 +390,7 @@
   .price-value {
     font-size: 24px;
     font-weight: 700;
-    color: #ff4d4f;
+    color: #fe9700;
   }
   
   .price-table {
@@ -446,6 +446,7 @@
     align-items: center;
     height: 40px;
     margin-bottom: 8px;
+    color: gray;
   }
   
   .quantity-btn {
@@ -470,8 +471,8 @@
   }
   
   .quantity-btn:hover:not(:disabled) {
-    border-color: #1890ff;
-    color: #1890ff;
+    border-color: #fe9700;
+    color: #fe9700;
   }
   
   .quantity-btn:disabled {
@@ -511,7 +512,7 @@
   .total-value {
     font-size: 24px;
     font-weight: 700;
-    color: #ff4d4f;
+    color: #fe9700;
   }
   
   .shipping-cost-simple {
@@ -538,7 +539,7 @@
   .shipping-cost-amount {
     font-size: 16px;
     font-weight: 700;
-    color: #1890ff;
+    color: #fe9700;
   }
   
   .shipping-cost-details {
@@ -605,8 +606,9 @@
   
   .chat-btn {
     background: #fff;
-    color: #1890ff;
-    border: 1px solid #1890ff;
+    color: #fe9700;
+    border: 1px solid #fe9700
+    ;
     flex: 1;
   }
   
@@ -615,13 +617,13 @@
   }
   
   .order-btn {
-    background: #ff4d4f;
+    background: #fe9700;
     color: white;
     flex: 2;
   }
   
   .order-btn:hover {
-    background: #ff7875;
+    background: #fe9700;
   }
   
   .trade-assurance {
@@ -642,7 +644,7 @@
     height: 40px;
     background: rgba(24, 144, 255, 0.1);
     border-radius: 50%;
-    color: #1890ff;
+    color: #fe9700;
   }
   
   .trade-assurance-title {

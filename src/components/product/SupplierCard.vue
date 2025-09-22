@@ -230,18 +230,18 @@
   }
   
   .supplier-action-btn.secondary:hover {
-    border-color: #1890ff;
-    color: #1890ff;
+    border-color: #fe9700;
+    color: #fe9700;
   }
   
   .supplier-action-btn.primary {
-    background: #1890ff;
+    background: #fe9700;
     color: #fff;
     border: none;
   }
   
   .supplier-action-btn.primary:hover {
-    background: #40a9ff;
+    background: #fe9800dd;
   }
   
   .supplier-guarantee {

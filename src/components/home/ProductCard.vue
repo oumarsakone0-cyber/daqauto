@@ -83,7 +83,7 @@
               class="alibaba-arrow-right" 
               @click.stop="nextImage"
             >
-              <svg width="10" height="17" viewBox="0 0 10 17" fill="none">
+              <svg width="10" height="17" viewBox="0 0 10 17" fill="none"  >
                 <path d="M1 1L9 8.5L1 16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
               </svg>
             </div>
@@ -475,6 +475,7 @@
       width: 24px;
       height: 24px;
       background: rgba(0, 0, 0, 0.5);
+      color: #fe7900;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -689,7 +690,7 @@
     .alibaba-chat-btn {
       flex: 1;
       padding: 8px 12px;
-      border: 1px solid #fe7900e8;
+      border: 1px solid #fe7900;
       border-radius: 4px;
       font-size: 12px;
       font-weight: 500;
@@ -699,16 +700,16 @@
     
     .alibaba-contact-btn {
       background: white;
-      color: #fe7900e8;
+      color: #fe7900;
     }
     
     .alibaba-contact-btn:hover {
-      background: #fe7900e8;
+      background: #fe7900;
       color: white;
     }
     
     .alibaba-chat-btn {
-      background: #fe7900e8;
+      background: #fe7900;
       color: white;
     }
     
@@ -792,18 +793,18 @@
   padding: 8px;
   font-size: 12px;
   border-radius: 4px;
-  border: 1px solid #fe7900e8;
+  border: 1px solid #fe7900;
   font-weight: 500;
   cursor: pointer;
 }
 
 .mobile-grid-product .alibaba-contact-btn {
   background-color: white;
-  color: #fe7900e8;
+  color: #fe7900;
 }
 
 .mobile-grid-product .alibaba-chat-btn {
-  background-color: #fe7900e8;
+  background-color: #fe7900;
   color: white;
 }
 

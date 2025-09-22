@@ -1190,7 +1190,7 @@ import CartBadge from '../product/CartBadge.vue'
     width: 40px;
     height: 40px;
     border: 4px solid #f3f3f3;
-    border-top: 4px solid #1890ff;
+    border-top: 4px solid #fe9700;
     border-radius: 50%;
     animation: spin 1s linear infinite;
     margin-bottom: 20px;
@@ -1213,7 +1213,7 @@ import CartBadge from '../product/CartBadge.vue'
   .retry-btn {
     margin-top: 16px;
     padding: 10px 20px;
-    background: #1890ff;
+    background: #fe9700;
     color: white;
     border: none;
     border-radius: 6px;
@@ -1222,7 +1222,7 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   .retry-btn:hover {
-    background: #40a9ff;
+    background: #fe9700;
   }
   
   /* Mobile Header */
@@ -1279,7 +1279,7 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   .header-action-btn.is-favorite {
-    color: #ff4d4f;
+    color: #fe9700;
   }
   
   /* Desktop Header */
@@ -1301,14 +1301,14 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   .breadcrumb-link {
-    color: #1890ff;
+    color: #fe9700;
     text-decoration: none;
     transition: color 0.3s ease;
   }
   
   .breadcrumb-link:hover {
     text-decoration: underline;
-    color: #40a9ff;
+    color: #fe9700;
   }
   
   .breadcrumb-separator {
@@ -1397,7 +1397,7 @@ import CartBadge from '../product/CartBadge.vue'
   
   .mobile-action-btn.primary {
     flex: 2;
-    background: #ff4d4f;
+    background: #fe9700;
     color: #fff;
     position: relative;
   }

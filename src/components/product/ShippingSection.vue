@@ -219,12 +219,12 @@
   }
   
   .shipping-option:hover {
-    border-color: #1890ff;
+    border-color: #fe9800d5;
   }
   
   .shipping-option.selected {
-    border-color: #1890ff;
-    background: rgba(24, 144, 255, 0.05);
+    border-color: #fe9700;
+    background: #1890ff0d;
   }
   
   .shipping-method {
@@ -238,7 +238,7 @@
   .shipping-cost {
     font-size: 15px;
     font-weight: 600;
-    color: #ff4d4f;
+    color: #fe9700;
   }
   
   .shipping-time {
@@ -257,7 +257,7 @@
   }
   
   .shipping-option.selected .shipping-radio {
-    border-color: #1890ff;
+    border-color: #fe9700;
   }
   
   .shipping-option.selected .shipping-radio::after {
@@ -268,7 +268,7 @@
     transform: translate(-50%, -50%);
     width: 10px;
     height: 10px;
-    background: #1890ff;
+    background: #fe9700;
     border-radius: 50%;
   }
   
@@ -302,14 +302,14 @@
   
   .commune-select:focus,
   .ville-select:focus {
-    border-color: #1890ff;
+    border-color: #fe9700;
     outline: none;
     box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
   }
   
   .retrait-info {
     background: #f0f8ff;
-    border: 1px solid #2196F3;
+    border: 1px solid #fe9700;
     border-radius: 8px;
     padding: 16px;
     margin-top: 12px;
@@ -321,7 +321,7 @@
   
   .retrait-label {
     font-weight: 600;
-    color: #2196F3;
+    color: #fe9700;
     margin-bottom: 8px;
   }
   
@@ -345,7 +345,7 @@
     padding: 8px 12px;
     border-radius: 6px;
     font-size: 14px;
-    color: #1976d2;
+    color: #fe9700;
   }
   </style>
   
