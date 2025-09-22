@@ -248,7 +248,7 @@
     align-items: center;
     gap: 6px;
     padding: 8px 16px;
-    background: #1890ff;
+    background: #fe9700;
     color: white;
     border: none;
     border-radius: 6px;
@@ -260,7 +260,7 @@
   
   .add-variant-btn:hover,
   .add-first-variant-btn:hover {
-    background: #40a9ff;
+    background: #fe8300;
   }
   
   .variants-list {
@@ -323,9 +323,16 @@
   
   .variant-select {
     padding: 8px 12px;
-    border: 1px solid #d9d9d9;
+    color: #333;
+    border: 1px solid #666;
     border-radius: 6px;
+    outline: none;
     font-size: 14px;
+  }
+  .variant-select:focus{
+    border-color:#fe9700;
+     box-shadow: 0 0 0 0.5px #fe7900; 
+    
   }
   
   .selected-color-preview {
@@ -351,6 +358,7 @@
     height: 32px;
     border: 1px solid #d9d9d9;
     background: #fff;
+    color: #333;
     font-size: 16px;
     display: flex;
     align-items: center;
@@ -367,9 +375,10 @@
   }
   
   .variant-quantity-controls .quantity-input {
-    width: 50px;
+    width: 65px;
     height: 32px;
     border: 1px solid #d9d9d9;
+    color: #333;
     border-left: none;
     border-right: none;
     text-align: center;
@@ -400,7 +409,7 @@
   .shipping-cost-amount {
     font-size: 16px;
     font-weight: 700;
-    color: #1890ff;
+    color: #fe9700;
   }
   
   .shipping-cost-details {

@@ -3,7 +3,7 @@
       <div class="max-w-md w-full space-y-8">
         <!-- Header -->
         <div class="text-center">
-          <div class="mx-auto h-16 w-38  rounded-full flex items-center justify-center mb-4 ">
+          <div class="mx-auto h-16 w-45  rounded-full flex items-center justify-center mb-4 ">
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
             <!-- <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
@@ -522,7 +522,7 @@ const handleForgotPassword = async () => {
 }
 .input-style:focus {
   border-color: #fe7900; 
-  box-shadow: 0 0 0 0.5px #fe7900; 
+ zz box-shadow: 0 0 0 0.5px #fe7900; 
 }
 
 .checkbox-style {
