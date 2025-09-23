@@ -62,7 +62,7 @@
           </button>
         </div>
       </div>
-
+ 
       <!-- Vue d'Ensemble - 3 lignes de 4 cards avec le style du dashboard client -->
       <section class="dashboard-section">
         <!-- Première ligne - Métriques principales -->

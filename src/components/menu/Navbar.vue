@@ -321,11 +321,11 @@
         </div>
         
         <nav class="main-nav">
-          <a href="#" class="nav-item featured">Acheter sur Alibaba (via notre service)</a>
+          <a href="#" class="nav-item featured">Acheter sur Daq Auto (via notre service)</a>
           <a href="#" class="nav-item hot">Meilleurs Deals</a>
           <a href="#" class="nav-item">Suivre une commande</a>
           <a href="#" class="nav-item">Faire une réclamation</a>
-          <a href="#" class="nav-item">Vendre sur Ali Adjamé</a>
+          <a href="#" class="nav-item">Vendre sur Daq Auto</a>
           <a href="#" class="nav-item">Comment avoir plus de clients</a>
         </nav>
       </div>

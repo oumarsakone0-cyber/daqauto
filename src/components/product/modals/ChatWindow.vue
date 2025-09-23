@@ -1,7 +1,12 @@
 <template>
   <!-- Chat Window Desktop (petite fenêtre comme Facebook) -->
+   
   <div class="chat-window-desktop" v-if="isOpen">
-    <div class="chat-header">
+     <div class=" inset-0  opacity-10">
+      <div class="absolute top-0 left-0 w-70 h-70 bg-white rounded-full -translate-x-48 -translate-y-48"></div>
+      </div>
+      <div class="chat-header bg-gradient-to-br">
+        
       <div class="supplier-info">
         <img src="https://cdn-icons-png.flaticon.com/512/4526/4526832.png" alt="supplier" class="supplier-logo" />
         <div class="supplier-details">
@@ -10,19 +15,26 @@
         </div>
       </div>
       <div class="chat-actions">
+        <button v-if="isMinimized" @click="toggleMinimize" class="minimize-btn">
+         <svg width="16" height="16" viewBox="0 0 24 24" stroke="currentColor" stroke-width="3" fill="none">
+            <rect x="6" y="6" width="16" height="12" />
+          </svg>
+        </button>
         <button @click="toggleMinimize" class="minimize-btn">
           <svg width="16" height="16" viewBox="0 0 24 24"  stroke="currentColor" stroke-width="4" fill="none">
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
         </button>
-        <button @click="$emit('close')" class="close-btn">
+        <button v-if="!isMinimized" @click="$emit('close')" class="close-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
           </svg>
         </button>
       </div>
+   
     </div>
+    
 
     <div class="chat-body" v-show="!isMinimized">
       <div class="messages-container" ref="messagesContainer">
@@ -68,7 +80,7 @@
             @keypress.enter="sendMessage"
             type="text"
             placeholder="Tapez votre message..."
-            class="message-input"
+            class="input-style"
           />
           <button @click="sendMessage" class="send-btn" :disabled="!newMessage.trim()">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -287,7 +299,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .chat-header {
-  background: linear-gradient(160deg,#6878e2, #70499e);
+  background: linear-gradient(160deg, #0c0c0c , #fc4618 , #0c0c0c);
   color: white;
   padding: 16px;
   display: flex;
@@ -377,7 +389,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .user-message .message-content {
-  background: linear-gradient(160deg, #6878e2, #70499e);
+  background: linear-gradient(160deg, #fe9700, #fc4618);
   color: white;
 }
 
@@ -453,7 +465,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 .product-price {
   font-size: 16px;
   font-weight: 700;
-  color: #6878e2;
+  color: #fe9700;
 }
 
 .product-rating {
@@ -508,23 +520,21 @@ watch(persistedMessages, scrollToBottom, { deep: true })
   border: none;
 }
 
-.message-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 1px solid #e0e0e0;
-  border-radius: 25px;
-  font-size: 14px;
-  outline: none;
-  color: #333;
-  transition: border-color 0.2s;
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 25px; 
+  padding: 12px 16px; 
+  transition: border-color 0.2s, box-shadow 0.2s; 
 }
-
-.message-input:focus {
-  border: 1px solid #333
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
 }
 
 .send-btn {
-  background: linear-gradient(135deg, #6878e2, #70499e);
+  background: linear-gradient(160deg, #fe9700, #fc4618);
   border: none;
   color: white;
   height: auto;
@@ -573,7 +583,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .test-btn {
-  background: #6878e2;
+  background: #fe9700;
   border: none;
   color: white;
   padding: 8px 12px;
@@ -585,7 +595,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .test-btn:hover {
-  background: #5a6bd8;
+  background: #fc4618;
   transform: translateY(-1px);
 }
 
