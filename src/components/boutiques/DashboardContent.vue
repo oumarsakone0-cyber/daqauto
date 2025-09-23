@@ -473,36 +473,36 @@
                     <button
                     v-else 
                       @click="openBoostModal(product)" 
-                      class="inline-flex items-center px-2 py-1 bg-gradient-to-r from-yellow-400 to-yellow-500 text-yellow-900 text-xs font-medium rounded-lg hover:from-yellow-500 hover:to-yellow-600 transition-all shadow-sm"
+                      class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-lg shadow-sm btn-degrade-orange"
                     >
                       <ZapIcon class="w-3 h-3 mr-1" />
                       <span class="hidden sm:inline">Booster</span>
                       <span class="sm:hidden">🚀</span>
                     </button>
                     
-                    <button @click="viewProduct(product)" class="text-gray-600 hover:text-gray-900 transition-colors text-xs sm:text-sm">
+                    <button @click="viewProduct(product)" class="text-xs sm:text-sm btn-degrade-ring">
                       <span class="hidden sm:inline">Détails</span>
                       <EyeIcon class="w-4 h-4 sm:hidden" />
                     </button>
                     <div class="relative">
-                      <button @click="toggleActionMenu(product.id)" class="text-gray-400 hover:text-gray-500 transition-colors">
+                      <button @click="toggleActionMenu(product.id)" class="btn-degrade-purple">
                         <MoreHorizontalIcon class="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
-                      <div v-if="activeActionMenu === product.id" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+                      <div v-if="activeActionMenu === product.id" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20 p-2">
                         <div class="py-1" role="menu">
-                          <button @click="viewProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <button @click="viewProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-degrade-purple">
                             <EyeIcon class="w-4 h-4 mr-3" />
                             Voir détails
                           </button>
-                          <button @click="editProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <button @click="editProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-degrade-purple">
                             <EditIcon class="w-4 h-4 mr-3" />
                             Modifier
                           </button>
-                          <button @click="duplicateProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">
+                          <button @click="duplicateProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-degrade-purple">
                             <CopyIcon class="w-4 h-4 mr-3" />
                             Dupliquer
                           </button>
-                          <button @click="deleteProductAction(product.id)" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50">
+                          <button @click="deleteProductAction(product.id)" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 mb-2 btn-degrade-purple">
                             <Trash2Icon class="w-4 h-4 mr-3" />
                             Supprimer
                           </button>
@@ -2420,7 +2420,6 @@ onUnmounted(() => {
   border-color: #ff5a01;
   opacity: 0.8;
 }
-
 
 .btn-degrade-ring{
 background: #18bd85;

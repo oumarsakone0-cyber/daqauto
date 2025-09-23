@@ -1385,6 +1385,10 @@ export default {
   border-radius: 20px 0 0 20px;
   color: #333;
 }
+.search-input:focus{
+  border: 2px solid #fe7900;
+  box-shadow: 0 0 0 0.5px #fe7900;
+}
 
 .search-input::placeholder {
   color: #999;
