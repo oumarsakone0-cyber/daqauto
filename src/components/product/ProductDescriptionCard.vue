@@ -43,24 +43,44 @@
                 <div class="spec-group">
                   <h3 class="spec-group-title">Informations générales</h3>
                   <div class="spec-row">
-                    <div class="spec-name">SKU</div>
-                    <div class="spec-value">{{ product.sku || 'N/A' }}</div>
+                    <div class="spec-name">Conditions</div>
+                    <div class="spec-value">{{ product.vehicle_condition || 'N/A' }}</div>
                   </div>
                   <div class="spec-row">
-                    <div class="spec-name">Catégorie</div>
-                    <div class="spec-value">{{ product.category_name || 'N/A' }}</div>
+                    <div class="spec-name">Make</div>
+                    <div class="spec-value">{{ product.vehicle_make || 'N/A' }}</div>
                   </div>
                   <div class="spec-row">
-                    <div class="spec-name">Sous-catégorie</div>
-                    <div class="spec-value">{{ product.subcategory_name || 'N/A' }}</div>
+                    <div class="spec-name">Model</div>
+                    <div class="spec-value">{{ product.vehicle_model || 'N/A' }}</div>
                   </div>
                   <div class="spec-row">
-                    <div class="spec-name">Stock disponible</div>
-                    <div class="spec-value">{{ product.stock }} pièces</div>
+                    <div class="spec-name">Category</div>
+                    <div class="spec-value">{{ product.category_name }} pièces</div>
                   </div>
                   <div class="spec-row">
-                    <div class="spec-name">Statut</div>
-                    <div class="spec-value">{{ product.status }}</div>
+                    <div class="spec-name">Drive Type</div>
+                    <div class="spec-value">{{ product.drive_type }}</div>
+                  </div>
+                  <div class="spec-row">
+                    <div class="spec-name">Year</div>
+                    <div class="spec-value">{{ product.vehicle_year }}</div>
+                  </div>
+                  <div class="spec-row">
+                    <div class="spec-name">Fuel Type</div>
+                    <div class="spec-value">{{ product.fuel_type }}</div>
+                  </div>
+                  <div class="spec-row">
+                    <div class="spec-name">Transmission</div>
+                    <div class="spec-value">{{ product.transmission_type }}</div>
+                  </div>
+                  <div class="spec-row">
+                    <div class="spec-name">Engine</div>
+                    <div class="spec-value">{{ product.engine_brand }}</div>
+                  </div>
+                  <div class="spec-row">
+                    <div class="spec-name">Mileage</div>
+                    <div class="spec-value">{{ product.vehicle_mileage }}</div>
                   </div>
                 </div>
               </div>
@@ -95,7 +115,7 @@
               </div>
             </div>
             
-            <!-- Onglet Expédition et paiement -->
+            <!-- Onglet Expédition et paiement 
             <div v-if="activeTab === 3" class="shipping-payment">
               <h2 class="section-title">Expédition & Paiement</h2>
               
@@ -130,6 +150,7 @@
                 </div>
               </div>
             </div>
+            -->
           </div>
         </div>
       </div>
@@ -155,8 +176,7 @@
   const productTabs = [
     { label: "Détails du produit" },
     { label: "Spécifications" },
-    { label: "Avis" },
-    { label: "Expédition & Paiement" }
+    { label: "Avis" }
   ]
   </script>
   

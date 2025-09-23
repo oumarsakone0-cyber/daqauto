@@ -44,7 +44,7 @@
           <span class="rating-count">({{ product.views || product.reviews || 0 }})</span>
         </div>
         <div class="alibaba-action-buttons">
-          <button class="alibaba-contact-btn" @click.stop="handleContactClick">Contacter</button>
+          <button class="alibaba-contact-btn" @click.stop="handleContactClick">View</button>
           <button class="alibaba-chat-btn" @click.stop="handleChatClick">Chat now</button>
         </div>
       </div>
@@ -54,9 +54,9 @@
     <div 
       v-else
       class="alibaba-product-card"
-      @click="handleProductClick"
+      
     >
-      <div class="alibaba-image-area" :style="{ height: cardImageHeight }">
+      <div @click="handleProductClick" class="alibaba-image-area" :style="{ height: cardImageHeight }">
         <div class="alibaba-slider">
           <div class="alibaba-slider-wrapper">
             <div class="alibaba-slider-link">
@@ -165,18 +165,37 @@
           </div>
         </div>
     
-        <div class="alibaba-action-buttons">
-          <button class="alibaba-contact-btn" @click.stop="handleContactClick">Contacter</button>
+       <div class="alibaba-action-buttons">
+          <button class="alibaba-contact-btn" @click.stop="handleProductClick">View</button>
           <button class="alibaba-chat-btn" @click.stop="handleChatClick">Chat now</button>
         </div>
     
         <!-- Badge publicitaire (si applicable) -->
       </div>
+
+      <ChatModal
+  v-if="chatStore.isChatOpen && isMobile"
+  :supplier="chatStore.supplier"
+  :chatMessages="chatStore.chatMessages"
+  @close="chatStore.closeChat"
+  @sendMessage="chatStore.sendMessage"
+/>
+
+<ChatDesktop
+  v-if="chatStore.isChatOpen && !isMobile"
+  :supplier="chatStore.supplier"
+  :chat-messages="chatStore.chatMessages"
+  @close="chatStore.closeChat"
+  @send-message="chatStore.sendMessage"
+/>
     </div>
     </template>
     
     <script setup>
     import { ref, computed, defineProps, defineEmits } from 'vue'
+    import ChatModal from '../product/modals/ChatModal2.vue'
+import ChatDesktop from '../product/modals/ChatWindow.vue'
+import ChatApiClient from '../../services/chat-api-client'
     
     // Props
     const props = defineProps({
@@ -209,6 +228,10 @@
         }
       }
     })
+
+    import { useChatStore } from '../../stores/chat'
+
+    const chatStore = useChatStore()
     
     // Emits
     const emit = defineEmits([
@@ -272,6 +295,7 @@
         currentImageIndex.value = productImages.value.length - 1
       }
     }
+
     
     const setImage = (imageIndex) => {
       currentImageIndex.value = imageIndex
@@ -322,8 +346,11 @@
     }
     
     const handleChatClick = () => {
-      emit('chat-click', props.product)
-    }
+  console.log("✅ handleChatClick triggered", props.product)
+  chatStore.setSupplier?.(props.product) // safe call
+  chatStore.openChat?.() // safe call
+  emit('chat-click', props.product)
+}
     </script>
     
     <style scoped>

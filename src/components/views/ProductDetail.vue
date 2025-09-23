@@ -1077,7 +1077,11 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   const formatFCFA = (montant) => {
-    return Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
+   return Number(montant).toLocaleString('en-US', { 
+    style: 'currency', 
+    currency: 'USD',
+    minimumFractionDigits: 2 
+  })
   }
   
   const scrollToTop = () => {
