@@ -1,9 +1,9 @@
 <template>
-  <div class="fixed top-20 right-4 z-[1111]" style="margin-top: 300px; color: black">
+  <div class="fixed top-20 right-4 z-[1111]" style="margin-top: 300px; color: black; border:none">
     <button 
       @click="toggleLanguage"
       :disabled="isTranslating"
-      class="bg-blue-600 hover:bg-blue-700 disabled:bg-gray-400 text-white px-4 py-2 rounded-lg shadow-xl border-2 border-white transition-all duration-200 flex items-center gap-2 min-w-[120px] justify-center"
+      class=" disabled:bg-gray-400 px-4 py-2 rounded-lg shadow-xl transition-all duration-200 flex items-center gap-2 min-w-[120px] justify-center translate-style"
     >
       <span class="text-sm font-bold" style="color: white">
         {{ isTranslating ? '⏳ Traduction...' : (currentLanguage === 'fr' ? '🇫🇷 Français' : '🇬🇧 English') }}
@@ -251,3 +251,16 @@ onMounted(async () => {
   }
 })
 </script>
+
+<style scoped>
+
+.translate-style{
+  background-color: black;
+  color: white;
+
+}
+
+.translate-style:hover{
+  border: black;
+}
+</style>
