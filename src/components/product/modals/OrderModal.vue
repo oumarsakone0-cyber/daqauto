@@ -92,7 +92,8 @@
                 </div>
               </div>
             </div>
-  
+            
+            <!--
             <div class="form-section">
               <h4 class="section-title">Adresse de livraison</h4>
               
@@ -141,6 +142,8 @@
                 ></textarea>
               </div>
             </div>
+
+            -->
   
             <!-- Order Total -->
             <div class="order-total">
@@ -148,13 +151,15 @@
                 <span>Sous-total:</span>
                 <span>{{ formatFCFA(calculateSubtotal()) }}</span>
               </div>
+              <!--
               <div class="total-row">
                 <span>Livraison:</span>
                 <span>{{ formatFCFA(getFinalShippingCost()) }}</span>
               </div>
+              -->
               <div class="total-row total">
                 <span>Total:</span>
-                <span>{{ formatFCFA(calculateSubtotal() + getFinalShippingCost()) }}</span>
+                <span>{{ formatFCFA(calculateSubtotal()) }}</span>
               </div>
             </div>
   

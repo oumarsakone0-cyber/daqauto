@@ -81,7 +81,7 @@
           <span class="total-value">{{ formatFCFA(calculateTotal()) }}</span>
         </div>
         
-        <!-- Affichage des frais de livraison pour quantité simple -->
+        <!-- Affichage des frais de livraison pour quantité simple 
         <div v-if="!hasVariants && currentShippingCost > 0" class="shipping-cost-simple">
           <div class="shipping-cost-header">
             <span class="shipping-cost-label">Frais de livraison:</span>
@@ -92,6 +92,7 @@
             <span class="shipping-destination">{{ getShippingDestination() }}</span>
           </div>
         </div>
+        -->
   
         <!-- Total avec livraison -->
         <div v-if="!hasVariants && currentShippingCost > 0" class="grand-total">

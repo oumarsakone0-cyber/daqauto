@@ -346,11 +346,11 @@ import ChatApiClient from '../../services/chat-api-client'
     }
     
     const handleChatClick = () => {
-  console.log("✅ handleChatClick triggered", props.product)
-  chatStore.setSupplier?.(props.product) // safe call
-  chatStore.openChat?.() // safe call
-  emit('chat-click', props.product)
-}
+      console.log("✅ handleChatClick triggered", props.product)
+      chatStore.setSupplier?.(props.product) // safe call
+      chatStore.openChat?.() // safe call
+      emit('chat-click', props.product)
+    }
     </script>
     
     <style scoped>

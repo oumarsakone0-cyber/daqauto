@@ -27,28 +27,38 @@
     <div class="chat-body" v-show="!isMinimized">
       <div class="messages-container" ref="messagesContainer">
         <div 
-          v-for="message in chatMessages" 
+          v-for="message in persistedMessages" 
           :key="message.id"
           :class="['message', message.sender === 'user' ? 'user-message' : 'bot-message']"
         >
-          <div class="message-content">
+          <!-- Message produit avec disposition spéciale -->
+          <div v-if="message.type === 'product'" class="product-message-card">
+            <div class="product-image-container">
+              <img :src="getProductData(message).image || '/placeholder.svg?height=80&width=80'" 
+                   :alt="getProductData(message).name" 
+                   class="product-image" />
+            </div>
+            <div class="product-details">
+              <h4 class="product-name">{{ getProductData(message).name }}</h4>
+              <p class="product-shop">{{ getProductData(message).shop }}</p>
+              <div class="product-price-rating">
+                <span class="product-price">{{ formatPrice(getProductData(message).price) }}</span>
+                <div v-if="getProductData(message).rating" class="product-rating">
+                  <span class="rating-stars">⭐</span>
+                  <span class="rating-value">{{ getProductData(message).rating }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <!-- Message normal -->
+          <div v-else class="message-content">
             <p>{{ message.message }}</p>
             <span class="message-time">
               {{ formatTime(message.timestamp) }}
             </span>
           </div>
         </div>
-      </div>
-
-      <div class="quick-actions">
-        <button 
-          v-for="action in quickActions" 
-          :key="action.id"
-          @click="sendQuickAction(action)"
-          class="quick-action-btn"
-        >
-          {{ action.text }}
-        </button>
       </div>
 
       <div class="message-input-container">
@@ -68,12 +78,22 @@
           </button>
         </div>
       </div>
+
+      <!-- Ajout de boutons de test pour démonstration -->
+      <div class="test-actions">
+        <button @click="addTestProduct" class="test-btn">
+          🛍️ Ajouter Produit Test
+        </button>
+        <button @click="clearAllMessages" class="test-btn clear-btn">
+          🗑️ Vider le Chat
+        </button>
+      </div>
     </div>
   </div>
 </template>
 
 <script setup>
-import { ref, nextTick, watch } from 'vue'
+import { ref, nextTick, watch, onMounted } from 'vue'
 
 const props = defineProps({
   isOpen: {
@@ -95,6 +115,7 @@ const emit = defineEmits(['close', 'send-message'])
 const newMessage = ref('')
 const isMinimized = ref(false)
 const messagesContainer = ref(null)
+const persistedMessages = ref([])
 
 const quickActions = ref([
   { id: 1, text: '👋 Salut!' },
@@ -102,6 +123,57 @@ const quickActions = ref([
   { id: 3, text: '📦 Livraison?' },
   { id: 4, text: '❓ Question' }
 ])
+
+const getStorageKey = () => `chat_messages_${props.supplier.id || 'default'}`
+
+const saveMessagesToStorage = (messages) => {
+  try {
+    localStorage.setItem(getStorageKey(), JSON.stringify(messages))
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde des messages:', error)
+  }
+}
+
+const loadMessagesFromStorage = () => {
+  try {
+    const stored = localStorage.getItem(getStorageKey())
+    return stored ? JSON.parse(stored) : []
+  } catch (error) {
+    console.error('Erreur lors du chargement des messages:', error)
+    return []
+  }
+}
+
+const mergeMessages = () => {
+  const storedMessages = loadMessagesFromStorage()
+  const allMessages = [...storedMessages]
+  
+  // Ajouter les nouveaux messages des props s'ils n'existent pas déjà
+  props.chatMessages.forEach(propMessage => {
+    const exists = allMessages.some(msg => msg.id === propMessage.id)
+    if (!exists) {
+      allMessages.push(propMessage)
+    }
+  })
+  
+  // Trier par timestamp
+  allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+  
+  persistedMessages.value = allMessages
+  saveMessagesToStorage(allMessages)
+}
+
+onMounted(() => {
+  mergeMessages()
+})
+
+watch(() => props.chatMessages, () => {
+  mergeMessages()
+}, { deep: true })
+
+watch(persistedMessages, (newMessages) => {
+  saveMessagesToStorage(newMessages)
+}, { deep: true })
 
 const toggleMinimize = () => {
   isMinimized.value = !isMinimized.value
@@ -117,6 +189,7 @@ const sendMessage = () => {
     timestamp: new Date()
   }
   
+  persistedMessages.value.push(message)
   emit('send-message', message)
   newMessage.value = ''
 }
@@ -129,7 +202,56 @@ const sendQuickAction = (action) => {
     timestamp: new Date()
   }
   
+  persistedMessages.value.push(message)
   emit('send-message', message)
+}
+
+const addTestProduct = () => {
+  const productData = {
+    name: "iPhone 15 Pro Max",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400",
+    shop: "Apple Store",
+    rating: 4.8
+  }
+  
+  const message = {
+    id: Date.now(),
+    message: JSON.stringify(productData),
+    sender: 'bot',
+    type: 'product',
+    timestamp: new Date()
+  }
+  
+  persistedMessages.value.push(message)
+}
+
+const clearAllMessages = () => {
+  persistedMessages.value = []
+  localStorage.removeItem(getStorageKey())
+}
+
+
+const getProductData = (message) => {
+  try {
+    return JSON.parse(message.message)
+  } catch (e) {
+    return {
+      name: 'Produit',
+      price: 0,
+      image: '/placeholder.svg?height=80&width=80',
+      shop: 'Boutique',
+      rating: null
+    }
+  }
+}
+
+const formatPrice = (price) => {
+  if (!price) return 'Prix non disponible'
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(price)
 }
 
 const formatTime = (timestamp) => {
@@ -147,7 +269,7 @@ const scrollToBottom = () => {
   })
 }
 
-watch(() => props.chatMessages, scrollToBottom, { deep: true })
+watch(persistedMessages, scrollToBottom, { deep: true })
 </script>
 
 <style scoped>
@@ -275,6 +397,81 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
   opacity: 0.7;
 }
 
+/* Styles pour la carte produit */
+.product-message-card {
+  max-width: 90%;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+}
+
+.product-image-container {
+  flex-shrink: 0;
+}
+
+.product-image {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.product-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-name {
+  margin: 0 0 4px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
+}
+
+.product-shop {
+  margin: 0 0 8px 0;
+  font-size: 12px;
+  color: #666;
+}
+
+.product-price-rating {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.product-price {
+  font-size: 16px;
+  font-weight: 700;
+  color: #6878e2;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+}
+
+.rating-stars {
+  color: #ffc107;
+}
+
+.rating-value {
+  color: #666;
+  font-weight: 500;
+}
+
 .quick-actions {
   padding: 12px 16px;
   display: flex;
@@ -364,5 +561,39 @@ watch(() => props.chatMessages, scrollToBottom, { deep: true })
 
 .messages-container::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
+}
+
+/* Ajout de styles pour les boutons de test */
+.test-actions {
+  padding: 8px 16px;
+  display: flex;
+  gap: 8px;
+  border-top: 1px solid #f0f0f0;
+  background: #f8f9fa;
+}
+
+.test-btn {
+  background: #6878e2;
+  border: none;
+  color: white;
+  padding: 8px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: all 0.2s;
+  flex: 1;
+}
+
+.test-btn:hover {
+  background: #5a6bd8;
+  transform: translateY(-1px);
+}
+
+.clear-btn {
+  background: #dc3545;
+}
+
+.clear-btn:hover {
+  background: #c82333;
 }
 </style>

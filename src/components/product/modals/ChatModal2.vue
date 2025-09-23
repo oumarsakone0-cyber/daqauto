@@ -24,12 +24,31 @@
       
       <div class="chat-messages" ref="messagesContainer">
         <div 
-          v-for="message in chatMessages" 
+          v-for="message in persistedMessages" 
           :key="message.id"
           class="message"
           :class="{ 'user-message': message.sender === 'user', 'bot-message': message.sender === 'bot' }"
         >
-          <div class="message-content">
+          <div v-if="message.type === 'product'" class="product-message-card">
+            <div class="product-image-container">
+              <img :src="getProductData(message).image || '/placeholder.svg?height=80&width=80'" 
+                   :alt="getProductData(message).name" 
+                   class="product-image" />
+            </div>
+            <div class="product-details">
+              <h4 class="product-name">{{ getProductData(message).name }}</h4>
+              <p class="product-shop">{{ getProductData(message).shop }}</p>
+              <div class="product-price-rating">
+                <span class="product-price">{{ formatPrice(getProductData(message).price) }}</span>
+                <div v-if="getProductData(message).rating" class="product-rating">
+                  <span class="rating-stars">⭐</span>
+                  <span class="rating-value">{{ getProductData(message).rating }}</span>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div v-else class="message-content">
             <div class="message-text">{{ message.message }}</div>
             <div class="message-time">{{ formatTime(message.timestamp) }}</div>
           </div>
@@ -67,6 +86,12 @@
           <button class="quick-action" @click="sendQuickMessage('Avez-vous ce produit en stock ?')">
             📦 Stock
           </button>
+          <button class="quick-action test-btn" @click="addTestProduct">
+            🛍️ Ajouter Produit
+          </button>
+          <button class="quick-action clear-btn" @click="clearAllMessages">
+            🗑️ Vider Chat
+          </button>
         </div>
       </div>
     </div>
@@ -74,7 +99,7 @@
 </template>
 
 <script setup>
-import { ref, nextTick, defineProps, defineEmits } from 'vue'
+import { ref, nextTick, defineProps, defineEmits, onMounted, watch } from 'vue'
 
 const props = defineProps({
   supplier: {
@@ -94,6 +119,56 @@ const emit = defineEmits(['close', 'sendMessage'])
 
 const messagesContainer = ref(null)
 const newMessage = ref('')
+const persistedMessages = ref([])
+
+const getStorageKey = () => `chat_messages_mobile_${props.supplier.id || 'default'}`
+
+const saveMessagesToStorage = (messages) => {
+  try {
+    localStorage.setItem(getStorageKey(), JSON.stringify(messages))
+  } catch (error) {
+    console.error('Erreur lors de la sauvegarde des messages:', error)
+  }
+}
+
+const loadMessagesFromStorage = () => {
+  try {
+    const stored = localStorage.getItem(getStorageKey())
+    return stored ? JSON.parse(stored) : []
+  } catch (error) {
+    console.error('Erreur lors du chargement des messages:', error)
+    return []
+  }
+}
+
+const mergeMessages = () => {
+  const storedMessages = loadMessagesFromStorage()
+  const allMessages = [...storedMessages]
+  
+  props.chatMessages.forEach(propMessage => {
+    const exists = allMessages.some(msg => msg.id === propMessage.id)
+    if (!exists) {
+      allMessages.push(propMessage)
+    }
+  })
+  
+  allMessages.sort((a, b) => new Date(a.timestamp) - new Date(b.timestamp))
+  
+  persistedMessages.value = allMessages
+  saveMessagesToStorage(allMessages)
+}
+
+onMounted(() => {
+  mergeMessages()
+})
+
+watch(() => props.chatMessages, () => {
+  mergeMessages()
+}, { deep: true })
+
+watch(persistedMessages, (newMessages) => {
+  saveMessagesToStorage(newMessages)
+}, { deep: true })
 
 const handleSendMessage = () => {
   if (newMessage.value.trim()) {
@@ -104,6 +179,7 @@ const handleSendMessage = () => {
       timestamp: new Date()
     }
     
+    persistedMessages.value.push(message)
     emit('sendMessage', message)
     newMessage.value = ''
     scrollToBottom()
@@ -115,6 +191,56 @@ const sendQuickMessage = (message) => {
   nextTick(() => {
     handleSendMessage()
   })
+}
+
+const addTestProduct = () => {
+  const productData = {
+    name: "iPhone 15 Pro Max",
+    price: 1299,
+    image: "https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400",
+    shop: "Apple Store",
+    rating: 4.8
+  }
+  
+  const message = {
+    id: Date.now(),
+    message: JSON.stringify(productData),
+    sender: 'bot',
+    type: 'product',
+    timestamp: new Date()
+  }
+  
+  persistedMessages.value.push(message)
+  scrollToBottom()
+}
+
+const clearAllMessages = () => {
+  if (confirm('Êtes-vous sûr de vouloir vider tout le chat ?')) {
+    persistedMessages.value = []
+    localStorage.removeItem(getStorageKey())
+  }
+}
+
+const getProductData = (message) => {
+  try {
+    return JSON.parse(message.message)
+  } catch (e) {
+    return {
+      name: 'Produit',
+      price: 0,
+      image: '/placeholder.svg?height=80&width=80',
+      shop: 'Boutique',
+      rating: null
+    }
+  }
+}
+
+const formatPrice = (price) => {
+  if (!price) return 'Prix non disponible'
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'EUR'
+  }).format(price)
 }
 
 const scrollToBottom = () => {
@@ -131,6 +257,8 @@ const formatTime = (timestamp) => {
     minute: '2-digit'
   })
 }
+
+watch(persistedMessages, scrollToBottom, { deep: true })
 </script>
 
 <style scoped>
@@ -362,6 +490,103 @@ const formatTime = (timestamp) => {
 .quick-action:hover {
   border-color: #1890ff;
   color: #1890ff;
+}
+
+.test-btn {
+  background: #52c41a !important;
+  color: white !important;
+  border-color: #52c41a !important;
+}
+
+.test-btn:hover {
+  background: #73d13d !important;
+  border-color: #73d13d !important;
+}
+
+.clear-btn {
+  background: #ff4d4f !important;
+  color: white !important;
+  border-color: #ff4d4f !important;
+}
+
+.clear-btn:hover {
+  background: #ff7875 !important;
+  border-color: #ff7875 !important;
+}
+
+.product-message-card {
+  max-width: 95%;
+  background: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  display: flex;
+  gap: 12px;
+  padding: 12px;
+  margin-bottom: 8px;
+}
+
+.product-image-container {
+  flex-shrink: 0;
+}
+
+.product-image {
+  width: 70px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+  background: #f8f9fa;
+}
+
+.product-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.product-name {
+  margin: 0 0 4px 0;
+  font-size: 13px;
+  font-weight: 600;
+  color: #333;
+  line-height: 1.3;
+}
+
+.product-shop {
+  margin: 0 0 8px 0;
+  font-size: 11px;
+  color: #666;
+}
+
+.product-price-rating {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+}
+
+.product-price {
+  font-size: 14px;
+  font-weight: 700;
+  color: #1890ff;
+}
+
+.product-rating {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+}
+
+.rating-stars {
+  color: #ffc107;
+}
+
+.rating-value {
+  color: #666;
+  font-weight: 500;
 }
 
 @media (max-width: 768px) {

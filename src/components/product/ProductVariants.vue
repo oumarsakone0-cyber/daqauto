@@ -81,7 +81,7 @@
         </div>
       </div>
   
-      <!-- Affichage des frais de livraison -->
+      <!-- Affichage des frais de livraison 
       <div v-if="selectedVariants.length > 0" class="shipping-cost-display">
         <div class="shipping-cost-header">
           <span class="shipping-cost-label">Frais de livraison:</span>
@@ -92,6 +92,7 @@
           <span class="shipping-destination">{{ getShippingDestination() }}</span>
         </div>
       </div>
+      -->
     </div>
   </template>
   

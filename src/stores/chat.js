@@ -1,4 +1,3 @@
-// stores/chat.js
 import { defineStore } from 'pinia'
 import { ref } from 'vue'
 import ChatApiClient from '../services/chat-api-client'
@@ -21,6 +20,38 @@ export const useChatStore = defineStore('chat', () => {
 
   const checkMobile = () => {
     isMobile.value = window.innerWidth < 768
+  }
+
+  // ✅ Injecte dynamiquement le produit comme "carte message" dans le chat
+  const sendProductIntroMessage = (product) => {
+    if (!product) return
+
+    const productMessage = {
+      id: Date.now(),
+      message: JSON.stringify({
+        name: product.name,
+        price: product.unit_price,
+        image: product.primary_image,
+        shop: product.boutique_name,
+        rating: product.rating
+      }),
+      sender: 'bot',
+      timestamp: new Date(),
+      type: 'product' // type personnalisé pour affichage spécial
+    }
+
+    chatMessages.value.push(productMessage)
+  }
+
+  // ✅ Définit le fournisseur et envoie automatiquement un message produit
+  const setSupplier = (product) => {
+    supplier.value = {
+      name: product?.boutique_name || 'Fournisseur inconnu',
+      logo: product?.primary_image || '/placeholder.svg?height=40&width=40',
+      status: 'En ligne'
+    }
+
+    sendProductIntroMessage(product)
   }
 
   const initializeChat = async () => {
@@ -127,6 +158,8 @@ export const useChatStore = defineStore('chat', () => {
     openChat,
     closeChat,
     openDesktopChat,
-    closeDesktopChat
+    closeDesktopChat,
+    setSupplier,
+    sendProductIntroMessage
   }
 })
