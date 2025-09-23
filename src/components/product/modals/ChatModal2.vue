@@ -1,6 +1,9 @@
 <template>
   <div class="chat-modal-overlay" @click.self="$emit('close')">
     <div class="chat-modal">
+      <div class=" inset-0  opacity-10">
+      <div class="absolute top-0 left-0 w-70 h-70 bg-white rounded-full -translate-x-48 -translate-y-48"></div>
+      </div>
       <div class="chat-header">
         <div class="supplier-info">
           <div class="supplier-avatar">
@@ -62,7 +65,7 @@
             v-model="newMessage"
             @keypress.enter="handleSendMessage"
             placeholder="Tapez votre message..."
-            class="message-input"
+            class="input-style"
           />
           <button 
             class="send-btn" 
@@ -268,7 +271,6 @@ watch(persistedMessages, scrollToBottom, { deep: true })
   left: 0;
   right: 0;
   bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
   z-index: 1000;
   display: flex;
   align-items: center;
@@ -290,11 +292,12 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 
 .chat-header {
   display: flex;
+  background: linear-gradient(160deg, #0c0c0c , #fc4618 , #0c0c0c);
   justify-content: space-between;
   align-items: center;
   padding: 16px 20px;
   border-bottom: 1px solid #e8e8e8;
-  background: #fafafa;
+  /* background: #fafafa; */
 }
 
 .supplier-info {
@@ -319,7 +322,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 .supplier-name {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
+  color: white;
   margin: 0 0 4px 0;
 }
 
@@ -342,21 +345,20 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .close-btn {
-  width: 32px;
-  color: #333;
-  height: 32px;
+  background: #ffffff33;
   border: none;
-  background: none;
+  color: white;
+  height: auto;
   border-radius: 50%;
-  display: block;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: background-color 0.3s ease;
+  transition: background 0.2s;
 }
 
 .close-btn:hover {
-  background: #f5f5f5;
+  background: #ffffff4d;
 }
 
 .chat-messages {
@@ -395,13 +397,13 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .user-message .message-text {
-  background: #1890ff;
+   background: linear-gradient(160deg, #fe9700, #fc4618);
   color: white;
   border-bottom-right-radius: 6px;
 }
 
 .bot-message .message-text {
-  background: #f0f0f0;
+ background: #f1f3f4;
   color: #333;
   border-bottom-left-radius: 6px;
 }
@@ -445,23 +447,33 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 .message-input:focus {
   border-color: #1890ff;
 }
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 25px; 
+  padding: 12px 16px; 
+  transition: border-color 0.2s, box-shadow 0.2s; 
+}
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
+}
 
 .send-btn {
-  width: 40px;
-  height: 40px;
-  background: #1890ff;
+  background: linear-gradient(160deg, #fe9700, #fc4618);
   border: none;
-  border-radius: 50%;
   color: white;
-  display: block;
+  height: auto;
+  border-radius: 50%;
+  display: flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: transform 0.2s;
 }
 
 .send-btn:hover:not(:disabled) {
-  background: #40a9ff;
   transform: scale(1.05);
 }
 
@@ -488,19 +500,19 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .quick-action:hover {
-  border-color: #1890ff;
-  color: #1890ff;
+  border-color: #fe7900;
+  color: #fe9700;
 }
 
 .test-btn {
-  background: #52c41a !important;
+  background: #fe9700 !important;
   color: white !important;
-  border-color: #52c41a !important;
+  border-color: #fe9700 !important;
 }
 
 .test-btn:hover {
-  background: #73d13d !important;
-  border-color: #73d13d !important;
+  background: #fe9700 !important;
+  border-color: #fe9700 !important;
 }
 
 .clear-btn {

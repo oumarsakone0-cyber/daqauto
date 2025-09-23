@@ -20,12 +20,12 @@
             <rect x="6" y="6" width="16" height="12" />
           </svg>
         </button>
-        <button @click="toggleMinimize" class="minimize-btn">
+        <button v-else-if="!isMinimized" @click="toggleMinimize" class="minimize-btn">
           <svg width="16" height="16" viewBox="0 0 24 24"  stroke="currentColor" stroke-width="4" fill="none">
             <line x1="5" y1="12" x2="19" y2="12"/>
           </svg>
         </button>
-        <button v-if="!isMinimized" @click="$emit('close')" class="close-btn">
+        <button  @click="$emit('close')" class="close-btn">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="4">
             <line x1="18" y1="6" x2="6" y2="18"/>
             <line x1="6" y1="6" x2="18" y2="18"/>
@@ -338,7 +338,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 
 .minimize-btn,
 .close-btn {
-  background: rgba(255, 255, 255, 0.2);
+  background: #ffffff33;
   border: none;
   color: white;
   height: auto;
@@ -352,7 +352,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 
 .minimize-btn:hover,
 .close-btn:hover {
-  background: rgba(255, 255, 255, 0.3);
+  background: #ffffff4d;
 }
 
 .chat-body {
@@ -587,7 +587,7 @@ watch(persistedMessages, scrollToBottom, { deep: true })
   border: none;
   color: white;
   padding: 8px 12px;
-  border-radius: 6px;
+  border-radius: 16px;
   font-size: 12px;
   cursor: pointer;
   transition: all 0.2s;
@@ -600,10 +600,10 @@ watch(persistedMessages, scrollToBottom, { deep: true })
 }
 
 .clear-btn {
-  background: #dc3545;
+  background: #ff4d4f;
 }
 
 .clear-btn:hover {
-  background: #c82333;
+  background: #ff7875;
 }
 </style>

@@ -176,6 +176,7 @@ onBeforeUnmount(() => {
 }
 .bg-degrade {
   background: linear-gradient(90deg, #fe7900, #f96204);
+  border: none;
 }
 .item-style{
   color: #666;
