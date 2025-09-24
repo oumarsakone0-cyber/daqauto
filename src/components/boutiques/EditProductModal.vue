@@ -1,5 +1,5 @@
 <template>
-   Overlay avec arrière-plan sombre 
+   <!-- Overlay avec arrière-plan sombre  -->
   <div 
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
     @click="handleBackdropClick"
@@ -8,18 +8,18 @@
       class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
       @click.stop
     >
-       Animation de fond luxueuse 
+       <!-- Animation de fond luxueuse  -->
       <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl">
         <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
       </div>
   
-       Header fixe 
+       <!-- Header fixe  -->
       <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <div class="w-10 h-10 bg-orange rounded-lg flex items-center justify-center">
               <EditIcon class="w-5 h-5 text-white" />
             </div>
             <div>
@@ -27,76 +27,72 @@
               <p class="text-sm text-gray-600 hidden sm:block">Modifiez les informations de votre produit</p>
             </div>
           </div>
-          <button 
-            @click="closeModal"
-            class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-          >
-            <XIcon class="w-5 h-5 text-gray-500" />
-          </button>
+         
+            <XIcon @click="closeModal" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
   
-         Messages d'état 
+         <!-- Messages d'état  -->
         <div v-if="error || isLoading || categoriesError || categoriesLoading" class="mt-4">
-          <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
-            <AlertCircleIcon class="w-4 h-4 text-red-500 flex-shrink-0" />
+          <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
+            <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
             <span class="text-sm">{{ error }}</span>
           </div>
   
-          <div v-if="categoriesError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
-            <AlertCircleIcon class="w-4 h-4 text-red-500 flex-shrink-0" />
+          <div v-if="categoriesError" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
+            <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
             <div class="flex-1">
               <span class="text-sm">{{ categoriesError }}</span>
               <button 
                 @click="fetchCategories" 
-                class="ml-2 px-2 py-1 bg-red-600 text-white rounded text-xs hover:bg-red-700 transition-colors"
+                class="ml-2 px-2 py-1 error-background-color text-white rounded text-xs hover:bg-red-700 transition-colors"
               >
                 Réessayer
               </button>
             </div>
           </div>
   
-          <div v-if="isLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg flex items-center space-x-2">
-            <div class="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <div v-if="isLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 primary-color rounded-lg flex items-center space-x-2">
+            <div class="animate-spin w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full flex-shrink-0"></div>
             <span class="text-sm">{{ loadingMessage }}</span>
           </div>
   
-          <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-blue-700 rounded-lg flex items-center space-x-2">
-            <div class="animate-spin w-4 h-4 border-2 border-blue-500 border-t-transparent rounded-full flex-shrink-0"></div>
+          <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 primary-color rounded-lg flex items-center space-x-2">
+            <div class="animate-spin w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full flex-shrink-0"></div>
             <span class="text-sm">Chargement des catégories...</span>
           </div>
         </div>
       </div>
   
-       Contenu scrollable 
+       <!-- Contenu scrollable  -->
       <div class="overflow-y-auto h-[calc(100vh-200px)] sm:h-auto sm:max-h-[calc(60vh)] px-4 sm:px-6 py-6 relative z-5">
         <form @submit.prevent="handleSubmit" class="space-y-6 sm:space-y-8" v-if="editData">
           
-           Informations de base 
+           <!-- Informations de base  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <InfoIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Informations de base</h3>
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               Nom du produit 
+               <!-- Nom du produit  -->
               <div class="sm:col-span-2">
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom du produit <span class="text-red-500">*</span>
+                  Nom du produit <span class="primary-color">*</span>
                 </label>
                 <input
                   id="name"
                   v-model="editData.name"
                   type="text"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="input-style"
                   placeholder="Ex: T-shirt Premium Coton"
                 >
               </div>
   
-               Description courte 
+               <!-- Description courte  -->
               <div class="sm:col-span-2">
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                   Description courte
@@ -105,36 +101,36 @@
                   id="description"
                   v-model="editData.description"
                   rows="3"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base resize-none"
+                  class="input-style"
                   placeholder="Décrivez votre produit..."
                 ></textarea>
               </div>
 
-               Description détaillée WYSIWYG 
+               <!-- Description détaillée WYSIWYG  -->
               <div class="sm:col-span-2">
                 <div class="flex items-center mb-3">
                   <input 
                     v-model="editData.hasDetailedDescription"
                     id="detailed-description-toggle"
                     type="checkbox"
-                    class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                    class="checkbox-style"
                   >
                   <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                    <EditIcon class="w-4 h-4 text-orange-600 mr-1" />
+                    <EditIcon class="w-4 h-4 primary-color mr-1" />
                     Activer la description détaillée (WYSIWYG)
                   </label>
                 </div>
                 
                 <div v-if="editData.hasDetailedDescription">
                   <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                     Barre d'outils WYSIWYG 
+                     <!-- Barre d'outils WYSIWYG  -->
                     <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                      <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold bg-gray-200 text-black" title="Gras">B</button>
-                      <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic bg-gray-200 text-black" title="Italique">I</button>
-                      <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline bg-gray-200 text-black" title="Souligné">U</button>
+                      <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
+                      <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic " title="Italique" style="background-color: lightgray; color: black;">I</button>
+                      <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline " title="Souligné" style="background-color: lightgray; color: black;">U</button>
                       <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                      <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm bg-gray-200 text-black" title="Liste à puces">•</button>
-                      <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm bg-gray-200 text-black" title="Liste numérotée">1.</button>
+                      <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
+                      <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
                       <div class="w-px h-6 bg-gray-300 mx-1"></div>
                       <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
                         <option value="">Titre</option>
@@ -143,7 +139,7 @@
                         <option value="h3">Titre 3</option>
                       </select>
                     </div>
-                     Zone d'édition 
+                     <!-- Zone d'édition  -->
                     <div 
                       ref="wysiwygEditor"
                       contenteditable="true"
@@ -156,10 +152,10 @@
                 </div>
               </div>
   
-               Catégorie 
+               <!-- Catégorie  -->
               <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                  Catégorie <span class="text-red-500">*</span>
+                  Catégorie <span class="primary-color">*</span>
                 </label>
                 <select
                   id="category"
@@ -167,7 +163,7 @@
                   @change="updateSubcategories"
                   required
                   :disabled="categoriesLoading"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
                   <option v-for="category in categories" :key="category.id" :value="category.id">
@@ -176,10 +172,10 @@
                 </select>
               </div>
   
-               Sous-catégorie 
+               <!-- Sous-catégorie  -->
               <div>
                 <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                  Sous-catégorie <span class="text-red-500">*</span>
+                  Sous-catégorie <span class="primary-color">*</span>
                 </label>
                 <select
                   id="subcategory"
@@ -187,7 +183,7 @@
                   @change="updateSubSubcategories"
                   required
                   :disabled="!editData.category_id || categoriesLoading"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Sélectionner une sous-catégorie</option>
                   <option v-for="subcategory in availableSubcategories" :key="subcategory.id" :value="subcategory.id">
@@ -196,7 +192,7 @@
                 </select>
               </div>
   
-               Sous-sous-catégorie 
+               <!-- Sous-sous-catégorie  -->
               <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-sous-catégorie
@@ -206,7 +202,7 @@
                   v-model="editData.subsubcategory_id"
                   @change="updateSubSubSubcategories"
                   :disabled="!editData.subcategory_id || categoriesLoading"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Sélectionner une sous-sous-catégorie (optionnel)</option>
                   <option v-for="subsubcategory in availableSubSubcategories" :key="subsubcategory.id" :value="subsubcategory.id">
@@ -215,7 +211,7 @@
                 </select>
               </div>
   
-               Sous-sous-sous-catégorie 
+               <!-- Sous-sous-sous-catégorie  -->
               <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-sous-sous-catégorie
@@ -224,7 +220,7 @@
                   id="subsubsubcategory"
                   v-model="editData.subsubsubcategory_id"
                   :disabled="!editData.subsubcategory_id || categoriesLoading"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base disabled:bg-gray-100"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Sélectionner une sous-sous-sous-catégorie (optionnel)</option>
                   <option v-for="subsubsubcategory in availableSubSubSubcategories" :key="subsubsubcategory.id" :value="subsubsubcategory.id">
@@ -233,7 +229,7 @@
                 </select>
               </div>
 
-               Tags 
+               <!-- Tags  -->
               <div class="sm:col-span-2">
                 <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
                   Tags (optionnel)
@@ -242,17 +238,17 @@
                   id="tags"
                   v-model="editData.tags"
                   type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
                 >
               </div>
             </div>
           </div>
 
-           Spécifications Véhicule 
+           <!-- Spécifications Véhicule  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
@@ -261,7 +257,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               Condition 
+               <!-- Condition  -->
               <div>
                 <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
                   État du véhicule
@@ -269,7 +265,7 @@
                 <select
                   id="vehicle_condition"
                   v-model="editData.vehicle_condition"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Tous les états</option>
                   <option value="new">Neuf</option>
@@ -278,7 +274,7 @@
                 </select>
               </div>
 
-               Make 
+               <!-- Make  -->
               <div>
                 <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                   Marque
@@ -287,12 +283,12 @@
                   id="vehicle_make"
                   v-model="editData.vehicle_make"
                   type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="Ex: Mercedes, Volvo, Scania"
                 >
               </div>
 
-               Model 
+               <!-- Model  -->
               <div>
                 <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                   Modèle
@@ -301,12 +297,12 @@
                   id="vehicle_model"
                   v-model="editData.vehicle_model"
                   type="text"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="Ex: Actros, FH, R-Series"
                 >
               </div>
 
-               Drive Type 
+               <!-- Drive Type  -->
               <div>
                 <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type de transmission
@@ -314,7 +310,7 @@
                 <select
                   id="drive_type"
                   v-model="editData.drive_type"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Tous les types</option>
                   <option value="4x2">4X2</option>
@@ -327,7 +323,7 @@
                 </select>
               </div>
 
-               Year 
+               <!-- Year  -->
               <div>
                 <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
                   Année
@@ -338,12 +334,12 @@
                   type="number"
                   min="1990"
                   :max="new Date().getFullYear() + 1"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="Ex: 2020"
                 >
               </div>
 
-               Fuel Type 
+               <!-- Fuel Type  -->
               <div>
                 <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type de carburant
@@ -351,7 +347,7 @@
                 <select
                   id="fuel_type"
                   v-model="editData.fuel_type"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Tous les carburants</option>
                   <option value="diesel">Diesel</option>
@@ -366,10 +362,10 @@
             </div>
           </div>
 
-           Caractéristiques Techniques 
+           <!-- Caractéristiques Techniques  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -379,7 +375,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               Transmission 
+               <!-- Transmission  -->
               <div>
                 <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Transmission
@@ -387,7 +383,7 @@
                 <select
                   id="transmission_type"
                   v-model="editData.transmission_type"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Toutes les transmissions</option>
                   <option value="automatic">Automatique</option>
@@ -395,7 +391,7 @@
                 </select>
               </div>
 
-               Engine Brand 
+               <!-- Engine Brand  -->
               <div>
                 <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
                   Marque du moteur
@@ -403,7 +399,7 @@
                 <select
                   id="engine_brand"
                   v-model="editData.engine_brand"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option value="">Sélectionnez une marque</option>
                   <option value="weichai">Weichai</option>
@@ -413,7 +409,7 @@
                 </select>
               </div>
 
-               Mileage 
+               <!-- Mileage  -->
               <div class="sm:col-span-2">
                 <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
                   Kilométrage (km)
@@ -424,7 +420,7 @@
                   type="number"
                   min="0"
                   max="200000"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="Ex: 150000"
                 >
                 <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
@@ -432,17 +428,17 @@
             </div>
           </div>
   
-           Prix et Stock 
+           <!-- Prix et Stock  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <DollarSignIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-               Prix unitaire 
+               <!-- Prix unitaire  -->
               <div>
                 <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
                   Prix unitaire ($) <span class="text-red-500">*</span>
@@ -454,15 +450,15 @@
                   min="0"
                   step="1"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="15000"
                 >
               </div>
   
-               Stock initial 
+               <!-- Stock initial  -->
               <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                  Stock <span class="text-red-500">*</span>
+                  Stock <span class="primary-color">*</span>
                 </label>
                 <input
                   id="stock"
@@ -471,12 +467,12 @@
                   min="0"
                   step="1"
                   required
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                   placeholder="50"
                 >
               </div>
   
-               Type d'unité 
+               <!-- Type d'unité  -->
               <div>
                 <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type d'unité
@@ -484,7 +480,7 @@
                 <select
                   id="unit_type"
                   v-model="editData.unit_type"
-                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  class="text-sm sm:text-base input-style"
                 >
                   <option v-for="unit in availableUnitTypes" :key="unit.value" :value="unit.value">
                     {{ unit.label }}
@@ -493,17 +489,17 @@
               </div>
             </div>
   
-             Prix de gros 
+             <!-- Prix de gros  -->
             <div class="mt-6">
               <div class="flex items-center mb-4">
                 <input 
                   v-model="hasWholesalePrice"
                   id="wholesale-price"
                   type="checkbox"
-                  class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                  class="checkbox-style"
                 >
                 <label for="wholesale-price" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                  <ZapIcon class="w-4 h-4 text-orange-600 mr-1" />
+                  <ZapIcon class="w-4 h-4 primary-color mr-1" />
                   Activer le prix de gros
                 </label>
               </div>
@@ -518,7 +514,7 @@
                     v-model.number="editData.wholesale_price"
                     type="number"
                     min="0"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="text-sm sm:text-base input-style"
                     placeholder="12000"
                   >
                 </div>
@@ -531,7 +527,7 @@
                     v-model.number="editData.wholesale_min_qty"
                     type="number"
                     min="1"
-                    class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                    class="text-sm sm:text-base input-style"
                     placeholder="10"
                   >
                 </div>
@@ -539,10 +535,10 @@
             </div>
           </div>
   
-           Couleurs 
+           <!-- Couleurs  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <PaletteIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Couleurs</h3>
@@ -570,7 +566,7 @@
               </div>
             </div>
 
-             Couleur personnalisée 
+             <!-- Couleur personnalisée  -->
             <div class="border-t border-gray-200 pt-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une couleur personnalisée</label>
               <div class="flex gap-2">
@@ -578,7 +574,7 @@
                   v-model="customColor.name"
                   type="text" 
                   placeholder="Nom de la couleur"
-                  class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm"
+                  class="flex-1 text-sm input-style"
                 >
                 <input 
                   v-model="customColor.value"
@@ -588,16 +584,16 @@
                 <button 
                   @click="addCustomColor"
                   type="button"
-                  class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all font-medium text-sm"
+                  class="px-4 py-2  text-white rounded-lg   transition-all font-medium text-sm btn-degrade-orange"
                 >
                   Ajouter
                 </button>
               </div>
             </div>
 
-             Ajout des tableaux de tracking pour les couleurs 
+             <!-- Ajout des tableaux de tracking pour les couleurs  -->
             <div v-if="colorsToAdd.length > 0 || colorsToRemove.length > 0" class="mt-6 space-y-4">
-               Couleurs à ajouter 
+               <!-- Couleurs à ajouter  -->
               <div v-if="colorsToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-2">Couleurs à ajouter :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -615,14 +611,14 @@
                 </div>
               </div>
 
-               Couleurs à supprimer 
+               <!-- Couleurs à supprimer  -->
               <div v-if="colorsToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-red-800 mb-2">Couleurs à supprimer :</h4>
+                <h4 class="text-sm font-medium error-color mb-2">Couleurs à supprimer :</h4>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="color in colorsToRemove" 
                     :key="color"
-                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800"
+                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 error-color"
                   >
                     <div 
                       class="w-3 h-3 rounded-full mr-1 border border-red-300"
@@ -635,22 +631,22 @@
             </div>
           </div>
   
-           Tailles 
+           <!-- Tailles  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <RulerIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
             </div>
 
-             Type de taille 
+             <!-- Type de taille  -->
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Type de taille</label>
               <select 
                 v-model="editData.sizeType"
                 @change="updateAvailableSizes"
-                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                class="text-sm sm:text-base input-style"
               >
                 <option value="">Sélectionner le type de taille</option>
                 <option v-for="sizeType in sizeTypes" :key="sizeType.value" :value="sizeType.value">
@@ -668,7 +664,7 @@
                 :class="[
                   'px-3 py-2 sm:px-4 sm:py-3 rounded-lg border-2 transition-all duration-200 text-xs sm:text-sm font-medium',
                   editData.sizes.includes(size)
-                    ? 'border-orange-500 bg-orange-50 text-orange-700'
+                    ? 'border-orange-500 bg-orange primary-color'
                     : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
                 ]"
               >
@@ -676,7 +672,7 @@
               </button>
             </div>
 
-             Taille personnalisée 
+             <!-- Taille personnalisée  -->
             <div v-if="editData.sizeType" class="border-t border-gray-200 pt-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une taille personnalisée</label>
               <div class="flex gap-2">
@@ -684,19 +680,19 @@
                   v-model="customSize"
                   type="text" 
                   :placeholder="getSizePlaceholder(editData.sizeType)"
-                  class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm"
+                  class="flex-1 transition-all text-sm input-style"
                 >
                 <button 
                   @click="addCustomSize"
                   type="button"
-                  class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all font-medium text-sm"
+                  class="px-4 py-2 btn-degrade-orange rounded-lg  transition-all font-medium text-sm"
                 >
                   Ajouter
                 </button>
               </div>
             </div>
 
-             Ajout des tableaux de tracking pour les tailles 
+             <!-- Ajout des tableaux de tracking pour les tailles  -->
             <div v-if="sizesToAdd.length > 0 || sizesToRemove.length > 0" class="mt-6 space-y-4">
                Tailles à ajouter 
               <div v-if="sizesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
@@ -712,14 +708,14 @@
                 </div>
               </div>
 
-               Tailles à supprimer 
+               <!-- Tailles à supprimer  -->
               <div v-if="sizesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-red-800 mb-2">Tailles à supprimer :</h4>
+                <h4 class="text-sm font-medium error-color mb-2">Tailles à supprimer :</h4>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="size in sizesToRemove" 
                     :key="size"
-                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 text-red-800"
+                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 error-color"
                   >
                     {{ size }}
                   </span>
@@ -730,7 +726,7 @@
   
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <ImageIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Images du produit</h3>
@@ -780,7 +776,7 @@
                  
                 <div 
                   v-if="index === 0"
-                  class="absolute bottom-2 left-2 px-2 py-1 bg-orange-500 text-white text-xs rounded-md"
+                  class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md"
                 >
                   
                 </div>
@@ -795,18 +791,18 @@
                 <button
                   type="button"
                   @click="removeImage(index)"
-                  class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity hover:bg-red-600"
+                  class="absolute -top-2 -right-2 w-6 h-6  text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity error-background-color"
                 >
                   <XIcon class="w-4 h-4" />
                 </button>
                 
-                 Boutons de réorganisation 
+                 <!-- Boutons de réorganisation  -->
                 <div class="absolute bottom-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     v-if="index > 0"
                     type="button"
                     @click="moveImageUp(index)"
-                    class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600"
+                    class="w-6 h-6 bg-orange text-white rounded-full flex items-center justify-center"
                     title="Déplacer vers la gauche"
                   >
                     <ChevronLeftIcon class="w-3 h-3" />
@@ -815,7 +811,7 @@
                     v-if="index < editData.images.length - 1"
                     type="button"
                     @click="moveImageDown(index)"
-                    class="w-6 h-6 bg-blue-500 text-white rounded-full flex items-center justify-center hover:bg-blue-600"
+                    class="w-6 h-6 bg-orange text-white rounded-full flex items-center justify-center"
                     title="Déplacer vers la droite"
                   >
                     <ChevronRightIcon class="w-3 h-3" />
@@ -824,9 +820,9 @@
               </div>
             </div>
 
-             Ajout des tableaux de tracking pour les images 
+             <!-- Ajout des tableaux de tracking pour les images  -->
             <div v-if="imagesToAdd.length > 0 || imagesToRemove.length > 0" class="space-y-4">
-               Images à ajouter 
+               <!-- Images à ajouter  -->
               <div v-if="imagesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-3">Images à ajouter ({{ imagesToAdd.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -855,9 +851,9 @@
                 </div>
               </div>
 
-               Images à supprimer 
+               <!-- Images à supprimer  -->
               <div v-if="imagesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-red-800 mb-3">Images à supprimer ({{ imagesToRemove.length }}) :</h4>
+                <h4 class="text-sm font-medium error-color mb-3">Images à supprimer ({{ imagesToRemove.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                   <div 
                     v-for="(imageUrl, index) in imagesToRemove" 
@@ -869,12 +865,12 @@
                       :alt="`Image supprimée ${index + 1}`"
                       class="w-full h-16 object-cover rounded border border-red-300 opacity-75"
                     >
-                    <div class="absolute -top-1 -right-1 w-4 h-4 bg-red-500 text-white rounded-full flex items-center justify-center">
+                    <div class="absolute -top-1 -right-1 w-4 h-4 error-color text-white rounded-full flex items-center justify-center">
                       <span class="text-xs">-</span>
                     </div>
                   </div>
                 </div>
-                <div class="mt-2 text-xs text-red-700">
+                <div class="mt-2 text-xs error-color">
                   <strong>Liens :</strong>
                   <ul class="list-disc list-inside mt-1 space-y-1">
                     <li v-for="(imageUrl, index) in imagesToRemove" :key="index" class="break-all">
@@ -885,7 +881,7 @@
               </div>
             </div>
 
-             Message si aucune image 
+             <!-- Message si aucune image  -->
             <div v-if="editData.images.length === 0" class="text-center py-8 text-gray-500">
               <ImageIcon class="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>Aucune image ajoutée</p>
@@ -893,10 +889,10 @@
             </div>
           </div>
 
-           Vidéo 
+           <!-- Vidéo  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <VideoIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vidéo (optionnel)</h3>
@@ -930,21 +926,21 @@
               <button 
                 @click="removeVideo"
                 type="button"
-                class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                class="mt-4 px-4 py-2 error-background-color text-white rounded-lg  transition-colors font-medium"
               >
                 Supprimer la vidéo
               </button>
             </div>
           </div>
   
-           Statut 
+           <!-- Statut  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center mb-6">
               <input 
                 v-model="editData.is_active"
                 id="is-active"
                 type="checkbox"
-                class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                class="checkbox-style"
               >
               <label for="is-active" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                 <CheckCircleIcon class="w-4 h-4 text-green-600 mr-1" />
@@ -956,14 +952,14 @@
         </form>
       </div>
   
-       Footer fixe avec navigation 
+       <!-- Footer fixe avec navigation  -->
       <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 sm:px-6 py-4 sm:rounded-b-2xl z-50">
         <div class="flex gap-2 sm:gap-3">
           <button
             type="button"
             @click="closeModal"
             :disabled="isLoading"
-            class="flex-1 px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            class="flex-1 px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium    transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-gray"
           >
             Annuler
           </button>
@@ -972,7 +968,7 @@
             type="button"
             @click="handleSubmit"
             :disabled="isLoading || !canSubmit"
-            class="flex-1 px-4 py-3 sm:px-6 sm:py-3 border border-transparent rounded-lg text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
+            class="flex-1 px-4 py-3 sm:px-6 sm:py-3 border border-transparent rounded-lg text-sm font-medium transition-all disabled:opacity-50 disabled:cursor-not-allowed btn-degrade-orange"
           >
             <div v-if="isLoading" class="flex items-center justify-center">
               <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
@@ -1627,39 +1623,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Couleurs personnalisées */
-.bg-orange-500 {
-  background-color: #F65A11;
-}
-
-.bg-orange-600 {
-  background-color: #e54a0a;
-}
-
-.hover\:bg-orange-600:hover {
-  background-color: #e54a0a;
-}
-
-.hover\:bg-orange-700:hover {
-  background-color: #d1440a;
-}
-
-.focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
-}
-
-.focus\:border-orange-500:focus {
-  border-color: #F65A11;
-}
-
-.text-orange-600 {
-  color: #e54a0a;
-}
-
-.border-orange-500 {
-  border-color: #F65A11;
-}
-
 /* Styles pour l'éditeur WYSIWYG */
 [contenteditable="true"]:empty:before {
   content: attr(placeholder);
@@ -1718,18 +1681,7 @@ onMounted(() => {
   text-decoration: underline;
 }
 
-/* Transitions fluides */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
 
-.transition-colors {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
 
 /* Effet de verre dépoli */
 .backdrop-blur-sm {

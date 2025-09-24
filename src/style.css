@@ -90,6 +90,21 @@ button:focus-visible {
 }
 .bg-orange{
   background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+}
+
+.bg-degrade-orange {
+ background: linear-gradient(160deg, black , #fc4618 , black);
+ color:white
+
+}
+
+.error-color{
+  color: #ec0202;
+}
+.error-background-color{
+  background-color: #ff0000;
+  color: white;
 }
 
 /* Les styles de bouton avec dégradé */
@@ -136,11 +151,42 @@ button:focus-visible {
   border-color: #fe7900;
 }
 .focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
+  --tw-ring-color: #fe7900;
 }
 
 .ring-orange-500 {
   --tw-ring-color: #fe7900;
+}
+
+/* les inputs styles */
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.5rem; 
+  padding: 0.80rem 0.75rem; 
+  transition: border-color 0.2s, box-shadow 0.2s; 
+  resize: none;
+}
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
+}
+.checkbox-style {
+  width: 1.25rem; 
+  height: 1.25rem; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.25rem; 
+  color: #fe7900 ;
+  transition: background-color 0.2s, border-color 0.2s; 
+}
+.checkbox-style:focus {
+  box-shadow: 0 0 0 1px #fe7900;
+  border-color: #fe7900; 
+}
+.checkbox-style:checked {
+  background-color: #fe7900; 
+  border-color: #fe7900; 
 }
 
 /* Transitions fluides */
@@ -155,3 +201,4 @@ button:focus-visible {
   transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
   transition-duration: 150ms;
 }
+

@@ -32,18 +32,19 @@
 
         <!-- Messages d'état -->
         <div v-if="error || isLoading || categoriesError || categoriesLoading" class="mt-4">
-          <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
-            <AlertCircleIcon class="w-4 h-4 text-red-500 flex-shrink-0" />
+          <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
+            <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
             <span class="text-sm">{{ error }}</span>
           </div>
 
-          <div v-if="categoriesError" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
-            <AlertCircleIcon class="w-4 h-4 text-red-500 flex-shrink-0" />
+          <div v-if="categoriesError" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
+            <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
             <div class="flex-1">
               <span class="text-sm">{{ categoriesError }}</span>
               <button 
                 @click="fetchCategories" 
-                class="ml-2 px-2 py-1 text-xs btn-degrade-orange"
+                class="ml-2 px-2 py-1 text-xs error-background-color
+                "
               >
                 Réessayer
               </button>
@@ -1645,45 +1646,10 @@ onMounted(() => {
   background: linear-gradient(90deg, #fe7900, #ff5a01);
  
 }
-.btn-degrade-orange {
-  background: linear-gradient(90deg, #fe7900, #ff5a01);
-  color: white;
-  transition: background 0.3s;
-}
-.btn-degrade-orange:hover {
-  background: linear-gradient(90deg, #ff5a01, #fe7900);
-  color: white;
-}
 
-.input-style {
-  width: 100%;
-  color: black ; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.5rem; 
-  padding: 0.80rem 0.75rem; 
-  transition: border-color 0.2s, box-shadow 0.2s; 
-}
-.input-style:focus {
-  border-color: #fe7900; 
-  box-shadow: 0 0 0 0.5px #fe7900; 
-}
 
-.checkbox-style {
-  width: 1.25rem; 
-  height: 1.25rem; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.25rem; 
-  color: #fe7900 ;
-  transition: background-color 0.2s, border-color 0.2s; 
-}
-.checkbox-style:focus {
-  box-shadow: 0 0 0 1px #fe7900;
-  border-color: #fe7900; 
-}
-.checkbox-style:checked {
-  background-color: #fe7900; 
-  border-color: #fe7900; 
-}
+
+
 
 .bg-lightgray {
   background-color: #F9FAFB;
