@@ -1,5 +1,5 @@
 <template>
-  <!-- Overlay avec arrière-plan sombre -->
+   Overlay avec arrière-plan sombre 
   <div 
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
     @click="handleBackdropClick"
@@ -8,14 +8,14 @@
       class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
       @click.stop
     >
-      <!-- Animation de fond luxueuse -->
+       Animation de fond luxueuse 
       <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl">
         <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
       </div>
   
-      <!-- Header fixe -->
+       Header fixe 
       <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
@@ -35,7 +35,7 @@
           </button>
         </div>
   
-        <!-- Messages d'état -->
+         Messages d'état 
         <div v-if="error || isLoading || categoriesError || categoriesLoading" class="mt-4">
           <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 text-red-700 rounded-lg flex items-center space-x-2">
             <AlertCircleIcon class="w-4 h-4 text-red-500 flex-shrink-0" />
@@ -67,11 +67,11 @@
         </div>
       </div>
   
-      <!-- Contenu scrollable -->
+       Contenu scrollable 
       <div class="overflow-y-auto h-[calc(100vh-200px)] sm:h-auto sm:max-h-[calc(60vh)] px-4 sm:px-6 py-6 relative z-5">
         <form @submit.prevent="handleSubmit" class="space-y-6 sm:space-y-8" v-if="editData">
           
-          <!-- Informations de base -->
+           Informations de base 
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-gradient-to-br from-blue-500 to-blue-600 rounded-lg flex items-center justify-center">
@@ -81,7 +81,7 @@
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-              <!-- Nom du produit -->
+               Nom du produit 
               <div class="sm:col-span-2">
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                   Nom du produit <span class="text-red-500">*</span>
@@ -96,7 +96,7 @@
                 >
               </div>
   
-              <!-- Description courte -->
+               Description courte 
               <div class="sm:col-span-2">
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                   Description courte
@@ -109,8 +109,54 @@
                   placeholder="Décrivez votre produit..."
                 ></textarea>
               </div>
+
+               Description détaillée WYSIWYG 
+              <div class="sm:col-span-2">
+                <div class="flex items-center mb-3">
+                  <input 
+                    v-model="editData.hasDetailedDescription"
+                    id="detailed-description-toggle"
+                    type="checkbox"
+                    class="w-5 h-5 text-orange-600 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                  >
+                  <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
+                    <EditIcon class="w-4 h-4 text-orange-600 mr-1" />
+                    Activer la description détaillée (WYSIWYG)
+                  </label>
+                </div>
+                
+                <div v-if="editData.hasDetailedDescription">
+                  <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
+                     Barre d'outils WYSIWYG 
+                    <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
+                      <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold bg-gray-200 text-black" title="Gras">B</button>
+                      <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic bg-gray-200 text-black" title="Italique">I</button>
+                      <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline bg-gray-200 text-black" title="Souligné">U</button>
+                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                      <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm bg-gray-200 text-black" title="Liste à puces">•</button>
+                      <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm bg-gray-200 text-black" title="Liste numérotée">1.</button>
+                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                      <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
+                        <option value="">Titre</option>
+                        <option value="h1">Titre 1</option>
+                        <option value="h2">Titre 2</option>
+                        <option value="h3">Titre 3</option>
+                      </select>
+                    </div>
+                     Zone d'édition 
+                    <div 
+                      ref="wysiwygEditor"
+                      contenteditable="true"
+                      @input="updateDetailedDescription"
+                      class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
+                      style="white-space: pre-wrap;"
+                      placeholder="Décrivez votre produit en détail..."
+                    ></div>
+                  </div>
+                </div>
+              </div>
   
-              <!-- Catégorie -->
+               Catégorie 
               <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                   Catégorie <span class="text-red-500">*</span>
@@ -130,7 +176,7 @@
                 </select>
               </div>
   
-              <!-- Sous-catégorie -->
+               Sous-catégorie 
               <div>
                 <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-catégorie <span class="text-red-500">*</span>
@@ -150,8 +196,8 @@
                 </select>
               </div>
   
-              <!-- Sous-sous-catégorie -->
-              <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-2">
+               Sous-sous-catégorie 
+              <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-sous-catégorie
                 </label>
@@ -169,8 +215,8 @@
                 </select>
               </div>
   
-              <!-- Sous-sous-sous-catégorie -->
-              <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-2">
+               Sous-sous-sous-catégorie 
+              <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-sous-sous-catégorie
                 </label>
@@ -186,10 +232,207 @@
                   </option>
                 </select>
               </div>
+
+               Tags 
+              <div class="sm:col-span-2">
+                <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
+                  Tags (optionnel)
+                </label>
+                <input
+                  id="tags"
+                  v-model="editData.tags"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
+                >
+              </div>
+            </div>
+          </div>
+
+           Spécifications Véhicule 
+          <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+              <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Spécifications Véhicule</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+               Condition 
+              <div>
+                <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
+                  État du véhicule
+                </label>
+                <select
+                  id="vehicle_condition"
+                  v-model="editData.vehicle_condition"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                >
+                  <option value="">Tous les états</option>
+                  <option value="new">Neuf</option>
+                  <option value="used">Occasion</option>
+                  <option value="refurbished">Reconditionné</option>
+                </select>
+              </div>
+
+               Make 
+              <div>
+                <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
+                  Marque
+                </label>
+                <input
+                  id="vehicle_make"
+                  v-model="editData.vehicle_make"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  placeholder="Ex: Mercedes, Volvo, Scania"
+                >
+              </div>
+
+               Model 
+              <div>
+                <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
+                  Modèle
+                </label>
+                <input
+                  id="vehicle_model"
+                  v-model="editData.vehicle_model"
+                  type="text"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  placeholder="Ex: Actros, FH, R-Series"
+                >
+              </div>
+
+               Drive Type 
+              <div>
+                <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Type de transmission
+                </label>
+                <select
+                  id="drive_type"
+                  v-model="editData.drive_type"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                >
+                  <option value="">Tous les types</option>
+                  <option value="4x2">4X2</option>
+                  <option value="6x2">6X2</option>
+                  <option value="6x4">6X4</option>
+                  <option value="6x6">6X6</option>
+                  <option value="8x4">8X4</option>
+                  <option value="8x6">8X6</option>
+                  <option value="8x8">8X8</option>
+                </select>
+              </div>
+
+               Year 
+              <div>
+                <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
+                  Année
+                </label>
+                <input
+                  id="vehicle_year"
+                  v-model="editData.vehicle_year"
+                  type="number"
+                  min="1990"
+                  :max="new Date().getFullYear() + 1"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  placeholder="Ex: 2020"
+                >
+              </div>
+
+               Fuel Type 
+              <div>
+                <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Type de carburant
+                </label>
+                <select
+                  id="fuel_type"
+                  v-model="editData.fuel_type"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                >
+                  <option value="">Tous les carburants</option>
+                  <option value="diesel">Diesel</option>
+                  <option value="electric">Électrique</option>
+                  <option value="hybrid">Hybride</option>
+                  <option value="cng">CNG</option>
+                  <option value="lng">LNG</option>
+                  <option value="hydrogen">Hydrogène</option>
+                  <option value="unknown">Inconnu</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+           Caractéristiques Techniques 
+          <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+              <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Caractéristiques Techniques</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+               Transmission 
+              <div>
+                <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Transmission
+                </label>
+                <select
+                  id="transmission_type"
+                  v-model="editData.transmission_type"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                >
+                  <option value="">Toutes les transmissions</option>
+                  <option value="automatic">Automatique</option>
+                  <option value="manual">Manuelle</option>
+                </select>
+              </div>
+
+               Engine Brand 
+              <div>
+                <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                  Marque du moteur
+                </label>
+                <select
+                  id="engine_brand"
+                  v-model="editData.engine_brand"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                >
+                  <option value="">Sélectionnez une marque</option>
+                  <option value="weichai">Weichai</option>
+                  <option value="yuchai">Yuchai</option>
+                  <option value="sinotruck">Sinotruck</option>
+                  <option value="man">MAN</option>
+                </select>
+              </div>
+
+               Mileage 
+              <div class="sm:col-span-2">
+                <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
+                  Kilométrage (km)
+                </label>
+                <input
+                  id="vehicle_mileage"
+                  v-model="editData.vehicle_mileage"
+                  type="number"
+                  min="0"
+                  max="200000"
+                  class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+                  placeholder="Ex: 150000"
+                >
+                <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
+              </div>
             </div>
           </div>
   
-          <!-- Prix et Stock -->
+           Prix et Stock 
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-gradient-to-br from-green-500 to-green-600 rounded-lg flex items-center justify-center">
@@ -199,10 +442,10 @@
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-              <!-- Prix unitaire -->
+               Prix unitaire 
               <div>
                 <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                  Prix unitaire (FCFA) <span class="text-red-500">*</span>
+                  Prix unitaire ($) <span class="text-red-500">*</span>
                 </label>
                 <input
                   id="unit_price"
@@ -216,7 +459,7 @@
                 >
               </div>
   
-              <!-- Stock initial -->
+               Stock initial 
               <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
                   Stock <span class="text-red-500">*</span>
@@ -233,7 +476,7 @@
                 >
               </div>
   
-              <!-- Type d'unité -->
+               Type d'unité 
               <div>
                 <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type d'unité
@@ -250,7 +493,7 @@
               </div>
             </div>
   
-            <!-- Prix de gros -->
+             Prix de gros 
             <div class="mt-6">
               <div class="flex items-center mb-4">
                 <input 
@@ -296,7 +539,7 @@
             </div>
           </div>
   
-          <!-- Couleurs -->
+           Couleurs 
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
@@ -327,9 +570,34 @@
               </div>
             </div>
 
-            <!-- Ajout des tableaux de tracking pour les couleurs -->
+             Couleur personnalisée 
+            <div class="border-t border-gray-200 pt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une couleur personnalisée</label>
+              <div class="flex gap-2">
+                <input 
+                  v-model="customColor.name"
+                  type="text" 
+                  placeholder="Nom de la couleur"
+                  class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm"
+                >
+                <input 
+                  v-model="customColor.value"
+                  type="color" 
+                  class="w-12 h-10 border border-gray-300 rounded-lg cursor-pointer"
+                >
+                <button 
+                  @click="addCustomColor"
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all font-medium text-sm"
+                >
+                  Ajouter
+                </button>
+              </div>
+            </div>
+
+             Ajout des tableaux de tracking pour les couleurs 
             <div v-if="colorsToAdd.length > 0 || colorsToRemove.length > 0" class="mt-6 space-y-4">
-              <!-- Couleurs à ajouter -->
+               Couleurs à ajouter 
               <div v-if="colorsToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-2">Couleurs à ajouter :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -347,7 +615,7 @@
                 </div>
               </div>
 
-              <!-- Couleurs à supprimer -->
+               Couleurs à supprimer 
               <div v-if="colorsToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Couleurs à supprimer :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -367,7 +635,7 @@
             </div>
           </div>
   
-          <!-- Tailles -->
+           Tailles 
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -375,10 +643,25 @@
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
             </div>
+
+             Type de taille 
+            <div class="mb-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Type de taille</label>
+              <select 
+                v-model="editData.sizeType"
+                @change="updateAvailableSizes"
+                class="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base"
+              >
+                <option value="">Sélectionner le type de taille</option>
+                <option v-for="sizeType in sizeTypes" :key="sizeType.value" :value="sizeType.value">
+                  {{ sizeType.label }}
+                </option>
+              </select>
+            </div>
   
-            <div class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 mb-4">
+            <div v-if="editData.sizeType" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 mb-4">
               <button
-                v-for="size in availableSizes"
+                v-for="size in currentAvailableSizes"
                 :key="size"
                 type="button"
                 @click="toggleSize(size)"
@@ -393,9 +676,29 @@
               </button>
             </div>
 
-            <!-- Ajout des tableaux de tracking pour les tailles -->
+             Taille personnalisée 
+            <div v-if="editData.sizeType" class="border-t border-gray-200 pt-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une taille personnalisée</label>
+              <div class="flex gap-2">
+                <input 
+                  v-model="customSize"
+                  type="text" 
+                  :placeholder="getSizePlaceholder(editData.sizeType)"
+                  class="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm"
+                >
+                <button 
+                  @click="addCustomSize"
+                  type="button"
+                  class="px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg hover:from-orange-600 hover:to-orange-700 transition-all font-medium text-sm"
+                >
+                  Ajouter
+                </button>
+              </div>
+            </div>
+
+             Ajout des tableaux de tracking pour les tailles 
             <div v-if="sizesToAdd.length > 0 || sizesToRemove.length > 0" class="mt-6 space-y-4">
-              <!-- Tailles à ajouter -->
+               Tailles à ajouter 
               <div v-if="sizesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-2">Tailles à ajouter :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -409,7 +712,7 @@
                 </div>
               </div>
 
-              <!-- Tailles à supprimer -->
+               Tailles à supprimer 
               <div v-if="sizesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-red-800 mb-2">Tailles à supprimer :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -425,7 +728,6 @@
             </div>
           </div>
   
-          <!-- Gestion des images -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-gradient-to-br from-indigo-500 to-indigo-600 rounded-lg flex items-center justify-center">
@@ -435,7 +737,6 @@
               <span class="text-sm text-gray-500">({{ editData.images.length }}/8)</span>
             </div>
 
-            <!-- Ajout de la zone d'upload d'images -->
             <div class="mb-6">
               <div class="flex items-center justify-center w-full">
                 <label 
@@ -464,7 +765,6 @@
               </div>
             </div>
 
-            <!-- Grille d'images avec possibilité de suppression -->
             <div v-if="editData.images.length > 0" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
               <div 
                 v-for="(image, index) in editData.images" 
@@ -477,25 +777,21 @@
                   class="w-full h-24 sm:h-32 object-cover rounded-lg border border-gray-200"
                 >
                 
-                <!-- Indicateur d'image principale -->
+                 
                 <div 
                   v-if="index === 0"
                   class="absolute bottom-2 left-2 px-2 py-1 bg-orange-500 text-white text-xs rounded-md"
                 >
-                  Principal
+                  
                 </div>
-                
-                <!-- Indicateur de progression d'upload pour nouvelles images -->
                 <div v-if="image.uploading" class="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
                   <div class="text-white text-sm font-medium">{{ image.uploadProgress }}%</div>
                 </div>
                 
-                <!-- Indicateur de succès d'upload -->
                 <div v-if="image.uploaded && image.url" class="absolute top-2 left-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
                   <CheckIcon class="h-4 w-4" />
                 </div>
                 
-                <!-- Bouton de suppression -->
                 <button
                   type="button"
                   @click="removeImage(index)"
@@ -504,7 +800,7 @@
                   <XIcon class="w-4 h-4" />
                 </button>
                 
-                <!-- Boutons de réorganisation -->
+                 Boutons de réorganisation 
                 <div class="absolute bottom-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     v-if="index > 0"
@@ -528,9 +824,9 @@
               </div>
             </div>
 
-            <!-- Ajout des tableaux de tracking pour les images -->
+             Ajout des tableaux de tracking pour les images 
             <div v-if="imagesToAdd.length > 0 || imagesToRemove.length > 0" class="space-y-4">
-              <!-- Images à ajouter -->
+               Images à ajouter 
               <div v-if="imagesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-3">Images à ajouter ({{ imagesToAdd.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -559,7 +855,7 @@
                 </div>
               </div>
 
-              <!-- Images à supprimer -->
+               Images à supprimer 
               <div v-if="imagesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-red-800 mb-3">Images à supprimer ({{ imagesToRemove.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -589,15 +885,59 @@
               </div>
             </div>
 
-            <!-- Message si aucune image -->
-            <div v-else-if="editData.images.length === 0" class="text-center py-8 text-gray-500">
+             Message si aucune image 
+            <div v-if="editData.images.length === 0" class="text-center py-8 text-gray-500">
               <ImageIcon class="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>Aucune image ajoutée</p>
               <p class="text-sm">Ajoutez jusqu'à 8 images pour votre produit</p>
             </div>
           </div>
+
+           Vidéo 
+          <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+              <div class="w-8 h-8 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+                <VideoIcon class="w-4 h-4 text-white" />
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vidéo (optionnel)</h3>
+            </div>
+
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors">
+              <VideoIcon class="mx-auto h-12 w-12 text-gray-400 mb-4" />
+              <div>
+                <label for="video-upload" class="cursor-pointer">
+                  <span class="block text-sm text-gray-600 mb-2">
+                    Cliquez pour télécharger une vidéo
+                  </span>
+                  <span class="block text-xs text-gray-500">
+                    MP4, MOV, AVI jusqu'à 50MB
+                  </span>
+                </label>
+                <input 
+                  id="video-upload" 
+                  type="file" 
+                  accept="video/*" 
+                  @change="handleVideoUpload"
+                  class="sr-only"
+                >
+              </div>
+            </div>
+            
+            <div v-if="editData.video" class="mt-6">
+              <video :src="editData.video.preview || editData.video.url" controls class="w-full max-w-md mx-auto rounded-lg shadow-lg">
+                Votre navigateur ne supporte pas la lecture de vidéos.
+              </video>
+              <button 
+                @click="removeVideo"
+                type="button"
+                class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+              >
+                Supprimer la vidéo
+              </button>
+            </div>
+          </div>
   
-          <!-- Statut -->
+           Statut 
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center mb-6">
               <input 
@@ -616,7 +956,7 @@
         </form>
       </div>
   
-      <!-- Footer fixe avec navigation -->
+       Footer fixe avec navigation 
       <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 sm:px-6 py-4 sm:rounded-b-2xl z-50">
         <div class="flex gap-2 sm:gap-3">
           <button
@@ -650,7 +990,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, watch } from 'vue'
+import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
 import { categoriesApi } from '../../services/api'
 import { 
   Edit as EditIcon,
@@ -665,7 +1005,8 @@ import {
   Zap as ZapIcon,
   Ruler as RulerIcon,
   ChevronLeft as ChevronLeftIcon,
-  ChevronRight as ChevronRightIcon
+  ChevronRight as ChevronRightIcon,
+  Video as VideoIcon
 } from 'lucide-vue-next'
 
 const props = defineProps({
@@ -679,6 +1020,9 @@ const emit = defineEmits(['close', 'save'])
 const isLoading = ref(false)
 const loadingMessage = ref('')
 const error = ref(null)
+const wysiwygEditor = ref(null)
+const customColor = ref({ name: '', value: '#000000' })
+const customSize = ref('')
 
 // États pour les catégories API
 const categories = ref([])
@@ -696,22 +1040,81 @@ const editData = ref({
   id: null,
   name: '',
   description: '',
+  detailed_description: '',
+  hasDetailedDescription: false,
   category_id: '',
   subcategory_id: '',
   subsubcategory_id: '',
   subsubsubcategory_id: '',
+  tags: '',
   unit_price: null,
   stock: null,
   unit_type: 'quantity',
   colors: [],
   sizes: [],
+  sizeType: '',
   images: [],
+  video: null,
   is_active: true,
   wholesale_price: null,
-  wholesale_min_qty: null
+  wholesale_min_qty: null,
+  // Vehicle specific fields
+  vehicle_condition: '',
+  vehicle_make: '',
+  vehicle_model: '',
+  drive_type: '',
+  vehicle_year: null,
+  fuel_type: '',
+  transmission_type: '',
+  engine_brand: '',
+  vehicle_mileage: null
 })
 
 const hasWholesalePrice = ref(false)
+
+// Types de tailles
+const sizeTypes = ref([
+  { 
+    value: 'clothing', 
+    label: 'Tailles de vêtements',
+    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
+  },
+  { 
+    value: 'shoes', 
+    label: 'Pointures de chaussures',
+    sizes: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47']
+  },
+  { 
+    value: 'storage', 
+    label: 'Capacité de stockage',
+    sizes: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB']
+  },
+  { 
+    value: 'screen', 
+    label: 'Taille d\'écran',
+    sizes: ['5.5"', '6.1"', '6.7"', '13"', '15"', '17"', '21"', '24"', '27"', '32"']
+  },
+  { 
+    value: 'ring', 
+    label: 'Taille de bague',
+    sizes: ['48', '50', '52', '54', '56', '58', '60', '62', '64', '66', '68']
+  },
+  { 
+    value: 'watch', 
+    label: 'Taille de bracelet de montre',
+    sizes: ['38mm', '40mm', '42mm', '44mm', '45mm', '49mm']
+  },
+  { 
+    value: 'custom', 
+    label: 'Tailles personnalisées',
+    sizes: []
+  }
+])
+
+const currentAvailableSizes = computed(() => {
+  const sizeType = sizeTypes.value.find(type => type.value === editData.value.sizeType)
+  return sizeType ? sizeType.sizes : []
+})
 
 const availableColors = ref([
   { name: 'Noir', value: '#000000' },
@@ -728,10 +1131,9 @@ const availableColors = ref([
   { name: 'Or', value: '#FFD700' }
 ])
 
-const availableSizes = ref(['XS', 'S', 'M', 'L', 'XL', 'XXL', '36', '37', '38', '39', '40', '41', '42', '43', '44'])
-
 const availableUnitTypes = ref([
   { value: 'quantity', label: 'Quantité (unités)' },
+  { value: 'weight_t', label: 'Poids (T)' },
   { value: 'weight_kg', label: 'Poids (kg)' },
   { value: 'weight_g', label: 'Poids (g)' },
   { value: 'volume_l', label: 'Volume (L)' },
@@ -808,6 +1210,19 @@ const getColorName = (colorValue) => {
   return color ? color.name : colorValue
 }
 
+const getSizePlaceholder = (sizeType) => {
+  const placeholders = {
+    'clothing': 'Ex: M, L, XL...',
+    'shoes': 'Ex: 42, 43, 44...',
+    'storage': 'Ex: 128GB, 256GB...',
+    'screen': 'Ex: 15", 17"...',
+    'ring': 'Ex: 54, 56, 58...',
+    'watch': 'Ex: 42mm, 44mm...',
+    'custom': 'Ex: Taille personnalisée...'
+  }
+  return placeholders[sizeType] || 'Ex: Taille personnalisée...'
+}
+
 // Méthodes
 const fetchCategories = async () => {
   try {
@@ -825,6 +1240,24 @@ const fetchCategories = async () => {
   }
 }
 
+const formatText = (command) => {
+  document.execCommand(command, false, null)
+  wysiwygEditor.value.focus()
+}
+
+const formatHeading = (event) => {
+  const heading = event.target.value
+  if (heading) {
+    document.execCommand('formatBlock', false, heading)
+    event.target.value = ''
+    wysiwygEditor.value.focus()
+  }
+}
+
+const updateDetailedDescription = () => {
+  editData.value.detailed_description = wysiwygEditor.value.innerHTML
+}
+
 const updateSubcategories = () => {
   editData.value.subcategory_id = ''
   editData.value.subsubcategory_id = ''
@@ -838,6 +1271,10 @@ const updateSubSubcategories = () => {
 
 const updateSubSubSubcategories = () => {
   editData.value.subsubsubcategory_id = ''
+}
+
+const updateAvailableSizes = () => {
+  editData.value.sizes = []
 }
 
 const toggleColor = (color) => {
@@ -855,6 +1292,36 @@ const toggleSize = (size) => {
     editData.value.sizes.splice(index, 1)
   } else {
     editData.value.sizes.push(size)
+  }
+}
+
+const addCustomColor = () => {
+  if (customColor.value.name && customColor.value.value) {
+    const exists = availableColors.value.some(color => 
+      color.value === customColor.value.value || 
+      color.name.toLowerCase() === customColor.value.name.toLowerCase()
+    )
+    
+    if (!exists) {
+      availableColors.value.push({
+        name: customColor.value.name,
+        value: customColor.value.value
+      })
+      editData.value.colors.push(customColor.value.value)
+    }
+    
+    customColor.value = { name: '', value: '#000000' }
+  }
+}
+
+const addCustomSize = () => {
+  if (customSize.value && !currentAvailableSizes.value.includes(customSize.value)) {
+    const sizeType = sizeTypes.value.find(type => type.value === editData.value.sizeType)
+    if (sizeType) {
+      sizeType.sizes.push(customSize.value)
+      editData.value.sizes.push(customSize.value)
+    }
+    customSize.value = ''
   }
 }
 
@@ -898,12 +1365,14 @@ const handleSubmit = async () => {
       subcategory_id: editData.value.subcategory_id,
       subsubcategory_id: editData.value.subsubcategory_id || null,
       subsubsubcategory_id: editData.value.subsubsubcategory_id || null,
+      tags: editData.value.tags,
       unit_price: parseFloat(editData.value.unit_price),
       stock: parseInt(editData.value.stock),
       unit_type: editData.value.unit_type,
       is_active: editData.value.is_active,
       colors: editData.value.colors,
       sizes: editData.value.sizes,
+      size_type: editData.value.sizeType,
       images: finalImageUrls,
       image_add: newImages.value.filter(img => img.uploaded && img.url).map(img => img.url),
       image_remove: imagesToRemove.value,
@@ -911,12 +1380,31 @@ const handleSubmit = async () => {
       colorsToAdd: colorsToAdd.value,
       colorsToRemove: colorsToRemove.value,
       sizesToAdd: sizesToAdd.value,
-      sizesToRemove: sizesToRemove.value
+      sizesToRemove: sizesToRemove.value,
+      // Vehicle specific fields
+      vehicle_condition: editData.value.vehicle_condition,
+      vehicle_make: editData.value.vehicle_make,
+      vehicle_model: editData.value.vehicle_model,
+      drive_type: editData.value.drive_type,
+      vehicle_year: editData.value.vehicle_year,
+      fuel_type: editData.value.fuel_type,
+      transmission_type: editData.value.transmission_type,
+      engine_brand: editData.value.engine_brand,
+      vehicle_mileage: editData.value.vehicle_mileage
+    }
+
+    // N'inclure la description détaillée que si elle est activée
+    if (editData.value.hasDetailedDescription && editData.value.detailed_description) {
+      formData.detailed_description = editData.value.detailed_description
     }
 
     if (hasWholesalePrice.value && editData.value.wholesale_price) {
       formData.wholesale_price = parseFloat(editData.value.wholesale_price)
       formData.wholesale_min_qty = parseInt(editData.value.wholesale_min_qty)
+    }
+
+    if (editData.value.video && editData.value.video.url) {
+      formData.video_url = editData.value.video.url
     }
     
     emit('save', formData)
@@ -975,6 +1463,28 @@ const handleImageUpload = (event) => {
   
   // Reset input
   event.target.value = ''
+}
+
+const handleVideoUpload = (event) => {
+  const file = event.target.files[0]
+  if (file && file.size <= 50 * 1024 * 1024) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      editData.value.video = {
+        file: file,
+        preview: e.target.result,
+        uploading: false,
+        uploadProgress: 0,
+        uploaded: false,
+        url: null
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+const removeVideo = () => {
+  editData.value.video = null
 }
 
 const removeImage = (index) => {
@@ -1060,19 +1570,34 @@ watch(() => props.product, (newProduct) => {
       id: newProduct.id,
       name: newProduct.name || '',
       description: newProduct.description || '',
+      detailed_description: newProduct.detailed_description || '',
+      hasDetailedDescription: !!(newProduct.detailed_description),
       category_id: newProduct.category_id || '',
       subcategory_id: newProduct.subcategory_id || '',
       subsubcategory_id: newProduct.subsubcategory_id || '',
       subsubsubcategory_id: newProduct.subsubsubcategory_id || '',
+      tags: newProduct.tags || '',
       unit_price: newProduct.unit_price || null,
       stock: newProduct.stock || null,
       unit_type: newProduct.unit_type || 'quantity',
       colors: [...(newProduct.colors || [])],
       sizes: [...(newProduct.sizes || [])],
+      sizeType: newProduct.size_type || '',
       images: existingImages, // Images existantes
+      video: newProduct.video_url ? { url: newProduct.video_url, preview: newProduct.video_url } : null,
       is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
       wholesale_price: newProduct.wholesale_price || null,
-      wholesale_min_qty: newProduct.wholesale_min_qty || null
+      wholesale_min_qty: newProduct.wholesale_min_qty || null,
+      // Vehicle specific fields
+      vehicle_condition: newProduct.vehicle_condition || '',
+      vehicle_make: newProduct.vehicle_make || '',
+      vehicle_model: newProduct.vehicle_model || '',
+      drive_type: newProduct.drive_type || '',
+      vehicle_year: newProduct.vehicle_year || null,
+      fuel_type: newProduct.fuel_type || '',
+      transmission_type: newProduct.transmission_type || '',
+      engine_brand: newProduct.engine_brand || '',
+      vehicle_mileage: newProduct.vehicle_mileage || null
     }
     
     originalColors.value = [...(newProduct.colors || [])]
@@ -1085,6 +1610,13 @@ watch(() => props.product, (newProduct) => {
     
     // Vérifier si le produit a un prix de gros
     hasWholesalePrice.value = !!(newProduct.wholesale_price && newProduct.wholesale_price > 0)
+
+    // Mettre à jour l'éditeur WYSIWYG si nécessaire
+    if (editData.value.hasDetailedDescription && wysiwygEditor.value) {
+      nextTick(() => {
+        wysiwygEditor.value.innerHTML = editData.value.detailed_description || ''
+      })
+    }
   }
 }, { immediate: true })
 
@@ -1126,6 +1658,64 @@ onMounted(() => {
 
 .border-orange-500 {
   border-color: #F65A11;
+}
+
+/* Styles pour l'éditeur WYSIWYG */
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  color: #9CA3AF;
+  font-style: italic;
+}
+
+[contenteditable="true"]:focus {
+  outline: none;
+}
+
+/* Styles pour le contenu formaté */
+[contenteditable="true"] h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable="true"] h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable="true"] h3 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable="true"] ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}
+
+[contenteditable="true"] ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}
+
+[contenteditable="true"] li {
+  margin: 0.25rem 0;
+}
+
+[contenteditable="true"] strong {
+  font-weight: bold;
+}
+
+[contenteditable="true"] em {
+  font-style: italic;
+}
+
+[contenteditable="true"] u {
+  text-decoration: underline;
 }
 
 /* Transitions fluides */
