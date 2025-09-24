@@ -7,9 +7,8 @@
   font-weight: 400;
 
   color-scheme: light dark;
-  color: rgba(255, 255, 255, 0.87);
+  color: #ffffffde;
   background-color: #242424;
-  --primary-color: #646cff;
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
@@ -21,7 +20,7 @@ a {
   text-decoration: inherit;
 }
 a:hover {
-  color: #535bf2;
+  color: #fe7900;
 }
 
 body {
@@ -45,12 +44,12 @@ button {
   font-size: 1em;
   font-weight: 500;
   font-family: inherit;
-  background-color: #1a1a1a;
+  background-color: #8f8f8f;
   cursor: pointer;
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: transparent;
 }
 button:focus,
 button:focus-visible {
@@ -72,13 +71,87 @@ button:focus-visible {
     background-color: #ffffff;
   }
   a:hover {
-    color: #747bff;
+    color: #fe7900;
   }
   button {
     background-color: #f9f9f9;
   }
 }
 
+/* les couleurs de bases */
 .bg-black {
-  background-color: #0000008f;
+  background-color: black;
+}
+.bg-white{
+  background-color: white;
+}
+.primary-color{
+  color: #fe7900;
+}
+.bg-orange{
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+}
+
+/* Les styles de bouton avec dégradé */
+
+.btn-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+  transition: background 0.3s;
+}
+.btn-degrade-orange:hover {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+  border-color: #ff5a01;
+  opacity: 0.8;
+}
+
+.btn-gray {
+  background: #8f8f8f;
+  color: #fff;
+  transition: background 0.3s;
+}
+.btn-gray:hover {
+  background: #b7b6b6;
+  border-color: #b7b6b6;
+}
+
+.btn-deconnexion{
+  background: #ec0202;
+  color: white ;
+  transition: background 0.3s;
+  }
+  .btn-deconnexion:hover{
+  background:#ff0000;
+  border-color:#ff0000;
+  }
+
+/* Les styles de bordures */
+
+.focus\:border-orange-500:focus {
+  border-color: #fe7900;
+}
+
+.border-orange-500 {
+  border-color: #fe7900;
+}
+.focus\:ring-orange-500:focus {
+  --tw-ring-color: rgba(246, 90, 17, 0.5);
+}
+
+.ring-orange-500 {
+  --tw-ring-color: #fe7900;
+}
+
+/* Transitions fluides */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
 }

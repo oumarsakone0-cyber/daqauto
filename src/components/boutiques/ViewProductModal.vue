@@ -19,7 +19,7 @@
       <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:py-6 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
-            <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+            <div class="w-10 h-10  rounded-lg flex items-center justify-center bg-orange">
               <PackageIcon class="w-5 h-5 text-white" />
             </div>
             <div>
@@ -27,12 +27,8 @@
               <p class="text-sm text-gray-600 hidden sm:block">Informations complètes et médias</p>
             </div>
           </div>
-          <button 
-            @click="$emit('close')"
-            class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors"
-          >
-            <XIcon class="w-5 h-5 text-gray-500" />
-          </button>
+         
+            <XIcon @click="$emit('close')" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
 
         <!-- Onglets modernes -->
@@ -41,10 +37,10 @@
             <button
               @click="activeTab = 'details'"
               :class="[
-                'flex-1 flex items-center justify-center space-x-2 py-2 sm:py-3 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200',
+                'flex-1 flex items-center justify-center space-x-2 py-2 sm:py-3 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm ',
                 activeTab === 'details'
-                  ? 'bg-orange-500 text-white shadow-lg transform scale-[1.02]'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? '  btn-degrade-orange'
+                  : 'btn-gray'
               ]"
             >
               <InfoIcon class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -58,8 +54,8 @@
               :class="[
                 'flex-1 flex items-center justify-center space-x-2 py-2 sm:py-3 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200',
                 activeTab === 'vehicle'
-                  ? 'bg-orange-500 text-white shadow-lg transform scale-[1.02]'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? '  btn-degrade-orange'
+                  : 'btn-gray'
               ]"
             >
               <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -71,14 +67,14 @@
               :class="[
                 'flex-1 flex items-center justify-center space-x-2 py-2 sm:py-3 px-2 sm:px-4 rounded-lg font-medium text-xs sm:text-sm transition-all duration-200',
                 activeTab === 'media'
-                  ? 'bg-orange-500 text-white shadow-lg transform scale-[1.02]'
-                  : 'text-gray-600 hover:text-gray-900 hover:bg-gray-50'
+                  ? '  btn-degrade-orange'
+                  : 'btn-gray'  
               ]"
             >
               <ImageIcon class="w-4 h-4 sm:w-5 sm:h-5" />
               <span class="hidden sm:inline">Galerie & Médias</span>
               <span class="sm:hidden">Médias</span>
-              <span v-if="mediaCount > 0" class="bg-white bg-opacity-20 text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
+              <span v-if="mediaCount > 0" class="bg-white text-black bg-opacity-20 text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
                 {{ mediaCount }}
               </span>
             </button>
@@ -106,12 +102,12 @@
                         @click="openImageModal"
                       >
                       <div v-else class="w-full h-full flex flex-col items-center justify-center text-gray-400">
-                        <ImageIcon class="w-12 h-12 sm:w-16 sm:h-16 mb-4" />
+                        <ImageIcon class="w-12 h-12 sm:w-16 sm:h-16 mb-4 primary-color" />
                         <span class="text-sm sm:text-lg font-medium">Aucune image</span>
                       </div>
                     </div>
                     <!-- Badge image count -->
-                    <div v-if="product.images && product.images.length > 1" class="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-orange-500 text-white text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full font-medium shadow-lg">
+                    <div v-if="product.images && product.images.length > 1" class="absolute -top-2 -right-2 sm:-top-3 sm:-right-3 bg-orange  text-xs sm:text-sm px-2 sm:px-3 py-1 rounded-full font-medium shadow-lg">
                       +{{ product.images.length - 1 }}
                     </div>
                   </div>
@@ -135,12 +131,12 @@
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div>
                         <h4 class="text-sm font-medium text-gray-500 mb-2">Prix de vente</h4>
-                        <div class="text-2xl sm:text-3xl font-bold text-orange-500">
-                          {{ formatPrice(product.unit_price) }} <span class="text-sm sm:text-lg text-gray-500">FCFA</span>
+                        <div class="text-2xl sm:text-3xl font-bold primary-color">
+                          {{ formatPrice(product.unit_price) }} <span class="text-sm sm:text-lg text-gray-500">$US  </span>
                         </div>
                         <div v-if="product.wholesale_price" class="mt-2 text-gray-600">
                           <span class="text-sm">Prix de gros: </span>
-                          <span class="font-semibold">{{ formatPrice(product.wholesale_price) }} FCFA</span>
+                          <span class="font-semibold">{{ formatPrice(product.wholesale_price) }} $US$</span>
                           <span class="text-sm text-gray-500"> ({{ product.wholesale_min_qty }}+ unités)</span>
                         </div>
                       </div>
@@ -162,12 +158,12 @@
                   <!-- Performance -->
                   <div class="grid grid-cols-2 gap-3 sm:gap-4">
                     <div class="bg-blue-50 rounded-xl p-3 sm:p-4 text-center">
-                      <div class="text-xl sm:text-2xl font-bold text-blue-600">{{ product.sales_count || 0 }}</div>
-                      <div class="text-xs sm:text-sm text-blue-600 font-medium">Ventes</div>
+                      <div class="text-xl sm:text-2xl font-bold primary-color">{{ product.sales_count || 0 }}</div>
+                      <div class="text-xs sm:text-sm primary-color font-medium">Ventes</div>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-3 sm:p-4 text-center">
-                      <div class="text-xl sm:text-2xl font-bold text-purple-600">{{ product.views_count || 0 }}</div>
-                      <div class="text-xs sm:text-sm text-purple-600 font-medium">Vues</div>
+                      <div class="text-xl sm:text-2xl font-bold primary-color">{{ product.views_count || 0 }}</div>
+                      <div class="text-xs sm:text-sm primary-color font-medium">Vues</div>
                     </div>
                   </div>
                 </div>
@@ -177,7 +173,7 @@
             <!-- Description -->
             <div v-if="product.description" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <FileTextIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                <FileTextIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                 Description
               </h4>
               <p class="text-gray-700 leading-relaxed text-sm sm:text-lg">{{ product.description }}</p>
@@ -188,7 +184,7 @@
               <!-- Catégorie -->
               <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <TagIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                  <TagIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Catégorie
                 </h4>
                 <div class="space-y-3">
@@ -206,7 +202,7 @@
               <!-- Informations système -->
               <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <InfoIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                  <InfoIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Informations
                 </h4>
                 <div class="space-y-3">
@@ -231,7 +227,7 @@
               <!-- Couleurs -->
               <div v-if="product.colors && product.colors.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <PaletteIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                  <PaletteIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Couleurs disponibles
                   <span class="ml-2 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{{ product.colors.length }}</span>
                 </h4>
@@ -253,7 +249,7 @@
               <!-- Tailles -->
               <div v-if="product.sizes && product.sizes.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <RulerIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                  <RulerIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Tailles disponibles
                   <span class="ml-2 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{{ product.sizes.length }}</span>
                 </h4>
@@ -272,14 +268,14 @@
             <!-- Tags -->
             <div v-if="product.tags && product.tags.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <TagIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                <TagIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                 Tags
               </h4>
               <div class="flex flex-wrap gap-2">
                 <span 
                   v-for="(tag, index) in product.tags" 
                   :key="index"
-                  class="px-3 py-2 bg-blue-100 text-blue-800 text-sm rounded-xl font-medium hover:bg-blue-200 transition-colors"
+                  class="px-3 py-2 bg-blue-100 primary-color text-sm rounded-xl font-medium hover:bg-blue-200 transition-colors"
                 >
                   {{ tag }}
                 </span>
@@ -293,7 +289,7 @@
             <div v-if="product.images && product.images.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center justify-between mb-4 sm:mb-6">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
-                  <ImageIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                  <ImageIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Galerie d'images
                 </h4>
                 <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium">
@@ -330,7 +326,7 @@
                     {{ currentImageIndex + 1 }} / {{ product.images.length }}
                   </div>
                   <!-- Badge image principale -->
-                  <div v-if="currentImageIndex === 0" class="absolute top-2 sm:top-4 left-2 sm:left-4 bg-orange-500 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-lg">
+                  <div v-if="currentImageIndex === 0" class="absolute top-2 sm:top-4 left-2 sm:left-4 primary-color text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-lg">
                     Image principale
                   </div>
                 </div>
@@ -357,12 +353,12 @@
                   <!-- Badge pour l'image principale -->
                   <div 
                     v-if="index === 0" 
-                    class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-orange-500 text-white text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full font-medium shadow-lg"
+                    class="absolute -top-1 -right-1 sm:-top-2 sm:-right-2 bg-orange text-white text-xs px-1.5 py-0.5 sm:px-2 sm:py-1 rounded-full font-medium shadow-lg"
                   >
-                    P
+                    
                   </div>
                   <!-- Overlay au survol -->
-                  <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all rounded-xl"></div>
+                  <div class="absolute inset-0 group-hover:bg-opacity-20 transition-all rounded-xl"></div>
                 </div>
               </div>
             </div>
@@ -371,7 +367,7 @@
             <div v-if="product.video_url" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center justify-between mb-4 sm:mb-6">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
-                  <VideoIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                  <VideoIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Vidéo du produit
                 </h4>
                 <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium">1 vidéo</span>
@@ -391,7 +387,7 @@
             <!-- Message si aucun média -->
             <div v-if="!product.images?.length && !product.video_url" class="text-center py-12 sm:py-16">
               <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <ImageIcon class="w-8 h-8 sm:w-12 sm:h-12 text-gray-400" />
+                <ImageIcon class="w-8 h-8 sm:w-12 sm:h-12 primary-color" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Aucun média disponible</h3>
               <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">Ce produit n'a pas d'images ou de vidéos associées. Vous pouvez en ajouter en modifiant le produit.</p>
@@ -403,7 +399,7 @@
             <!-- Informations générales du véhicule -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                 Informations Véhicule
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -411,7 +407,7 @@
                   <div class="text-sm text-gray-500 mb-1">État</div>
                   <div class="font-semibold text-gray-900 capitalize">
                     <span v-if="product.vehicle_condition === 'new'" class="text-green-600">Neuf</span>
-                    <span v-else-if="product.vehicle_condition === 'used'" class="text-blue-600">Occasion</span>
+                    <span v-else-if="product.vehicle_condition === 'used'" class="text-red-600">Occasion</span>
                     <span v-else-if="product.vehicle_condition === 'refurbished'" class="text-orange-600">Reconditionné</span>
                     <span v-else>{{ product.vehicle_condition }}</span>
                   </div>
@@ -440,7 +436,7 @@
             <!-- Caractéristiques techniques -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <SettingsIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                <SettingsIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                 Caractéristiques Techniques
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -471,7 +467,7 @@
             <!-- Spécifications avancées -->
             <div v-if="hasAdvancedSpecs" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <CogIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 text-gray-500" />
+                <CogIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                 Spécifications Avancées
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -524,7 +520,7 @@
             <!-- Message si aucune spécification véhicule -->
             <div v-if="!hasVehicleSpecs" class="text-center py-12 sm:py-16">
               <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
-                <TruckIcon class="w-8 h-8 sm:w-12 sm:h-12 text-gray-400" />
+                <TruckIcon class="w-8 h-8 sm:w-12 sm:h-12 primary-color" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Aucune spécification véhicule</h3>
               <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">Ce produit n'a pas de spécifications véhicule associées.</p>
@@ -539,14 +535,14 @@
           <div class="flex gap-2 sm:gap-3 order-2 sm:order-1">
             <button
               @click="$emit('edit', product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg text-sm font-medium hover:from-orange-600 hover:to-orange-700 transition-all active:scale-95 flex items-center justify-center"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3  text-white rounded-lg text-sm font-medium  transition-all active:scale-95 flex items-center justify-center btn-degrade-orange"
             >
               <EditIcon class="w-4 h-4 mr-2" />
               Modifier
             </button>
             <button
               @click="$emit('duplicate', product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors active:bg-gray-100 flex items-center justify-center"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium   transition-colors flex items-center justify-center"
             >
               <CopyIcon class="w-4 h-4 mr-2" />
               Dupliquer
@@ -556,14 +552,14 @@
           <div class="flex gap-2 sm:gap-3 order-1 sm:order-2">
             <button
               @click="$emit('delete', product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-red-300 rounded-lg text-sm font-medium text-red-700 bg-white hover:bg-red-50 transition-colors active:bg-red-100 flex items-center justify-center"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium  transition-colors  flex items-center justify-center btn-deconnexion"
             >
               <TrashIcon class="w-4 h-4 mr-2" />
               Supprimer
             </button>
             <button
               @click="$emit('close')"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 transition-colors active:bg-gray-100"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium  hover:bg-gray-50 transition-colors active:bg-gray-100"
             >
               Fermer
             </button>
@@ -889,71 +885,6 @@ const getDurabilityPercentage = () => {
 </script>
 
 <style scoped>
-/* Couleurs personnalisées */
-.bg-orange-500 {
-  background-color: #F65A11;
-}
-
-.bg-orange-600 {
-  background-color: #e54a0a;
-}
-
-.hover\:bg-orange-600:hover {
-  background-color: #e54a0a;
-}
-
-.hover\:bg-orange-700:hover {
-  background-color: #d1440a;
-}
-
-.focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
-}
-
-.focus\:border-orange-500:focus {
-  border-color: #F65A11;
-}
-
-.text-orange-500 {
-  color: #F65A11;
-}
-
-.border-orange-500 {
-  border-color: #F65A11;
-}
-
-.ring-orange-500 {
-  --tw-ring-color: #F65A11;
-}
-
-.from-orange-500 {
-  --tw-gradient-from: #F65A11;
-}
-
-.to-orange-600 {
-  --tw-gradient-to: #e54a0a;
-}
-
-.hover\:from-orange-600:hover {
-  --tw-gradient-from: #e54a0a;
-}
-
-.hover\:to-orange-700:hover {
-  --tw-gradient-to: #d1440a;
-}
-
-/* Transitions fluides */
-.transition-all {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
-}
-
-.transition-colors {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
 
 /* Effet de verre dépoli */
 .backdrop-blur-sm {

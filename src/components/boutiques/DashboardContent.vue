@@ -2408,7 +2408,6 @@ onUnmounted(() => {
 .bg-degrade-orange {
  background: linear-gradient(160deg, black , #fc4618 , black);
 }
-
 .btn-degrade-orange {
   background: linear-gradient(90deg, #fe7900, #ff5a01);
   color: white;
