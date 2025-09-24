@@ -1546,7 +1546,7 @@ const getColorName = (color) => {
 const formatPrice = (price) => {
   return new Intl.NumberFormat('fr-FR', {
       style: 'currency',
-      currency: 'XOF',
+      currency: 'usd',
       minimumFractionDigits: 0,
       maximumFractionDigits: 0
   })
