@@ -15,13 +15,8 @@
         <div v-for="(variant, variantIndex) in selectedVariants" :key="variant.id" class="variant-item">
           <div class="variant-header">
             <span class="variant-number">Variante {{ variantIndex + 1 }}</span>
-            <button 
-              class="remove-variant-btn text-red-600 font-bold text-lg" 
-              @click="$emit('removeVariant', variantIndex)" 
-              v-if="selectedVariants.length > 1"
-            >
-              ✖
-            </button>
+            
+            <XIcon v-if="selectedVariants.length > 1"  @click="$emit('removeVariant', variantIndex)" class="remove-variant-btnw-7 h-7 text-gray-500 cursor-pointer" />
           </div>
           
           <div class="variant-options">
@@ -98,6 +93,8 @@
   
   <script setup>
   import { defineProps, defineEmits, onMounted, ref } from 'vue'
+  import { 
+  X as XIcon,} from 'lucide-vue-next';
   
   const props = defineProps({
     productColors: Array,
