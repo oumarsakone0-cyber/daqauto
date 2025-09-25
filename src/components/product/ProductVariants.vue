@@ -2,7 +2,7 @@
     <div class="product-variants">
       <div class="variants-header">
         <div class="variants-label">Variantes du produit:</div>
-        <button class="add-variant-btn" @click="$emit('addVariant')" v-if="selectedVariants.length < 5">
+        <button class="btn-degrade-orange" @click="$emit('addVariant')" v-if="selectedVariants.length < 5">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <line x1="12" y1="5" x2="12" y2="19"></line>
             <line x1="5" y1="12" x2="19" y2="12"></line>
@@ -16,7 +16,7 @@
           <div class="variant-header">
             <span class="variant-number">Variante {{ variantIndex + 1 }}</span>
             
-            <XIcon v-if="selectedVariants.length > 1"  @click="$emit('removeVariant', variantIndex)" class="remove-variant-btnw-7 h-7 text-gray-500 cursor-pointer" />
+            <XIcon v-if="selectedVariants.length > 1"  @click="$emit('removeVariant', variantIndex)" class="w-7 h-7 text-gray-500 cursor-pointer" />
           </div>
           
           <div class="variant-options">
@@ -26,7 +26,7 @@
               <select 
                 :value="variant.sizeIndex" 
                 @change="$emit('updateVariantSize', { variantIndex, sizeIndex: parseInt($event.target.value) })"
-                class="variant-select"
+                class="input-style"
               >
                 <option v-for="(size, sizeIndex) in productSizes" :key="sizeIndex" :value="sizeIndex">
                   {{ size.name.name || size.name }}
@@ -43,7 +43,7 @@
                     style="width: 100%;" 
                     :value="variant.colorIndex" 
                     @change="$emit('updateVariantColor', { variantIndex, colorIndex: parseInt($event.target.value) })"
-                    class="variant-select"
+                    class="input-style"
                   >
                     <option v-for="(color, colorIndex) in productColors" :key="colorIndex" :value="colorIndex">
                       {{ color.name }}
@@ -80,7 +80,7 @@
       <div v-if="selectedVariants.length > 0" class="shipping-cost-display">
         <div class="shipping-cost-header">
           <span class="shipping-cost-label">Frais de livraison:</span>
-          <span class="shipping-cost-amount">{{ formatFCFA(calculateShippingCost()) }}</span>
+          <span class="primary-color">{{ formatFCFA(calculateShippingCost()) }}</span>
         </div>
         <div class="shipping-cost-details">
           <span class="shipping-method">{{ getShippingMethodName() }}</span>
@@ -240,27 +240,6 @@
     color: #333;
   }
   
-  .add-variant-btn,
-  .add-first-variant-btn {
-    display: flex;
-    align-items: center;
-    gap: 6px;
-    padding: 8px 16px;
-    background: #fe9700;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-  
-  .add-variant-btn:hover,
-  .add-first-variant-btn:hover {
-    background: #fe8300;
-  }
-  
   .variants-list {
     display: flex;
     flex-direction: column;
@@ -287,19 +266,6 @@
     color: #666;
   }
   
-  .remove-variant-btn {
-    width: 24px;
-    height: 24px;
-    border: none;
-    background: #ff4d4f;
-    color: white;
-    border-radius: 20%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  
   .variant-options {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
@@ -317,20 +283,6 @@
     font-size: 13px;
     font-weight: 500;
     color: #666;
-  }
-  
-  .variant-select {
-    padding: 8px 12px;
-    color: #333;
-    border: 1px solid #666;
-    border-radius: 6px;
-    outline: none;
-    font-size: 14px;
-  }
-  .variant-select:focus{
-    border-color:#fe9700;
-     box-shadow: 0 0 0 0.5px #fe7900; 
-    
   }
   
   .selected-color-preview {
@@ -402,12 +354,6 @@
     font-size: 14px;
     font-weight: 500;
     color: #333;
-  }
-  
-  .shipping-cost-amount {
-    font-size: 16px;
-    font-weight: 700;
-    color: #fe9700;
   }
   
   .shipping-cost-details {

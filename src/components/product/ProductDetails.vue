@@ -85,7 +85,7 @@
         <div v-if="!hasVariants && currentShippingCost > 0" class="shipping-cost-simple">
           <div class="shipping-cost-header">
             <span class="shipping-cost-label">Frais de livraison:</span>
-            <span class="shipping-cost-amount">{{ formatFCFA(currentShippingCost) }}</span>
+            <span class="primary-color">{{ formatFCFA(currentShippingCost) }}</span>
           </div>
           <div class="shipping-cost-details">
             <span class="shipping-method">{{ getShippingMethodName() }}</span>
@@ -394,6 +394,7 @@
   .price-table-row {
     display: grid;
     grid-template-columns: 1fr 1fr 1fr;
+    color: #666;
   }
   
   .price-table-header {
@@ -461,11 +462,6 @@
     border-radius: 0 8px 8px 0;
   }
   
-  .quantity-btn:hover:not(:disabled) {
-    border-color: #fe7900;
-    color: #fe7900;
-  }
-  
   .quantity-btn:disabled {
     opacity: 0.5;
     cursor: not-allowed;
@@ -524,12 +520,6 @@
     font-size: 14px;
     font-weight: 500;
     color: #333;
-  }
-  
-  .shipping-cost-amount {
-    font-size: 16px;
-    font-weight: 700;
-    color: #fe9700;
   }
   
   .shipping-cost-details {

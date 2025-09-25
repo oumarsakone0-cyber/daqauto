@@ -83,7 +83,7 @@
                   placeholder="Ex: 07 12 34 56 78"
                   required
                 />
-                <div v-if="formSubmitted && !orderForm.customerContact" class="error-message">
+                <div v-if="formSubmitted && !orderForm.customerContact" class="error-color">
                   Le numéro de téléphone est requis
                 </div>
               </div>
@@ -121,7 +121,7 @@
                   rows="3"
                   required
                 ></textarea>
-                <div v-if="formSubmitted && !orderForm.adresse_complete" class="error-message">
+                <div v-if="formSubmitted && !orderForm.adresse_complete" class="error-color">
                   L'adresse complète est requise
                 </div>
               </div>
@@ -651,24 +651,6 @@
     color: #333;
     margin: 0;
   }
-  
-  .close-btn {
-    width: 32px;
-    height: 32px;
-    border: none;
-    background: none;
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.3s ease;
-  }
-  
-  .close-btn:hover {
-    background: #f5f5f5;
-  }
-  
   .debug-panel {
     background: #f0f8ff;
     border-bottom: 1px solid #b3d9ff;
@@ -814,38 +796,6 @@
     font-weight: 500;
     color: #333;
   }
-  
-  .form-input,
-  .form-textarea {
-    padding: 10px 12px;
-    border: 1px solid #d9d9d9;
-    border-radius: 6px;
-    font-size: 14px;
-    transition: border-color 0.3s ease;
-  }
-  
-  .form-input:focus,
-  .form-textarea:focus {
-    outline: none;
-    border-color: #1890ff;
-    box-shadow: 0 0 0 2px rgba(24, 144, 255, 0.1);
-  }
-  
-  .form-input.error,
-  .form-textarea.error {
-    border-color: #ff4d4f;
-  }
-  
-  .form-textarea {
-    resize: vertical;
-    min-height: 80px;
-  }
-  
-  .error-message {
-    font-size: 12px;
-    color: #ff4d4f;
-  }
-  
   .shipping-info {
     background: #f0f8ff;
     border: 1px solid #b3d9ff;
@@ -865,17 +815,6 @@
     font-size: 14px;
     font-weight: 500;
     color: #333;
-  }
-  
-  .method-cost {
-    font-size: 14px;
-    font-weight: 600;
-    color: #1890ff;
-  }
-  
-  .shipping-destination {
-    font-size: 13px;
-    color: #666;
   }
   
   .shipping-rules {
@@ -913,47 +852,6 @@
     gap: 12px;
     padding-top: 16px;
     border-top: 1px solid #e8e8e8;
-  }
-  
-  .cancel-btn,
-  .confirm-btn {
-    flex: 1;
-    padding: 12px 24px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-  }
-  
-  .cancel-btn {
-    background: #fff;
-    color: #666;
-    border: 1px solid #d9d9d9;
-  }
-  
-  .cancel-btn:hover {
-    border-color: #1890ff;
-    color: #1890ff;
-  }
-  
-  .confirm-btn {
-    background: #ff4d4f;
-    color: #fff;
-    border: none;
-  }
-  
-  .confirm-btn:hover:not(:disabled) {
-    background: #ff7875;
-  }
-  
-  .confirm-btn:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
   }
   
   .loading-spinner {
