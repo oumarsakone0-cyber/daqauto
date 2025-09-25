@@ -70,7 +70,8 @@
                     />
                   </div>
                   <div class="result-content">
-                    <div class="result-name" v-html="result.highlighted_name || result.product_name"></div>
+                    <!-- Using method instead of inline logic to avoid linter confusion -->
+                    <div class="result-name" v-html="getResultDisplayName(result)"></div>
                     <div class="result-category">
                       <span class="category-badge">{{ result.category_name }}</span>
                       <span v-if="result.subcategory_name" class="category-badge">{{ result.subcategory_name }}</span>
@@ -136,13 +137,48 @@
               </svg>
               <span>Téléchargez l'application</span>
             </div>
-            
-            <div class="language-selector">
-              <img src="https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png" alt="FR" class="flag" />
-              <span>FR / F CFA</span>
-              <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="6,9 12,15 18,9"/>
-              </svg>
+
+            <!-- Updated language selector with MyMemory translation logic -->
+            <div class="language-selector relative" :class="{ open: showLanguageDropdown }">
+              <div 
+                class="flex items-center cursor-pointer gap-2" 
+                @click="toggleLanguageDropdown"
+                :disabled="isTranslating"
+                :class="{ 'opacity-50': isTranslating }"
+              >
+                <img :src="currentLanguageDisplay.flag" :alt="currentLanguageDisplay.code" class="w-6 h-4" />
+                <span v-if="isTranslating">⏳ Traduction...</span>
+                <span v-else>{{ currentLanguageDisplay.label }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"/>
+                </svg>
+              </div>
+
+              <!-- Translation Stats Tooltip -->
+              <div v-if="showStats" class="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-3 text-xs text-gray-600 min-w-[200px] z-50">
+                <div class="font-semibold mb-1">📊 Statistiques Cache</div>
+                <div>✅ Traductions en cache: {{ cacheStats.cached }}</div>
+                <div>🔄 Nouvelles traductions: {{ cacheStats.new }}</div>
+                <div>💾 Économie d'API: {{ cacheStats.saved }}%</div>
+              </div>
+
+              <!-- Original Dropdown (hidden when translating) -->
+              <div 
+                v-if="showLanguageDropdown && !isTranslating" 
+                class="absolute mt-2 bg-white shadow-md rounded-lg w-40 z-50"
+              >
+                <ul class="divide-y divide-gray-100">
+                  <li 
+                    v-for="lang in languages" 
+                    :key="lang.code" 
+                    @click="selectLanguageWithTranslation(lang)"
+                    class="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100"
+                  >
+                    <img :src="lang.flag" :alt="lang.code" class="w-6 h-4" />
+                    <span>{{ lang.label }}</span>
+                  </li>
+                </ul>
+              </div>
             </div>
             
             <div class="user-account" @click="goToBoutique">
@@ -433,7 +469,8 @@
               />
             </div>
             <div class="mobile-result-content">
-              <div class="mobile-result-name" v-html="result.highlighted_name || result.product_name"></div>
+              <!-- Using method instead of inline logic to avoid linter confusion -->
+              <div class="mobile-result-name" v-html="getResultDisplayName(result)"></div>
               <div class="mobile-result-category">
                 <span class="mobile-category-badge">{{ result.category_name }}</span>
                 <span v-if="result.subcategory_name" class="mobile-category-badge">{{ result.subcategory_name }}</span>
@@ -670,657 +707,896 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { categoriesApi, productsApi } from '../../services/api.js';
 
-export default {
-  name: 'NavBar',
-  setup() {
-    const router = useRouter();
+const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
+const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
 
-    // États existants
-    const showImageSearch = ref(false);
-    const searchQuery = ref('');
-    const cartCount = ref(0);
-    const showSuggestions = ref(false);
-    const showCategoriesMenu = ref(false);
-    const activeCategory = ref(null);
-    const isLoadingCategories = ref(false);
-    const categoriesError = ref(null);
+// Translation states
+const currentLanguage = ref('fr')
+const isTranslating = ref(false)
+const showStats = ref(false)
+const originalTexts = new Map()
+const translationCache = new Map()
 
-    // Nouveaux états pour la recherche de produits
-    const searchResults = ref([]);
-    const isSearching = ref(false);
-    const showSearchResults = ref(false);
-    const searchTimeout = ref(null);
-    const searchAbortController = ref(null);
+const cacheStats = ref({
+  cached: 0,
+  new: 0,
+  saved: 0
+})
 
-    // Nouveaux états pour la version mobile
-    const showMobileSearch = ref(false);
-    const showMobileMenu = ref(false);
-    const mobileMenuLevel = ref(1);
-    const selectedMobileCategory = ref(null);
-    const selectedMobileSubcategory = ref(null);
-    const mobileSearchInput = ref(null);
+// === États pour la recherche ===
+const searchQuery = ref('')
+const showSearchResults = ref(false)
+const searchResults = ref([])
+const isSearching = ref(false)
+const showSuggestions = ref(false)
+const searchTimeout = ref(null)
+const searchAbortController = ref(null)
 
-    // Recherches récentes et populaires pour mobile
-    const recentSearches = ref(['iPhone 15', 'Écouteurs sans fil', 'Montre connectée']);
-    const popularSearches = ref([
-      'iPhone 15 Pro Max',
-      'Samsung Galaxy S24',
-      'Écouteurs Bluetooth',
-      'Chargeur sans fil',
-      'Montre connectée',
-      'Caméra surveillance',
-      'Drone',
-      'Tablette Android',
-      'Clavier mécanique',
-      'Souris gaming'
-    ]);
+const showImageSearch = ref(false)
 
-    // Search suggestions data (gardé statique pour les suggestions rapides)
-    const searchSuggestions = ref([
-      'iPhone 15 Pro Max',
-      'Samsung Galaxy S24',
-      'MacBook Air M2',
-      'AirPods Pro',
-      'iPad Pro',
-      'Nintendo Switch',
-      'PlayStation 5',
-      'Xbox Series X',
-      'Apple Watch',
-      'Casque Bluetooth',
-      'Chargeur sans fil',
-      'Écouteurs gaming',
-      'Clavier mécanique',
-      'Souris gaming',
-      'Webcam 4K',
-      'Moniteur gaming',
-      'SSD externe',
-      'Powerbank',
-      'Câble USB-C',
-      'Adaptateur HDMI',
-      'Smartphone Android',
-      'Tablette Samsung',
-      'Ordinateur portable',
-      'Écran PC',
-      'Imprimante',
-      'Router WiFi',
-      'Disque dur',
-      'Mémoire RAM',
-      'Carte graphique',
-      'Processeur Intel'
-    ]);
+// === États pour les catégories ===
+const showCategoriesMenu = ref(false)
+const categories = ref([])
+const isLoadingCategories = ref(false)
+const categoriesError = ref('')
+const activeCategory = ref(null)
 
-    // Categories data - maintenant récupérées depuis l'API
-    const categories = ref([]);
+// === États pour le panier ===
+const cartCount = ref(0)
 
-    // Fonction pour charger les catégories depuis l'API
-    const loadCategories = async () => {
-      try {
-        isLoadingCategories.value = true;
-        categoriesError.value = null;
-        
-        console.log('🔄 Chargement des catégories depuis l\'API...');
-        const response = await categoriesApi.getCategories();
-        
-        if (response.success && response.data) {
-          categories.value = response.data.map(category => ({
-            id: category.id,
-            name: category.name,
-            icon: category.icon || '📦',
-            subcategories: category.subcategories || []
-          }));
-          
-          console.log('✅ Catégories chargées:', categories.value);
-        } else {
-          throw new Error(response.message || 'Erreur lors du chargement des catégories');
-        }
-      } catch (error) {
-        console.error('❌ Erreur lors du chargement des catégories:', error);
-        categoriesError.value = error.message;
-        
-        // Fallback avec des catégories par défaut en cas d'erreur
-        categories.value = [
-          {
-            id: 1,
-            name: 'Électronique',
-            icon: '📱',
-            subcategories: [
-              { 
-                id: 1, 
-                name: 'Smartphones', 
-                sub_subcategories: [
-                  { id: 1, name: 'iPhone' },
-                  { id: 2, name: 'Samsung' },
-                  { id: 3, name: 'Xiaomi' }
-                ]
-              },
-              { 
-                id: 2, 
-                name: 'Ordinateurs', 
-                sub_subcategories: [
-                  { id: 4, name: 'Laptops' },
-                  { id: 5, name: 'PC Bureau' },
-                  { id: 6, name: 'Tablettes' }
-                ]
-              }
-            ]
-          },
-          {
-            id: 2,
-            name: 'Mode & Vêtements',
-            icon: '👕',
-            subcategories: [
-              { 
-                id: 3, 
-                name: 'Homme', 
-                sub_subcategories: [
-                  { id: 7, name: 'T-shirts' },
-                  { id: 8, name: 'Pantalons' },
-                  { id: 9, name: 'Chaussures' }
-                ]
-              },
-              { 
-                id: 4, 
-                name: 'Femme', 
-                sub_subcategories: [
-                  { id: 10, name: 'Robes' },
-                  { id: 11, name: 'Sacs' },
-                  { id: 12, name: 'Bijoux' }
-                ]
-              }
-            ]
-          }
-        ];
-      } finally {
-        isLoadingCategories.value = false;
-      }
-    };
+// === États pour la liste déroulante langue/devise ===
+const showLanguageDropdown = ref(false)
+const selectedLanguage = ref({
+  code: 'FR',
+  label: 'FR / F CFA',
+  flag: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png'
+})
 
-    // Nouvelles fonctions pour la recherche de produits
-    const handleSearchInput = () => {
-      // Effacer le timeout précédent
-      if (searchTimeout.value) {
-        clearTimeout(searchTimeout.value);
-      }
-      
-      // Annuler la requête précédente si elle existe
-      if (searchAbortController.value) {
-        searchAbortController.value.abort();
-      }
-      
-      const query = searchQuery.value.trim();
-      
-      // Afficher les résultats si le champ n'est pas vide
-      showSearchResults.value = query.length > 0;
-      showSuggestions.value = false;
-      
-      // Ne pas rechercher si moins de 2 caractères
-      if (query.length < 2) {
-        searchResults.value = [];
-        isSearching.value = false;
-        showSuggestions.value = query.length > 0;
-        return;
-      }
-      
-      // Définir un délai avant de lancer la recherche (debouncing)
-      isSearching.value = true;
-      searchTimeout.value = setTimeout(async () => {
-        await performProductSearch(query);
-      }, 300);
-    };
+const languages = ref([
+  {
+    code: 'FR',
+    label: 'FR / F CFA',
+    flag: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png'
+  },
+  {
+    code: 'EN',
+    label: 'EN / USD',
+    flag: 'https://flagcdn.com/w20/us.png'
+  },
+  {
+    code: 'CI',
+    label: 'FR / XOF',
+    flag: 'https://flagcdn.com/w20/ci.png'
+  }
+])
 
-    const performProductSearch = async (query) => {
-      try {
-        // Créer un nouveau AbortController pour cette requête
-        searchAbortController.value = new AbortController();
-        
-        console.log('🔍 Recherche de produits pour:', query);
-        
-        const response = await productsApi.searchProducts(query, {
-          limit: 8, // Limiter à 8 résultats pour la prévisualisation
-        });
-        
-        if (response.success && response.data) {
-          searchResults.value = response.data;
-          console.log('✅ Résultats de recherche:', searchResults.value);
-        } else {
-          searchResults.value = [];
-          console.warn('⚠️ Aucun résultat trouvé');
-        }
-      } catch (error) {
-        if (error.name !== 'AbortError') {
-          console.error('❌ Erreur lors de la recherche:', error);
-          searchResults.value = [];
-        }
-      } finally {
-        isSearching.value = false;
-      }
-    };
+// === États pour la version mobile ===
+const showMobileSearch = ref(false)
+const showMobileMenu = ref(false)
+const mobileMenuLevel = ref(1)
+const selectedMobileCategory = ref(null)
+const selectedMobileSubcategory = ref(null)
+const mobileSearchInput = ref(null)
 
-    const performSearch = () => {
-      if (searchQuery.value.trim()) {
-        // Rediriger vers la page résultats avec le terme de recherche
-        router.push({
-          path: '/recherche_de_produit_list',
-          query: { search: searchQuery.value.trim() }
-        });
-        clearSearch();
-        closeMobileSearch();
-      }
-    };
+// Recherches récentes et populaires pour mobile
+const recentSearches = ref(['iPhone 15', 'Écouteurs sans fil', 'Montre connectée'])
+const popularSearches = ref([
+  'iPhone 15 Pro Max',
+  'Samsung Galaxy S24',
+  'Écouteurs Bluetooth',
+  'Chargeur sans fil',
+  'Montre connectée',
+  'Caméra surveillance',
+  'Drone',
+  'Tablette Android',
+  'Clavier mécanique',
+  'Souris gaming'
+])
 
-    const clearSearch = () => {
-      searchQuery.value = '';
-      searchResults.value = [];
-      showSearchResults.value = false;
-      showSuggestions.value = false;
-      
-      if (searchTimeout.value) {
-        clearTimeout(searchTimeout.value);
-      }
-      
-      if (searchAbortController.value) {
-        searchAbortController.value.abort();
-      }
-    };
+// Search suggestions data (gardé statique pour les suggestions rapides)
+const searchSuggestions = ref([
+  'iPhone 15 Pro Max',
+  'Samsung Galaxy S24',
+  'MacBook Air M2',
+  'AirPods Pro',
+  'iPad Pro',
+  'Nintendo Switch',
+  'PlayStation 5',
+  'Xbox Series X',
+  'Apple Watch',
+  'Casque Bluetooth',
+  'Chargeur sans fil',
+  'Écouteurs gaming',
+  'Clavier mécanique',
+  'Souris gaming',
+  'Webcam 4K',
+  'Moniteur gaming',
+  'SSD externe',
+  'Powerbank',
+  'Câble USB-C',
+  'Adaptateur HDMI',
+  'Smartphone Android',
+  'Tablette Samsung',
+  'Ordinateur portable',
+  'Écran PC',
+  'Imprimante',
+  'Router WiFi',
+  'Disque dur',
+  'Mémoire RAM',
+  'Carte graphique',
+  'Processeur Intel'
+])
 
-    // Fonction modifiée pour rediriger vers la page résultats avec les catégories du produit
-    const goToProduct = (product) => {
-      console.log('Navigation vers le produit:', product);
-      
-      // Construire les paramètres de query avec les catégories du produit et le terme de recherche
-      const queryParams = {
-        search: searchQuery.value.trim()
-      };
-      
-      // Ajouter les catégories si disponibles
-      if (product.category_id) {
-        queryParams.category = product.category_id;
-      }
-      if (product.subcategory_id) {
-        queryParams.subcategory = product.subcategory_id;
-      }
-      if (product.subsubcategory_id) {
-        queryParams.sub_subcategory = product.subsubcategory_id;
-      }
-      
-      router.push({
-        path: '/recherche_de_produit_list',
-        query: queryParams
-      });
-      
-      clearSearch();
-      closeMobileSearch();
-    };
+const router = useRouter(); // Declare router variable
 
-    const viewAllResults = () => {
-      router.push({
-        path: '/recherche_de_produit_list',
-        query: { search: searchQuery.value.trim() }
-      });
-      clearSearch();
-      closeMobileSearch();
-    };
+const currentLanguageDisplay = computed(() => {
+  if (currentLanguage.value === 'en') {
+    return languages.value.find(lang => lang.code === 'EN') || selectedLanguage.value
+  }
+  return selectedLanguage.value
+})
 
-    // Nouvelles fonctions de navigation pour les catégories
-    const navigateToCategory = (category) => {
-      console.log('Navigation vers catégorie:', category);
-      router.push({
-        path: '/recherche_de_produit_list',
-        query: { category: category.id }
-      });
-      showCategoriesMenu.value = false;
-    };
+const getResultDisplayName = (result) => {
+  return result.highlighted_name || result.product_name
+}
 
-    const navigateToSubcategory = (subcategory) => {
-      console.log('Navigation vers sous-catégorie:', subcategory);
-      
-      // Trouver la catégorie parente
-      const parentCategory = activeCategory.value;
-      
-      const queryParams = {
-        subcategory: subcategory.id
-      };
-      
-      if (parentCategory) {
-        queryParams.category = parentCategory.id;
-      }
-      
-      router.push({
-        path: '/recherche_de_produit_list',
-        query: queryParams
-      });
-      showCategoriesMenu.value = false;
-    };
-
-    const navigateToSubSubcategory = (subSubcategory) => {
-      console.log('Navigation vers sous-sous-catégorie:', subSubcategory);
-      
-      // Trouver la catégorie et sous-catégorie parentes
-      const parentCategory = activeCategory.value;
-      let parentSubcategory = null;
-      
-      if (parentCategory && parentCategory.subcategories) {
-        parentSubcategory = parentCategory.subcategories.find(sub => 
-          sub.sub_subcategories && sub.sub_subcategories.some(subsub => subsub.id === subSubcategory.id)
-        );
-      }
-      
-      const queryParams = {
-        sub_subcategory: subSubcategory.id
-      };
-      
-      if (parentCategory) {
-        queryParams.category = parentCategory.id;
-      }
-      if (parentSubcategory) {
-        queryParams.subcategory = parentSubcategory.id;
-      }
-      
-      router.push({
-        path: '/recherche_de_produit_list',
-        query: queryParams
-      });
-      
-      showCategoriesMenu.value = false;
-      if (showMobileMenu.value) {
-        toggleMobileMenu();
-      }
-    };
-
-    const handleImageError = (event) => {
-      event.target.src = 'https://www.svgrepo.com/show/422038/product.svg';
-    };
-
-    const formatPrice = (price) => {
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'XOF',
-        minimumFractionDigits: 0
-      }).format(price);
-    };
-
-    const getMatchTypeLabel = (matchType) => {
-      const labels = {
-        'product': 'Produit',
-        'category': 'Catégorie',
-        'subcategory': 'Sous-catégorie',
-        'subsubcategory': 'Sous-sous-catégorie'
-      };
-      return labels[matchType] || 'Correspondance';
-    };
-
-    // Computed pour les suggestions filtrées (suggestions statiques)
-    const filteredSuggestions = computed(() => {
-      if (!searchQuery.value || searchQuery.value.length < 3) {
-        return [];
-      }
-      
-      const query = searchQuery.value.toLowerCase().trim();
-      return searchSuggestions.value
-        .filter(suggestion => 
-          suggestion.toLowerCase().includes(query)
-        )
-        .slice(0, 8);
-    });
-
-    // Watch pour surveiller les changements de searchQuery (pour les suggestions statiques)
-    watch(searchQuery, (newValue) => {
-      if (newValue && newValue.length >= 3 && !showSearchResults.value) {
-        showSuggestions.value = true;
-      } else if (newValue.length < 3) {
-        showSuggestions.value = false;
-      }
-    });
-
-    // Gestion des clics extérieurs et touches d'échappement
-    const handleClickOutside = (event) => {
-      if (!event.target.closest('.search-container')) {
-        showSearchResults.value = false;
-        showSuggestions.value = false;
-      }
-      
-      if (!event.target.closest('.all-categories')) {
-        showCategoriesMenu.value = false;
-      }
-    };
-
-    const goToBoutique = () => {
-      router.push('/boutique-admin/dashboard')
-    };
-
-    const handleEscapeKey = (event) => {
-      if (event.key === 'Escape') {
-        showSearchResults.value = false;
-        showSuggestions.value = false;
-        showCategoriesMenu.value = false;
-        closeMobileSearch();
-        if (showMobileMenu.value) {
-          toggleMobileMenu();
-        }
-      }
-    };
-
-    const toggleImageSearch = () => {
-      showImageSearch.value = !showImageSearch.value;
-    };
-
-    const handleFocus = () => {
-      if (searchQuery.value.length >= 3 && searchResults.value.length === 0 && !isSearching.value) {
-        showSuggestions.value = true;
-      }
-    };
-
-    const hideSuggestions = () => {
-      setTimeout(() => {
-        showSuggestions.value = false;
-        showSearchResults.value = false;
-      }, 150);
-    };
-
-    const selectSuggestion = (suggestion) => {
-      searchQuery.value = suggestion;
-      showSuggestions.value = false;
-      handleSearchInput(); // Déclencher une recherche avec la suggestion sélectionnée
-      
-      // Ajouter aux recherches récentes si mobile
-      if (showMobileSearch.value && !recentSearches.value.includes(suggestion)) {
-        recentSearches.value.unshift(suggestion);
-        if (recentSearches.value.length > 5) {
-          recentSearches.value.pop();
-        }
-      }
-    };
-
-    const highlightMatch = (suggestion) => {
-      if (!searchQuery.value) return suggestion;
-      
-      const query = searchQuery.value.toLowerCase().trim();
-      const suggestionLower = suggestion.toLowerCase();
-      const index = suggestionLower.indexOf(query);
-      
-      if (index === -1) return suggestion;
-      
-      const before = suggestion.substring(0, index);
-      const match = suggestion.substring(index, index + query.length);
-      const after = suggestion.substring(index + query.length);
-      
-      return `${before}<strong style="color: #fe7900; font-weight: 600;">${match}</strong>${after}`;
-    };
-
-    const setActiveCategory = (category) => {
-      activeCategory.value = category;
-    };
-
-    const handleDrop = (event) => {
-      console.log('File dropped:', event.dataTransfer.files);
-    };
-
-    const reloadCategories = () => {
-      loadCategories();
-    };
-
-    // Nouvelles fonctions pour la version mobile
-    const openMobileSearch = () => {
-      showMobileSearch.value = true;
-      document.body.style.overflow = 'hidden';
-      
-      // Focus sur l'input après le rendu du DOM
-      nextTick(() => {
-        if (mobileSearchInput.value) {
-          mobileSearchInput.value.focus();
-        }
-      });
-    };
-
-    const closeMobileSearch = () => {
-      showMobileSearch.value = false;
-      document.body.style.overflow = '';
-    };
-
-    const toggleMobileMenu = () => {
-      showMobileMenu.value = !showMobileMenu.value;
-      
-      if (showMobileMenu.value) {
-        document.body.style.overflow = 'hidden';
-        // Réinitialiser le niveau du menu
-        mobileMenuLevel.value = 1;
-        selectedMobileCategory.value = null;
-        selectedMobileSubcategory.value = null;
-      } else {
-        document.body.style.overflow = '';
-      }
-    };
-
-    const selectMobileCategory = (category) => {
-      if (category.subcategories && category.subcategories.length > 0) {
-        selectedMobileCategory.value = category;
-        mobileMenuLevel.value = 2;
-      } else {
-        // Si pas de sous-catégories, naviguer directement
-        navigateToCategory(category);
-        toggleMobileMenu();
-      }
-    };
-
-    const selectMobileSubcategory = (subcategory) => {
-      if (subcategory.sub_subcategories && subcategory.sub_subcategories.length > 0) {
-        selectedMobileSubcategory.value = subcategory;
-        mobileMenuLevel.value = 3;
-      } else {
-        // Si pas de sous-sous-catégories, naviguer directement
-        navigateToSubcategory(subcategory);
-        toggleMobileMenu();
-      }
-    };
-
-    const mobileMenuBack = () => {
-      if (mobileMenuLevel.value === 3) {
-        mobileMenuLevel.value = 2;
-        selectedMobileSubcategory.value = null;
-      } else if (mobileMenuLevel.value === 2) {
-        mobileMenuLevel.value = 1;
-        selectedMobileCategory.value = null;
-      }
-    };
-
-    // Lifecycle - Charger les catégories au montage du composant
-    onMounted(() => {
-      loadCategories();
-      
-      // Écouter les clics pour fermer les dropdowns
-      document.addEventListener('click', handleClickOutside);
-      document.addEventListener('keydown', handleEscapeKey);
-    });
-
-    onUnmounted(() => {
-      // Nettoyer les event listeners
-      document.removeEventListener('click', handleClickOutside);
-      document.removeEventListener('keydown', handleEscapeKey);
-      
-      // Nettoyer les timeouts et requêtes
-      if (searchTimeout.value) {
-        clearTimeout(searchTimeout.value);
-      }
-      
-      if (searchAbortController.value) {
-        searchAbortController.value.abort();
-      }
-      
-      // Réinitialiser le overflow du body
-      document.body.style.overflow = '';
-    });
-
-    // Exposer les fonctions pour le debugging
-    window.navbarDebug = {
-      reloadCategories,
-      categories: categories.value,
-      isLoading: isLoadingCategories.value,
-      error: categoriesError.value,
-      searchResults: searchResults.value,
-      performSearch: () => performProductSearch(searchQuery.value)
-    };
-
-    return {
-      // États
-      showImageSearch,
-      searchQuery,
-      cartCount,
-      showSuggestions,
-      showCategoriesMenu,
-      activeCategory,
-      isLoadingCategories,
-      categoriesError,
-      searchResults,
-      isSearching,
-      showSearchResults,
-      showMobileSearch,
-      showMobileMenu,
-      mobileMenuLevel,
-      selectedMobileCategory,
-      selectedMobileSubcategory,
-      mobileSearchInput,
-      recentSearches,
-      popularSearches,
-      categories,
-      
-      // Computed
-      filteredSuggestions,
-      
-      // Méthodes
-      handleSearchInput,
-      performSearch,
-      clearSearch,
-      goToProduct,
-      viewAllResults,
-      navigateToCategory,
-      navigateToSubcategory,
-      navigateToSubSubcategory,
-      handleImageError,
-      formatPrice,
-      getMatchTypeLabel,
-      toggleImageSearch,
-      handleFocus,
-      hideSuggestions,
-      selectSuggestion,
-      highlightMatch,
-      setActiveCategory,
-      handleDrop,
-      reloadCategories,
-      openMobileSearch,
-      closeMobileSearch,
-      goToBoutique,
-      toggleMobileMenu,
-      selectMobileCategory,
-      selectMobileSubcategory,
-      mobileMenuBack
-    };
+const loadCache = () => {
+  try {
+    const saved = localStorage.getItem('mymemory-cache')
+    if (saved) {
+      const parsed = JSON.parse(saved)
+      Object.entries(parsed).forEach(([key, value]) => {
+        translationCache.set(key, value)
+      })
+      console.log('[v0] Cache loaded:', translationCache.size, 'entries')
+    }
+  } catch (error) {
+    console.error('[v0] Error loading cache:', error)
   }
 }
+
+const saveCache = () => {
+  try {
+    const cacheObj = {}
+    translationCache.forEach((value, key) => {
+      cacheObj[key] = value
+    })
+    localStorage.setItem('mymemory-cache', JSON.stringify(cacheObj))
+    console.log('[v0] Cache saved:', translationCache.size, 'entries')
+  } catch (error) {
+    console.error('[v0] Error saving cache:', error)
+  }
+}
+
+const getAllTextNodes = (element = document.body) => {
+  const textNodes = []
+  const walker = document.createTreeWalker(
+    element,
+    NodeFilter.SHOW_TEXT,
+    {
+      acceptNode: (node) => {
+        const parent = node.parentElement
+        if (!parent || 
+            parent.tagName === 'SCRIPT' || 
+            parent.tagName === 'STYLE' ||
+            parent.tagName === 'NOSCRIPT' ||
+            parent.closest('[data-no-translate]') ||
+            node.textContent.trim() === '' ||
+            node.textContent.trim().length < 3) {
+          return NodeFilter.FILTER_REJECT
+        }
+        return NodeFilter.FILTER_ACCEPT
+      }
+    }
+  )
+  
+  let node
+  while (node = walker.nextNode()) {
+    textNodes.push(node)
+  }
+  
+  console.log('[v0] Found text nodes:', textNodes.length)
+  return textNodes
+}
+
+const translateWithMyMemory = async (texts, sourceLang = 'fr', targetLang = 'en') => {
+  try {
+    console.log('[v0] Translating with MyMemory API...')
+    const translations = []
+    
+    const batchSize = 5
+    for (let i = 0; i < texts.length; i += batchSize) {
+      const batch = texts.slice(i, i + batchSize)
+      const batchPromises = batch.map(async (text) => {
+        const cacheKey = `${text}_${sourceLang}_${targetLang}`
+        
+        if (translationCache.has(cacheKey)) {
+          cacheStats.value.cached++
+          return translationCache.get(cacheKey)
+        }
+        
+        try {
+          let url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`
+          url += `&key=${MYMEMORY_API_KEY}`
+          url += `&de=${encodeURIComponent(MYMEMORY_EMAIL)}`
+
+          console.log('[v0] API call for:', text.substring(0, 50) + '...')
+          const response = await fetch(url)
+          
+          if (!response.ok) {
+            throw new Error(`API error: ${response.status}`)
+          }
+          
+          const data = await response.json()
+          const translation = data.responseData?.translatedText || text
+          
+          translationCache.set(cacheKey, translation)
+          cacheStats.value.new++
+          
+          return translation
+        } catch (error) {
+          console.error('[v0] Translation error for text:', text, error)
+          return text
+        }
+      })
+      
+      const batchResults = await Promise.all(batchPromises)
+      translations.push(...batchResults)
+      
+      if (i + batchSize < texts.length) {
+        await new Promise(resolve => setTimeout(resolve, 200))
+      }
+    }
+    
+    saveCache()
+    
+    const total = cacheStats.value.cached + cacheStats.value.new
+    cacheStats.value.saved = total > 0 ? Math.round((cacheStats.value.cached / total) * 100) : 0
+    
+    return translations
+  } catch (error) {
+    console.error('[v0] MyMemory translation failed:', error)
+    return texts
+  }
+}
+
+const translatePage = async () => {
+  isTranslating.value = true
+  cacheStats.value = { cached: 0, new: 0, saved: 0 }
+  
+  console.log('[v0] Starting MyMemory page translation...')
+  
+  await nextTick()
+  
+  const textNodes = getAllTextNodes()
+  console.log('[v0] Processing', textNodes.length, 'text nodes')
+  
+  const textsToTranslate = []
+  const nodeTextMap = new Map()
+  
+  textNodes.forEach(node => {
+    const originalText = node.textContent.trim()
+    if (originalText && originalText.length > 2) {
+      if (!originalTexts.has(node)) {
+        originalTexts.set(node, originalText)
+      }
+      
+      textsToTranslate.push(originalText)
+      nodeTextMap.set(node, originalText)
+    }
+  })
+  
+  if (textsToTranslate.length > 0) {
+    console.log('[v0] Translating', textsToTranslate.length, 'texts')
+    const translations = await translateWithMyMemory(textsToTranslate, 'fr', 'en')
+    
+    let processedCount = 0
+    textNodes.forEach((node, index) => {
+      if (translations[index] && translations[index] !== textsToTranslate[index]) {
+        node.textContent = translations[index]
+        processedCount++
+      }
+    })
+    
+    console.log('[v0] Translation completed. Processed:', processedCount, 'nodes')
+    
+    showStats.value = true
+    setTimeout(() => {
+      showStats.value = false
+    }, 3000)
+  }
+  
+  isTranslating.value = false
+}
+
+const restoreOriginalTexts = () => {
+  console.log('[v0] Restoring original texts...')
+  let restoredCount = 0
+  originalTexts.forEach((originalText, node) => {
+    if (node.parentElement) {
+      node.textContent = originalText
+      restoredCount++
+    }
+  })
+  console.log('[v0] Restored', restoredCount, 'text nodes')
+}
+
+const toggleLanguageWithTranslation = async () => {
+  if (isTranslating.value) return
+  
+  console.log('[v0] Toggling language from', currentLanguage.value)
+  
+  if (currentLanguage.value === 'fr') {
+    currentLanguage.value = 'en'
+    await translatePage()
+  } else {
+    currentLanguage.value = 'fr'
+    restoreOriginalTexts()
+  }
+  
+  localStorage.setItem('preferred-language', currentLanguage.value)
+  showLanguageDropdown.value = false
+}
+
+const selectLanguageWithTranslation = async (lang) => {
+  if (isTranslating.value) return
+  
+  selectedLanguage.value = lang
+  showLanguageDropdown.value = false
+  
+  // If selecting English variant, translate the page
+  if (lang.code === 'EN' && currentLanguage.value === 'fr') {
+    currentLanguage.value = 'en'
+    await translatePage()
+  } else if (lang.code !== 'EN' && currentLanguage.value === 'en') {
+    currentLanguage.value = 'fr'
+    restoreOriginalTexts()
+  }
+  
+  localStorage.setItem('preferred-language', currentLanguage.value)
+  localStorage.setItem('selected-language', JSON.stringify(lang))
+}
+
+const toggleLanguageDropdown = () => {
+  if (!isTranslating.value) {
+    showLanguageDropdown.value = !showLanguageDropdown.value
+  }
+}
+
+// Function to load categories from API
+const loadCategories = async () => {
+  try {
+    isLoadingCategories.value = true;
+    categoriesError.value = '';
+    
+    console.log('🔄 Chargement des catégories depuis l\'API...');
+    const response = await categoriesApi.getCategories();
+    
+    if (response.success && response.data) {
+      categories.value = response.data.map(category => ({
+        id: category.id,
+        name: category.name,
+        icon: category.icon || '📦',
+        subcategories: category.subcategories || []
+      }));
+      
+      console.log('✅ Catégories chargées:', categories.value);
+    } else {
+      throw new Error(response.message || 'Erreur lors du chargement des catégories');
+    }
+  } catch (error) {
+    console.error('❌ Erreur lors du chargement des catégories:', error);
+    categoriesError.value = error.message;
+    
+    // Fallback avec des catégories par défaut en cas d'erreur
+    categories.value = [
+      {
+        id: 1,
+        name: 'Électronique',
+        icon: '📱',
+        subcategories: [
+          { 
+            id: 1, 
+            name: 'Smartphones', 
+            sub_subcategories: [
+              { id: 1, name: 'iPhone' },
+              { id: 2, name: 'Samsung' },
+              { id: 3, name: 'Xiaomi' }
+            ]
+          },
+          { 
+            id: 2, 
+            name: 'Ordinateurs', 
+            sub_subcategories: [
+              { id: 4, name: 'Laptops' },
+              { id: 5, name: 'PC Bureau' },
+              { id: 6, name: 'Tablettes' }
+            ]
+          }
+        ]
+      },
+      {
+        id: 2,
+        name: 'Mode & Vêtements',
+        icon: '👕',
+        subcategories: [
+          { 
+            id: 3, 
+            name: 'Homme', 
+            sub_subcategories: [
+              { id: 7, name: 'T-shirts' },
+              { id: 8, name: 'Pantalons' },
+              { id: 9, name: 'Chaussures' }
+            ]
+          },
+          { 
+            id: 4, 
+            name: 'Femme', 
+            sub_subcategories: [
+              { id: 10, name: 'Robes' },
+              { id: 11, name: 'Sacs' },
+              { id: 12, name: 'Bijoux' }
+            ]
+          }
+        ]
+      }
+    ];
+  } finally {
+    isLoadingCategories.value = false;
+  }
+};
+
+// New functions for product search
+const handleSearchInput = () => {
+  // Clear previous timeout
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+  }
+  
+  // Abort previous request if it exists
+  if (searchAbortController.value) {
+    searchAbortController.value.abort();
+  }
+  
+  const query = searchQuery.value.trim();
+  
+  // Show results if the field is not empty
+  showSearchResults.value = query.length > 0;
+  showSuggestions.value = false;
+  
+  // Do not search if less than 2 characters
+  if (query.length < 2) {
+    searchResults.value = [];
+    isSearching.value = false;
+    showSuggestions.value = query.length > 0;
+    return;
+  }
+  
+  // Set a delay before initiating the search (debouncing)
+  isSearching.value = true;
+  searchTimeout.value = setTimeout(async () => {
+    await performProductSearch(query);
+  }, 300);
+};
+
+const performProductSearch = async (query) => {
+  try {
+    // Create a new AbortController for this request
+    searchAbortController.value = new AbortController();
+    
+    console.log('🔍 Recherche de produits pour:', query);
+    
+    const response = await productsApi.searchProducts(query, {
+      limit: 8, // Limit to 8 results for preview
+    });
+    
+    if (response.success && response.data) {
+      searchResults.value = response.data;
+      console.log('✅ Résultats de recherche:', searchResults.value);
+    } else {
+      searchResults.value = [];
+      console.warn('⚠️ Aucun résultat trouvé');
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      console.error('❌ Erreur lors de la recherche:', error);
+      searchResults.value = [];
+    }
+  } finally {
+    isSearching.value = false;
+  }
+};
+
+const performSearch = () => {
+  if (searchQuery.value.trim()) {
+    // Redirect to the search results page with the search term
+    router.push({
+      path: '/recherche_de_produit_list',
+      query: { search: searchQuery.value.trim() }
+    });
+    clearSearch();
+    closeMobileSearch();
+  }
+};
+
+const clearSearch = () => {
+  searchQuery.value = '';
+  searchResults.value = [];
+  showSearchResults.value = false;
+  showSuggestions.value = false;
+  
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+  }
+  
+  if (searchAbortController.value) {
+    searchAbortController.value.abort();
+  }
+};
+
+// Modified function to redirect to results page with product categories
+const goToProduct = (product) => {
+  console.log('Navigation vers le produit:', product);
+  
+  // Construct query parameters with product categories and search term
+  const queryParams = {
+    search: searchQuery.value.trim()
+  };
+  
+  // Add categories if available
+  if (product.category_id) {
+    queryParams.category = product.category_id;
+  }
+  if (product.subcategory_id) {
+    queryParams.subcategory = product.subcategory_id;
+  }
+  if (product.subsubcategory_id) {
+    queryParams.sub_subcategory = product.subsubcategory_id;
+  }
+  
+  router.push({
+    path: '/recherche_de_produit_list',
+    query: queryParams
+  });
+  
+  clearSearch();
+  closeMobileSearch();
+};
+
+const viewAllResults = () => {
+  router.push({
+    path: '/recherche_de_produit_list',
+    query: { search: searchQuery.value.trim() }
+  });
+  clearSearch();
+  closeMobileSearch();
+};
+
+// New navigation functions for categories
+const navigateToCategory = (category) => {
+  console.log('Navigation vers catégorie:', category);
+  router.push({
+    path: '/recherche_de_produit_list',
+    query: { category: category.id }
+  });
+  showCategoriesMenu.value = false;
+};
+
+const navigateToSubcategory = (subcategory) => {
+  console.log('Navigation vers sous-catégorie:', subcategory);
+  
+  // Find parent category
+  const parentCategory = activeCategory.value;
+  
+  const queryParams = {
+    subcategory: subcategory.id
+  };
+  
+  if (parentCategory) {
+    queryParams.category = parentCategory.id;
+  }
+  
+  router.push({
+    path: '/recherche_de_produit_list',
+    query: queryParams
+  });
+  showCategoriesMenu.value = false;
+};
+
+const navigateToSubSubcategory = (subSubcategory) => {
+  console.log('Navigation vers sous-sous-catégorie:', subSubcategory);
+  
+  // Find parent category and subcategory
+  const parentCategory = activeCategory.value;
+  let parentSubcategory = null;
+  
+  if (parentCategory && parentCategory.subcategories) {
+    parentSubcategory = parentCategory.subcategories.find(sub => 
+      sub.sub_subcategories && sub.sub_subcategories.some(subsub => subsub.id === subSubcategory.id)
+    );
+  }
+  
+  const queryParams = {
+    sub_subcategory: subSubcategory.id
+  };
+  
+  if (parentCategory) {
+    queryParams.category = parentCategory.id;
+  }
+  if (parentSubcategory) {
+    queryParams.subcategory = parentSubcategory.id;
+  }
+  
+  router.push({
+    path: '/recherche_de_produit_list',
+    query: queryParams
+  });
+  
+  showCategoriesMenu.value = false;
+  if (showMobileMenu.value) {
+    toggleMobileMenu();
+  }
+};
+
+const handleImageError = (event) => {
+  event.target.src = 'https://www.svgrepo.com/show/422038/product.svg';
+};
+
+const formatPrice = (price) => {
+  return new Intl.NumberFormat('fr-FR', {
+    style: 'currency',
+    currency: 'XOF',
+    minimumFractionDigits: 0
+  }).format(price);
+};
+
+const getMatchTypeLabel = (matchType) => {
+  const labels = {
+    'product': 'Produit',
+    'category': 'Catégorie',
+    'subcategory': 'Sous-catégorie',
+    'subsubcategory': 'Sous-sous-catégorie'
+  };
+  return labels[matchType] || 'Correspondance';
+};
+
+// Computed for filtered suggestions (static suggestions)
+const filteredSuggestions = computed(() => {
+  if (!searchQuery.value || searchQuery.value.length < 3) {
+    return [];
+  }
+  
+  const query = searchQuery.value.toLowerCase().trim();
+  return searchSuggestions.value
+    .filter(suggestion => 
+      suggestion.toLowerCase().includes(query)
+    )
+    .slice(0, 8);
+});
+
+// Watch for searchQuery changes (for static suggestions)
+watch(searchQuery, (newValue) => {
+  if (newValue && newValue.length >= 3 && !showSearchResults.value) {
+    showSuggestions.value = true;
+  } else if (newValue.length < 3) {
+    showSuggestions.value = false;
+  }
+});
+
+// Handling clicks outside and escape keys
+const handleClickOutside = (event) => {
+  if (!event.target.closest('.search-container')) {
+    showSearchResults.value = false;
+    showSuggestions.value = false;
+  }
+  
+  if (!event.target.closest('.all-categories')) {
+    showCategoriesMenu.value = false;
+  }
+};
+
+const goToBoutique = () => {
+  router.push('/boutique-admin/dashboard')
+};
+
+const handleEscapeKey = (event) => {
+  if (event.key === 'Escape') {
+    showSearchResults.value = false;
+    showSuggestions.value = false;
+    showCategoriesMenu.value = false;
+    closeMobileSearch();
+    if (showMobileMenu.value) {
+      toggleMobileMenu();
+    }
+  }
+};
+
+const toggleImageSearch = () => {
+  showImageSearch.value = !showImageSearch.value;
+};
+
+const handleFocus = () => {
+  if (searchQuery.value.length >= 3 && searchResults.value.length === 0 && !isSearching.value) {
+    showSuggestions.value = true;
+  }
+};
+
+const hideSuggestions = () => {
+  setTimeout(() => {
+    showSuggestions.value = false;
+    showSearchResults.value = false;
+  }, 150);
+};
+
+const selectSuggestion = (suggestion) => {
+  searchQuery.value = suggestion;
+  showSuggestions.value = false;
+  handleSearchInput(); // Trigger search with selected suggestion
+  
+  // Add to recent searches if mobile
+  if (showMobileSearch.value && !recentSearches.value.includes(suggestion)) {
+    recentSearches.value.unshift(suggestion);
+    if (recentSearches.value.length > 5) {
+      recentSearches.value.pop();
+    }
+  }
+};
+
+const highlightMatch = (suggestion) => {
+  if (!searchQuery.value) return suggestion;
+  
+  const query = searchQuery.value.toLowerCase().trim();
+  const suggestionLower = suggestion.toLowerCase();
+  const index = suggestionLower.indexOf(query);
+  
+  if (index === -1) return suggestion;
+  
+  const before = suggestion.substring(0, index);
+  const match = suggestion.substring(index, index + query.length);
+  const after = suggestion.substring(index + query.length);
+  
+  return `${before}<strong style="color: #fe7900; font-weight: 600;">${match}</strong>${after}`;
+};
+
+const setActiveCategory = (category) => {
+  activeCategory.value = category;
+};
+
+const handleDrop = (event) => {
+  console.log('File dropped:', event.dataTransfer.files);
+};
+
+const reloadCategories = () => {
+  loadCategories();
+};
+
+// New functions for mobile version
+const openMobileSearch = () => {
+  showMobileSearch.value = true;
+  document.body.style.overflow = 'hidden';
+  
+  // Focus on input after DOM render
+  nextTick(() => {
+    if (mobileSearchInput.value) {
+      mobileSearchInput.value.focus();
+    }
+  });
+};
+
+const closeMobileSearch = () => {
+  showMobileSearch.value = false;
+  document.body.style.overflow = '';
+};
+
+const toggleMobileMenu = () => {
+  showMobileMenu.value = !showMobileMenu.value;
+  
+  if (showMobileMenu.value) {
+    document.body.style.overflow = 'hidden';
+    // Reset menu level
+    mobileMenuLevel.value = 1;
+    selectedMobileCategory.value = null;
+    selectedMobileSubcategory.value = null;
+  } else {
+    document.body.style.overflow = '';
+  }
+};
+
+const selectMobileCategory = (category) => {
+  if (category.subcategories && category.subcategories.length > 0) {
+    selectedMobileCategory.value = category;
+    mobileMenuLevel.value = 2;
+  } else {
+    // If no subcategories, navigate directly
+    navigateToCategory(category);
+    toggleMobileMenu();
+  }
+};
+
+const selectMobileSubcategory = (subcategory) => {
+  if (subcategory.sub_subcategories && subcategory.sub_subcategories.length > 0) {
+    selectedMobileSubcategory.value = subcategory;
+    mobileMenuLevel.value = 3;
+  } else {
+    // If no sub-subcategories, navigate directly
+    navigateToSubcategory(subcategory);
+    toggleMobileMenu();
+  }
+};
+
+const mobileMenuBack = () => {
+  if (mobileMenuLevel.value === 3) {
+    mobileMenuLevel.value = 2;
+    selectedMobileSubcategory.value = null;
+  } else if (mobileMenuLevel.value === 2) {
+    mobileMenuLevel.value = 1;
+    selectedMobileCategory.value = null;
+  }
+};
+
+// Lifecycle - Load categories on component mount
+onMounted(async () => {
+  console.log('[v0] Navbar with MyMemory Translation mounted')
+  
+  loadCache()
+  
+  const savedLang = localStorage.getItem('preferred-language')
+  const savedSelectedLang = localStorage.getItem('selected-language')
+  
+  if (savedSelectedLang) {
+    try {
+      selectedLanguage.value = JSON.parse(savedSelectedLang)
+    } catch (error) {
+      console.error('[v0] Error parsing saved language:', error)
+    }
+  }
+  
+  if (savedLang === 'en') {
+    currentLanguage.value = 'en'
+    setTimeout(async () => {
+      await translatePage()
+    }, 2000)
+  }
+  
+  loadCategories();
+  
+  // Listen for clicks to close dropdowns
+  document.addEventListener('click', handleClickOutside);
+  document.addEventListener('keydown', handleEscapeKey);
+});
+
+onUnmounted(() => {
+  // Clean up event listeners
+  document.removeEventListener('click', handleClickOutside);
+  document.removeEventListener('keydown', handleEscapeKey);
+  
+  // Clean up timeouts and requests
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value);
+  }
+  
+  if (searchAbortController.value) {
+    searchAbortController.value.abort();
+  }
+  
+  // Reset body overflow
+  document.body.style.overflow = '';
+});
+
+// Expose functions for debugging
+window.navbarDebug = {
+  reloadCategories,
+  categories: categories.value,
+  isLoading: isLoadingCategories.value,
+  error: categoriesError.value,
+  searchResults: searchResults.value,
+  performSearch: () => performProductSearch(searchQuery.value)
+};
 </script>
 
 <style scoped>
@@ -2350,7 +2626,6 @@ export default {
   border-radius: 12px;
   box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
   z-index: 1000;
-  width: 1616px;
   display: flex;
   overflow: hidden;
   animation: slideDown 0.3s ease;
@@ -2822,5 +3097,84 @@ export default {
   .subcategory-column {
     max-width: 100%;
   }
+}
+
+.language-selector {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 10px;
+  background: #f8f8f8;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  cursor: pointer;
+  user-select: none;
+  transition: opacity 0.3s ease;
+}
+
+.language-selector img.flag {
+  width: 20px;
+  height: auto;
+}
+
+.language-selector svg {
+  margin-left: 4px;
+  transition: transform 0.3s;
+}
+
+.language-selector.open svg {
+  transform: rotate(180deg);
+}
+
+/* Added disabled state styling */
+.language-selector.opacity-50 {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+/* Dropdown */
+.language-dropdown {
+  position: absolute;
+  top: 110%;
+  left: 0;
+  width: 160px;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.15);
+  display: none;
+  z-index: 10;
+}
+
+.language-selector.open .language-dropdown {
+  display: block;
+}
+
+.language-dropdown div {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 10px;
+  cursor: pointer;
+}
+
+.language-dropdown div:hover {
+  background: #f2f2f2;
+}
+
+.language-dropdown img.flag {
+  width: 18px;
+}
+
+/* Added styles for translation stats tooltip */
+.absolute.top-full {
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
+  font-size: 12px;
+  color: #6b7280;
+  z-index: 1000;
 }
 </style>

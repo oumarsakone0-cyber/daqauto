@@ -1177,6 +1177,7 @@ import {
 } from 'lucide-vue-next'
 
 // États réactifs
+const router = useRouter()
 const products = ref([])
 const loading = ref(false)
 const error = ref('')
@@ -2357,6 +2358,14 @@ watch(boostStartDate, updateEndDate)
 
 // Lifecycle hooks
 onMounted(async () => {
+
+   const token = localStorage.getItem('authToken')
+   console.log('Token au montage:', token)
+    if (!token) {
+      router.replace('/boutique-admin/login')
+      return
+    }
+
   document.addEventListener('click', handleClickOutside)
 
   // Initialiser avec les données mock pour la démo

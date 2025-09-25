@@ -6,7 +6,7 @@
       <div class="fixed top-4 right-4 z-50">
         <AutoTranslator />
       </div>
-      
+       -->
       <!-- Navbar -->
       <Navbar 
         v-if="!hideNavbar"
@@ -31,14 +31,14 @@ import { computed, ref, watch, onMounted } from 'vue'
 import { useRoute } from 'vue-router'
 import Navbar from './components/menu/Navbar.vue'
 import Footer from './components/menu/Footer.vue'
-import AutoTranslator from './components/traduction/AutoTranslator.vue'
+//import AutoTranslator from './components/traduction/AutoTranslator.vue'
 
 export default {
   name: 'App',
   components: {
     Navbar,
     Footer,
-    AutoTranslator
+    //AutoTranslator
   },
   setup() {
     const route = useRoute()

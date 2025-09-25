@@ -93,10 +93,10 @@
               </div>
             </div>
             
-            <!--
+            
             <div class="form-section">
               <h4 class="section-title">Adresse de livraison</h4>
-              
+              <!--
               <div class="shipping-info">
                 <div class="shipping-method">
                   <span class="method-name">{{ getShippingMethodName() }}</span>
@@ -112,7 +112,7 @@
                   </small>
                 </div>
               </div>
-              
+              -->
               <div class="form-group">
                 <label for="adresseComplete" class="form-label">Adresse complète *</label>
                 <textarea 
@@ -129,7 +129,7 @@
                   L'adresse complète est requise
                 </div>
               </div>
-              
+               <!--
               <div class="form-group">
                 <label for="instructionsLivraison" class="form-label">Instructions de livraison (optionnel)</label>
                 <textarea 
@@ -141,9 +141,10 @@
                   rows="2"
                 ></textarea>
               </div>
+              -->
             </div>
 
-            -->
+            
   
             <!-- Order Total -->
             <div class="order-total">
@@ -391,10 +392,6 @@
   // ===== GESTION DE LA COMMANDE =====
   
   const handleButtonClick = (event) => {
-    console.log('🖱️ Clic sur le bouton confirmer')
-    console.log('- Event:', event)
-    console.log('- canConfirmOrder:', props.canConfirmOrder)
-    console.log('- orderLoading:', props.orderLoading)
     
     // Ne pas traiter si désactivé
     if (!props.canConfirmOrder || props.orderLoading) {
@@ -412,55 +409,33 @@
   }
   
   const handleSubmitOrder = async () => {
-    console.log('📝 ===== DÉBUT SOUMISSION COMMANDE =====')
-    console.log('- Timestamp:', new Date().toISOString())
     
     try {
       // Validation
-      console.log('🔍 Validation des données...')
       const validation = validateOrderData()
       if (!validation.isValid) {
         console.error('❌ Validation échouée:', validation.errors)
         alert('Erreur: ' + validation.errors.join(', '))
         return
       }
-      console.log('✅ Validation réussie')
       
       // Construction des données
-      console.log('🏗️ Construction des données de commande...')
       const orderData = buildOrderData()
-      console.log('📦 Données de commande construites:', orderData)
-      
-      // Vérification finale des frais de livraison
-      console.log('🔍 Vérification finale:')
-      console.log('- frais_livraison dans orderData:', orderData.frais_livraison)
-      console.log('- shipping_cost dans orderData:', orderData.shipping_cost)
-      console.log('- total dans orderData:', orderData.total)
       
       // Émission vers le parent
-      console.log('📤 Émission vers le parent...')
       emit('confirmOrder', orderData)
-      console.log('✅ Données émises avec succès')
       
     } catch (error) {
-      console.error('❌ Erreur dans handleSubmitOrder:', error)
       alert('Erreur lors de la soumission: ' + error.message)
     }
     
-    console.log('📝 ===== FIN SOUMISSION COMMANDE =====')
   }
   
   const buildOrderData = () => {
-    console.log('🏗️ ===== DÉBUT buildOrderData =====')
     
     const subtotal = calculateSubtotal()
     const shippingCost = getFinalShippingCost() // UTILISE LE CALCUL DU MODAL
-    const total = subtotal + shippingCost
-    
-    console.log('💰 Calculs financiers dans buildOrderData:')
-    console.log('- Sous-total:', subtotal)
-    console.log('- Frais livraison (getFinalShippingCost):', shippingCost)
-    console.log('- Total calculé:', total)
+    const total = subtotal
     
     const orderData = {
       // Informations commande
@@ -535,9 +510,9 @@
       errors.push('Mode de livraison requis')
     }
     
-    if (props.selectedShipping === 'abidjan' && !props.selectedCommune) {
-      errors.push('Commune requise pour Abidjan')
-    }
+   // if (props.selectedShipping === 'abidjan' && !props.selectedCommune) {
+    //  errors.push('Commune requise pour Abidjan')
+   // }
     
     if (props.selectedShipping === 'interieur' && !props.selectedVille) {
       errors.push('Ville requise pour l\'intérieur')
@@ -612,7 +587,7 @@
   }
   
   const formatFCFA = (montant) => {
-    return Number(montant || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
+    return Number(montant || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $'
   }
   
   // ===== FONCTIONS DE DEBUG =====
