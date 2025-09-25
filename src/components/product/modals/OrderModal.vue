@@ -3,12 +3,8 @@
       <div class="order-modal">
         <div class="modal-header">
           <h3 class="modal-title">Confirmer votre commande</h3>
-          <button class="close-btn" @click="$emit('close')">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="18" y1="6" x2="6" y2="18"></line>
-              <line x1="6" y1="6" x2="18" y2="18"></line>
-            </svg>
-          </button>
+          
+          <XIcon @click="$emit('close')" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
         
         <!-- Debug Panel -->
@@ -52,7 +48,7 @@
                   Quantité: {{ quantity }}
                 </div>
               </div>
-              <div class="product-price">
+              <div class="product-price primary-color">
                 {{ formatFCFA(calculateSubtotal()) }}
               </div>
             </div>
@@ -70,19 +66,19 @@
                   id="customerName"
                   :value="orderForm.customerName"
                   @input="$emit('updateForm', 'customerName', $event.target.value)"
-                  class="form-input"
+                  class="input-style"
                   placeholder="Votre nom complet"
                 />
               </div>
               
               <div class="form-group">
-                <label for="customerContact" class="form-label">Numéro de téléphone *</label>
+                <label for="customerContact" class="form-label">Numéro de téléphone <span class="error-color">*</span></label>
                 <input 
                   type="tel" 
                   id="customerContact"
                   :value="orderForm.customerContact"
                   @input="$emit('updateForm', 'customerContact', $event.target.value)"
-                  class="form-input"
+                  class="input-style"
                   :class="{ 'error': formSubmitted && !orderForm.customerContact }"
                   placeholder="Ex: 07 12 34 56 78"
                   required
@@ -114,12 +110,12 @@
               </div>
               -->
               <div class="form-group">
-                <label for="adresseComplete" class="form-label">Adresse complète *</label>
+                <label for="adresseComplete" class="form-label">Adresse complète <span class="error-color">*</span></label>
                 <textarea 
                   id="adresseComplete"
                   :value="orderForm.adresse_complete"
                   @input="$emit('updateForm', 'adresse_complete', $event.target.value)"
-                  class="form-textarea"
+                  class="input-style"
                   :class="{ 'error': formSubmitted && !orderForm.adresse_complete }"
                   placeholder="Indiquez votre adresse complète avec des points de repère"
                   rows="3"
@@ -148,17 +144,17 @@
   
             <!-- Order Total -->
             <div class="order-total">
-              <div class="total-row">
+              <div class="total-row text-gray-500">
                 <span>Sous-total:</span>
                 <span>{{ formatFCFA(calculateSubtotal()) }}</span>
               </div>
-              <!--
+<!--               
               <div class="total-row">
                 <span>Livraison:</span>
                 <span>{{ formatFCFA(getFinalShippingCost()) }}</span>
               </div>
               -->
-              <div class="total-row total">
+              <div class="total-row total primary-color">
                 <span>Total:</span>
                 <span>{{ formatFCFA(calculateSubtotal()) }}</span>
               </div>
@@ -166,12 +162,12 @@
   
             <!-- Submit Button -->
             <div class="form-actions">
-              <button type="button" class="cancel-btn" @click="$emit('close')">
+              <button type="button" class="btn-gray flex-1" @click="$emit('close')">
                 Annuler
               </button>
               <button 
                 type="submit" 
-                class="confirm-btn"
+                class="btn-degrade-orange flex-1"
                 :disabled="!canConfirmOrder || orderLoading"
                 @click="handleButtonClick"
               >
@@ -187,7 +183,8 @@
   
   <script setup>
   import { computed, defineProps, defineEmits } from 'vue'
-  
+  import { 
+  X as XIcon,} from 'lucide-vue-next'
   const props = defineProps({
     product: Object,
     selectedVariants: Array,
@@ -782,7 +779,6 @@
   .product-price {
     font-size: 16px;
     font-weight: 700;
-    color: #ff4d4f;
     text-align: right;
   }
   
@@ -907,7 +903,6 @@
   .total-row.total {
     font-size: 16px;
     font-weight: 700;
-    color: #ff4d4f;
     padding-top: 8px;
     border-top: 1px solid #e8e8e8;
     margin-top: 8px;

@@ -99,6 +99,14 @@ button:focus-visible {
 
 }
 
+.success-color{
+  color: #52c41a;
+}
+
+.blue-color{
+  color: #1890ff;
+}
+
 .error-color{
   color: #ec0202;
 }
@@ -109,10 +117,16 @@ button:focus-visible {
 
 /* Les styles de bouton avec dégradé */
 
+
+
 .btn-degrade-orange {
+  display: flex;
   background: linear-gradient(90deg, #fe7900, #ff5a01);
   color: white;
   transition: background 0.3s;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 .btn-degrade-orange:hover {
   background: linear-gradient(90deg, #ff5a01, #fe7900);
@@ -173,6 +187,24 @@ button:focus-visible {
     border: 1px solid #fe7900;
   }
 
+  .btn-whatsapp{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 16px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    border: none;
+    background: #25D366;
+    color: white;
+  }
+  .whatsapp-btn:hover {
+    background: #22c55e;
+  }
 
 /* Les styles de bordures */
 
