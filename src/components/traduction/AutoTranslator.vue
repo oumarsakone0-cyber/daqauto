@@ -1,5 +1,6 @@
 <template>
-  <div class="fixed top-20 right-4 z-[1111]" style="margin-top: 300px; color: black; border:none">
+  <!-- On Desktop -->
+  <div class="fixed top-20 right-4 z-[1111] desktop-only" style="margin-top: 300px; color: black; border:none">
     <button 
       @click="toggleLanguage"
       :disabled="isTranslating"
@@ -8,6 +9,28 @@
       <span class="text-sm font-bold" style="color: white">
         {{ isTranslating ? '⏳ Traduction...' : (currentLanguage === 'fr' ? '🇫🇷 Français' : '🇬🇧 English') }}
       </span>
+    </button>
+    
+    <!-- Cache stats tooltip -->
+    <div v-if="showStats" class="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-3 text-xs text-gray-600 min-w-[200px]">
+      <div class="font-semibold mb-1">📊 Statistiques Cache</div>
+      <div>✅ Traductions en cache: {{ cacheStats.cached }}</div>
+      <div>🔄 Nouvelles traductions: {{ cacheStats.new }}</div>
+      <div>💾 Économie d'API: {{ cacheStats.saved }}%</div>
+    </div>
+  </div>
+
+
+  <!--On Mobile device -->
+  <div class="fixed top-20 right-4 z-[1111] mobile-only" style="margin-top: 300px; background-color: transparent;  border:none">
+    <button 
+      @click="toggleLanguage"
+      :disabled="isTranslating"
+      class="disabled:bg-gray-400  rounded-lg shadow-xl transition-all duration-200 translate-icon-mobile "  
+    >
+      
+        {{ isTranslating ? '⏳' : (currentLanguage === 'fr' ? '🇫🇷 ' : '🇬🇧 ') }}
+      
     </button>
     
     <!-- Cache stats tooltip -->
@@ -259,8 +282,35 @@ onMounted(async () => {
   color: white;
 
 }
-
 .translate-style:hover{
   border: black;
 }
+.translate-icon-mobile {
+  background-color: black;
+  font-size: 1.5rem;
+  padding:2px 8px
+}
+.translating-icon-mobile {
+  background-color: black;
+  font-size: 0.2rem; /* ou 32px */
+  padding:2px 8px
+}
+/* Responsive */
+  .mobile-only {
+    display: none;
+  }
+  
+  .desktop-only {
+    display: block;
+  }
+  
+  @media (max-width: 768px) {
+    .mobile-only {
+      display: block;
+    }
+    
+    .desktop-only {
+      display: none;
+    }
+  }
 </style>
