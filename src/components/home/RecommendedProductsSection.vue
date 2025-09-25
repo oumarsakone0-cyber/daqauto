@@ -3,7 +3,7 @@
     <section class="mobile-recommended mobile-only">
       <div class="section-header-mobile">
         <h2>🔥 Recommandés pour vous</h2>
-        <button class="see-all-btn">Voir tout</button>
+        <a v-if="!recommendedProductsError" href="#" class="btn-outline">Voir tout</a>
       </div>
       
       <div class="mobile-products-grid">
@@ -25,7 +25,7 @@
       <div class="section-content">
         <div class="section-header">
           <h2 class="section-title">🔥 Produits Recommandés</h2>
-          <a href="#" class="view-all">Voir tout →</a>
+          <a v-if="!recommendedProductsError" href="#" class="btn-outline">Voir tout →</a>
         </div>
         
         <!-- État de chargement des produits recommandés -->
@@ -41,8 +41,8 @@
   
         <!-- État d'erreur des produits recommandés -->
         <div v-else-if="recommendedProductsError" class="error-products">
-          <p class="error-message">{{ recommendedProductsError }}</p>
-          <button @click="loadRecommendedProducts" class="retry-button">Réessayer</button>
+          <p class="error-message error-color">{{ recommendedProductsError }}</p>
+          <button @click="loadRecommendedProducts" class="btn-gray">Réessayer</button>
         </div>
   
         <!-- Produits recommandés chargés -->
@@ -224,16 +224,6 @@
     margin: 0;
   }
   
-  .see-all-btn {
-    background: none;
-    border: 1px solid #fe7900;
-    color: #fe7900;
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  
   .mobile-products-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
@@ -267,23 +257,6 @@
     display: flex;
     align-items: center;
     gap: 8px;
-  }
-  
-  .view-all {
-    color: #fe7900;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 2px solid #fe7900;
-  }
-  
-  .view-all:hover {
-    background: #fe7900;
-    color: white;
-    transform: translateX(4px);
   }
   
   /* Grille de produits dense */
@@ -350,7 +323,6 @@
   .error-products {
     text-align: center;
     padding: 40px;
-    color: #666;
   }
   
   .error-message {

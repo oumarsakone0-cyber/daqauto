@@ -15,7 +15,7 @@
       </div>
       <div class="mobile-grid-info">
         <h3 class="mobile-grid-title">{{ product.name }}</h3>
-        <div class="mobile-grid-price">{{ formatPrice(product.unit_price) }}</div>
+        <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }}</div>
         <div class="wholesale-price" style="margin-bottom: 8px;" v-if="product.wholesale_price || product.wholesalePrice">
             <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs :</span>
             <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
@@ -44,8 +44,8 @@
           <span class="rating-count">({{ product.views || product.reviews || 0 }})</span>
         </div>
         <div class="alibaba-action-buttons">
-          <button class="alibaba-contact-btn" @click.stop="handleContactClick">View</button>
-          <button class="alibaba-chat-btn" @click.stop="handleChatClick">Chat now</button>
+          <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
+          <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
         </div>
       </div>
     </div>
@@ -71,7 +71,7 @@
             <!-- Flèches de navigation (seulement si plusieurs images) -->
             <div 
               v-if="productImages.length > 1"
-              class="alibaba-arrow-left" 
+              class="alibaba-arrow-left primary-color" 
               @click.stop="previousImage"
             >
               <svg width="10" height="17" viewBox="0 0 10 17" fill="none">
@@ -80,7 +80,7 @@
             </div>
             <div 
               v-if="productImages.length > 1"
-              class="alibaba-arrow-right" 
+              class="alibaba-arrow-right primary-color" 
               @click.stop="nextImage"
             >
               <svg width="10" height="17" viewBox="0 0 10 17" fill="none"  >
@@ -101,7 +101,7 @@
           </div>
         </div>
         
-        <div class="alibaba-favorite-btn" @click.stop="handleFavoriteClick">
+        <div class="alibaba-favorite-btn bg-orange" @click.stop="handleFavoriteClick">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
           </svg>
@@ -119,7 +119,7 @@
     
           <div class="product-pricing">
             <div class="unit-price">
-              <span class="current-price">{{ formatPrice(product.unit_price || product.unitPrice) }}</span>
+              <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }}</span>
               <span v-if="product.originalPrice" class="original-price">{{ formatPrice(product.originalPrice) }}</span>
             </div>
             <div class="wholesale-price" v-if="product.wholesale_price || product.wholesalePrice">
@@ -166,8 +166,8 @@
         </div>
     
        <div class="alibaba-action-buttons">
-          <button class="alibaba-contact-btn" @click.stop="handleProductClick">View</button>
-          <button class="alibaba-chat-btn" @click.stop="handleChatClick">Chat now</button>
+          <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
+          <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
         </div>
     
         <!-- Badge publicitaire (si applicable) -->
@@ -191,7 +191,7 @@
     </div>
     </template>
     
-    <script setup>
+<script setup>
     import { ref, computed, defineProps, defineEmits } from 'vue'
     import ChatModal from '../product/modals/ChatModal2.vue'
 import ChatDesktop from '../product/modals/ChatWindow.vue'
@@ -351,9 +351,9 @@ import ChatApiClient from '../../services/chat-api-client'
       chatStore.openChat?.() // safe call
       emit('chat-click', props.product)
     }
-    </script>
+</script>
     
-    <style scoped>
+<style scoped>
     /* Styles mobile */
     .mobile-grid-product {
       background: #f8f8f8;
@@ -414,7 +414,6 @@ import ChatApiClient from '../../services/chat-api-client'
     .mobile-grid-price {
       font-size: 16px;
       font-weight: 700;
-      color: #fe7900;
       margin-bottom: 4px;
     }
     
@@ -502,7 +501,6 @@ import ChatApiClient from '../../services/chat-api-client'
       width: 24px;
       height: 24px;
       background: rgba(0, 0, 0, 0.5);
-      color: #fe7900;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -555,7 +553,6 @@ import ChatApiClient from '../../services/chat-api-client'
       right: 8px;
       width: 32px;
       height: 32px;
-      background: #fe7900;
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -566,7 +563,6 @@ import ChatApiClient from '../../services/chat-api-client'
     }
     
     .alibaba-favorite-btn:hover {
-      background: #ff4704;
       transform: scale(1.1);
     }
     
@@ -615,7 +611,6 @@ import ChatApiClient from '../../services/chat-api-client'
     .current-price {
       font-size: 16px;
       font-weight: 700;
-      color: #fe7900;
     }
     
     .original-price {
@@ -713,38 +708,6 @@ import ChatApiClient from '../../services/chat-api-client'
       right: 16px;
     }
     
-    .alibaba-contact-btn,
-    .alibaba-chat-btn {
-      flex: 1;
-      padding: 8px 12px;
-      border: 1px solid #fe7900;
-      border-radius: 4px;
-      font-size: 12px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: all 0.3s ease;
-    }
-    
-    .alibaba-contact-btn {
-      background: white;
-      color: #fe7900;
-    }
-    
-    .alibaba-contact-btn:hover {
-      background: #fe7900;
-      color: white;
-    }
-    
-    .alibaba-chat-btn {
-      background: #fe7900;
-      color: white;
-    }
-    
-    .alibaba-chat-btn:hover {
-      background: white;
-      color: #fd342db8;
-    }
-    
     .alibaba-ad-badge {
       position: absolute;
       top: 8px;
@@ -812,27 +775,6 @@ import ChatApiClient from '../../services/chat-api-client'
   display: flex;
   gap: 8px;
   margin-top: 10px;
-}
-
-.mobile-grid-product .alibaba-contact-btn,
-.mobile-grid-product .alibaba-chat-btn {
-  flex: 1;
-  padding: 8px;
-  font-size: 12px;
-  border-radius: 4px;
-  border: 1px solid #fe7900;
-  font-weight: 500;
-  cursor: pointer;
-}
-
-.mobile-grid-product .alibaba-contact-btn {
-  background-color: white;
-  color: #fe7900;
-}
-
-.mobile-grid-product .alibaba-chat-btn {
-  background-color: #fe7900;
-  color: white;
 }
 
 .mobile-grid-product .alibaba-action-buttons {

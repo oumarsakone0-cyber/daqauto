@@ -141,16 +141,17 @@ button:focus-visible {
   border-color:#ff0000;
   }
 
-  .btn-outline{
-     color: #fe7900;
-     background-color: white;
+  .btn-outline ,
+  .btn-outline-with-background{
+    color: #fe7900;
+    background-color: none;
     text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
+    font-weight: 500;
+    font-size: 12px;
     transition: all 0.3s ease;
     padding: 8px 16px;
-    border-radius: 20px;
-    border: 2px solid #fe7900;
+    border-radius: 4px;
+    border: 1px solid #fe7900;
   }
 
   .btn-outline:hover{
@@ -158,6 +159,20 @@ button:focus-visible {
     background-color: #fe7900;
   
   }
+.btn-outline{
+    color: #fe7900;
+    background-color: white;
+  }
+  .btn-outline-with-background{
+    color: white;
+    background-color: #fe7900;
+  }
+  .btn-outline-with-background:hover{
+    color: #fe7900;
+    background-color: white;
+    border: 1px solid #fe7900;
+  }
+
 
 /* Les styles de bordures */
 

@@ -3,7 +3,7 @@
     <section class="mobile-categories mobile-only">
       <div class="section-header-mobile">
         <h2>Catégories</h2>
-        <button v-if="!categoriesError" class="btn-outline">Voir tout</button>
+        <a v-if="!categoriesError" href="#" class="btn-outline">Voir tout</a>
       </div>
       
       <div class="categories-grid-mobile">
@@ -29,7 +29,7 @@
             <span class="amazon-title-text">Catégories populaires</span>
           </h2>
           <span class="amazon-title-right">
-            <a v-if="!categoriesError" href="#" class="btn-outline">Découvrir tout →</a>
+            <a v-if="!categoriesError" href="#" class="btn-outline">Voir tout →</a>
           </span>
         </div>
         
