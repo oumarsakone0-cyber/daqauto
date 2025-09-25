@@ -1,5 +1,5 @@
 <template>
-  <div class="relative w-full bg-gradient-to-br overflow-hidden degrade-fond">
+  <div class="relative w-full bg-gradient-to-br overflow-hidden bg-degrade-orange">
     <!-- Background Pattern -->
     <div class="absolute inset-0 opacity-10">
       <div class="absolute top-0 left-0 w-96 h-96 bg-white rounded-full -translate-x-48 -translate-y-48"></div>
@@ -324,10 +324,6 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
-.degrade-fond {
-  background: linear-gradient(160deg, black , #fc4618 , black );
-  
-}
 
 .offer-button{
   background-color: white;
@@ -336,6 +332,7 @@ onBeforeUnmount(() => {
 }
 .offer-button:hover {
   background-color: #e66e00;
+  color: white;
 }
 .line-clamp-2 {
   display: -webkit-box;

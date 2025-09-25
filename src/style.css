@@ -141,6 +141,24 @@ button:focus-visible {
   border-color:#ff0000;
   }
 
+  .btn-outline{
+     color: #fe7900;
+     background-color: white;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 14px;
+    transition: all 0.3s ease;
+    padding: 8px 16px;
+    border-radius: 20px;
+    border: 2px solid #fe7900;
+  }
+
+  .btn-outline:hover{
+    color: white;
+    background-color: #fe7900;
+  
+  }
+
 /* Les styles de bordures */
 
 .focus\:border-orange-500:focus {

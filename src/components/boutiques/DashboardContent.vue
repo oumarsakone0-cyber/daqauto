@@ -1055,7 +1055,7 @@
               Votre demande de boost pour <strong>{{ boostConfirmationData?.product_name }}</strong> a été reçue.
             </p>
             <p class="text-gray-600 mb-6 leading-relaxed">
-              Un agent AliAdjame vous contactera sous 24h pour finaliser l'activation.
+              Un agent Daq Auto vous contactera sous 24h pour finaliser l'activation.
             </p>
             
             <!-- Détails du boost -->

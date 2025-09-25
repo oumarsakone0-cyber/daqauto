@@ -66,7 +66,7 @@
         <div class="section-content">
           <div class="benefits-grid">
             <div class="benefit-item" v-for="(benefit, index) in benefits" :key="index">
-              <div class="benefit-icon">
+              <div class="benefit-icon bg-orange">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" v-html="benefit.icon"></svg>
               </div>
               <div class="benefit-content">
@@ -92,15 +92,15 @@
       <RecommendedProductsSection />
 
       <!-- Section newsletter compacte (Desktop uniquement) -->
-      <section class="newsletter-section desktop-only">
+      <section class="bg-degrade-orange py-10 desktop-only">
         <div class="section-content">
           <div class="newsletter-container">
             <div class="newsletter-content">
               <h2>📧 Restez informé de nos offres</h2>
               <p>Inscrivez-vous à notre newsletter et recevez en exclusivité nos meilleures promotions</p>
-              <div class="newsletter-form">
-                <input type="email" placeholder="Votre adresse email" v-model="newsletterEmail" />
-                <button @click="subscribeNewsletter">S'inscrire</button>
+              <div class="newsletter-form ">
+                <input type="email" placeholder="Votre adresse email" v-model="newsletterEmail" class="input-style" />
+                <button @click="subscribeNewsletter" class="btn-degrade-orange">S'inscrire</button>
               </div>
             </div>
           </div>
@@ -111,7 +111,7 @@
       <section class="mobile-services mobile-only">
         <div class="services-grid-mobile">
           <div class="service-item-mobile" v-for="(service, index) in mobileServices" :key="index">
-            <div class="service-icon-mobile" v-html="service.icon"></div>
+            <div class="service-icon-mobile bg-orange" v-html="service.icon"></div>
             <div class="service-text-mobile">
               <h4>{{ service.title }}</h4>
               <p>{{ service.description }}</p>
@@ -144,7 +144,7 @@
           <path d="M16 10a4 4 0 0 1-8 0"/>
         </svg>
         <span>Panier</span>
-        <span class="cart-badge">2</span>
+        <span class="cart-badge bg-orange">2</span>
       </div>
       <div class="nav-item">
         <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -870,8 +870,6 @@ const handleSendMessage = (message) => {
   width: 40px;
   height: 40px;
   border-radius: 50%;
-  background: #fe7900;
-  color: white;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -892,11 +890,6 @@ const handleSendMessage = (message) => {
 }
 
 /* Section newsletter */
-.newsletter-section {
-  padding: 40px 0;
-  background: linear-gradient(160deg, black , #fc4618 , black);
-}
-
 .newsletter-container {
   text-align: center;
   color: white;
@@ -921,30 +914,8 @@ const handleSendMessage = (message) => {
   gap: 12px;
 }
 
-.newsletter-form input {
-  flex: 1;
-  padding: 12px 16px;
-  border: none;
-  border-radius: 25px;
-  font-size: 14px;
-  color: #333;
-}
 
-.newsletter-form button {
-  padding: 12px 24px;
-  background: #fe7900;
-  color: white;
-  border: none;
-  border-radius: 25px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
 
-.newsletter-form button:hover {
-  background: #fe4c00;
-  transform: translateY(-2px);
-}
 
 /* Services Mobile */
 .mobile-services {
@@ -971,7 +942,6 @@ const handleSendMessage = (message) => {
 .service-icon-mobile {
   width: 40px;
   height: 40px;
-  background: linear-gradient(135deg, #ff6b35, #ff8c42);
   border-radius: 50%;
   display: flex;
   align-items: center;
@@ -1021,7 +991,7 @@ const handleSendMessage = (message) => {
 }
 
 .nav-item.active {
-  color: #ff6b35;
+  color: #fe7900;
 }
 
 .nav-item svg {
@@ -1033,8 +1003,6 @@ const handleSendMessage = (message) => {
   position: absolute;
   top: 4px;
   right: 20px;
-  background: #ff4757;
-  color: white;
   font-size: 10px;
   font-weight: bold;
   padding: 2px 6px;
@@ -1043,58 +1011,6 @@ const handleSendMessage = (message) => {
   text-align: center;
 }
 
-/* Bouton Flottant */
-.floating-chat-btn {
-  position: fixed;
-  bottom: 100px;
-  right: 16px;
-  width: 56px;
-  height: 56px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border: none;
-  border-radius: 50%;
-  color: white;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-  z-index: 999;
-  transition: transform 0.2s;
-}
-
-.floating-chat-btn:active {
-  transform: scale(0.95);
-}
-
-/* Styles pour le bouton de chat desktop */
-.floating-chat-btn-desktop {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
-  border: none;
-  border-radius: 50px;
-  color: white;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 16px 24px;
-  box-shadow: 0 4px 20px rgba(102, 126, 234, 0.4);
-  z-index: 999;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  font-weight: 600;
-  font-size: 14px;
-}
-
-.floating-chat-btn-desktop:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 25px rgba(102, 126, 234, 0.5);
-}
-
-.chat-btn-text {
-  white-space: nowrap;
-}
 
 /* Styles mobiles cachés par défaut */
 .mobile-only {

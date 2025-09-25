@@ -3,7 +3,7 @@
     <section class="mobile-categories mobile-only">
       <div class="section-header-mobile">
         <h2>Catégories</h2>
-        <button class="see-all-btn">Voir tout</button>
+        <button v-if="!categoriesError" class="btn-outline">Voir tout</button>
       </div>
       
       <div class="categories-grid-mobile">
@@ -29,7 +29,7 @@
             <span class="amazon-title-text">Catégories populaires</span>
           </h2>
           <span class="amazon-title-right">
-            <a href="#" class="amazon-discover-link">Découvrir tout →</a>
+            <a v-if="!categoriesError" href="#" class="btn-outline">Découvrir tout →</a>
           </span>
         </div>
         
@@ -45,8 +45,8 @@
   
           <!-- État d'erreur -->
           <div v-else-if="categoriesError" class="error-categories">
-            <p class="error-message">{{ categoriesError }}</p>
-            <button @click="loadCategories" class="retry-button">Réessayer</button>
+            <p class="error-message error-color">{{ categoriesError }}</p>
+            <button @click="loadCategories" class="btn-gray">Réessayer</button>
           </div>
   
           <!-- Catégories chargées -->
@@ -60,7 +60,7 @@
               >
                 <a href="#" class="amazon-category-link">
                   <div class="category-card-content">
-                    <img :src="category.image" :alt="`${category.name} image`" class="amazon-product-image" />
+                    <img :src="category.image" :alt="`${category.name} image`" class="amazon-product-image primary-color" />
                     <div class="category-info">
                       <h3 class="category-name">{{ category.name }}</h3>
                       <p class="category-count">{{ category.count }}+ produits</p>
@@ -229,17 +229,6 @@
     margin: 0;
   }
   
-  .see-all-btn {
-    background: none;
-    border: 1px solid #fe7900;
-    color: #fe7900;
-    padding: 6px 12px;
-    border-radius: 16px;
-    font-size: 12px;
-    font-weight: 600;
-  }
-  
-  
   .categories-grid-mobile {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -307,22 +296,6 @@
     color: #0F1111;
   }
   
-  .amazon-discover-link {
-     color: #fe7900;
-    text-decoration: none;
-    font-weight: 600;
-    font-size: 14px;
-    transition: all 0.3s ease;
-    padding: 8px 16px;
-    border-radius: 20px;
-    border: 2px solid #fe7900;
-  }
-  
-  .amazon-discover-link:hover {
-    color: white;
-    background-color: #fe7900;
-  }
-  
   .amazon-carousel-container {
     position: relative;
     height: 280px;
@@ -374,7 +347,6 @@
     width: 100%;
     height: 180px;
     object-fit: cover;
-    color:#fe7900
   }
   
   .category-info {
@@ -489,7 +461,6 @@
   .error-categories {
     text-align: center;
     padding: 40px;
-    color: #666;
   }
   
   .error-message {
@@ -497,20 +468,7 @@
     margin-bottom: 16px;
   }
   
-  .retry-button {
-    padding: 10px 20px;
-    background: #fe7900;
-    color: white;
-    border: none;
-    border-radius: 6px;
-    cursor: pointer;
-    font-weight: 600;
-    transition: all 0.3s ease;
-  }
   
-  .retry-button:hover {
-    background: #fe7900;
-  }
   
   /* Responsive */
   .mobile-only {
