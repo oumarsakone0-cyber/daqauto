@@ -2269,7 +2269,9 @@ const handleLogout = async () => {
     )
 
     localStorage.removeItem('authToken')
+    sessionStorage.removeItem('authToken')
     localStorage.removeItem('user')
+    sessionStorage.removeItem('user')
     localStorage.removeItem('rememberMe')
 
     ElMessage({
@@ -2358,9 +2360,9 @@ watch(boostStartDate, updateEndDate)
 
 // Lifecycle hooks
 onMounted(async () => {
-
-   const token = localStorage.getItem('authToken')
-   console.log('Token au montage:', token)
+  
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+    console.log(token)
     if (!token) {
       router.replace('/boutique-admin/login')
       return
