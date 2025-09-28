@@ -12,9 +12,9 @@
       </div>
       
       <div class="shipping-options">
-        <div class="shipping-option" :class="{ 'selected': selectedShipping === 'abidjan' }" @click="selectShipping('abidjan')">
+        <div class="shipping-option " :class="{ 'selected': selectedShipping === 'abidjan' }" @click="selectShipping('abidjan')">
           <div class="shipping-method">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
+            <svg  width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
               <rect x="1" y="3" width="15" height="13"></rect>
               <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
               <circle cx="5.5" cy="18.5" r="2.5"></circle>
@@ -29,7 +29,7 @@
   
         <div class="shipping-option" :class="{ 'selected': selectedShipping === 'interieur' }" @click="selectShipping('interieur')">
           <div class="shipping-method">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#Fe7900" stroke-width="2">
               <circle cx="12" cy="12" r="10"></circle>
               <polyline points="12 6 12 12 16 14"></polyline>
             </svg>
@@ -42,7 +42,7 @@
   
         <div class="shipping-option" :class="{ 'selected': selectedShipping === 'retrait' }" @click="selectShipping('retrait')">
           <div class="shipping-method">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#2196F3" stroke-width="2">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
               <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
               <polyline points="9 22 9 12 15 12 15 22"></polyline>
             </svg>
@@ -56,8 +56,8 @@
   
       <!-- Sélection de commune pour Abidjan -->
       <div v-if="selectedShipping === 'abidjan'" class="commune-selection">
-        <div class="commune-label">Sélectionnez votre commune:</div>
-        <select :value="selectedCommune" @change="$emit('updateCommune', $event.target.value)" class="commune-select">
+        <div class="commune-label ">Sélectionnez votre commune:</div>
+        <select :value="selectedCommune" @change="$emit('updateCommune', $event.target.value)" class="input-style">
           <option value="">Choisir une commune</option>
           <option v-for="tarif in tarifsAbidjan" :key="tarif.id" :value="tarif.commune">
             {{ tarif.commune }} ({{ formatFCFA(tarif.tarif_min) }} - {{ formatFCFA(tarif.tarif_max) }})
@@ -68,7 +68,7 @@
       <!-- Sélection de ville pour l'intérieur -->
       <div v-if="selectedShipping === 'interieur'" class="ville-selection">
         <div class="ville-label">Sélectionnez votre ville:</div>
-        <select :value="selectedVille" @change="$emit('updateVille', $event.target.value)" class="ville-select">
+        <select :value="selectedVille" @change="$emit('updateVille', $event.target.value)" class="input-style">
           <option value="">Choisir une ville</option>
           <option v-for="tarif in tarifsInterieur" :key="tarif.id" :value="tarif.ville">
             {{ tarif.ville }} ({{ formatFCFA(tarif.tarif) }})
@@ -211,11 +211,12 @@
     align-items: center;
     justify-content: space-between;
     padding: 16px;
-    border: 2px solid #e8e8e8;
+    border: 1px solid #e8e8e8;
     border-radius: 8px;
     cursor: pointer;
     transition: all 0.3s ease;
     position: relative;
+    color: #333;
   }
   
   .shipping-option:hover {
@@ -287,24 +288,6 @@
     font-weight: 600;
     color: #333;
     margin-bottom: 8px;
-  }
-  
-  .commune-select,
-  .ville-select {
-    width: 100%;
-    padding: 10px 12px;
-    border: 2px solid #e8e8e8;
-    border-radius: 6px;
-    font-size: 14px;
-    background: #fff;
-    transition: border-color 0.3s ease;
-  }
-  
-  .commune-select:focus,
-  .ville-select:focus {
-    border-color: #fe9700;
-    outline: none;
-    box-shadow: 0 0 0 3px rgba(24, 144, 255, 0.1);
   }
   
   .retrait-info {

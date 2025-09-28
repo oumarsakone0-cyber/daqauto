@@ -3,9 +3,9 @@
       <!-- Product Basic Info -->
       <div class="product-basic-info">
         <div class="product-badges">
-          <span class="badge hot" v-if="product.status === 'Actif'">En Stock</span>
-          <span class="badge ready" v-if="product.stock > 0">Disponible</span>
-          <span class="badge new" v-if="isNewProduct">Nouveau</span>
+          <span class="badge primary-color" style="background: #fff2e8;" v-if="product.status === 'Actif'">En Stock</span>
+          <span class="badge success-color" style="background:   #f6ffed;" v-if="product.stock > 0">Disponible</span>
+          <span class="badge blue-color" style="background: #e6f7ff;" v-if="isNewProduct">Nouveau</span>
         </div>
         
         <h1 class="product-title">{{ product.name }}</h1>
@@ -20,7 +20,7 @@
   
         <div class="product-price-section">
           <div class="price-range">
-            <div class="price-value">
+            <div class="price-value primary-color">
               <span v-if="product.wholesale_price && product.wholesale_min_qty">
                 {{ formatFCFA(product.wholesale_price) }} - {{ formatFCFA(product.unit_price) }}
               </span>
@@ -119,7 +119,7 @@
             <span>Livraison:</span>
             <span>{{ formatFCFA(currentShippingCost) }}</span>
           </div>
-          <div class="total-item total">
+          <div class="total-item total primary-color">
             <span>Total:</span>
             <span>{{ formatFCFA(calculateTotal() + currentShippingCost) }}</span>
           </div>
@@ -313,7 +313,6 @@
   .price-value {
     font-size: 20px;
     font-weight: 700;
-    color: #fe9700;
     margin-bottom: 8px;
   }
   
@@ -482,7 +481,6 @@
   .total-item.total {
     font-size: 16px;
     font-weight: 700;
-    color: #fe9700;
     padding-top: 8px;
     border-top: 1px solid #e8e8e8;
   }

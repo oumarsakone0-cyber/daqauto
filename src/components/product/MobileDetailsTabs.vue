@@ -5,7 +5,7 @@
           v-for="(tab, index) in tabs" 
           :key="index"
           class="tab-button" 
-          :class="{ active: activeTab === index }"
+          :class="{ active: activeTab === index } "
           @click="activeTab = index"
         >
           {{ tab.label }}
@@ -56,7 +56,7 @@
           
           <div class="no-reviews">
             <p>Aucun avis pour le moment.</p>
-            <button class="write-review-btn" @click="$emit('openReviewForm')">
+            <button style="display: inline;" class="btn-degrade-orange mt-4" @click="$emit('openReviewForm')">
               Écrire un avis
             </button>
           </div>
@@ -67,7 +67,7 @@
           <div class="shipping-info">
             <div class="shipping-method">
               <div class="method-header">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#4CAF50" stroke-width="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fe7900"  stroke-width="2">
                   <rect x="1" y="3" width="15" height="13"></rect>
                   <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
                   <circle cx="5.5" cy="18.5" r="2.5"></circle>
@@ -77,13 +77,13 @@
               </div>
               <div class="method-details">
                 <div class="method-time">1-2 jours</div>
-                <div class="method-cost">1500 - 3000 FCFA</div>
+                <div class="primary-color font-bold">1500 - 3000 FCFA</div>
               </div>
             </div>
             
             <div class="shipping-method">
               <div class="method-header">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#FF9800" stroke-width="2">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#Fe7900" stroke-width="2">
                   <circle cx="12" cy="12" r="10"></circle>
                   <polyline points="12 6 12 12 16 14"></polyline>
                 </svg>
@@ -91,7 +91,7 @@
               </div>
               <div class="method-details">
                 <div class="method-time">3-7 jours</div>
-                <div class="method-cost">3000 - 8000 FCFA</div>
+                <div class="primary-color font-bold">3000 - 8000 FCFA</div>
               </div>
             </div>
             
@@ -159,7 +159,7 @@
   }
   
   .tab-button.active {
-    color: #1890ff;
+    color: #fe7900;
     font-weight: 600;
   }
   
@@ -170,7 +170,7 @@
     left: 0;
     width: 100%;
     height: 2px;
-    background: #1890ff;
+    background: #fe7900;
   }
   
   .tab-content {
@@ -229,7 +229,7 @@
   .rating-number {
     font-size: 32px;
     font-weight: 700;
-    color: #ff4d4f;
+    color: #fe7900;
   }
   
   .rating-stars {
@@ -251,20 +251,12 @@
   }
   
   .no-reviews {
+    align-items: center;
+    justify-content:center ;
     text-align: center;
     color: #666;
   }
   
-  .write-review-btn {
-    margin-top: 16px;
-    padding: 10px 20px;
-    background: #1890ff;
-    color: white;
-    border: none;
-    border-radius: 20px;
-    font-size: 14px;
-    font-weight: 500;
-  }
   
   .shipping-info {
     display: flex;
@@ -285,6 +277,7 @@
     font-size: 14px;
     font-weight: 500;
     margin-bottom: 8px;
+    color: #333;
   }
   
   .method-details {
@@ -295,11 +288,6 @@
   
   .method-time {
     color: #666;
-  }
-  
-  .method-cost {
-    font-weight: 600;
-    color: #ff4d4f;
   }
   
   .payment-methods h4 {
@@ -320,6 +308,7 @@
     background: #fafafa;
     border-radius: 6px;
     font-size: 14px;
+    color: #333;
   }
   </style>
   
