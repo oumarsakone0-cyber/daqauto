@@ -1371,10 +1371,11 @@ import CartBadge from '../product/CartBadge.vue'
     background: #fff;
     border-top: 1px solid #e8e8e8;
     padding: 12px 16px;
-    gap: 8px;
+    gap: 18px;
     z-index: 100;
     box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
     display: none; /* Masqué par défaut */
+    height: 70px;
   }
   
   .mobile-action-btn {
@@ -1389,7 +1390,8 @@ import CartBadge from '../product/CartBadge.vue'
     font-size: 12px;
     font-weight: 600;
     transition: all 0.3s ease;
-    min-height: 56px;
+    /* min-height: 56px; */
+    height: 60px;
   }
   
   .mobile-action-btn.secondary {

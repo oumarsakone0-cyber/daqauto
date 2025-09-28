@@ -974,6 +974,10 @@ const handleSendMessage = (message) => {
   border-top: 1px solid #e0e0e0;
   display: flex;
   z-index: 1000;
+   padding: 12px 16px;
+    gap: 8px;
+    z-index: 100;
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
 }
 
 .nav-item {
