@@ -5,9 +5,6 @@
         <div class="text-center">
           <div class="mx-auto h-16 w-38  rounded-full flex items-center justify-center mb-4 ">
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
-            <!-- <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg> -->
           </div>
           <h2 class="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h2>
           <p class="text-gray-600">Rejoignez Daq Auto dès aujourd'hui</p>
@@ -21,14 +18,14 @@
               <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-red-800 text-sm">{{ error }}</span>
+              <span class="error-color text-sm">{{ error }}</span>
             </div>
           </div>
   
           <!-- Email Already Exists Message -->
           <div v-if="emailExists" class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
             <div class="flex items-start">
-              <svg class="w-5 h-5 text-yellow-400 mr-2 mt-0.5" fill="currentColor" viewBox="0 0 20 20">
+              <svg class="w-5 h-5  mr-2 mt-0.5" fill="#ffb300" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd"/>
               </svg>
               <div class="flex-1">
@@ -39,22 +36,22 @@
                   Un compte avec l'adresse email <strong>{{ registerData.email }}</strong> existe déjà. 
                   Vous pouvez vous connecter ou réinitialiser votre mot de passe.
                 </p>
-                <div class="flex space-x-3">
+                <div class="flex gap-x-2 text-xs">
                   <button
                     @click="goToLogin"
-                    class="px-4 py-2 bg-orange text-white text-sm rounded-lg hover:bg-orange-600 transition-colors"
+                    class="btn-degrade-orange flex-1"
                   >
                     Se connecter
                   </button>
                   <button
                     @click="showForgotPassword = true"
-                    class="px-4 py-2 border border-yellow-300 text-yellow-800 text-sm rounded-lg hover:bg-yellow-100 transition-colors"
+                    class="bg-lightgray flex-1"
                   >
                     Mot de passe oublié
                   </button>
                   <button
                     @click="emailExists = false"
-                    class="px-4 py-2 text-yellow-600 text-sm hover:text-yellow-800 transition-colors"
+                    class="bg-lightgray flex-1"
                   >
                     Modifier l'email
                   </button>
@@ -69,7 +66,7 @@
               <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-green-800 text-sm">{{ successMessage }}</span>
+              <span class="success-color text-sm">{{ successMessage }}</span>
             </div>
           </div>
   
@@ -79,7 +76,7 @@
               <div v-for="(step, index) in steps" :key="index" class="flex items-center">
                 <div :class="[
                   'w-8 h-8 rounded-full flex items-center justify-center text-sm font-medium',
-                  currentStep > index ? 'bg-green-500 text-white' : 
+                  currentStep > index ? 'bg-step-color text-white' : 
                   currentStep === index ? 'bg-orange text-white' : 'bg-gray-200 text-gray-600'
                 ]">
                   <svg v-if="currentStep > index" class="w-5 h-5" fill="currentColor" viewBox="0 0 20 20">
@@ -89,7 +86,7 @@
                 </div>
                 <div v-if="index < steps.length - 1" :class="[
                   'w-12 h-1 mx-2',
-                  currentStep > index ? 'bg-green-500' : 'bg-gray-200'
+                  currentStep > index ? 'bg-step-color' : 'bg-gray-200'
                 ]"></div>
               </div>
             </div>
@@ -109,7 +106,7 @@
               <!-- Nom complet -->
               <div>
                 <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom complet *
+                  Nom complet <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -129,7 +126,7 @@
                     placeholder="Votre nom complet"
                   >
                 </div>
-                <div v-if="validationErrors.fullName" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.fullName" class="mt-1 text-sm error-color">
                   {{ validationErrors.fullName }}
                 </div>
               </div>
@@ -137,7 +134,7 @@
               <!-- Email -->
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                  Adresse email *
+                  Adresse email <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -158,7 +155,7 @@
                     @blur="clearEmailExistsError"
                   >
                 </div>
-                <div v-if="validationErrors.email" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.email" class="mt-1 text-sm error-color">
                   {{ validationErrors.email }}
                 </div>
               </div>
@@ -166,7 +163,7 @@
               <!-- Numéro de téléphone -->
               <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-                  Numéro de téléphone *
+                  Numéro de téléphone <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -186,7 +183,7 @@
                     placeholder="+225 XX XX XX XX XX"
                   >
                 </div>
-                <div v-if="validationErrors.phone" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.phone" class="mt-1 text-sm error-color">
                   {{ validationErrors.phone }}
                 </div>
               </div>
@@ -197,7 +194,7 @@
               <!-- Nom du magasin -->
               <div>
                 <label for="storeName" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom du magasin *
+                  Nom du magasin <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -217,7 +214,7 @@
                     placeholder="Nom de votre magasin"
                   >
                 </div>
-                <div v-if="validationErrors.storeName" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.storeName" class="mt-1 text-sm error-color">
                   {{ validationErrors.storeName }}
                 </div>
               </div>
@@ -225,7 +222,7 @@
               <!-- Type de commerce -->
               <div>
                 <label for="businessType" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de commerce *
+                  Type de commerce <span class="error-color">*</span>
                 </label>
                 <select
                   id="businessType"
@@ -248,7 +245,7 @@
                   <option value="health">Santé et Bien-être</option>
                   <option value="other">Autre</option>
                 </select>
-                <div v-if="validationErrors.businessType" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.businessType" class="mt-1 text-sm error-color">
                   {{ validationErrors.businessType }}
                 </div>
               </div>
@@ -256,7 +253,7 @@
               <!-- Marché -->
               <div>
                 <label for="market" class="block text-sm font-medium text-gray-700 mb-2">
-                  Marché de localisation *
+                  Marché de localisation <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -286,7 +283,7 @@
                     </svg>
                   </div>
                 </div>
-                <div v-if="validationErrors.market" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.market" class="mt-1 text-sm error-color">
                   {{ validationErrors.market }}
                 </div>
                 <p class="mt-1 text-xs text-gray-500">
@@ -297,7 +294,7 @@
               <!-- Adresse du magasin -->
               <div>
                 <label for="storeAddress" class="block text-sm font-medium text-gray-700 mb-2">
-                  Adresse du magasin *
+                  Adresse du magasin <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 pt-3 pointer-events-none">
@@ -317,7 +314,7 @@
                     placeholder="Adresse précise dans le marché (ex: Allée 3, Boutique 25)"
                   ></textarea>
                 </div>
-                <div v-if="validationErrors.storeAddress" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.storeAddress" class="mt-1 text-sm error-color">
                   {{ validationErrors.storeAddress }}
                 </div>
                 <p class="mt-1 text-xs text-gray-500">
@@ -332,7 +329,7 @@
               <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
                   Mot de passe 
-                  <span style="color: #fe9700;">*</span>
+                  <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -354,18 +351,18 @@
                   <button
                     type="button"
                     @click="showPassword = !showPassword"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange-500"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange"
                   >
-                    <svg v-if="showPassword" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-if="showPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
                     </svg>
-                    <svg v-else class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-else class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                     </svg>
                   </button>
                 </div>
-                <div v-if="validationErrors.password" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.password" class="mt-1 text-sm error-color">
                   {{ validationErrors.password }}
                 </div>
                 <!-- Indicateur de force du mot de passe -->
@@ -390,7 +387,7 @@
               <!-- Confirmation du mot de passe -->
               <div>
                 <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
-                  Confirmer le mot de passe <span style="color: #fe9700;">*</span>
+                  Confirmer le mot de passe <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -412,18 +409,18 @@
                   <button
                     type="button"
                     @click="showConfirmPassword = !showConfirmPassword"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center"
+                    class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange"
                   >
-                    <svg v-if="showConfirmPassword" class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-if="showConfirmPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
                     </svg>
-                    <svg v-else class="h-5 w-5 text-gray-400 hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg v-else class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M2.458 12C3.732 7.943 7.523 5 12 5c4.478 0 8.268 2.943 9.542 7-1.274 4.057-5.064 7-9.542 7-4.477 0-8.268-2.943-9.542-7z"/>
                     </svg>
                   </button>
                 </div>
-                <div v-if="validationErrors.confirmPassword" class="mt-1 text-sm text-red-600">
+                <div v-if="validationErrors.confirmPassword" class="mt-1 text-sm error-color">
                   {{ validationErrors.confirmPassword }}
                 </div>
               </div>
@@ -440,11 +437,11 @@
                   >
                   <label for="acceptTerms" class="ml-2 block text-sm text-gray-700">
                     J'accepte les 
-                    <button type="button" @click="showTerms = true" class="text-orange hover:text-orange-600 font-medium " style="background-color: transparent;border: none;">
+                    <button type="button" @click="showTerms = true" class="font-medium bg-lightgray" >
                       conditions d'utilisation
                     </button>
                     et la 
-                    <button type="button" @click="showPrivacy = true" class="text-orange hover:text-orange-600 font-medium" style="background-color: transparent;border: none;">
+                    <button type="button" @click="showPrivacy = true" class="font-medium bg-lightgray" >
                       politique de confidentialité
                     </button>
                   </label>
@@ -484,8 +481,7 @@
                 v-if="currentStep > 0"
                 @click="currentStep--"
                 type="button"
-                style="background-color: lightgrey; border: none; color: white;"
-                class="px-4 py-2 text-gray-600 border border-gray-300 rounded-lg hover:bg-gray-50 transition-colors"
+                class="btn-gray"
               >
                 Précédent
               </button>
@@ -496,7 +492,7 @@
                 @click="nextStep"
                 type="button"
                 :disabled="isCheckingEmail"
-                class="px-6 py-2 bg-orange text-white rounded-lg hover:bg-orange-600 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center"
+                class="btn-degrade-orange"
               >
                 <svg v-if="isCheckingEmail" class="animate-spin -ml-1 mr-3 h-4 w-4 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -507,11 +503,9 @@
               <button 
                 v-else
                 type="submit"
-
                 :disabled="isLoading || !registerData.acceptTerms"
-                
                 style="background-color: #10b981;"
-                class="px-6 py-2  text-white rounded-lg hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                class="disabled:opacity-50 disabled:cursor-not-allowed submit-btn"
               >
                 <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white inline" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
@@ -527,7 +521,7 @@
             <p class="text-sm text-gray-600">
               Vous avez déjà un compte ?
               <router-link
-                to="/boutique-admin/login"
+                to="/login"
                 class="font-medium text-orange hover:text-orange-600"
               >
                 Se connecter
@@ -949,68 +943,4 @@
   
   <style scoped>
 
-.input-style {
-  width: 100%;
-  color: black ; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.5rem; 
-  padding: 0.80rem 0.75rem; 
-  padding-left: 2.5rem;
-  transition: border-color 0.2s, box-shadow 0.2s; 
-  resize: none;
-}
-.input-style:focus {
-  border-color: #fe7900; 
-  box-shadow: 0 0 0 0.5px #fe7900; 
-}
-
-.checkbox-style {
-  width: 1.25rem; 
-  height: 1.25rem; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.25rem; 
-  color: #fe7900 ;
-  transition: background-color 0.2s, border-color 0.2s; 
-}
-.checkbox-style:focus {
-  box-shadow: 0 0 0 1px #fe7900;
-  border-color: #fe7900; 
-}
-.checkbox-style:checked {
-  background-color: #fe7900; 
-  border-color: #fe7900; 
-}
-  
-  .bg-orange {
-    background-color: #fe7900;
-  }
-  
-  .text-orange {
-    color: #fe7900;
-  }
-  
-  .border-orange {
-    border-color: #fe7900;
-  }
-  
-  .hover\:bg-orange-600:hover {
-    background-color: #e54a0a;
-  }
-  
-  .hover\:text-orange-600:hover {
-    color: #e54a0a;
-  }
-  
-  .focus\:ring-orange:focus {
-    --tw-ring-color: rgba(246, 90, 17, 0.5);
-  }
-  
-  .focus\:border-orange:focus {
-    border-color: #fe7900;
-  }
-  
-  /* Style pour le select avec icône */
-  select {
-    background-image: none;
-  }
   </style>

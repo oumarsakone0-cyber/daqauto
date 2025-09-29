@@ -107,7 +107,7 @@
                   </svg>
                 </button>
               </div>
-              <div v-if="validationErrors.password" class="mt-1 text-sm text-red-600">
+              <div v-if="validationErrors.password" class="mt-1 text-sm error-color">
                 {{ validationErrors.password }}
               </div>
             </div>
@@ -454,7 +454,7 @@ const handleForgotPassword = async () => {
 }
 
   const handleSignup = () => {
-    router.push('/boutique-admin/register')
+    router.push('/register')
   }
   
   const loginWithGoogle = () => {

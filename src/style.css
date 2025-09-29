@@ -111,6 +111,9 @@ button:focus-visible {
 .success-color{
   color: #52c41a;
 }
+.bg-step-color{
+  background-color: #10B981;
+}
 
 .blue-color{
   color: #1890ff;
@@ -122,6 +125,10 @@ button:focus-visible {
 .error-background-color{
   background-color: #ff0000;
   color: white;
+}
+
+.warning-color{
+  color:#ffb300
 }
 
 /* Les styles de bouton avec dégradé */
@@ -194,6 +201,20 @@ button:focus-visible {
     background-color: white;
     border: 1px solid #fe7900;
   }
+  .submit-btn{
+    display: flex;
+  background:#10B981 ;
+  color: white;
+  transition: background 0.3s;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.8rem 0.75rem;
+  }
+  .submit-btn:hover{
+    background-color: #039e6a;
+    opacity: 0.8;
+  }
 
   .btn-whatsapp{
     display: flex;
@@ -238,6 +259,7 @@ button:focus-visible {
   border: 1px solid #d1d5db; 
   border-radius: 0.5rem; 
   padding: 0.80rem 0.75rem; 
+  padding-left: 2.5rem;
   transition: border-color 0.2s, box-shadow 0.2s; 
   resize: none;
 }
