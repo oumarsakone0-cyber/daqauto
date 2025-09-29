@@ -5,9 +5,6 @@
         <div class="text-center">
           <div class="mx-auto h-16 w-45  rounded-full flex items-center justify-center mb-4 ">
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
-            <!-- <svg class="h-8 w-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
-            </svg> -->
           </div>
           <h2 class="text-3xl font-bold text-gray-900 mb-2">Connexion</h2>
           <p class="text-gray-600">Connectez-vous à votre compte DaqAuto</p>
@@ -21,7 +18,7 @@
               <svg class="w-5 h-5 text-red-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM8.707 7.293a1 1 0 00-1.414 1.414L8.586 10l-1.293 1.293a1 1 0 101.414 1.414L10 11.414l1.293 1.293a1 1 0 001.414-1.414L11.414 10l1.293-1.293a1 1 0 00-1.414-1.414L10 8.586 8.707 7.293z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-red-800 text-sm">{{ error }}</span>
+              <span class="error-color text-sm">{{ error }}</span>
             </div>
           </div>
   
@@ -31,7 +28,7 @@
               <svg class="w-5 h-5 text-green-400 mr-2" fill="currentColor" viewBox="0 0 20 20">
                 <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
               </svg>
-              <span class="text-green-800 text-sm">{{ successMessage }}</span>
+              <span class="success-color text-sm">{{ successMessage }}</span>
             </div>
           </div>
   
@@ -63,7 +60,7 @@
                   @input="detectLoginType"
                 >
               </div>
-              <div v-if="validationErrors.identifier" class="mt-1 text-sm text-red-600">
+              <div v-if="validationErrors.identifier" class="mt-1 text-sm error-color">
                 {{ validationErrors.identifier }}
               </div>
               <div v-if="loginData.identifier" class="mt-1 text-xs text-gray-500">
@@ -107,7 +104,7 @@
                   </svg>
                 </button>
               </div>
-              <div v-if="validationErrors.password" class="mt-1 text-sm text-red-600">
+              <div v-if="validationErrors.password" class="mt-1 text-sm error-color">
                 {{ validationErrors.password }}
               </div>
             </div>
@@ -151,7 +148,7 @@
           </form>
   
           <!-- Divider -->
-          <div class="mt-6">
+          <!-- <div class="mt-6">
             <div class="relative">
               <div class="absolute inset-0 flex items-center">
                 <div class="w-full border-t border-gray-300"></div>
@@ -160,7 +157,7 @@
                 <span class="px-2 bg-white text-gray-500">Ou</span>
               </div>
             </div>
-          </div>
+          </div> -->
   
           <!-- Social Login 
           <div class="mt-6 grid grid-cols-2 gap-3">
@@ -209,7 +206,7 @@
       </div>
   
       <!-- Forgot Password Modal -->
-      <div v-if="showForgotPassword" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50" @click="showForgotPassword = false">
+      <div v-if="showForgotPassword" class="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50" @click="showForgotPassword = false">
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4" @click.stop>
           <h3 class="text-lg font-medium text-gray-900 mb-4">Réinitialiser le mot de passe</h3>
           <p class="text-sm text-gray-600 mb-4">

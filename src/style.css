@@ -98,6 +98,15 @@ button:focus-visible {
  color:white
 
 }
+.bg-lightgray {
+  background-color: #F9FAFB;
+  color: #fe7900;
+  font-weight: 500;
+}
+.bg-lightgray:hover {
+  background-color: #F3F4F6;
+  border: 1px solid #D1D5DB;
+}
 
 .success-color{
   color: #52c41a;
@@ -117,8 +126,6 @@ button:focus-visible {
 
 /* Les styles de bouton avec dégradé */
 
-
-
 .btn-degrade-orange {
   display: flex;
   background: linear-gradient(90deg, #fe7900, #ff5a01);
@@ -127,6 +134,7 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 8px;
+  padding: 0.8rem 0.75rem; 
 }
 .btn-degrade-orange:hover {
   background: linear-gradient(90deg, #ff5a01, #fe7900);

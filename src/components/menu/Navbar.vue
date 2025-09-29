@@ -181,7 +181,15 @@
               </div>
             </div>
             
-            <div class="user-account" @click="goToBoutique">
+            <!-- <div class="user-account" @click="goToBoutique">
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                <circle cx="12" cy="7" r="4"/>
+              </svg>
+              <span>Se connecter / S'inscrire</span>
+              <span>Mon Dashboard</span>
+            </div> -->
+            <div class="user-account" @click="goToAuthentication">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
@@ -1402,6 +1410,9 @@ const handleClickOutside = (event) => {
 
 const goToBoutique = () => {
   router.push('/boutique-admin/dashboard')
+};
+const goToAuthentication = () => {
+  router.push('/login')
 };
 
 const handleEscapeKey = (event) => {

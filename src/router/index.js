@@ -159,7 +159,7 @@ const routes = [
     },
   },
 
-  //POUR LES BOIUTIQUES
+  //POUR LES BOUTIQUES
   {
     path: "/boutique-admin/login",
     name: "boutique-login",
