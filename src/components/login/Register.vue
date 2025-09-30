@@ -21,6 +21,7 @@
               <span class="error-color text-sm">{{ error }}</span>
             </div>
           </div>
+          
   
           <!-- Email Already Exists Message -->
           <div v-if="emailExists" class="mb-6 p-4 bg-yellow-50 border border-yellow-200 rounded-lg">
@@ -103,6 +104,21 @@
           <form @submit.prevent="handleSubmit" class="space-y-6">
             <!-- Étape 1: Informations personnelles -->
             <div v-if="currentStep === 0" class="space-y-4">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
+             <div >
+
+              <input
+                  type="file"
+                  accept="image/*"
+                  v-modele="registerData.pathPicture"
+                  @change="onFileChange"
+                  id="profilePic"
+                 class="input-style"
+              />
+              <!-- <label for="profilePic" class="btn-degrade-orange m-3">
+                  Charger la Photo
+                </label> -->
+              </div>
               <!-- Nom complet -->
               <div>
                 <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">
@@ -193,8 +209,8 @@
             <div v-if="currentStep === 1" class="space-y-4">
               <!-- Nom du magasin -->
               <div>
-                <label for="storeName" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom du magasin <span class="error-color">*</span>
+                <label for="companyName" class="block text-sm font-medium text-gray-700 mb-2">
+                  Nom de votre entreprise <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -203,123 +219,65 @@
                     </svg>
                   </div>
                   <input
-                    id="storeName"
-                    v-model="registerData.storeName"
+                    id="companyName"
+                    v-model="registerData.companyName"
                     type="text"
                     required
                     :class="[
                       'input-style',
-                      validationErrors.storeName ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                      validationErrors.companyName ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="Nom de votre magasin"
+                    placeholder="Nom de votre entreprise"
                   >
                 </div>
-                <div v-if="validationErrors.storeName" class="mt-1 text-sm error-color">
-                  {{ validationErrors.storeName }}
+                <div v-if="validationErrors.companyName" class="mt-1 text-sm error-color">
+                  {{ validationErrors.companyName }}
                 </div>
               </div>
   
-              <!-- Type de commerce -->
+              <!-- Pays -->
               <div>
-                <label for="businessType" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de commerce <span class="error-color">*</span>
+                <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
+                  Votre Pays <span class="error-color">*</span>
                 </label>
                 <select
-                  id="businessType"
-                  v-model="registerData.businessType"
+                  id="country"
+                  v-model="registerData.country"
                   required
                   :class="[
                     'input-style',
-                    validationErrors.businessType ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                    validationErrors.country ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   ]"
                 >
-                  <option value="">Sélectionnez votre type de commerce</option>
-                  <option value="electronics">Électronique</option>
-                  <option value="clothing">Vêtements et Mode</option>
-                  <option value="food">Alimentation</option>
-                  <option value="beauty">Beauté et Cosmétiques</option>
-                  <option value="home">Maison et Jardin</option>
-                  <option value="sports">Sports et Loisirs</option>
-                  <option value="books">Livres et Papeterie</option>
-                  <option value="automotive">Automobile</option>
-                  <option value="health">Santé et Bien-être</option>
-                  <option value="other">Autre</option>
-                </select>
-                <div v-if="validationErrors.businessType" class="mt-1 text-sm error-color">
-                  {{ validationErrors.businessType }}
-                </div>
-              </div>
-  
-              <!-- Marché -->
-              <div>
-                <label for="market" class="block text-sm font-medium text-gray-700 mb-2">
-                  Marché de localisation <span class="error-color">*</span>
-                </label>
-                <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
-                    </svg>
-                  </div>
-                  <select
-                    id="market"
-                    v-model="registerData.market"
-                    required
-                    :class="[
-                      'input-style',
-                      validationErrors.market ? 'border-red-300 bg-red-50' : 'border-gray-300'
-                    ]"
-                  >
-                    <option value="">Sélectionnez votre marché</option>
-                    <option v-for="market in availableMarkets" :key="market.value" :value="market.value">
-                      {{ market.label }}
+
+                  <option value="">Sélectionnez votre pays</option>
+                   <option v-for="country in countryList" :key="country" :value="country">
+                      {{ country }}
                     </option>
-                  </select>
-                  <!-- Chevron icon -->
-                  <div class="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                    </svg>
-                  </div>
+                </select>
+                <div v-if="validationErrors.country" class="mt-1 text-sm error-color">
+                  {{ validationErrors.country }}
                 </div>
-                <div v-if="validationErrors.market" class="mt-1 text-sm error-color">
-                  {{ validationErrors.market }}
-                </div>
-                <p class="mt-1 text-xs text-gray-500">
-                  Sélectionnez le marché où se situe votre magasin ou boutique
-                </p>
               </div>
   
-              <!-- Adresse du magasin -->
+              <!-- Ville -->
               <div>
-                <label for="storeAddress" class="block text-sm font-medium text-gray-700 mb-2">
-                  Adresse du magasin <span class="error-color">*</span>
+                <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
+                  Votre Ville
                 </label>
                 <div class="relative">
-                  <div class="absolute inset-y-0 left-0 pl-3 pt-3 pointer-events-none">
-                    <svg class="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                    </svg>
-                  </div>
-                  <textarea
-                    id="storeAddress"
-                    v-model="registerData.storeAddress"
-                    required
-                    rows="3"
+                  
+                  <input
+                    id="city"
+                    type="text"
+                    v-model="registerData.city"
                     :class="[
                       'input-style',
-                      validationErrors.storeAddress ? 'border-red-300 bg-red-50' : 'border-gray-300'
+                      validationErrors.city ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="Adresse précise dans le marché (ex: Allée 3, Boutique 25)"
-                  ></textarea>
+                    placeholder="Ville"
+                  />
                 </div>
-                <div v-if="validationErrors.storeAddress" class="mt-1 text-sm error-color">
-                  {{ validationErrors.storeAddress }}
-                </div>
-                <p class="mt-1 text-xs text-gray-500">
-                  Précisez l'emplacement exact de votre magasin dans le marché sélectionné
-                </p>
               </div>
             </div>
   
@@ -467,10 +425,9 @@
                   <p><strong>Nom:</strong> {{ registerData.fullName || 'Non défini' }}</p>
                   <p><strong>Email:</strong> {{ registerData.email || 'Non défini' }}</p>
                   <p><strong>Téléphone:</strong> {{ registerData.phone || 'Non défini' }}</p>
-                  <p><strong>Magasin:</strong> {{ registerData.storeName || 'Non défini' }}</p>
-                  <p><strong>Type:</strong> {{ getBusinessTypeLabel(registerData.businessType) || 'Non défini' }}</p>
-                  <p><strong>Marché:</strong> {{ getMarketLabel(registerData.market) || 'Non défini' }}</p>
-                  <p><strong>Adresse:</strong> {{ registerData.storeAddress ? (registerData.storeAddress.length > 50 ? registerData.storeAddress.substring(0, 50) + '...' : registerData.storeAddress) : 'Non définie' }}</p>
+                  <p><strong>Entreprise:</strong> {{ registerData.companyName || 'Non défini' }}</p>
+                  <p><strong>Pays:</strong> {{ registerData.country || 'Non défini' }}</p>
+                  <p><strong>Ville:</strong> {{ registerData.city ? (registerData.city.length > 50 ? registerData.city.substring(0, 50) + '...' : registerData.city) : 'Non définie' }}</p>
                 </div>
               </div>
             </div>
@@ -612,6 +569,7 @@
   import { ref, reactive, computed } from 'vue'
   import { useRouter } from 'vue-router'
   import { usersApi } from '../../services/api.js'
+  import countries from '/src/assets/countries.json'
   
   const router = useRouter()
   
@@ -629,21 +587,23 @@
   const error = ref('')
   const successMessage = ref('')
   const forgotPasswordEmail = ref('')
+  let countryList = ref([''])
+  
   
   const steps = [
     { title: 'Informations personnelles' },
-    { title: 'Informations du magasin' },
+    { title: 'Informations sur l\'entreprise' },
     { title: 'Sécurité et finalisation' }
   ]
   
   const registerData = reactive({
+    pathPicture:'',
     fullName: '',
     email: '',
     phone: '',
-    storeName: '',
-    businessType: '',
-    market: '',
-    storeAddress: '',
+    companyName: '',
+    country: '',
+    city: '',
     password: '',
     confirmPassword: '',
     acceptTerms: false,
@@ -654,28 +614,16 @@
     fullName: '',
     email: '',
     phone: '',
-    storeName: '',
-    businessType: '',
-    market: '',
-    storeAddress: '',
+    companyName: '',
+    country: '',
     password: '',
     confirmPassword: ''
   })
   
-  // Liste des marchés disponibles
-  const availableMarkets = [
-    { value: 'forum', label: 'Marché Forum' },
-    { value: 'petit-doubai', label: 'Marché Petit Doubai' },
-    { value: 'gouro', label: 'Marché Gouro' },
-    { value: 'petit-lome', label: 'Marché Petit Lomé' },
-    { value: 'black', label: 'Marché Black' },
-    { value: 'bromacote', label: 'Marché Bromacoté' },
-    { value: 'roxi', label: 'Marché Roxi' },
-    { value: 'gare', label: 'Marché Gare' }
-  ]
-  
+   
   // Computed properties
   const passwordStrength = computed(() => {
+    
     const password = registerData.password
     if (!password) return { width: '0%', color: 'bg-gray-300', text: '', textColor: 'text-gray-500' }
     
@@ -727,29 +675,22 @@
   })
   
   // Methods
-  const getBusinessTypeLabel = (type) => {
-    const types = {
-      'electronics': 'Électronique',
-      'clothing': 'Vêtements et Mode',
-      'food': 'Alimentation',
-      'beauty': 'Beauté et Cosmétiques',
-      'home': 'Maison et Jardin',
-      'sports': 'Sports et Loisirs',
-      'books': 'Livres et Papeterie',
-      'automotive': 'Automobile',
-      'health': 'Santé et Bien-être',
-      'other': 'Autre'
-    }
-    return types[type] || type
+ const getCountryList=()=> {
+
+  for (let index = 0; index < countries.length; index++) {
+
+     countryList= countries[index].name;
+    
   }
-  
-  const getMarketLabel = (marketValue) => {
-    const market = availableMarkets.find(m => m.value === marketValue)
-    return market ? market.label : marketValue
-  }
-  
+  console.log(countryList.value);
+  return countries.map(c => c.name);
+}
+
+
   // Fonction pour vérifier si l'email existe
   const checkEmailExists = async (email) => {
+    getCountryList()
+    
     try {
       isCheckingEmail.value = true
       
@@ -817,10 +758,10 @@
         email: registerData.email,
         phone: registerData.phone,
         password: registerData.password,
-        store_name: registerData.storeName,
-        business_type: registerData.businessType,
+        store_name: registerData.companyName,
+        business_type: registerData.country,
         market: registerData.market,
-        store_address: registerData.storeAddress,
+        store_address: registerData.city,
         store_description: '',
         accept_marketing: registerData.acceptMarketing
       }
@@ -874,25 +815,16 @@
       }
     } else if (currentStep.value === 1) {
       // Validation étape 2
-      if (!registerData.storeName.trim()) {
-        validationErrors.storeName = 'Le nom du magasin est requis'
+      if (!registerData.companyName.trim()) {
+        validationErrors.companyName = 'Le nom du magasin est requis'
         isValid = false
       }
       
-      if (!registerData.businessType) {
-        validationErrors.businessType = 'Le type de commerce est requis'
+      if (!registerData.country) {
+        validationErrors.country = 'Le type de commerce est requis'
         isValid = false
       }
       
-      if (!registerData.market) {
-        validationErrors.market = 'Le marché est requis'
-        isValid = false
-      }
-      
-      if (!registerData.storeAddress.trim()) {
-        validationErrors.storeAddress = 'L\'adresse du magasin est requise'
-        isValid = false
-      }
     } else if (currentStep.value === 2) {
       // Validation étape 3
       if (!registerData.password) {

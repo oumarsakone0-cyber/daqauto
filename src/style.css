@@ -114,6 +114,9 @@ button:focus-visible {
 .bg-step-color{
   background-color: #10B981;
 }
+.green-color{
+  color: #10B981;
+}
 
 .blue-color{
   color: #1890ff;
@@ -129,6 +132,10 @@ button:focus-visible {
 
 .warning-color{
   color:#ffb300
+}
+
+.purple-color{
+  color: #7C3AED;
 }
 
 /* Les styles de bouton avec dégradé */
@@ -154,6 +161,10 @@ button:focus-visible {
   background: #8f8f8f;
   color: #fff;
   transition: background 0.3s;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.8rem 0.75rem; 
 }
 .btn-gray:hover {
   background: #b7b6b6;
@@ -163,7 +174,11 @@ button:focus-visible {
 .btn-deconnexion{
   background: #ec0202;
   color: white ;
-  transition: background 0.3s;
+   transition: background 0.3s;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.8rem 0.75rem; 
   }
   .btn-deconnexion:hover{
   background:#ff0000;
@@ -177,8 +192,10 @@ button:focus-visible {
     text-decoration: none;
     font-weight: 500;
     font-size: 12px;
-    transition: all 0.3s ease;
-    padding: 8px 16px;
+    align-items: center;
+    justify-content: center;
+    transition: background 0.3s;
+    padding: 0.8rem 0.75rem; 
     border-radius: 4px;
     border: 1px solid #fe7900;
   }
@@ -221,12 +238,12 @@ button:focus-visible {
     align-items: center;
     justify-content: center;
     gap: 8px;
-    padding: 12px 16px;
+    padding: 0.8rem 0.75rem; 
     border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: all 0.3s ease;
+    transition: background 0.3s;
     border: none;
     background: #25D366;
     color: white;
@@ -244,6 +261,7 @@ button:focus-visible {
 .border-orange-500 {
   border-color: #fe7900;
 }
+
 .focus\:ring-orange-500:focus {
   --tw-ring-color: #fe7900;
 }
@@ -258,7 +276,7 @@ button:focus-visible {
   color: black ; 
   border: 1px solid #d1d5db; 
   border-radius: 0.5rem; 
-  padding: 0.80rem 0.75rem; 
+  padding: 0.8rem 0.75rem; 
   padding-left: 2.5rem;
   transition: border-color 0.2s, box-shadow 0.2s; 
   resize: none;

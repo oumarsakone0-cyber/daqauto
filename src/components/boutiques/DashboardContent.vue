@@ -34,6 +34,7 @@
         <router-link to="/" class="hover:text-gray-700">
           <HomeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
         </router-link>
+        
         <span class="mx-2">/</span>
         <span class="font-medium text-gray-700 truncate">Dashboard Produits</span>
       </div>
@@ -60,11 +61,11 @@
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 ">
               <div role="menu">
                 <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem" >
-                  <FileTextIcon class="w-4 h-4 mr-2 text-red-600" />
+                  <FileTextIcon class="w-4 h-4 mr-2 error-color" />
                   Exporter en PDF
                 </button>
                 <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 mr-1 text-green-500" />
+                  <FileTextIcon class="w-4 h-4 mr-1 green-color" />
                   Exporter en Excel
                 </button>
               </div>
@@ -76,9 +77,8 @@
             @click="showAddProductModal = true"
             :disabled="!canAddMoreProducts()"
             :class="[
-              'w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2  rounded-lg shadow-sm text-sm font-medium  transition-colors ',
               canAddMoreProducts()
-                ?'focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 btn-degrade-ring'
+                ?'submit-btn'
                 : 'bg-gray-400 cursor-not-allowed'
             ]"
           >
@@ -154,12 +154,12 @@
         <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 sm:p-6 shadow-lg">
           <div class="flex flex-col sm:flex-row sm:items-center gap-4">
             <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <AlertCircleIcon class="w-5 h-5 text-red-500" />
+              <AlertCircleIcon class="w-5 h-5 error-color" />
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-red-800 font-medium text-sm sm:text-base">{{ error }}</p>
+              <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
             </div>
-            <button @click="refresh" class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
+            <button @click="refresh" class="w-full sm:w-auto px-4 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
               Réessayer
             </button>
           </div>
@@ -180,7 +180,7 @@
             <select 
               v-model="selectedPeriod" 
               @change="updateStats"
-              class="w-full text-xs sm:text-sm font-semibold text-gray-900 bg-white border border-gray-200 rounded-lg px-2 sm:px-3 py-1.5 sm:py-2 focus:ring-2 focus:ring-orange-500 focus:border-orange-500 cursor-pointer transition-colors"
+              class="input-style"
             >
               <option value="all">Tout</option>
               <option value="today">Aujourd'hui</option>
@@ -328,7 +328,7 @@
               <input 
                 v-model="searchQuery"
                 type="text" 
-                class="w-full pl-8 sm:pl-10 pr-4 py-2 bg-gray-50 text-black border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base" 
+                class="input-style" 
                 placeholder="Rechercher un produit..."
               >
             </div>
@@ -2418,17 +2418,6 @@ onUnmounted(() => {
 }
 .bg-degrade-orange {
  background: linear-gradient(160deg, black , #fc4618 , black);
-}
-.btn-degrade-orange {
-  background: linear-gradient(90deg, #fe7900, #ff5a01);
-  color: white;
-  transition: background 0.3s;
-}
-.btn-degrade-orange:hover {
-  background: linear-gradient(90deg, #ff5a01, #fe7900);
-  color: white;
-  border-color: #ff5a01;
-  opacity: 0.8;
 }
 
 .btn-degrade-ring{

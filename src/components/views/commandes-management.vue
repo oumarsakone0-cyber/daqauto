@@ -32,7 +32,7 @@
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
         <router-link to="/" class="hover:text-gray-700">
-          <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/home.svg" alt="Home" class="w-4 h-4 sm:w-5 sm:h-5" />
+          <HomeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
         </router-link>
         <span class="mx-2">/</span>
         <span class="font-medium text-gray-700 truncate">Gestion des Commandes</span>
@@ -51,21 +51,20 @@
           <div class="relative">
             <button 
               @click="showExportDropdown = !showExportDropdown"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
             >
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/arrow-down-tray.svg" alt="Download" class="w-4 h-4 mr-2" />
-              <span class="hidden sm:inline">Exporter</span>
-              <span class="sm:hidden">Export</span>
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/chevron-down.svg" alt="Chevron" class="w-4 h-4 ml-2" />
+               <DownloadIcon class="w-4 h-4 mr-2" />
+              <span >Exporter</span>
+              <ChevronDownIcon class="w-4 h-4 ml-2" />
             </button>
-            <div v-if="showExportDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
-              <div class="py-1" role="menu">
-                <button @click="exportToPDF" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/document-text.svg" alt="PDF" class="w-4 h-4 mr-3 text-red-500" />
+            <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
+              <div  role="menu">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
+                   <FileTextIcon class="w-4 h-4 mr-2 error-color" />
                   Exporter en PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/document-text.svg" alt="Excel" class="w-4 h-4 mr-3 text-green-500" />
+                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
+                  <FileTextIcon class="w-4 h-4 mr-1 green-color" />
                   Exporter en Excel
                 </button>
               </div>
@@ -75,12 +74,10 @@
           <!-- Refresh button -->
           <button 
             @click="loadAllData"
-            class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all"
-            style="background: linear-gradient(to right, #F65A11, #e54a0a);"
+            class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all submit-btn"
           >
-            <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/arrow-path.svg" alt="Refresh" class="w-4 h-4 mr-2" />
-            <span class="hidden sm:inline">Actualiser</span>
-            <span class="sm:hidden">Actualiser</span>
+            <RefreshIcon class="w-4 h-4 mr-2" />
+            Actualiser
           </button>
         </div>
       </div>
@@ -98,12 +95,12 @@
         <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 sm:p-6 shadow-lg">
           <div class="flex flex-col sm:flex-row sm:items-center gap-4">
             <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/exclamation-triangle.svg" alt="Error" class="w-5 h-5 text-red-500" />
+              <WarningIcon class="w-6 h-6 error-color" />
             </div>
             <div class="flex-1 min-w-0">
-              <p class="text-red-800 font-medium text-sm sm:text-base">{{ error }}</p>
+              <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
             </div>
-            <button @click="loadAllData" class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
+            <button @click="loadAllData" class="w-full sm:w-auto px-4 py-2 error-background-color  rounded-lg  transition-colors font-medium text-sm">
               Réessayer
             </button>
           </div>
@@ -117,7 +114,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-200 to-orange-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/shopping-cart.svg" alt="Shopping cart" class="w-5 h-5 sm:w-6 sm:h-6 text-orange-700" />
+                <ShoppingCartIcon class="w-5 h-5 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Commandes Totales</p>
@@ -141,7 +138,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/clock.svg" alt="Clock" class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-700" />
+                <Clock class="w-5 h-5 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">En Attente</p>
@@ -165,7 +162,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/check-circle.svg" alt="Check circle" class="w-5 h-5 sm:w-6 sm:h-6 text-green-700" />
+                <CheckCircle2Icon class="w-5 h-45 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Confirmées</p>
@@ -175,7 +172,7 @@
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
                 <span class="truncate">Croissance: +{{ stats.confirmed_growth || 0 }}%</span>
-                <span class="text-green-600 flex-shrink-0">Aujourd'hui</span>
+                <span class="green-color flex-shrink-0">Aujourd'hui</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 85%"></div>
@@ -189,7 +186,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/currency-euro.svg" alt="Euro" class="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" />
+                <BadgeEuroIcon class="w-5 h-45 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Revenus du Jour</p>
@@ -199,7 +196,7 @@
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
                 <span class="truncate">Croissance: +{{ stats.revenue_growth || 0 }}%</span>
-                <span class="text-purple-600 flex-shrink-0">Vs hier</span>
+                <span class="purple-color flex-shrink-0">Vs hier</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
@@ -221,10 +218,10 @@
               :class="[
                 'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium',
                 activeFilter === tab.value 
-                  ? 'text-white shadow-lg' 
-                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50'
+                  ? 'btn-degrade-orange' 
+                  : 'btn-gray'
               ]"
-              :style="activeFilter === tab.value ? 'background: linear-gradient(to right, #F65A11, #e54a0a);' : ''"
+              :style="activeFilter === tab.value ? 'btn-degrade-orange' : ''"
             >
               <span class="hidden sm:inline">{{ tab.label }} ({{ filterCounts[tab.value] }})</span>
               <span class="sm:hidden">{{ tab.label.split(' ')[0] }} ({{ filterCounts[tab.value] }})</span>
@@ -234,38 +231,50 @@
 
         <!-- Search and Filters responsive -->
         <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-white">
-          <div class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
+          <div class="flex space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <div class="relative flex-1 max-w-full sm:max-w-md">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/magnifying-glass.svg" alt="Search" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
+                <Search  class="w-4 h-4 text-black" />
               </div>
               <input 
                 v-model="searchQuery"
                 type="text" 
-                class="w-full pl-8 sm:pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base" 
+                class="input-style" 
                 placeholder="Rechercher par numéro, client, produit..."
                 @input="handleSearch"
               >
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-              <select v-model="statusFilter" @change="loadOrders" class="px-2 sm:px-4 py-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all text-xs sm:text-sm">
-                <option value="">Tous les statuts</option>
-                <option value="en_attente">En attente</option>
-                <option value="confirmee">Confirmée</option>
-                <option value="en_livraison">En livraison</option>
-                <option value="livree">Livrée</option>
-                <option value="annulee">Annulée</option>
-              </select>
-              <select v-model="dateFilter" @change="loadOrders" class="px-2 sm:px-4 py-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all text-xs sm:text-sm">
-                <option value="">Toutes les dates</option>
-                <option value="today">Aujourd'hui</option>
-                <option value="yesterday">Hier</option>
-                <option value="week">Cette semaine</option>
-                <option value="month">Ce mois</option>
-              </select>
-              <button v-if="hasActiveFilters" @click="clearFilters" class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-red-600 bg-red-50 border border-red-300 rounded-lg hover:bg-red-100 focus:ring-2 focus:ring-red-200 transition-all text-xs sm:text-sm">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/x-mark.svg" alt="Clear" class="w-4 h-4" />
-                <span class="hidden sm:inline">Effacer filtres</span>
+              <div class="w-45">
+
+                <select 
+                  v-model="statusFilter" 
+                  @change="loadOrders" 
+                  class=" input-style">
+                  <option value="" class="px-4">Tous les statuts</option>
+                  <option value="en_attente">En attente</option>
+                  <option value="confirmee">Confirmée</option>
+                  <option value="en_livraison">En livraison</option>
+                  <option value="livree">Livrée</option>
+                  <option value="annulee">Annulée</option> 
+                </select>
+              </div>
+              <div class="w-45">
+
+                <select 
+                  v-model="dateFilter" 
+                  @change="loadOrders" 
+                  class="input-style">
+                  <option value="">Toutes les dates</option>
+                  <option value="today">Aujourd'hui</option>
+                  <option value="yesterday">Hier</option>
+                  <option value="week">Cette semaine</option>
+                  <option value="month">Ce mois</option>
+                </select>
+              </div>
+              <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion w-30">
+                <X class="w-4 h-4 sm:hidden" />
+                <span class="hidden sm:inline text-xs">Effacer Filtres</span>
               </button>
             </div>
           </div>
@@ -291,7 +300,7 @@
                   <div class="space-y-1">
                     <div class="text-xs sm:text-sm font-medium text-gray-900">{{ order.numero_commande }}</div>
                     <div class="flex items-center text-xs text-gray-500">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/16/solid/calendar-days.svg" alt="Calendar" class="h-3 w-3 mr-1">
+                      <Calendar class="h-3 w-3 mr-1 primary-color" />
                       {{ formatDate(order.date_commande) }}
                     </div>
                     <div class="text-xs text-gray-400">{{ formatTime(order.date_commande) }}</div>
@@ -300,11 +309,11 @@
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
                     <div class="flex items-center text-xs sm:text-sm font-medium text-gray-900">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/user.svg" alt="User" class="h-3 w-3 mr-1 text-orange-500">
+                      <User class="h-3 w-3 mr-1 primary-color" />
                       {{ order.client_nom }}
                     </div>
                     <div class="flex items-center text-xs text-gray-500">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/16/solid/phone.svg" alt="Phone" class="h-3 w-3 mr-1">
+                      <PhoneCall class="h-3 w-3 mr-1 primary-color" />
                       {{ order.client_telephone }}
                     </div>
                   </div>
@@ -317,7 +326,7 @@
                       <span>{{ formatCurrency(order.produit_prix) }}</span>
                     </div>
                     <div class="flex items-center text-xs text-gray-600">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/16/solid/building-storefront.svg" alt="Store" class="h-3 w-3 mr-1 text-purple-500">
+                      <Building class="h-3 w-3 mr-1 primary-color" />
                       <span class="truncate" style="max-width: 100px;" :title="order.boutique_name || order.boutique_nom">{{ order.boutique_name || order.boutique_nom }}</span>
                     </div>
                   </div>
@@ -325,11 +334,11 @@
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
                     <div class="flex items-center text-xs sm:text-sm font-medium text-gray-900">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/truck.svg" alt="Truck" class="h-3 w-3 mr-1 text-blue-500">
+                      <Truck class="h-3 w-3 mr-1 primary-color" />
                       {{ getDeliveryTypeLabel(order.type_livraison) }}
                     </div>
                     <div class="flex items-center text-xs text-gray-500">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/16/solid/map-pin.svg" alt="Location" class="h-3 w-3 mr-1">
+                      <MapPin class="h-3 w-3 mr-1 primary-color" />
                       {{ order.commune || order.ville }}
                     </div>
                   </div>
@@ -358,7 +367,7 @@
                       title="Confirmer"
                       style="background-color: rgba(74, 222, 128, 0.1); color: rgb(22, 163, 74);"
                     >
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/check.svg" alt="Confirm" class="h-3 w-3 sm:h-4 sm:w-4">
+                    <Check class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
                     </button>
                     <button 
                       v-if="order.statut === 'confirmee'" 
@@ -367,7 +376,7 @@
                       title="Expédier"
                       style="background-color: rgba(147, 197, 253, 0.1); color: rgb(37, 99, 235);"
                     >
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/truck.svg" alt="Ship" class="h-3 w-3 sm:h-4 sm:w-4">
+                    <Truck class="h-3 w-3 sm:h-4 sm:w-4  text-black" />
                     </button>
                     <button 
                       v-if="order.statut === 'en_livraison'" 
@@ -376,7 +385,7 @@
                       title="Livrer"
                       style="background-color: rgba(191, 144, 255, 0.1); color: rgb(99, 37, 235);"
                     >
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/archive-box.svg" alt="Deliver" class="h-3 w-3 sm:h-4 sm:w-4">
+                    <ArchiveIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
                     </button>
                     <button 
                       v-if="['en_attente', 'confirmee'].includes(order.statut)" 
@@ -385,7 +394,7 @@
                       title="Annuler"
                       style="background-color: rgba(248, 113, 113, 0.1); color: rgb(220, 38, 38);"
                     >
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/x-mark.svg" alt="Cancel" class="h-3 w-3 sm:h-4 sm:w-4">
+                    <BookmarkXIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
                     </button>
                     <button 
                       @click.stop="openOrderDetails(order)" 
@@ -393,7 +402,7 @@
                       title="Voir détails"
                       style="background-color: rgba(209, 213, 219, 0.1); color: rgb(71, 85, 105);"
                     >
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/eye.svg" alt="View" class="h-3 w-3 sm:h-4 sm:w-4">
+                    <EyeIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
                     </button>
                   </div>
                 </td>
@@ -407,15 +416,19 @@
           <div class="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
             <span class="text-gray-700 hidden sm:inline">Éléments par page</span>
             <span class="text-gray-700 sm:hidden">Par page</span>
-            <select 
-              v-model="itemsPerPage"
-              @change="handleItemsPerPageChange"
-              class="bg-white border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 p-1 sm:p-1.5"
-            >
-              <option value="10">10</option>
-              <option value="25">25</option>
-              <option value="50">50</option>
-            </select>
+            <div class="w-15">
+              
+              <select 
+                v-model="itemsPerPage"
+                @change="handleItemsPerPageChange"
+                class="input-style p-0 m-0"
+                style="padding-left: 10px;"
+              >
+                <option value="10">10</option>
+                <option value="25">25</option>
+                <option value="50">50</option>
+              </select>
+            </div>
             <span class="text-gray-700 text-xs sm:text-sm">
               <span class="hidden sm:inline">
                 Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à 
@@ -434,7 +447,7 @@
               :disabled="isFirstPage"
               class="relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/chevron-left.svg" alt="Previous" class="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
+            <ChevronLeft class="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-black" />
               <span class="hidden sm:inline">Précédent</span>
               <span class="sm:hidden">Préc</span>
             </button>
@@ -446,10 +459,9 @@
                 :class="[
                   'relative inline-flex items-center px-2 sm:px-4 py-1.5 sm:py-2 border text-xs sm:text-sm font-medium rounded-lg transition-colors',
                   currentPage === page 
-                    ? 'z-10 border-transparent text-white' 
+                    ? 'bg-orange' 
                     : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                 ]"
-                :style="currentPage === page ? 'background: linear-gradient(to right, #F65A11, #e54a0a);' : ''"
               >
                 {{ page }}
               </button>
@@ -461,7 +473,7 @@
             >
               <span class="hidden sm:inline">Suivant</span>
               <span class="sm:hidden">Suiv</span>
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/chevron-right.svg" alt="Next" class="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
+              <ChevronRight class="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-black" />
             </button>
           </div>
         </div>
@@ -817,6 +829,57 @@ import axios from 'axios'
 import jsPDF from 'jspdf'
 import * as XLSX from 'xlsx'
 import { useRouter } from 'vue-router'
+// Icônes Lucide Vue Next
+import { 
+  Home as HomeIcon,
+  Download as DownloadIcon,
+  ChevronDown as ChevronDownIcon,
+  FileText as FileTextIcon,
+  ShoppingCart as ShoppingCartIcon,
+  Calendar as CalendarIcon,
+  Package as PackageIcon,
+  CheckCircle as CheckCircleIcon,
+  Warehouse as WarehouseIcon,
+  Eye as EyeIcon,
+  Search as SearchIcon,
+  ArrowUpDown as ArrowUpDownIcon,
+  Filter as FilterIcon,
+  MoreHorizontal as MoreHorizontalIcon,
+  Edit as EditIcon,
+  Copy as CopyIcon,
+  Trash2 as Trash2Icon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  Crown as CrownIcon,
+  LogOut as LogoutIcon,
+  X as XIcon,
+  Zap as ZapIcon,
+  TrendingUp as TrendingUpIcon,
+  Rocket as RocketIcon,
+  RefreshCcw as RefreshIcon,
+  CircleAlertIcon as WarningIcon,
+  Clock,
+  CheckCircle2Icon,
+  CurrencyIcon,
+  Currency,
+  ReceiptEuroIcon,
+  BadgeEuroIcon,
+  SearchXIcon,
+  Search,
+  X,
+  Calendar,
+  Calendar1,
+  User,
+  PhoneCall,
+  Building,
+  Truck,
+  MapPin,
+  Check,
+  ArchiveIcon,
+  BookmarkXIcon,
+  ChevronLeft,
+  ChevronRight
+} from 'lucide-vue-next'
 
 const router = useRouter()
 
@@ -2065,10 +2128,6 @@ onMounted(() => {
 
 .text-orange-500 {
   color: #F65A11;
-}
-
-.border-orange-500 {
-  border-color: #F65A11;
 }
 
 .hover\:bg-orange-50:hover {

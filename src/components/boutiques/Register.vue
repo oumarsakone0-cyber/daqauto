@@ -613,6 +613,7 @@
   import { useRouter } from 'vue-router'
   import { usersApi } from '../../services/api.js'
   
+  
   const router = useRouter()
   
   // Reactive data
@@ -636,6 +637,7 @@
     { title: 'Sécurité et finalisation' }
   ]
   
+
   const registerData = reactive({
     fullName: '',
     email: '',
