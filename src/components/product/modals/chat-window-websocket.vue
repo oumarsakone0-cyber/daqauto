@@ -52,7 +52,7 @@
             <span class="text-xs opacity-75 block mt-1">{{ formatTime(message.timestamp) }}</span>
           </div>
           
-           Bot Message 
+           <!-- Bot Message  -->
           <div v-else class="max-w-xs">
             <div v-if="message.type === 'product'" class="bg-white border border-gray-200 rounded-lg p-3 shadow-sm">
               <div class="flex space-x-3">
@@ -74,7 +74,7 @@
               </div>
             </div>
             
-             Text Message 
+             <!-- Text Message  -->
             <div v-else class="bg-white border border-gray-200 px-4 py-2 rounded-lg rounded-bl-sm">
               <p class="text-sm text-gray-800">{{ message.message }}</p>
               <span class="text-xs text-gray-500 block mt-1">{{ formatTime(message.timestamp) }}</span>

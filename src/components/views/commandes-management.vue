@@ -497,13 +497,13 @@
           <div class="flex justify-end space-x-3">
             <button 
               @click="closeConfirmModal"
-              class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+              class="btn-gray"
             >
               Annuler
             </button>
             <button 
               @click="executeAction"
-              :class="['px-4 py-2 text-white rounded-lg transition-colors', getConfirmationButtonClass()]"
+              :class="['btn-degrade-orange', getConfirmationButtonClass()]"
             >
               {{ getConfirmationButtonText() }}
             </button>
@@ -518,14 +518,12 @@
         <div class="sticky top-0 bg-white border-b border-gray-100 px-8 py-6 rounded-t-2xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
-              <div class="p-3 bg-gradient-to-r from-orange-500 to-orange-600 rounded-xl">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/document-text.svg" alt="Order" class="h-6 w-6 text-white">
+              <div class="p-3 bg-orange rounded-xl">
+                <FileTextIcon class="h-6 w-6 text-white" />
               </div>
               <h3 class="text-2xl font-bold text-gray-900">Détails de la Commande</h3>
             </div>
-            <button @click="closeOrderModal" class="p-2 bg-gray-100 rounded-xl hover:bg-gray-200 transition-colors duration-200">
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/x-mark.svg" alt="Close" class="h-5 w-5 text-gray-600">
-            </button>
+            <XIcon @click="closeOrderModal" class="h-7 w-7 cursor-pointer text-gray-700" />
           </div>
         </div>
 
@@ -534,8 +532,8 @@
           <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-200">
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center gap-4">
-                <div class="p-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-2xl">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/document-check.svg" alt="Order badge" class="h-8 w-8 text-white">
+                <div class="p-4 bg-orange rounded-2xl">
+                  <FileCheck class="h-7 w-7 text-white" />
                 </div>
                 <div>
                   <div class="text-2xl font-bold text-gray-900">{{ selectedOrder.numero_commande }}</div>
@@ -551,21 +549,21 @@
             <!-- Quick Stats -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/banknotes.svg" alt="Total" class="h-6 w-6 text-orange-500">
+                <Banknote class="h-6 w-6 primary-color" />
                 <div>
                   <div class="text-sm text-gray-600">Total</div>
                   <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.total) }}</div>
                 </div>
               </div>
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/cube.svg" alt="Quantity" class="h-6 w-6 text-purple-500">
+                <BoxIcon class="h-6 w-6 primary-color" />
                 <div>
                   <div class="text-sm text-gray-600">Quantité</div>
                   <div class="text-xl font-bold text-gray-900">{{ selectedOrder.quantite }}</div>
                 </div>
               </div>
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/truck.svg" alt="Delivery" class="h-6 w-6 text-blue-500">
+                <Truck class="h-6 w-6 primary-color" />
                 <div>
                   <div class="text-sm text-gray-600">Livraison</div>
                   <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</div>
@@ -579,19 +577,19 @@
             <!-- Customer Information -->
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/user.svg" alt="Customer" class="h-6 w-6 text-orange-500">
+                <User class="h-6 w-6 primary-color" />
                 <h4 class="text-lg font-semibold text-gray-900">Informations Client</h4>
               </div>
               <div class="space-y-3">
                 <div class="flex items-center gap-3">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/user.svg" alt="User" class="h-4 w-4 text-gray-400">
+                  <User2 class="h-4 w-4 text-gray-500" />
                   <div>
                     <span class="text-sm text-gray-500">Nom complet</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.client_nom }}</div>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/phone.svg" alt="Phone" class="h-4 w-4 text-gray-400">
+                  <PhoneCall class="h-4 w-4 text-gray-400" />
                   <div>
                     <span class="text-sm text-gray-500">Téléphone</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.client_telephone }}</div>
@@ -603,26 +601,26 @@
             <!-- Delivery Information -->
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/truck.svg" alt="Delivery" class="h-6 w-6 text-blue-500">
+                <Truck class="h-6 w-6 primary-color" />
                 <h4 class="text-lg font-semibold text-gray-900">Informations de Livraison</h4>
               </div>
               <div class="space-y-3">
                 <div class="flex items-center gap-3">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/truck.svg" alt="Truck" class="h-4 w-4 text-gray-400">
+                  <Truck class="h-4 w-4 text-gray-400" />
                   <div>
                     <span class="text-sm text-gray-500">Type de livraison</span>
                     <div class="font-medium text-gray-900">{{ getDeliveryTypeLabel(selectedOrder.type_livraison) }}</div>
                   </div>
                 </div>
                 <div v-if="selectedOrder.commune" class="flex items-center gap-3">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/map-pin.svg" alt="Location" class="h-4 w-4 text-gray-400">
+                  <MapPin class="h-4 w-4 text-gray-400" />
                   <div>
                     <span class="text-sm text-gray-500">Commune</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.commune }}</div>
                   </div>
                 </div>
                 <div class="flex items-start gap-3">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/home.svg" alt="Address" class="h-4 w-4 text-gray-400 mt-1">
+                  <Home class="h-4 w-4 text-gray-400 mt-1" />
                   <div>
                     <span class="text-sm text-gray-500">Adresse complète</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.adresse_complete }}</div>
@@ -635,26 +633,26 @@
           <!-- Product Information Enhanced -->
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/cube.svg" alt="Product" class="h-6 w-6 text-purple-500">
+              <BoxIcon class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Produit Commandé</h4>
             </div>
             <div class="flex items-start gap-6">
               <div class="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center">
-                <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/photo.svg" alt="Product" class="h-8 w-8 text-gray-400">
+                <BoxIcon class="h-8 w-8 text-gray-500" />
               </div>
               <div class="flex-1">
                 <h5 class="text-xl font-semibold text-gray-900 mb-3">{{ selectedOrder.produit_nom }}</h5>
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div class="flex items-center gap-2">
-                    <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/cube.svg" alt="Quantity" class="h-4 w-4 text-gray-400">
+                  <div class="flex items-center gap-2 text-gray-400">
+                    <BoxIcon class="h-4 w-4 text-gray-400" />
                     <span>Quantité: {{ selectedOrder.quantite }}</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/banknotes.svg" alt="Price" class="h-4 w-4 text-gray-400">
+                  <div class="flex items-center gap-2 text-gray-400">
+                    <Banknote class="h-4 w-4 text-gray-400" />
                     <span>Prix unitaire: {{ formatCurrency(selectedOrder.produit_prix) }}</span>
                   </div>
-                  <div class="flex items-center gap-2">
-                    <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/building-storefront.svg" alt="Store" class="h-4 w-4 text-gray-400">
+                  <div class="flex items-center gap-2 text-gray-400">
+                    <Building class="h-4 w-4 text-gray-400" />
                     <span>Boutique: {{ selectedOrder.boutique_nom }}</span>
                   </div>
                 </div>
@@ -665,13 +663,13 @@
           <!-- Boutique Information Enhanced -->
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/building-storefront.svg" alt="Boutique" class="h-6 w-6 text-green-500">
+                <Building class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Informations de la Boutique</h4>
             </div>
             <div class="space-y-4">
               <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gradient-to-r from-green-500 to-emerald-600 rounded-xl flex items-center justify-center">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/building-storefront.svg" alt="Boutique logo" class="h-6 w-6 text-white">
+                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
+                  <Building class="h-8 w-8 text-gray-500" />
                 </div>
                 <div>
                   <h5 class="text-lg font-semibold text-gray-900">{{ selectedOrder.boutique_name || selectedOrder.boutique_nom }}</h5>
@@ -687,12 +685,12 @@
                 <div v-if="selectedOrder.boutique_telephone || selectedOrder.boutique_email">
                   <h6 class="text-sm font-semibold text-gray-700 mb-3">Contact</h6>
                   <div class="space-y-2">
-                    <div v-if="selectedOrder.boutique_telephone" class="flex items-center gap-2 text-sm">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/phone.svg" alt="Phone" class="h-4 w-4 text-gray-400">
+                    <div v-if="selectedOrder.boutique_telephone" class="flex items-center gap-2 text-sm text-gray-400">
+                      <PhoneCall class="h-4 w-4 text-gray-400" />
                       <span>{{ selectedOrder.boutique_telephone }}</span>
                     </div>
-                    <div v-if="selectedOrder.boutique_email" class="flex items-center gap-2 text-sm">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/envelope.svg" alt="Email" class="h-4 w-4 text-gray-400">
+                    <div v-if="selectedOrder.boutique_email" class="flex items-center gap-2 text-sm text-gray-400">
+                      <Mail class="h-4 w-4 text-gray-400" />
                       <span>{{ selectedOrder.boutique_email }}</span>
                     </div>
                   </div>
@@ -702,11 +700,11 @@
                   <h6 class="text-sm font-semibold text-gray-700 mb-3">Localisation</h6>
                   <div class="space-y-2">
                     <div v-if="selectedOrder.boutique_address" class="flex items-center gap-2 text-sm">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/map-pin.svg" alt="Address" class="h-4 w-4 text-gray-400">
+                      <MapPin class="h-4 w-4 text-gray-400" />
                       <span>{{ selectedOrder.boutique_address }}</span>
                     </div>
                     <div v-if="selectedOrder.boutique_commune" class="flex items-center gap-2 text-sm">
-                      <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/building-office.svg" alt="Commune" class="h-4 w-4 text-gray-400">
+                      <Building class="h-4 w-4 text-gray-400" />
                       <span>{{ selectedOrder.boutique_commune }}</span>
                     </div>
                   </div>
@@ -715,24 +713,24 @@
               
               <!-- Actions boutique -->
               <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-100">
-                <button v-if="selectedOrder.boutique_telephone" @click="callBoutique(selectedOrder.boutique_telephone)" class="flex items-center gap-2 px-4 py-2 bg-green-100 text-green-700 rounded-lg hover:bg-green-200 transition-colors duration-200">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/phone.svg" alt="Call" class="h-4 w-4">
+                <button v-if="selectedOrder.boutique_telephone" @click="callBoutique(selectedOrder.boutique_telephone)" class="flex items-center gap-2 px-4 py-2  rounded-lg  transition-colors duration-200">
+                  <PhoneCall class="h-4 w-4" />
                   <span>Appeler</span>
                 </button>
-                <button v-if="selectedOrder.boutique_email" @click="emailBoutique(selectedOrder.boutique_email)" class="flex items-center gap-2 px-4 py-2 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition-colors duration-200">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/envelope.svg" alt="Email" class="h-4 w-4">
+                <button v-if="selectedOrder.boutique_email" @click="emailBoutique(selectedOrder.boutique_email)" class="flex items-center gap-2 px-4 py-2 rounded-lg  transition-colors duration-200">
+                  <Mail class="h-4 w-4" />
                   <span>Email</span>
                 </button>
-                <button @click="notifyBoutiqueNewOrder(selectedOrder)" class="flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-lg hover:bg-orange-200 transition-colors duration-200">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/bell.svg" alt="Notify" class="h-4 w-4">
+                <button @click="notifyBoutiqueNewOrder(selectedOrder)" class="flex items-center gap-2 px-4 py-2  rounded-lg  transition-colors duration-200">
+                 <Bell class="h-4 w-4" />
                   <span>Notifier Commande</span>
                 </button>
-                <button @click="notifyClientOrderStatus(selectedOrder)" class="flex items-center gap-2 px-4 py-2 bg-purple-100 text-purple-700 rounded-lg hover:bg-purple-200 transition-colors duration-200">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/chat-bubble-left.svg" alt="Notify Client" class="h-4 w-4">
+                <button @click="notifyClientOrderStatus(selectedOrder)" class="flex items-center gap-2 px-4 py-2  rounded-lg  transition-colors duration-200">
+                 <MessageSquare class="h-4 w-4" />
                   <span>Notifier Client</span>
                 </button>
-                <button @click="generateReceiptPDF(selectedOrder)" class="flex items-center gap-2 px-4 py-2 bg-yellow-100 text-yellow-700 rounded-lg hover:bg-yellow-200 transition-colors duration-200">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/document-arrow-down.svg" alt="PDF Receipt" class="h-4 w-4">
+                <button @click="generateReceiptPDF(selectedOrder)" class="flex items-center gap-2 px-4 py-2 rounded-lg  transition-colors duration-200">
+                  <FileDownIcon class="h-4 w-4" />
                   <span>Reçu PDF</span>
                 </button>
               </div>
@@ -742,27 +740,27 @@
           <!-- Financial Summary Enhanced -->
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/banknotes.svg" alt="Money" class="h-6 w-6 text-yellow-500">
+              <Banknote class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Récapitulatif Financier</h4>
             </div>
             <div class="space-y-4">
               <div class="flex justify-between items-center py-2">
                 <div class="flex items-center gap-2">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/calculator.svg" alt="Subtotal" class="h-4 w-4 text-gray-400">
+                  <CalculatorIcon class="h-4 w-4 text-gray-400" />
                   <span class="text-gray-600">Sous-total</span>
                 </div>
                 <span class="font-medium text-gray-900">{{ formatCurrency(selectedOrder.sous_total) }}</span>
               </div>
               <div class="flex justify-between items-center py-2">
                 <div class="flex items-center gap-2">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/truck.svg" alt="Shipping" class="h-4 w-4 text-gray-400">
+                  <Truck class="h-4 w-4 text-gray-400" />
                   <span class="text-gray-600">Frais de livraison</span>
                 </div>
                 <span class="font-medium text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</span>
               </div>
               <div class="flex justify-between items-center py-3 border-t border-gray-100">
                 <div class="flex items-center gap-2">
-                  <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/banknotes.svg" alt="Total" class="h-5 w-5 text-orange-500">
+                  <Banknote class="h-6 w-6 text-black font-bold" />
                   <span class="text-lg font-semibold text-gray-900">Total</span>
                 </div>
                 <span class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.total) }}</span>
@@ -775,33 +773,29 @@
             <button 
               v-if="selectedOrder.statut === 'en_attente'" 
               @click="showConfirmModal('confirm', selectedOrder)"
-              class="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-600 text-white rounded-xl hover:from-green-600 hover:to-emerald-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              class="submit-btn"
             >
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/check-circle.svg" alt="Confirm" class="h-5 w-5">
               <span>Confirmer la commande</span>
             </button>
             <button 
               v-if="selectedOrder.statut === 'confirmee'" 
               @click="showConfirmModal('ship', selectedOrder)"
-              class="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-blue-500 to-indigo-600 text-white rounded-xl hover:from-blue-600 hover:to-indigo-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              class="submit-btn"
             >
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/truck.svg" alt="Ship" class="h-5 w-5">
               <span>Marquer comme expédiée</span>
             </button>
             <button 
               v-if="selectedOrder.statut === 'en_livraison'" 
               @click="showConfirmModal('deliver', selectedOrder)"
-              class="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-purple-500 to-violet-600 text-white rounded-xl hover:from-purple-600 hover:to-violet-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              class="submit-btn"
             >
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/archive-box.svg" alt="Deliver" class="h-5 w-5">
               <span>Marquer comme livrée</span>
             </button>
             <button 
               v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)" 
               @click="showConfirmModal('cancel', selectedOrder)"
-              class="flex items-center gap-3 px-6 py-3 bg-gradient-to-r from-red-500 to-rose-600 text-white rounded-xl hover:from-red-600 hover:to-rose-700 transition-all duration-200 shadow-lg hover:shadow-xl"
+              class="btn-deconnexion"
             >
-              <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/solid/x-circle.svg" alt="Cancel" class="h-5 w-5">
               <span>Annuler la commande</span>
             </button>
           </div>
@@ -815,7 +809,6 @@
         <img :src="getNotificationIcon(notificationType)" :alt="notificationType" class="w-4 h-4 sm:w-5 sm:h-5 flex-shrink-0" />
         <span class="text-sm sm:text-base">{{ notificationMessage }}</span>
         <button @click="closeNotification" class="ml-auto p-1 hover:bg-white/20 rounded transition-colors duration-200">
-          <img src="https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/x-mark.svg" alt="Close" class="h-4 w-4 text-white">
         </button>
       </div>
     </div>
@@ -878,7 +871,23 @@ import {
   ArchiveIcon,
   BookmarkXIcon,
   ChevronLeft,
-  ChevronRight
+  ChevronRight,
+  FileCheck,
+  Banknote,
+  BanknoteIcon,
+  BanknoteXIcon,
+  LucideBanknote,
+  Square,
+  BoxIcon,
+  User2,
+  Home,
+  PhoneOutgoing,
+  Image,
+  Mail,
+  Bell,
+  MessageSquare,
+  FileDownIcon,
+  CalculatorIcon
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -1155,10 +1164,6 @@ const getConfirmationMessage = () => {
 
 const getConfirmationIcon = () => {
   switch (confirmationAction.value) {
-    case 'confirm': return 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/check-circle.svg'
-    case 'ship': return 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/truck.svg'
-    case 'deliver': return 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/archive-box.svg'
-    case 'cancel': return 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/24/outline/x-circle.svg'
     default: return ''
   }
 }
@@ -1554,9 +1559,9 @@ const closeNotification = () => {
 const formatCurrency = (amount) => {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
-    currency: 'XOF',
+    currency: 'USD',
     minimumFractionDigits: 0
-  }).format(amount) + ' FCFA'
+  }).format(amount) 
 }
 
 const formatDate = (dateString) => {
@@ -1598,13 +1603,7 @@ const getStatusClass = (status) => {
 
 const getStatusIcon = (status) => {
   const icons = {
-    'en_attente': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/clock.svg',
-    'confirmee': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/check-circle.svg',
-    'en_livraison': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/truck.svg',
-    'livree': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/check-badge.svg',
-    'annulee': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/x-circle.svg'
   }
-  return icons[status] || 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/question-mark-circle.svg'
 }
 
 const getDeliveryTypeLabel = (type) => {
@@ -1618,12 +1617,7 @@ const getDeliveryTypeLabel = (type) => {
 
 const getNotificationIcon = (type) => {
   const icons = {
-    'success': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/check-circle.svg',
-    'warning': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/exclamation-triangle.svg',
-    'error': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/x-circle.svg',
-    'info': 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/information-circle.svg'
   }
-  return icons[type] || 'https://cdn.jsdelivr.net/npm/heroicons@2.0.18/20/solid/bell.svg'
 }
 
 const getBoutiqueStatusLabel = (status) => {
