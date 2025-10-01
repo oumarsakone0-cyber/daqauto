@@ -28,20 +28,22 @@
     </div>
 
     <!-- Container responsive avec largeur adaptative -->
-    <div class="w-full max-w-[1600px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+    <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
         <router-link to="/" class="hover:text-gray-700">
-          <HomeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
+          <Home class="w-4 h-4 sm:w-5 sm:h-5" />
         </router-link>
         <span class="mx-2">/</span>
         <span class="font-medium text-gray-700 truncate">Gestion des Catégories</span>
       </div>
 
       <!-- Header Section -->
-      <div class="text-center mb-6 sm:mb-8">
-        <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Catégories</h1>
-        <p class="text-sm sm:text-base text-gray-600">Organisez votre catalogue produits avec une hiérarchie complète</p>
+      <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
+        <div>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Catégories</h1>
+          <p class="text-sm sm:text-base text-gray-600">Organisez votre catalogue produits avec une hiérarchie complète</p>
+        </div>
       </div>
 
       <!-- Stats Overview -->
@@ -51,7 +53,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <FolderIcon class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700" />
+                <FolderIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">\
                 <p class="text-xs sm:text-sm text-gray-600">Catégories</p>
@@ -68,8 +70,8 @@
         <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <FolderOpenIcon class="w-5 h-5 sm:w-6 sm:h-6 text-green-700" />
+              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                <FolderOpenIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Sous-catégories</p>
@@ -77,7 +79,7 @@
               </div>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
+              <div class="bg-gradient-to-r from-blue-400 to-blue-500 h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
             </div>
           </div>
         </div>
@@ -86,8 +88,8 @@
         <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-200 to-orange-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <FolderTreeIcon class="w-5 h-5 sm:w-6 sm:h-6 text-orange-700" />
+              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                <FolderTreeIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Sous-sous-catégories</p>
@@ -95,7 +97,7 @@
               </div>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300" style="width: 60%"></div>
+              <div class="bg-gradient-to-r from-blue-300 to-blue-400 h-2 rounded-full transition-all duration-300" style="width: 60%"></div>
             </div>
           </div>
         </div>
@@ -104,8 +106,8 @@
         <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <LayersIcon class="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" />
+              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                <LayersIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Niveau 4</p>
@@ -113,7 +115,7 @@
               </div>
             </div>
             <div class="w-full bg-gray-200 rounded-full h-2">
-              <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: 45%"></div>
+              <div class="bg-gradient-to-r from-blue-200 to-blue-300 h-2 rounded-full transition-all duration-300" style="width: 45%"></div>
             </div>
           </div>
         </div>
@@ -139,11 +141,14 @@
               :class="[
                 'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium flex items-center gap-2',
                 activeTab === tab.id 
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-lg' 
-                  : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50'
+                  ? 'btn-degrade-orange' 
+                  : 'btn-gray'
               ]"
             >
-              <component :is="tab.icon" class="w-4 h-4" />
+               <FolderIcon v-if="tab.id==='categories'" class="w-4 h-4 sm:w-6 sm:h-5 " />
+               <FolderOpenIcon v-if="tab.id==='subcategories'" class="w-4 h-4 sm:w-5 sm:h-5 " />
+               <FolderTreeIcon v-if="tab.id==='sub-subcategories'" class="w-4 h-4 sm:w-5 sm:h-5" />
+              <LayersIcon v-if="tab.id==='level4'" class="w-4 h-4 sm:w-5 sm:h-5 " />
               <span class="hidden sm:inline">{{ tab.name }}</span>
               <span class="sm:hidden">{{ tab.name.split(' ')[0] }}</span>
               <span class="bg-white/20 px-1.5 py-0.5 rounded-full text-xs">{{ getTabCount(tab.id) }}</span>
@@ -157,17 +162,17 @@
           <div v-if="activeTab === 'categories'" class="category-section">
             <div class="section-header">
               <h3 class="section-title-small">Catégories Principales</h3>
-              <button @click="openModal('category')" class="add-btn">
-                <PlusIcon />
+              <button @click="openModal('category')" class="btn-degrade-orange">
+                <PlusIcon/>
                 Ajouter une catégorie
               </button>
             </div>
 
-            <div v-if="categories.length === 0" class="empty-state">
+            <div v-if="categories.length === 0" class="empty-state ">
               <FolderIcon />
               <h3>Aucune catégorie</h3>
               <p>Commencez par créer votre première catégorie</p>
-              <button @click="openModal('category')" class="add-btn">
+              <button @click="openModal('category')" class="btn-degrade-orange" >
                 <PlusIcon />
                 Créer une catégorie
               </button>
@@ -184,8 +189,8 @@
                 </div>
                 <div class="category-content">
                   <div class="category-header">
-                    <div class="category-icon">
-                      <component :is="category.icon || 'FolderIcon'" />
+                    <div class="category-icon bg-orange">
+                      <FolderIcon class="w-4 h-4 sm:w-5 sm:h-5" />
                     </div>
                     <h4 class="category-name">{{ category.name }}</h4>
                   </div>
@@ -195,10 +200,10 @@
                     <span class="stat-item">{{ category.products_count || 0 }} produits</span>
                   </div>
                   <div class="category-actions">
-                    <button @click="editCategory(category)" class="action-btn edit">
+                    <button @click="editCategory(category)" class="submit-btn">
                       <EditIcon />
                     </button>
-                    <button @click="deleteCategory(category.id)" class="action-btn delete">
+                    <button @click="deleteCategory(category.id)" class="btn-deconnexion">
                       <TrashIcon />
                     </button>
                   </div>
@@ -212,13 +217,15 @@
             <div class="section-header">
               <h3 class="section-title-small">Sous-catégories</h3>
               <div class="header-controls">
-                <select v-model="selectedCategoryFilter" class="filter-select" @change="loadSubcategories">
-                  <option value="">Toutes les catégories</option>
-                  <option v-for="cat in categories" :key="cat.id" :value="cat.id">
-                    {{ cat.name }}
-                  </option>
-                </select>
-                <button @click="openModal('subcategory')" class="add-btn">
+                <div class="sm:w-55 w-20" >
+                  <select v-model="selectedCategoryFilter" class="input-style" @change="loadSubcategories">
+                    <option value="">Toutes les catégories</option>
+                    <option v-for="cat in categories" :key="cat.id" :value="cat.id">
+                      {{ cat.name }}
+                    </option>
+                  </select>
+                </div>
+                <button @click="openModal('subcategory')" class="btn-degrade-orange">
                   <PlusIcon />
                   Ajouter une sous-catégorie
                 </button>
@@ -229,7 +236,7 @@
               <FolderOpenIcon />
               <h3>Aucune sous-catégorie</h3>
               <p>Créez des sous-catégories pour organiser vos produits</p>
-              <button @click="openModal('subcategory')" class="add-btn">
+              <button @click="openModal('subcategory')" class="btn-degrade-orange">
                 <PlusIcon />
                 Créer une sous-catégorie
               </button>
@@ -242,8 +249,9 @@
                 class="subcategory-item"
               >
                 <div class="subcategory-info">
-                  <div class="subcategory-icon">
-                    <component :is="subcategory.icon || 'FolderOpenIcon'" />
+                  
+                  <div class="subcategory-icon bg-orange">
+                    <FolderOpenIcon class="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <div class="subcategory-details">
                     <h4 class="subcategory-name">{{ subcategory.name }}</h4>
@@ -259,10 +267,10 @@
                   <span class="stat-label">Sous-sous-cat.</span>
                 </div>
                 <div class="subcategory-actions">
-                  <button @click="editSubcategory(subcategory)" class="action-btn edit">
+                  <button @click="editSubcategory(subcategory)" class="submit-btn">
                     <EditIcon />
                   </button>
-                  <button @click="deleteSubcategory(subcategory.id)" class="action-btn delete">
+                  <button @click="deleteSubcategory(subcategory.id)" class="btn-deconnexion">
                     <TrashIcon />
                   </button>
                 </div>
@@ -275,13 +283,15 @@
             <div class="section-header">
               <h3 class="section-title-small">Sous-sous-catégories</h3>
               <div class="header-controls">
-                <select v-model="selectedSubcategoryFilter" class="filter-select" @change="loadSubSubcategories">
-                  <option value="">Toutes les sous-catégories</option>
-                  <option v-for="subcat in subcategories" :key="subcat.id" :value="subcat.id">
-                    {{ subcat.name }}
-                  </option>
-                </select>
-                <button @click="openModal('sub-subcategory')" class="add-btn">
+                <div>
+                  <select v-model="selectedSubcategoryFilter" class="input-style" @change="loadSubSubcategories">
+                    <option value="">Toutes les sous-catégories</option>
+                    <option v-for="subcat in subcategories" :key="subcat.id" :value="subcat.id">
+                      {{ subcat.name }}
+                    </option>
+                  </select>
+                </div>
+                <button @click="openModal('sub-subcategory')" class="btn-degrade-orange">
                   <PlusIcon />
                   Ajouter une sous-sous-catégorie
                 </button>
@@ -292,7 +302,7 @@
               <FolderTreeIcon />
               <h3>Aucune sous-sous-catégorie</h3>
               <p>Créez des sous-sous-catégories pour plus de précision</p>
-              <button @click="openModal('sub-subcategory')" class="add-btn">
+              <button @click="openModal('sub-subcategory')" class="btn-degrade-orange">
                 <PlusIcon />
                 Créer une sous-sous-catégorie
               </button>
@@ -309,15 +319,15 @@
                 </div>
                 <div class="sub-subcategory-content">
                   <div class="sub-subcategory-icon">
-                    <component :is="subSubcategory.icon || 'FolderTreeIcon'" />
+                    <FolderTreeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
                   </div>
                   <h4 class="sub-subcategory-name">{{ subSubcategory.name }}</h4>
                   <p class="sub-subcategory-parent">{{ subSubcategory.subcategory_name }}</p>
                   <div class="sub-subcategory-actions">
-                    <button @click="editSubSubcategory(subSubcategory)" class="action-btn edit">
+                    <button @click="editSubSubcategory(subSubcategory)" class="submit-btn">
                       <EditIcon />
                     </button>
-                    <button @click="deleteSubSubcategory(subSubcategory.id)" class="action-btn delete">
+                    <button @click="deleteSubSubcategory(subSubcategory.id)" class="btn-deconnexion">
                       <TrashIcon />
                     </button>
                   </div>
@@ -331,13 +341,15 @@
             <div class="section-header">
               <h3 class="section-title-small">Catégories Niveau 4</h3>
               <div class="header-controls">
-                <select v-model="selectedSubSubcategoryFilter" class="filter-select" @change="loadLevel4Categories">
-                  <option value="">Toutes les sous-sous-catégories</option>
-                  <option v-for="subSubcat in subSubcategories" :key="subSubcat.id" :value="subSubcat.id">
-                    {{ subSubcat.name }}
-                  </option>
-                </select>
-                <button @click="openModal('level4')" class="add-btn">
+                <div class="sm:w-auto">
+                  <select v-model="selectedSubSubcategoryFilter" class="input-style mr-5" @change="loadLevel4Categories">
+                    <option value="">Toutes les sous-sous-catégories</option>
+                    <option v-for="subSubcat in subSubcategories" :key="subSubcat.id" :value="subSubcat.id">
+                      {{ subSubcat.name }}
+                    </option>
+                  </select>
+                </div>
+                <button @click="openModal('level4')" class="btn-degrade-orange">
                   <PlusIcon />
                   Ajouter niveau 4
                 </button>
@@ -348,7 +360,7 @@
               <LayersIcon />
               <h3>Aucune catégorie niveau 4</h3>
               <p>Créez des catégories de niveau 4 pour une classification détaillée</p>
-              <button @click="openModal('level4')" class="add-btn">
+              <button @click="openModal('level4')" class="btn-degrade-orange">
                 <PlusIcon />
                 Créer niveau 4
               </button>
@@ -372,10 +384,10 @@
                   <img :src="level4.image_url || '/placeholder.svg?height=50&width=50'" :alt="level4.name">
                 </div>
                 <div class="level4-actions">
-                  <button @click="editLevel4(level4)" class="action-btn edit">
+                  <button @click="editLevel4(level4)" class="submit-btn">
                     <EditIcon />
                   </button>
-                  <button @click="deleteLevel4(level4.id)" class="action-btn delete">
+                  <button @click="deleteLevel4(level4.id)" class="btn-deconnexion">
                     <TrashIcon />
                   </button>
                 </div>
@@ -393,16 +405,14 @@
           <h3 class="modal-title">
             {{ isEditing ? 'Modifier' : 'Ajouter' }} {{ getModalTitle() }}
           </h3>
-          <button @click="closeModal" class="modal-close">
-            <XIcon />
-          </button>
+            <XIcon @click="closeModal" class="w-7 h-7 text-gray-700 cursor-pointer" />
         </div>
 
         <form @submit.prevent="submitForm" class="modal-form">
           <!-- Parent Selection (for subcategories and below) -->
-          <div v-if="modalType !== 'category'" class="form-group">
+          <div  v-if="modalType !== 'category'" class="form-group">
             <label class="form-label">{{ getParentLabel() }}</label>
-            <select v-model="formData.parent_id" class="form-select" required>
+            <select v-model="formData.parent_id" class=" input-style" required>
               <option value="">Sélectionner {{ getParentLabel().toLowerCase() }}</option>
               <option v-for="parent in getParentOptions()" :key="parent.id" :value="parent.id">
                 {{ parent.name }}
@@ -416,7 +426,8 @@
             <input 
               v-model="formData.name" 
               type="text" 
-              class="form-input" 
+              class="input-style" 
+              style="padding-left: 15px;"
               placeholder="Nom de la catégorie"
               required
             >
@@ -427,7 +438,8 @@
             <label class="form-label">Description</label>
             <textarea 
               v-model="formData.description" 
-              class="form-textarea" 
+              class="input-style" 
+              style="padding-left: 15px;"
               placeholder="Description de la catégorie"
               rows="3"
             ></textarea>
@@ -443,7 +455,7 @@
                 :class="['icon-option', { selected: formData.icon === icon.name }]"
                 @click="formData.icon = icon.name"
               >
-                <component :is="icon.component" />
+                <component :is="icon.component"/>
               </div>
             </div>
           </div>
@@ -479,7 +491,7 @@
                 <button 
                   type="button" 
                   @click="$refs.imageInput.click()" 
-                  class="upload-btn"
+                  class="upload-btn btn-deconnexion"
                   :disabled="formData.imageUploading"
                 >
                   <UploadIcon v-if="!formData.imageUploading" />
@@ -490,7 +502,7 @@
                   v-if="formData.image_url && !formData.imageUploading" 
                   type="button" 
                   @click="removeImage" 
-                  class="remove-btn"
+                  class="remove-btn btn-deconnexion"
                 >
                   <TrashIcon />
                   Supprimer
@@ -501,10 +513,10 @@
 
           <!-- Form Actions -->
           <div class="form-actions">
-            <button type="button" @click="closeModal" class="btn-cancel">
+            <button type="button" @click="closeModal" class="btn-gray">
               Annuler
             </button>
-            <button type="submit" class="btn-submit" :disabled="loading">
+            <button type="submit" class="btn-degrade-orange" :disabled="loading">
               <LoaderIcon v-if="loading" class="animate-spin" />
               {{ isEditing ? 'Modifier' : 'Ajouter' }}
             </button>
@@ -513,20 +525,25 @@
       </div>
     </div>
   </div>
-  <!-- Bouton de debug temporaire - à supprimer après résolution -->
-  <div v-if="!dataLoading" style="text-align: center; margin: 20px;">
-    <button @click="loadAllData" style="padding: 10px 20px; background: #667eea; color: white; border: none; border-radius: 8px;">
-      🔄 Recharger les données
-    </button>
-    <p style="margin-top: 10px; font-size: 12px; color: #666;">
-      Debug: Categories: {{ categories.length }}, Subcategories: {{ subcategories.length }}
-    </p>
-  </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
 import axios from 'axios'
+// Icônes Lucide Vue Next
+import { 
+ 
+  Edit as EditIcon,
+  X as XIcon,
+  Home,
+  FolderIcon,
+  FolderOpenIcon,
+  FolderTreeIcon,
+  LayersIcon,
+  PlusIcon,
+  TrashIcon,
+ 
+} from 'lucide-vue-next'
 
 // Cloudinary configuration
 const cloudinaryConfig = {
@@ -1217,144 +1234,8 @@ const loadStats = async () => {
   })
 </script>
 
-<script>
-// Icon Components (same as before)
-const FolderIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M22 19a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h5l2 3h9a2 2 0 0 1 2 2z"></path></svg>`
-}
-
-const FolderOpenIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m6 14 1.45-2.9A2 2 0 0 1 9.24 10H20a2 2 0 0 1 1.94 2.5l-1.55 6a2 2 0 0 1-1.94 1.5H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.2a2 2 0 0 0 1.66.9H18a2 2 0 0 1 2 2v2"></path></svg>`
-}
-
-const FolderTreeIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20 10a1 1 0 0 0 1-1V6a1 1 0 0 0-1-1h-2.5a1 1 0 0 1-.8-.4l-.9-1.2A1 1 0 0 0 15 3h-2a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z"></path><path d="M20 21a1 1 0 0 0 1-1v-3a1 1 0 0 0-1-1h-2.5a1 1 0 0 1-.8-.4l-.9-1.2a1 1 0 0 0-.8-.4H13a1 1 0 0 0-1 1v5a1 1 0 0 0 1 1Z"></path><path d="M3 5a2 2 0 0 0 2 2h3"></path><path d="M3 3v13a2 2 0 0 0 2 2h3"></path></svg>`
-}
-
-const LayersIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="m12.83 2.18a2 2 0 0 0-1.66 0L2.6 6.08a1 1 0 0 0 0 1.83l8.58 3.91a2 2 0 0 0 1.66 0l8.58-3.9a1 1 0 0 0 0-1.83Z"></path><path d="m22 17.65-9.17 4.16a2 2 0 0 1-1.66 0L2 17.65"></path><path d="m22 12.65-9.17 4.16a2 2 0 0 1-1.66 0L2 12.65"></path></svg>`
-}
-
-const PlusIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14"></path><path d="M12 5v14"></path></svg>`
-}
-
-const EditIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path><path d="M18.5 2.5a2.12 2.12 0 0 1 3 3L12 15l-4 1 1-4Z"></path></svg>`
-}
-
-const TrashIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18"></path><path d="M19 6v14c0 1-1 2-2 2H7c-1 0-2-1-2-2V6"></path><path d="M8 6V4c0-1 1-2 2-2h4c1 0 2 1 2 2v2"></path></svg>`
-}
-
-const XIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6 6 18"></path><path d="M6 6l12 12"></path></svg>`
-}
-
-const UploadIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path><polyline points="17 8 12 3 7 8"></polyline><line x1="12" x2="12" y1="3" y2="15"></line></svg>`
-}
-
-const LoaderIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12a9 9 0 1 1-6.219-8.56"></path></svg>`
-}
-
-const SmartphoneIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect width="14" height="20" x="5" y="2" rx="2" ry="2"></rect><path d="M12 18h.01"></path></svg>`
-}
-
-const ShirtIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.38 3.46 16 2a4 4 0 0 1-8 0L3.62 3.46a2 2 0 0 0-1.34 2.23l.58 3.47a1 1 0 0 0 .99.84H6v10c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V10h2.15a1 1 0 0 0 .99-.84l.58-3.47a2 2 0-1.34-2.23Z"></path></svg>`
-}
-
-const HomeIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path><polyline points="9 22 9 12 15 12 15 22"></polyline></svg>`
-}
-
-const CarIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 17h2c.6 0 1-.4 1-1v-3c0-.9-.7-1.7-1.5-1.9L18.4 9.6a2 2 0 0 0-1.6-1.4C16.6 8.2 16.3 8 16 8H8c-.3 0-.6.2-.8.4L5.1 11.1C4.4 11.3 4 12.1 4 13v3c0 .6.4 1 1 1h2"></path><circle cx="7" cy="17" r="2"></circle><path d="M9 17h6"></path><circle cx="17" cy="17" r="2"></circle></svg>`
-}
-
-const BookIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v20H6.5a2.5 2.5 0 0 1 0-5H20"></path></svg>`
-}
-
-const GamepadIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="6" x2="10" y1="12" y2="12"></line><line x1="8" x2="8" y1="10" y2="14"></line><line x1="15" x2="15.01" y1="13" y2="13"></line><line x1="18" x2="18.01" y1="11" y2="11"></line><rect width="20" height="12" x="2" y="6" rx="2"></rect></svg>`
-}
-
-const HeartIcon = {
-  template: `<svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path></svg>`
-}
-
-export default {
-  components: {
-    FolderIcon,
-    FolderOpenIcon,
-    FolderTreeIcon,
-    LayersIcon,
-    PlusIcon,
-    EditIcon,
-    TrashIcon,
-    XIcon,
-    UploadIcon,
-    LoaderIcon,
-    SmartphoneIcon,
-    ShirtIcon,
-    HomeIcon,
-    CarIcon,
-    BookIcon,
-    GamepadIcon,
-    HeartIcon
-  }
-}
-</script>
 
 <style scoped>
-/* Tous les styles CSS restent identiques à l'original */
-.dashboard-container {
-  display: flex;
-  min-height: 100vh;
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  font-family: ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif;
-}
-
-.main-content {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  margin-left: 280px;
-  background: linear-gradient(135deg, #f8fafc 0%, #e2e8f0 100%);
-}
-
-.dashboard-main {
-  flex: 1;
-  padding: 32px;
-}
-
-.dashboard-section {
-  margin-bottom: 48px;
-}
-
-/* Loading State */
-.loading-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  min-height: 400px;
-}
-
-.loading-spinner {
-  text-align: center;
-  color: #64748b;
-}
-
-.loading-spinner svg {
-  width: 48px;
-  height: 48px;
-  margin-bottom: 16px;
-  color: #667eea;
-}
 
 /* Empty State */
 .empty-state {
@@ -1554,35 +1435,6 @@ export default {
   gap: 16px;
 }
 
-.filter-select {
-  padding: 8px 16px;
-  border: 1px solid rgba(0, 0, 0, 0.1);
-  border-radius: 8px;
-  background: white;
-  font-size: 14px;
-  cursor: pointer;
-}
-
-.add-btn {
-  display: inline-flex;
-  items-center: center;
-  gap: 8px;
-  padding: 10px 20px;
-  background: linear-gradient(135deg, #F65A11, #e54a0a);
-  color: white;
-  border: none;
-  border-radius: 10px;
-  font-size: 14px;
-  font-weight: 500;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(246, 90, 17, 0.2);
-}
-
-.add-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 8px 25px rgba(246, 90, 17, 0.3);
-}
 
 /* Categories Grid */
 .categories-grid {
@@ -1627,10 +1479,10 @@ export default {
 }
 
 .category-icon {
-  width: 40px;
-  height: 40px;
+  width: 30px;
+  height: 30px;
   border-radius: 10px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
+  /* background: linear-gradient(135deg, #667eea, #764ba2); */
   color: white;
   display: flex;
   align-items: center;
@@ -1735,7 +1587,6 @@ export default {
   width: 48px;
   height: 48px;
   border-radius: 12px;
-  background: linear-gradient(135deg, #667eea, #764ba2);
   color: white;
   display: flex;
   align-items: center;
@@ -2049,7 +1900,7 @@ export default {
 .icon-option {
   width: 50px;
   height: 50px;
-  border: 2px solid #e5e7eb;
+  border: 2px solid #cbd5e1;
   border-radius: 8px;
   display: flex;
   align-items: center;
@@ -2060,14 +1911,13 @@ export default {
 }
 
 .icon-option:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #fe7900;
 }
 
 .icon-option.selected {
-  border-color: #667eea;
+  border-color: #fe7900;
   background: rgba(102, 126, 234, 0.1);
-  color: #667eea;
+  color: #fe7900;
 }
 
 /* Image Upload */
@@ -2120,8 +1970,8 @@ export default {
 }
 
 .upload-btn:hover {
-  border-color: #667eea;
-  color: #667eea;
+  border-color: #fe7900;
+  color: #fe7900;
 }
 
 .upload-btn:disabled {
@@ -2134,19 +1984,12 @@ export default {
   align-items: center;
   gap: 8px;
   padding: 8px 12px;
-  border: 1px solid #ef4444;
   border-radius: 6px;
-  background: white;
-  color: #ef4444;
   cursor: pointer;
   transition: all 0.3s ease;
   font-size: 12px;
 }
 
-.remove-btn:hover {
-  background: #ef4444;
-  color: white;
-}
 
 /* Upload overlay and progress */
 .upload-overlay {
