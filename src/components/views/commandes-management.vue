@@ -354,7 +354,11 @@
                 </td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', getStatusClass(order.statut)]">
-                    <img :src="getStatusIcon(order.statut)" :alt="order.statut" class="h-3 w-3">
+                    <span v-if="order.statut === 'en_attente'"><Clock class="h-3 w-3" /></span>
+                    <span v-else-if="order.statut === 'confirmee'"><CheckCircle class="h-3 w-3" /></span>
+                    <span v-else-if="order.statut === 'en_livraison'"><Truck class="h-3 w-3" /></span>
+                    <span v-else-if="order.statut === 'livree'"><PackageIcon class="h-3 w-3" /></span>
+                    <span v-else-if="order.statut === 'annulee'"><XIcon class="h-3 w-3" /></span>
                     {{ getStatusLabel(order.statut) }}
                   </span>
                 </td>
@@ -487,6 +491,11 @@
           <div class="flex items-center mb-4">
             <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4', getConfirmationIconClass()]">
               <img :src="getConfirmationIcon()" alt="Icon" class="w-6 h-6" />
+              <!-- <span v-if="order.statut === 'en_attente'"><Clock class="h-3 w-3" /></span>
+              <span v-else-if="order.statut === 'confirmee'"><CheckCircle class="h-3 w-3" /></span>
+              <span v-else-if="order.statut === 'en_livraison'"><Truck class="h-3 w-3" /></span>
+              <span v-else-if="order.statut === 'livree'"><PackageIcon class="h-3 w-3" /></span>
+              <span v-else-if="order.statut === 'annulee'"><XIcon class="h-3 w-3" /></span> -->
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">{{ getConfirmationTitle() }}</h3>
@@ -541,7 +550,11 @@
                 </div>
               </div>
               <span :class="['inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium', getStatusClass(selectedOrder.statut)]">
-                <img :src="getStatusIcon(selectedOrder.statut)" :alt="selectedOrder.statut" class="h-4 w-4">
+                <!-- <span v-if="order.statut === 'en_attente'"><Clock class="h-3 w-3" /></span>
+                <span v-else-if="order.statut === 'confirmee'"><CheckCircle class="h-3 w-3" /></span>
+                <span v-else-if="order.statut === 'en_livraison'"><Truck class="h-3 w-3" /></span>
+                <span v-else-if="order.statut === 'livree'"><PackageIcon class="h-3 w-3" /></span>
+                <span v-else-if="order.statut === 'annulee'"><XIcon class="h-3 w-3 primary-color" /></span> -->
                 {{ getStatusLabel(selectedOrder.statut) }}
               </span>
             </div>
@@ -853,15 +866,10 @@ import {
   CircleAlertIcon as WarningIcon,
   Clock,
   CheckCircle2Icon,
-  CurrencyIcon,
-  Currency,
-  ReceiptEuroIcon,
   BadgeEuroIcon,
-  SearchXIcon,
   Search,
   X,
   Calendar,
-  Calendar1,
   User,
   PhoneCall,
   Building,
@@ -874,20 +882,16 @@ import {
   ChevronRight,
   FileCheck,
   Banknote,
-  BanknoteIcon,
-  BanknoteXIcon,
-  LucideBanknote,
-  Square,
   BoxIcon,
   User2,
   Home,
-  PhoneOutgoing,
-  Image,
   Mail,
   Bell,
   MessageSquare,
   FileDownIcon,
-  CalculatorIcon
+  CalculatorIcon,
+  Waypoints,
+  CheckCircle
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -1193,7 +1197,7 @@ const getConfirmationButtonText = () => {
     case 'confirm': return 'Confirmer'
     case 'ship': return 'Expédier'
     case 'deliver': return 'Livrer'
-    case 'cancel': return 'Annuler'
+    case 'cancel': return 'Annuler Commande'
     default: return 'Confirmer'
   }
 }
@@ -1599,11 +1603,6 @@ const getStatusClass = (status) => {
     'annulee': 'bg-red-100 text-red-800'
   }
   return classes[status] || 'bg-gray-100 text-gray-800'
-}
-
-const getStatusIcon = (status) => {
-  const icons = {
-  }
 }
 
 const getDeliveryTypeLabel = (type) => {
@@ -2103,34 +2102,6 @@ onMounted(() => {
 </script>
 
 <style scoped>
-/* Couleurs personnalisées */
-.bg-orange-500 {
-  background-color: #F65A11;
-}
-
-.hover\:bg-orange-600:hover {
-  background-color: #e54a0a;
-}
-
-.focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
-}
-
-.focus\:border-orange-500:focus {
-  border-color: #F65A11;
-}
-
-.text-orange-500 {
-  color: #F65A11;
-}
-
-.hover\:bg-orange-50:hover {
-  background-color: rgba(246, 90, 17, 0.05);
-}
-
-.bg-orange-100 {
-  background-color: rgba(246, 90, 17, 0.1);
-}
 
 /* Transitions fluides */
 .transition-all {
