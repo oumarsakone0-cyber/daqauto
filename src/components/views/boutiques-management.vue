@@ -11,11 +11,9 @@
       <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
         <!-- Breadcrumb -->
         <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
-          <router-link to="/admin" class="hover:text-gray-700">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
-          </router-link>
+          <router-link to="/" class="hover:text-gray-700">
+          <HomeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
+        </router-link>
           <span class="mx-2">/</span>
           <router-link to="/admin/produits" class="hover:text-gray-700">Produits</router-link>
           <span class="mx-2">/</span>
@@ -33,12 +31,9 @@
             <button 
               @click="loadAllData"
               :disabled="dataLoading"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all disabled:opacity-50"
-              style="background: linear-gradient(to right, #10B981, #059669);"
-            >
-              <svg class="w-4 h-4 mr-2" :class="{ 'animate-spin': dataLoading }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
+              class="submit-btn"
+              >
+              <RefreshCcw class="w-4 h-4 mr-2" />
               {{ dataLoading ? 'Chargement...' : 'Actualiser' }}
             </button>
           </div>
@@ -47,7 +42,7 @@
         <!-- Loading State -->
         <div v-if="dataLoading" class="mb-6 sm:mb-8">
           <div class="bg-white rounded-lg p-6 sm:p-8 text-center shadow-lg">
-            <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-green-500 border-t-transparent"></div>
+            <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-orange-500 border-t-transparent"></div>
             <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Chargement des boutiques...</p>
           </div>
         </div>
@@ -58,9 +53,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                  </svg>
+                 <Building class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                 </div>
                 <div class="min-w-0">
                   <p class="text-xs sm:text-sm text-gray-600">Total Boutiques</p>
@@ -74,9 +67,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
+                  <CheckCircle2 class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                 </div>
                 <div class="min-w-0">
                   <p class="text-xs sm:text-sm text-gray-600">Boutiques Vérifiées</p>
@@ -90,9 +81,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
-                  </svg>
+                  <ZapIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                 </div>
                 <div class="min-w-0">
                   <p class="text-xs sm:text-sm text-gray-600">Boutiques Boostées</p>
@@ -106,9 +95,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
-                  </svg>
+                  <Clock class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
                 </div>
                 <div class="min-w-0">
                   <p class="text-xs sm:text-sm text-gray-600">Boosts en Attente</p>
@@ -126,20 +113,18 @@
             <div class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <div class="relative flex-1 max-w-full sm:max-w-md">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                  </svg>
+                  <SearchIcon class="ww-4 h-4 sm:w-5 sm:h-5 text-gray-400" />
                 </div>
                 <input 
                   v-model="searchQuery"
                   type="text" 
-                  class="w-full pl-8 sm:pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all text-sm sm:text-base" 
+                  class="input-style" 
                   placeholder="Rechercher par nom, marché, contact..."
                   @input="handleSearch"
                 >
               </div>
               <div class="flex items-center gap-2 sm:gap-3">
-                <select v-model="statusFilter" @change="loadBoutiques" class="px-2 sm:px-4 py-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all text-xs sm:text-sm">
+                <select v-model="statusFilter" @change="loadBoutiques" class=" input-style" style="padding-left: 15px; padding-right: 30px;">
                   <option value="">Tous les statuts</option>
                   <option value="verified">Vérifiées</option>
                   <option value="unverified">Non vérifiées</option>
@@ -170,9 +155,9 @@
                   <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                     <div class="flex items-center space-x-3">
                       <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-100 to-blue-200 rounded-lg flex items-center justify-center flex-shrink-0">
-                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
-                        </svg>
+                        </svg>  
                       </div>
                       <div class="min-w-0 flex-1">
                         <div class="text-xs sm:text-sm font-medium text-gray-900 truncate">{{ boutique.name }}</div>
@@ -208,8 +193,8 @@
                   <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                     <div class="space-y-2">
                       <!-- Boutique boostée -->
-                      <div v-if="boutique.is_boosted && boutique.boost_status === 'active'" class="space-y-1">
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                      <div v-if="boutique.is_boosted && boutique.boost_status === 'active'" class="space-y-1 items-center justify-center">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 primary-color">
                           <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                           </svg>
@@ -220,7 +205,7 @@
                         </div>
                         <button 
                           @click="viewBoutiqueBoostDetails(boutique)"
-                          class="text-xs text-purple-600 hover:text-purple-800 font-medium underline"
+                          class="btn-outline h-10 w-30 mt-1  items-center justify-center"
                         >
                           Voir détails
                         </button>
@@ -237,16 +222,18 @@
                         <div class="text-xs text-gray-500">
                           Type: {{ getBoostTypeLabel(boutique.boost_type) }}
                         </div>
-                        <div class="flex gap-1">
+                        <div class="flex gap-1 mt-2">
                           <button 
                             @click="openBoutiqueBoostValidation(boutique)"
-                            class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200 font-medium"
+                            style="font-size: 12px;"
+                            class="submit-btn h-10 flex-1"
                           >
                             Valider
                           </button>
                           <button 
                             @click="viewBoutiqueBoostDetails(boutique)"
-                            class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 font-medium"
+                            style="border-radius: 8px"
+                            class="btn-outline h-10 flex-1 text-2xl"
                           >
                             Détails
                           </button>
@@ -255,7 +242,12 @@
                       
                       <!-- Pas de boost -->
                       <div v-else class="text-xs text-gray-400">
+                       <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 error-color">
+                          <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                          </svg>
                         Aucun boost
+                        </span>
                       </div>
                     </div>
                   </td>
@@ -270,7 +262,7 @@
                   
                   <!-- Statut -->
                   <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
-                    <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', boutique.is_verified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                    <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', boutique.is_verified ? 'bg-green-100 success-color' : 'bg-red-100 error-color']">
                       <svg v-if="boutique.is_verified" class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
@@ -288,7 +280,7 @@
                         @click="openBoutiqueDetails(boutique)" 
                         class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
                         title="Voir détails"
-                        style="background-color: rgba(59, 130, 246, 0.1); color: rgb(37, 99, 235);"
+                        style="background-color: rgba(59, 130, 246, 0.1); color: black;"
                       >
                         <svg class="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -299,7 +291,7 @@
                         @click="toggleBoutiqueVerification(boutique)" 
                         class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
                         :title="boutique.is_verified ? 'Retirer vérification' : 'Vérifier boutique'"
-                        :style="boutique.is_verified ? 'background-color: rgba(248, 113, 113, 0.1); color: rgb(220, 38, 38);' : 'background-color: rgba(74, 222, 128, 0.1); color: rgb(22, 163, 74);'"
+                        :style="boutique.is_verified ? 'background-color: rgba(248, 113, 113, 0.1); color: red;' : 'background-color: rgba(74, 222, 128, 0.1); color: rgb(22, 163, 74);'"
                       >
                         <svg v-if="boutique.is_verified" class="h-3 w-3 sm:h-4 sm:w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
@@ -323,7 +315,8 @@
               <select 
                 v-model="itemsPerPage"
                 @change="handleItemsPerPageChange"
-                class="bg-white border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-green-500 focus:border-green-500 p-1 sm:p-1.5"
+                class="input-style"
+                style="width: 60px; height: 45px; padding-left: 10px;"
               >
                 <option value="10">10</option>
                 <option value="25">25</option>
@@ -361,10 +354,10 @@
                   :class="[
                     'relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border text-xs sm:text-sm font-medium rounded-lg transition-colors',
                     page === currentPage 
-                      ? 'text-white border-transparent shadow-lg' 
+                      ? 'bg-orange' 
                       : 'text-gray-500 border-gray-300 bg-white hover:bg-gray-50'
                   ]"
-                  :style="page === currentPage ? 'background: linear-gradient(to right, #10B981, #059669);' : ''"
+                  :style="page === currentPage ? 'bg-orange' : ''"
                 >
                   {{ page }}
                 </button>
@@ -399,42 +392,38 @@
       </div>
   
       <!-- Boutique Details Modal -->
-      <div v-if="showBoutiqueModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div v-if="showBoutiqueModal" class="fixed inset-0 bg-black/60  backdrop-blur-sm bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           <div class="relative">
             <!-- Header avec gradient -->
-            <div class="bg-gradient-to-r from-blue-500 to-blue-600 px-6 py-4 rounded-t-xl">
+            <div class="bg-white px-8 py-6 rounded-t-xl border-b border-gray-100">
               <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold text-white flex items-center">
-                  <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mr-3">
+                <h3 class="text-xl font-bold text-black flex items-center">
+                  <div class="w-10 h-10 bg-orange rounded-lg flex items-center justify-center mr-3">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                   </div>
                   Détails de la boutique
                 </h3>
-                <button @click="closeBoutiqueModal" class="text-white/80 hover:text-white transition-colors">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                  </svg>
-                </button>
+                <XIcon @click="closeBoutiqueModal" class="h-7 w-7 cursor-pointer text-gray-700" />
               </div>
             </div>
   
             <div class="p-6">
               <div v-if="selectedBoutique" class="space-y-6">
                 <!-- Boutique Header -->
-                <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+                <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-200">
                   <div class="flex items-center space-x-6">
-                    <div class="w-20 h-20 bg-gradient-to-br from-blue-100 to-blue-200 rounded-xl flex items-center justify-center flex-shrink-0">
-                      <svg class="w-10 h-10 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <div class="w-20 h-20 bg-orange rounded-xl flex items-center justify-center flex-shrink-0">
+                      <svg class="w-10 h-10 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                       </svg>
                     </div>
                     <div class="flex-1">
                       <h4 class="text-2xl font-bold text-gray-900 mb-2">{{ selectedBoutique.name }}</h4>
                       <div class="flex items-center gap-4 mb-4">
-                        <span :class="['inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium', selectedBoutique.is_verified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                        <span :class="['inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium', selectedBoutique.is_verified ? 'bg-green-100 success-color' : 'bg-red-100 error-color']">
                           <svg v-if="selectedBoutique.is_verified" class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                           </svg>
@@ -443,14 +432,14 @@
                           </svg>
                           {{ selectedBoutique.is_verified ? 'Boutique Vérifiée' : 'Non Vérifiée' }}
                         </span>
-                        <span v-if="selectedBoutique.is_boosted" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                        <span v-if="selectedBoutique.is_boosted" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 primary-color">
                           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                           </svg>
                           Boostée
                         </span>
                       </div>
-                      <div class="text-lg font-medium text-blue-600">ID: #{{ selectedBoutique.id }}</div>
+                      <div class="text-lg font-medium primary-color">ID: #{{ selectedBoutique.id }}</div>
                     </div>
                   </div>
                 </div>
@@ -460,7 +449,7 @@
                   <!-- Informations générales -->
                   <div class="bg-gray-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       Informations générales
@@ -492,7 +481,7 @@
                   <!-- Informations contact -->
                   <div class="bg-green-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                       </svg>
                       Contact
@@ -517,7 +506,7 @@
                 <!-- Boost Info -->
                 <div v-if="selectedBoutique.is_boosted" class="bg-purple-50 rounded-xl p-6">
                   <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                     Informations de boost
@@ -526,7 +515,7 @@
                     <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <p class="text-sm text-gray-600">Type de boost</p>
-                        <p class="font-medium text-purple-900">{{ getBoostTypeLabel(selectedBoutique.boost_type) }}</p>
+                        <p class="font-medium primary-color">{{ getBoostTypeLabel(selectedBoutique.boost_type) }}</p>
                       </div>
                       <div>
                         <p class="text-sm text-gray-600">Statut</p>
@@ -536,7 +525,7 @@
                       </div>
                       <div>
                         <p class="text-sm text-gray-600">Expire le</p>
-                        <p class="font-medium text-purple-900">{{ formatDate(selectedBoutique.boost_expires_at) }}</p>
+                        <p class="font-medium error-color">{{ formatDate(selectedBoutique.boost_expires_at) }}</p>
                       </div>
                     </div>
                   </div>
@@ -548,30 +537,26 @@
       </div>
   
       <!-- Boutique Boost Modal -->
-      <div v-if="showBoutiqueBoostModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div v-if="showBoutiqueBoostModal" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-xl shadow-2xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
           <div class="p-6">
-            <div class="flex justify-between items-center mb-6">
+            <div class="flex justify-between items-center mb-6 border-b py-6 border-gray-100">
               <h3 class="text-xl font-bold text-gray-900 flex items-center">
-                <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 bg-orange rounded-lg flex items-center justify-center mr-3">
+                  <svg class="w-5 h-5 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                   </svg>
                 </div>
                 {{ selectedBoutiqueBoost?.boost_status === 'pending' ? 'Validation de Boost Boutique' : 'Détails du Boost Boutique' }}
               </h3>
-              <button @click="closeBoutiqueBoostModal" class="text-gray-400 hover:text-gray-600 transition-colors">
-                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                </svg>
-              </button>
+              <XIcon @click="closeBoutiqueBoostModal" class="h-7 w-7 cursor-pointer text-gray-700" />
             </div>
             
             <div v-if="selectedBoutiqueBoost" class="space-y-6">
               <!-- Boutique Info -->
-              <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
+              <div class="bg-gradient-to-r from-orange-50 to-red-50 rounded-xl p-6">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                   </svg>
                   Boutique à booster
@@ -579,11 +564,11 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Nom de la boutique</p>
-                    <p class="font-bold text-blue-600 text-xl">{{ selectedBoutiqueBoost.name }}</p>
+                    <p class="font-bold primary-color text-xl">{{ selectedBoutiqueBoost.name }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">ID Boutique</p>
-                    <p class="font-bold text-blue-600 text-xl">#{{ selectedBoutiqueBoost.id }}</p>
+                    <p class="font-bold primary-color text-xl">#{{ selectedBoutiqueBoost.id }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Marché</p>
@@ -599,7 +584,7 @@
               <!-- Contact Info -->
               <div class="bg-gradient-to-r from-green-50 to-emerald-50 rounded-xl p-6">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                   </svg>
                   Informations de contact
@@ -623,7 +608,7 @@
               <!-- Boost Details -->
               <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                   </svg>
                   Détails du boost demandé
@@ -631,15 +616,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Type de boost</p>
-                    <p class="font-bold text-purple-900 text-lg">{{ getBoostTypeLabel(selectedBoutiqueBoost.boost_type) }}</p>
+                    <p class="font-bold primary-color text-lg">{{ getBoostTypeLabel(selectedBoutiqueBoost.boost_type) }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Durée</p>
-                    <p class="font-bold text-purple-900 text-lg">{{ selectedBoutiqueBoost.boost_duration }} jours</p>
+                    <p class="font-bold blue-color text-lg">{{ selectedBoutiqueBoost.boost_duration }} jours</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Prix du boost</p>
-                    <p class="font-bold text-purple-900 text-lg">{{ formatCurrency(selectedBoutiqueBoost.boost_price) }}</p>
+                    <p class="font-bold primary-color text-lg">{{ formatCurrency(selectedBoutiqueBoost.boost_price) }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Statut</p>
@@ -653,7 +638,7 @@
                   <p class="text-sm text-gray-600 mb-2">Période de boost</p>
                   <div class="flex items-center space-x-4">
                     <div class="flex items-center">
-                      <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 success-color mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                       </svg>
                       <span class="font-medium text-gray-900">Du {{ formatDate(selectedBoutiqueBoost.boost_start_date) }}</span>
@@ -662,7 +647,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
                     <div class="flex items-center">
-                      <svg class="w-4 h-4 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 error-color mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                       </svg>
                       <span class="font-medium text-gray-900">Au {{ formatDate(selectedBoutiqueBoost.boost_end_date) }}</span>
@@ -675,20 +660,20 @@
               <div v-if="selectedBoutiqueBoost.boost_status === 'pending'" class="flex justify-end space-x-3 pt-4 border-t">
                 <button 
                   @click="closeBoutiqueBoostModal"
-                  class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  class="btn-gray"
                 >
                   Annuler
                 </button>
                 <button 
                   @click="rejectBoutiqueBoost"
-                  class="px-6 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                  class="btn-deconnexion"
                 >
                   Rejeter le boost
                 </button>
                 <button 
                   @click="approveBoutiqueBoost"
                   :disabled="actionLoading"
-                  class="px-6 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 font-medium"
+                  class="submit-btn"
                 >
                   {{ actionLoading ? 'Validation...' : 'Valider le boost' }}
                 </button>
@@ -698,7 +683,7 @@
               <div v-else class="flex justify-end pt-4 border-t">
                 <button 
                   @click="closeBoutiqueBoostModal"
-                  class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  class="btn-gray"
                 >
                   Fermer
                 </button>
@@ -709,7 +694,7 @@
       </div>
   
       <!-- Notification -->
-      <div v-if="notification.show" :class="['fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300', notification.type === 'success' ? 'bg-green-100 border border-green-200 text-green-800' : 'bg-red-100 border border-red-200 text-red-800']">
+      <div v-if="notification.show" :class="['fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300', notification.type === 'success' ? 'bg-green-100 border border-green-200 success-color' : 'bg-red-100 border border-red-200 error-color']">
         <div class="flex items-center">
           <svg v-if="notification.type === 'success'" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -732,6 +717,7 @@
     adminBoostApi,
     adminApiUtils 
   } from '../../services/admin-api.js'
+import { Building, Building2, CheckCircle, CheckCircle2, Clock, FileWarning, Home, HomeIcon, LockIcon, RefreshCcw, SearchIcon, XIcon, ZapIcon } from 'lucide-vue-next'
   
   // Data
   const dataLoading = ref(true)
@@ -1158,15 +1144,6 @@
   
   ::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
-  }
-  
-  /* Focus styles for accessibility */
-  button:focus,
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: 2px solid #10B981;
-    outline-offset: 2px;
   }
   
   /* Smooth transitions */

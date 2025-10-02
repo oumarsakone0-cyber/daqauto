@@ -164,7 +164,7 @@ button:focus-visible {
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0.8rem 0.75rem; 
+  padding: 0.75rem 0.75rem; 
 }
 .btn-gray:hover {
   background: #b7b6b6;
@@ -187,6 +187,7 @@ button:focus-visible {
 
   .btn-outline ,
   .btn-outline-with-background{
+    display: flex;
     color: #fe7900;
     background-color: none;
     text-decoration: none;
