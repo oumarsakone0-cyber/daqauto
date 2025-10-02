@@ -249,8 +249,9 @@ button:focus-visible {
     background: #25D366;
     color: white;
   }
-  .whatsapp-btn:hover {
+  .btn-whatsapp:hover {
     background: #22c55e;
+    color: white;
   }
 
 /* Les styles de bordures */

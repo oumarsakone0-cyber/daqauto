@@ -31,11 +31,9 @@
       <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
         <!-- Breadcrumb -->
         <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
-          <router-link to="/admin" class="hover:text-gray-700">
-            <svg class="w-4 h-4 sm:w-5 sm:h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"/>
-            </svg>
-          </router-link>
+          <router-link to="/" class="hover:text-gray-700">
+          <HomeIcon  class="w-4 h-4 sm:w-5 sm:h-5" />
+        </router-link>
           <span class="mx-2">/</span>
           <span class="font-medium text-gray-700 truncate">Gestion des Produits</span>
         </div>
@@ -53,32 +51,25 @@
             <div class="relative">
               <button 
                 @click="showExportDropdown = !showExportDropdown"
-                class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+                class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-sm font-medium btn-degrade-orange"
               >
-                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                </svg>
-                <span class="hidden sm:inline">Exporter</span>
-                <span class="sm:hidden">Export</span>
-                <svg class="w-4 h-4 ml-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                </svg>
+                 <DownloadIcon class="w-4 h-4 mr-2" />
+                <span >Exporter</span>
+                <ChevronDownIcon class="w-4 h-4 ml-2" />
               </button>
-              <div v-if="showExportDropdown" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20">
+              <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
                 <div class="py-1" role="menu">
-                  <button @click="exportToPDF" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                    <svg class="w-4 h-4 mr-3 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Exporter en PDF
-                  </button>
-                  <button @click="exportToExcel" class="flex items-center w-full px-4 py-2 text-sm text-gray-700 hover:bg-gray-100" role="menuitem">
-                    <svg class="w-4 h-4 mr-3 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                      <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 17v-2m3 2v-4m3 4v-6m2 10H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
-                    </svg>
-                    Exporter en Excel
-                  </button>
                 </div>
+                <div  role="menu">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
+                   <FileTextIcon   class="w-4 h-4 mr-2 error-color" />
+                  Exporter en PDF
+                </button>
+                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
+                  <FileTextIcon class="w-4 h-4 mr-1 green-color" />
+                  Exporter en Excel
+                </button>
+              </div>
               </div>
             </div>
   
@@ -86,12 +77,9 @@
             <button 
               @click="loadAllData"
               :disabled="dataLoading"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-transparent rounded-lg shadow-sm text-sm font-medium text-white transition-all disabled:opacity-50"
-              style="background: linear-gradient(to right, #F65A11, #e54a0a);"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all submit-btn"
             >
-              <svg class="w-4 h-4 mr-2" :class="{ 'animate-spin': dataLoading }" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
-              </svg>
+              <RefreshCcw class="w-4 h-4 mr-2" />
               <span class="hidden sm:inline">{{ dataLoading ? 'Chargement...' : 'Actualiser' }}</span>
               <span class="sm:hidden">{{ dataLoading ? 'Chargement...' : 'Actualiser' }}</span>
             </button>
@@ -99,7 +87,7 @@
             <!-- Boutiques Management Button -->
             <router-link 
               to="/admin/boutiques"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 border border-gray-300 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-500 transition-colors"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2  font-medium   transition-colors btn-whatsapp"
             >
               <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
@@ -123,12 +111,12 @@
           <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 sm:p-6 shadow-lg">
             <div class="flex flex-col sm:flex-row sm:items-center gap-4">
               <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-                <svg class="w-5 h-5 text-red-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 error-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-2.5L13.732 4c-.77-.833-1.964-.833-2.732 0L3.732 16.5c-.77.833.192 2.5 1.732 2.5z"/>
                 </svg>
               </div>
               <div class="flex-1 min-w-0">
-                <p class="text-red-800 font-medium text-sm sm:text-base">{{ error }}</p>
+                <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
               </div>
               <button @click="loadAllData" class="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
                 Réessayer
@@ -144,7 +132,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-yellow-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                 </div>
@@ -169,8 +157,8 @@
           <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
-                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                   </svg>
                 </div>
@@ -182,10 +170,10 @@
               <div class="space-y-2">
                 <div class="flex justify-between text-xs text-gray-500">
                   <span class="truncate">À valider</span>
-                  <span class="text-purple-600 flex-shrink-0">Priorité</span>
+                  <span class="blue-color flex-shrink-0">Priorité</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
-                  <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300" :style="{ width: getBoostPercentage() + '%' }"></div>
+                  <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" :style="{ width: getBoostPercentage() + '%' }"></div>
                 </div>
               </div>
             </div>
@@ -196,7 +184,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-green-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                 </div>
@@ -222,7 +210,7 @@
             <div class="px-4 sm:px-6 py-4 sm:py-6">
               <div class="flex items-center mb-3 sm:mb-4">
                 <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-red-200 to-red-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-red-700" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 sm:w-6 sm:h-6 text-black" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/>
                   </svg>
                 </div>
@@ -256,10 +244,10 @@
                 :class="[
                   'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium',
                   activeFilter === tab.value 
-                    ? 'text-white shadow-lg' 
-                    : 'text-gray-600 hover:text-orange-500 hover:bg-orange-50'
+                    ? 'btn-degrade-orange' 
+                  : 'btn-gray'
                 ]"
-                :style="activeFilter === tab.value ? 'background: linear-gradient(to right, #F65A11, #e54a0a);' : ''"
+                :style="activeFilter === tab.value ? 'btn-degrade-orange' : ''"
               >
                 <span class="hidden sm:inline">{{ tab.label }} ({{ filterCounts[tab.value] }})</span>
                 <span class="sm:hidden">{{ tab.label.split(' ')[0] }} ({{ filterCounts[tab.value] }})</span>
@@ -272,36 +260,37 @@
             <div class="flex flex-col space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
               <div class="relative flex-1 max-w-full sm:max-w-md">
                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                  <svg class="w-4 h-4 sm:w-5 sm:h-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
-                  </svg>
+                  <Search  class="w-4 h-4 text-gray-500" />
                 </div>
                 <input 
                   v-model="searchQuery"
                   type="text" 
-                  class="w-full pl-8 sm:pl-10 pr-4 py-2 bg-gray-50 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 transition-all text-sm sm:text-base" 
+                  class="input-style"
                   placeholder="Rechercher par nom, boutique, catégorie..."
                   @input="handleSearch"
                 >
               </div>
               <div class="flex items-center gap-2 sm:gap-3">
-                <select v-model="statusFilter" @change="loadProducts" class="px-2 sm:px-4 py-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all text-xs sm:text-sm">
+              <div class="w-45">
+                <select v-model="statusFilter" @change="loadProducts" class="input-style"style="padding-right: 30px; padding-left: 10px;">
                   <option value="">Tous les statuts</option>
                   <option value="En attente">En attente</option>
                   <option value="Actif">Validé</option>
                   <option value="Rejeté">Rejeté</option>
                   <option value="Brouillon">Brouillon</option>
                 </select>
-                <select v-model="boutiqueFilter" @change="loadProducts" class="px-2 sm:px-4 py-2 text-gray-500 bg-gray-50 border border-gray-300 rounded-lg hover:bg-gray-100 focus:ring-2 focus:ring-gray-200 transition-all text-xs sm:text-sm">
+              </div>
+              <div>
+  
+                <select v-model="boutiqueFilter" @change="loadProducts" class="input-style" style="padding-right: 30px; padding-left: 10px;">
                   <option value="">Toutes les boutiques</option>
                   <option v-for="boutique in availableBoutiques" :key="boutique.id" :value="boutique.id">
                     {{ boutique.name }}
                   </option>
                 </select>
-                <button v-if="hasActiveFilters" @click="clearFilters" class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2 text-red-600 bg-red-50 border border-red-300 rounded-lg hover:bg-red-100 focus:ring-2 focus:ring-red-200 transition-all text-xs sm:text-sm">
-                  <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                  </svg>
+              </div>
+                <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion w-30">
+                  <X class="w-4 h-4 sm:hidden" />
                   <span class="hidden sm:inline">Effacer filtres</span>
                 </button>
               </div>
@@ -345,7 +334,7 @@
                   <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                     <div class="space-y-1">
                       <div class="flex items-center text-xs sm:text-sm font-medium text-gray-900">
-                        <svg class="h-3 w-3 mr-1 text-orange-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <svg class="h-3 w-3 mr-1 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                         </svg>
                         {{ product.boutique_name }}
@@ -370,7 +359,7 @@
                     <div class="space-y-2">
                       <!-- Boost actif -->
                       <div v-if="product.is_boosted && product.boost_status === 'active'" class="space-y-1">
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 text-purple-800">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-purple-100 primary-color">
                           <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                           </svg>
@@ -381,7 +370,7 @@
                         </div>
                         <button 
                           @click="viewBoostDetails(product)"
-                          class="text-xs text-purple-600 hover:text-purple-800 font-medium underline"
+                          class="btn-outline h-10 mt-1  items-center justify-center"
                         >
                           Voir détails
                         </button>
@@ -401,16 +390,16 @@
                         <div class="text-xs text-gray-500">
                           Contact: {{ product.created_by_name }}
                         </div>
-                        <div class="flex gap-1">
+                        <div class="flex gap-1 mt-2">
                           <button 
                             @click="openBoostValidation(product)"
-                            class="text-xs bg-green-100 text-green-700 px-2 py-1 rounded hover:bg-green-200 font-medium"
+                            class="submit-btn h-10 flex-1"
                           >
                             Valider
                           </button>
                           <button 
                             @click="viewBoostDetails(product)"
-                            class="text-xs bg-blue-100 text-blue-700 px-2 py-1 rounded hover:bg-blue-200 font-medium"
+                            class="btn-outline h-10 flex-1 "
                           >
                             Détails
                           </button>
@@ -419,7 +408,7 @@
                       
                       <!-- Boost rejeté -->
                       <div v-else-if="product.boost_status === 'rejected'" class="space-y-1">
-                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 text-red-800">
+                        <span class="inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium bg-red-100 error-color">
                           <svg class="h-3 w-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
                           </svg>
@@ -446,7 +435,7 @@
                     <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', getStatusClass(product.status)]">
                       <component :is="getStatusIcon(product.status)" class="h-3 w-3" />
                       {{ getStatusLabel(product.status) }}
-                    </span>
+                    </span> 
                   </td>
                   <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
                     <div class="flex items-center space-x-1 sm:space-x-2">
@@ -518,15 +507,18 @@
             <div class="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
               <span class="text-gray-700 hidden sm:inline">Éléments par page</span>
               <span class="text-gray-700 sm:hidden">Par page</span>
-              <select 
-                v-model="itemsPerPage"
-                @change="handleItemsPerPageChange"
-                class="bg-white border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 p-1 sm:p-1.5"
-              >
-                <option value="10">10</option>
-                <option value="25">25</option>
-                <option value="50">50</option>
-              </select>
+              <div class="w-15">
+                <select 
+                  v-model="itemsPerPage"
+                  @change="handleItemsPerPageChange"
+                  class="input-style p-0 m-0"
+                  style="padding-left: 10px;"
+                >
+                  <option value="10">10</option>
+                  <option value="25">25</option>
+                  <option value="50">50</option>
+                </select>
+              </div>
               <span class="text-gray-700 text-xs sm:text-sm">
                 <span class="hidden sm:inline">
                   Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à 
@@ -559,10 +551,9 @@
                   :class="[
                     'relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border text-xs sm:text-sm font-medium rounded-lg transition-colors',
                     page === currentPage 
-                      ? 'text-white border-transparent shadow-lg' 
-                      : 'text-gray-500 border-gray-300 bg-white hover:bg-gray-50'
+                      ? 'bg-orange' 
+                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                   ]"
-                  :style="page === currentPage ? 'background: linear-gradient(to right, #F65A11, #e54a0a);' : ''"
                 >
                   {{ page }}
                 </button>
@@ -593,7 +584,7 @@
           <p class="text-sm sm:text-base text-gray-500 mb-4 sm:mb-6">
             {{ hasActiveFilters ? 'Aucun produit ne correspond à vos critères de recherche.' : 'Aucun produit n\'a été soumis pour validation.' }}
           </p>
-          <button v-if="hasActiveFilters" @click="clearFilters" class="inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-lg text-white transition-all" style="background: linear-gradient(to right, #F65A11, #e54a0a);">
+          <button v-if="hasActiveFilters" @click="clearFilters" class="btn-degrade-orange inline-flex items-center mx-auto">
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
             </svg>
@@ -609,7 +600,7 @@
             <div class="flex justify-between items-center mb-6">
               <h3 class="text-xl font-bold text-gray-900 flex items-center">
                 <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center mr-3">
-                  <svg class="w-5 h-5 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                   </svg>
                 </div>
@@ -626,7 +617,7 @@
               <!-- Product Info avec image -->
               <div class="bg-gradient-to-r from-gray-50 to-gray-100 rounded-xl p-6">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                   </svg>
                   Produit à booster
@@ -649,7 +640,7 @@
                       </div>
                       <div>
                         <p class="text-gray-600">Prix</p>
-                        <p class="font-medium text-orange-600 text-lg">{{ formatCurrency(selectedBoost.unit_price) }}</p>
+                        <p class="font-medium primary-color text-lg">{{ formatCurrency(selectedBoost.unit_price) }}</p>
                       </div>
                       <div>
                         <p class="text-gray-600">Stock</p>
@@ -667,7 +658,7 @@
               <!-- Boutique Info Détaillée -->
               <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-xl p-6">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                   </svg>
                   Informations de la boutique
@@ -675,7 +666,7 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">ID Boutique</p>
-                    <p class="font-bold text-blue-600 text-xl">#{{ selectedBoost.boutique_id }}</p>
+                    <p class="font-bold primary-color text-xl">#{{ selectedBoost.boutique_id }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Nom de la boutique</p>
@@ -688,7 +679,7 @@
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Contact Principal</p>
                     <p class="font-medium text-gray-900">{{ selectedBoost.created_by_name }}</p>
-                    <p class="text-sm text-blue-600">{{ selectedBoost.created_by_email }}</p>
+                    <p class="text-sm primary-color">{{ selectedBoost.created_by_email }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Téléphone</p>
@@ -696,7 +687,7 @@
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Statut Boutique</p>
-                    <span :class="['inline-flex items-center px-2 py-1 rounded-full text-xs font-medium', selectedBoost.boutique_verified ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                    <span :class="['inline-flex items-center px-2 py-1 rounded-full text-xs font-medium', selectedBoost.boutique_verified ? 'bg-green-100 success-color' : 'bg-red-100 error-color']">
                       {{ selectedBoost.boutique_verified ? 'Vérifiée' : 'Non vérifiée' }}
                     </span>
                   </div>
@@ -706,7 +697,7 @@
               <!-- Boost Details Améliorés -->
               <div class="bg-gradient-to-r from-purple-50 to-pink-50 rounded-xl p-6">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                  <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                   </svg>
                   Détails du boost demandé
@@ -714,15 +705,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Type de boost</p>
-                    <p class="font-bold text-purple-900 text-lg">{{ getBoostTypeLabel(selectedBoost.boost_type) }}</p>
+                    <p class="font-bold primary-color text-lg">{{ getBoostTypeLabel(selectedBoost.boost_type) }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Durée</p>
-                    <p class="font-bold text-purple-900 text-lg">{{ selectedBoost.boost_duration }} jours</p>
+                    <p class="font-bold blue-color text-lg">{{ selectedBoost.boost_duration }} jours</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Prix du boost</p>
-                    <p class="font-bold text-purple-900 text-lg">{{ formatCurrency(selectedBoost.boost_price) }}</p>
+                    <p class="font-bold primary-color text-lg">{{ formatCurrency(selectedBoost.boost_price) }}</p>
                   </div>
                   <div class="bg-white rounded-lg p-4 shadow-sm">
                     <p class="text-sm text-gray-600 mb-1">Statut</p>
@@ -736,7 +727,7 @@
                   <p class="text-sm text-gray-600 mb-2">Période de boost</p>
                   <div class="flex items-center space-x-4">
                     <div class="flex items-center">
-                      <svg class="w-4 h-4 text-green-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 success-color mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                       </svg>
                       <span class="font-medium text-gray-900">Du {{ formatDate(selectedBoost.boost_start_date) }}</span>
@@ -745,7 +736,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 8l4 4m0 0l-4 4m4-4H3"/>
                     </svg>
                     <div class="flex items-center">
-                      <svg class="w-4 h-4 text-red-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-4 h-4 error-color mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                       </svg>
                       <span class="font-medium text-gray-900">Au {{ formatDate(selectedBoost.boost_end_date) }}</span>
@@ -758,20 +749,20 @@
               <div v-if="selectedBoost.boost_status === 'pending'" class="flex justify-end space-x-3 pt-4 border-t">
                 <button 
                   @click="closeBoostModal"
-                  class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  class="btn-gray"
                 >
                   Annuler
                 </button>
                 <button 
                   @click="rejectBoost"
-                  class="px-6 py-2 text-white bg-red-600 rounded-lg hover:bg-red-700 transition-colors font-medium"
+                  class="btn-deconnexion"
                 >
                   Rejeter le boost
                 </button>
                 <button 
                   @click="approveBoost"
                   :disabled="actionLoading"
-                  class="px-6 py-2 text-white bg-purple-600 rounded-lg hover:bg-purple-700 transition-colors disabled:opacity-50 font-medium"
+                  class="submit-btn"
                 >
                   {{ actionLoading ? 'Validation...' : 'Valider le boost' }}
                 </button>
@@ -781,7 +772,7 @@
               <div v-else class="flex justify-end pt-4 border-t">
                 <button 
                   @click="closeBoostModal"
-                  class="px-6 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors font-medium"
+                  class="btn-gray"
                 >
                   Fermer
                 </button>
@@ -792,7 +783,7 @@
       </div>
   
       <!-- Confirmation Modal -->
-      <div v-if="showConfirmationModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div v-if="showConfirmationModal" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div class="bg-white rounded-lg shadow-xl max-w-md w-full">
           <div class="p-6">
             <div class="flex items-center mb-4">
@@ -810,21 +801,21 @@
               <textarea 
                 v-model="rejectionReason"
                 rows="3"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500 text-sm"
+                class="input-style w-full"
                 placeholder="Expliquez pourquoi ce produit est rejeté..."
               ></textarea>
             </div>
             <div class="flex justify-end space-x-3">
               <button 
                 @click="closeConfirmModal"
-                class="px-4 py-2 text-gray-700 bg-gray-100 rounded-lg hover:bg-gray-200 transition-colors"
+                class="btn-gray"
               >
                 Annuler
               </button>
               <button 
                 @click="executeAction"
                 :disabled="actionLoading"
-                :class="['px-4 py-2 text-white rounded-lg transition-colors disabled:opacity-50', getConfirmationButtonClass()]"
+                :class="['btn-degrade-orange', getConfirmationButtonClass()]"
               >
                 {{ actionLoading ? 'Traitement...' : getConfirmationButtonText() }}
               </button>
@@ -834,25 +825,22 @@
       </div>
   
       <!-- Product Details Modal Améliorée avec toutes les nouvelles données -->
-      <div v-if="showProductModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+      <div v-if="showProductModal" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center p-4 z-50" @click="closeProductModal">
         <div class="bg-white rounded-xl shadow-2xl max-w-6xl w-full max-h-[90vh] overflow-y-auto">
           <div class="relative">
             <!-- Header avec gradient -->
-            <div class="bg-gradient-to-r from-orange-500 to-orange-600 px-6 py-4 rounded-t-xl">
+            <div class= "sticky top-0 bg-white border-b border-gray-100 px-6 py-4 rounded-t-xl">
               <div class="flex justify-between items-center">
-                <h3 class="text-xl font-bold text-white flex items-center">
-                  <div class="w-10 h-10 bg-white/20 rounded-lg flex items-center justify-center mr-3">
+                <h3 class="text-xl font-bold text-black flex items-center">
+                  <div class="w-10 h-10 bg-orange rounded-lg flex items-center justify-center mr-3">
                     <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 7l-8-4-8 4m16 0l-8 4m8-4v10l-8 4m0-10L4 7m8 4v10M4 7v10l8 4"/>
                     </svg>
                   </div>
                   Détails du produit
                 </h3>
-                <button @click="closeProductModal" class="text-white/80 hover:text-white transition-colors">
-                  <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
-                  </svg>
-                </button>
+               
+                 <XIcon @click="closeProductModal" class="h-7 w-7 cursor-pointer text-gray-700" />
               </div>
             </div>
   
@@ -879,26 +867,26 @@
                           <component :is="getStatusIcon(selectedProduct.status)" class="h-4 w-4" />
                           {{ getStatusLabel(selectedProduct.status) }}
                         </span>
-                        <span v-if="selectedProduct.is_boosted" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-purple-100 text-purple-800">
+                        <span v-if="selectedProduct.is_boosted" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-orange-100 primary-color">
                           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                           </svg>
                           Boosté
                         </span>
-                        <span v-if="selectedProduct.is_featured" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 text-yellow-800">
+                        <span v-if="selectedProduct.is_featured" class="inline-flex items-center gap-1 px-3 py-1 rounded-full text-sm font-medium bg-yellow-100 primary-color">
                           <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
                           </svg>
                           Mis en avant
                         </span>
-                        <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', selectedProduct.is_active ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800']">
+                        <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', selectedProduct.is_active ? 'bg-green-100 success-color' : 'bg-red-100 error-color']">
                           {{ selectedProduct.is_active ? 'Actif' : 'Inactif' }}
                         </span>
                       </div>
                       
                       <div class="grid grid-cols-2 gap-4 mb-4">
                         <div>
-                          <div class="text-4xl font-bold text-orange-600 mb-1">{{ formatCurrency(selectedProduct.unit_price) }}</div>
+                          <div class="text-4xl font-bold primary-color mb-1">{{ formatCurrency(selectedProduct.unit_price) }}</div>
                           <div v-if="selectedProduct.wholesale_price" class="text-lg text-gray-600">
                             Gros: {{ formatCurrency(selectedProduct.wholesale_price) }}
                             <span v-if="selectedProduct.min_wholesale_qty" class="text-sm">(min. {{ selectedProduct.min_wholesale_qty }})</span>
@@ -912,15 +900,15 @@
                       
                       <div class="grid grid-cols-3 gap-4 text-center">
                         <div class="bg-blue-50 rounded-lg p-3">
-                          <div class="text-2xl font-bold text-blue-600">{{ selectedProduct.views_count || 0 }}</div>
+                          <div class="text-2xl font-bold primary-color">{{ selectedProduct.views_count || 0 }}</div>
                           <div class="text-sm text-gray-600">Vues</div>
                         </div>
                         <div class="bg-green-50 rounded-lg p-3">
-                          <div class="text-2xl font-bold text-green-600">{{ selectedProduct.sales_count || 0 }}</div>
+                          <div class="text-2xl font-bold success-color">{{ selectedProduct.sales_count || 0 }}</div>
                           <div class="text-sm text-gray-600">Ventes</div>
                         </div>
                         <div class="bg-purple-50 rounded-lg p-3">
-                          <div class="text-2xl font-bold text-purple-600">{{ selectedProduct.image_count || 0 }}</div>
+                          <div class="text-2xl font-bold blue-color">{{ selectedProduct.image_count || 0 }}</div>
                           <div class="text-sm text-gray-600">Images</div>
                         </div>
                       </div>
@@ -931,7 +919,7 @@
                 <!-- Galerie d'images complète -->
                 <div v-if="selectedProduct.images && selectedProduct.images.length > 0" class="bg-gray-50 rounded-xl p-6">
                   <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                     </svg>
                     Galerie d'images ({{ selectedProduct.images.length }})
@@ -942,7 +930,7 @@
                       <div v-if="image.is_primary" class="absolute top-2 left-2 bg-orange-500 text-white text-xs px-2 py-1 rounded-full font-medium">
                         Principale
                       </div>
-                      <div class="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
+                      <div class="absolute inset-0 bg-black/50 bg-opacity-0 group-hover:bg-opacity-20 transition-all flex items-center justify-center">
                         <svg class="w-6 h-6 text-white opacity-0 group-hover:opacity-100 transition-opacity" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
                         </svg>
@@ -956,7 +944,7 @@
                   <!-- Couleurs -->
                   <div v-if="selectedProduct.colors && selectedProduct.colors.length > 0" class="bg-purple-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M7 21a4 4 0 01-4-4V5a2 2 0 012-2h4a2 2 0 012 2v12a4 4 0 01-4 4zM21 5a2 2 0 00-2-2h-4a2 2 0 00-2 2v12a4 4 0 004 4h4a2 2 0 002-2V5z"/>
                       </svg>
                       Couleurs disponibles ({{ selectedProduct.colors.length }})
@@ -972,7 +960,7 @@
                   <!-- Tailles -->
                   <div v-if="selectedProduct.sizes && selectedProduct.sizes.length > 0" class="bg-blue-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 8V4m0 0h4M4 4l5 5m11-1V4m0 0h-4m4 0l-5 5M4 16v4m0 0h4m-4 0l5-5m11 5l-5-5m5 5v-4m0 4h-4"/>
                       </svg>
                       Tailles disponibles ({{ selectedProduct.sizes.length }})
@@ -991,7 +979,7 @@
                   <!-- Informations générales -->
                   <div class="bg-blue-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-blue-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
                       </svg>
                       Informations générales
@@ -1037,7 +1025,7 @@
                   <!-- Informations boutique -->
                   <div class="bg-green-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                       </svg>
                       Boutique
@@ -1068,13 +1056,13 @@
                       </div>
                       <div class="flex justify-between">
                         <span class="text-sm text-gray-600">Plan:</span>
-                        <span :class="['font-medium', (selectedProduct.boutique_info?.subscription_plan || selectedProduct.boutique_premium) === 'premium' ? 'text-purple-600' : 'text-gray-600']">
+                        <span :class="['font-medium', (selectedProduct.boutique_info?.subscription_plan || selectedProduct.boutique_premium) === 'premium' ? 'blue-color' : 'text-gray-600']">
                           {{ (selectedProduct.boutique_info?.subscription_plan || selectedProduct.boutique_premium) === 'premium' ? 'Premium' : 'Gratuit' }}
                         </span>
                       </div>
                       <div class="flex justify-between">
                         <span class="text-sm text-gray-600">Vérifié:</span>
-                        <span :class="['font-medium', (selectedProduct.boutique_info?.is_verified ?? selectedProduct.boutique_verified) ? 'text-green-600' : 'text-red-600']">
+                        <span :class="['font-medium', (selectedProduct.boutique_info?.is_verified ?? selectedProduct.boutique_verified) ? 'success-color' : 'error-color']">
                           {{ (selectedProduct.boutique_info?.is_verified ?? selectedProduct.boutique_verified) ? 'Oui' : 'Non' }}
                         </span>
                       </div>
@@ -1084,7 +1072,7 @@
                   <!-- Informations créateur -->
                   <div class="bg-yellow-50 rounded-xl p-6">
                     <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                      <svg class="w-5 h-5 mr-2 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
                       </svg>
                       Créateur
@@ -1109,7 +1097,7 @@
                 <!-- Description -->
                 <div class="bg-gray-50 rounded-xl p-6">
                   <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                     </svg>
                     Description
@@ -1122,7 +1110,7 @@
                 <!-- Informations de boost -->
                 <div v-if="selectedProduct.boost_info || selectedProduct.is_boosted" class="bg-purple-50 rounded-xl p-6">
                   <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-purple-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                     </svg>
                     Informations de boost
@@ -1131,11 +1119,11 @@
                     <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
                       <div>
                         <p class="text-sm text-gray-600">ID Boost</p>
-                        <p class="font-medium text-purple-900">{{ selectedProduct.boost_info?.id || selectedProduct.boost_id || 'N/A' }}</p>
+                        <p class="font-medium primary-color">{{ selectedProduct.boost_info?.id || selectedProduct.boost_id || 'N/A' }}</p>
                       </div>
                       <div>
                         <p class="text-sm text-gray-600">Type de boost</p>
-                        <p class="font-medium text-purple-900">{{ getBoostTypeLabel(selectedProduct.boost_info?.type || selectedProduct.boost_type) }}</p>
+                        <p class="font-medium blue-color">{{ getBoostTypeLabel(selectedProduct.boost_info?.type || selectedProduct.boost_type) }}</p>
                       </div>
                       <div>
                         <p class="text-sm text-gray-600">Statut</p>
@@ -1145,18 +1133,18 @@
                       </div>
                       <div>
                         <p class="text-sm text-gray-600">Jours restants</p>
-                        <p class="font-medium text-purple-900">{{ selectedProduct.boost_info?.days_remaining || selectedProduct.boost_days_remaining || 0 }} jours</p>
+                        <p class="font-medium blue-color">{{ selectedProduct.boost_info?.days_remaining || selectedProduct.boost_days_remaining || 0 }} jours</p>
                       </div>
                     </div>
                     <div class="mt-4 pt-4 border-t border-purple-200">
                       <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                         <div>
                           <p class="text-sm text-gray-600">Créé le</p>
-                          <p class="font-medium text-purple-900">{{ formatDate(selectedProduct.boost_info?.created_at || selectedProduct.boost_created_at) }}</p>
+                          <p class="font-medium primary-color">{{ formatDate(selectedProduct.boost_info?.created_at || selectedProduct.boost_created_at) }}</p>
                         </div>
                         <div>
                           <p class="text-sm text-gray-600">Expire le</p>
-                          <p class="font-medium text-purple-900">{{ formatDate(selectedProduct.boost_info?.expires_at || selectedProduct.boost_expires_at || selectedProduct.boost_expires_at_detail) }}</p>
+                          <p class="font-medium error-color">{{ formatDate(selectedProduct.boost_info?.expires_at || selectedProduct.boost_expires_at || selectedProduct.boost_expires_at_detail) }}</p>
                         </div>
                       </div>
                     </div>
@@ -1166,7 +1154,7 @@
                 <!-- Adresse de la boutique -->
                 <div v-if="selectedProduct.boutique_info?.address || selectedProduct.boutique_address" class="bg-indigo-50 rounded-xl p-6">
                   <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-indigo-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/>
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/>
                     </svg>
@@ -1180,7 +1168,7 @@
                 <!-- Description de la boutique -->
                 <div v-if="selectedProduct.boutique_info?.description || selectedProduct.boutique_description" class="bg-teal-50 rounded-xl p-6">
                   <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
-                    <svg class="w-5 h-5 mr-2 text-teal-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <svg class="w-5 h-5 mr-2 primary-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"/>
                     </svg>
                     À propos de la boutique
@@ -1196,7 +1184,7 @@
       </div>
   
       <!-- Notification -->
-      <div v-if="notification.show" :class="['fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300', notification.type === 'success' ? 'bg-green-100 border border-green-200 text-green-800' : 'bg-red-100 border border-red-200 text-red-800']">
+      <div v-if="notification.show" :class="['fixed top-4 right-4 p-4 rounded-lg shadow-lg z-50 transition-all duration-300', notification.type === 'success' ? 'bg-green-100 border border-green-200 success-color' : 'bg-red-100 border border-red-200 error-color']">
         <div class="flex items-center">
           <svg v-if="notification.type === 'success'" class="w-5 h-5 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
@@ -1223,11 +1211,12 @@
     adminBoostApi,
     adminApiUtils 
   } from '../../services/admin-api.js'
+import {  CheckCircleIcon, ChevronDownIcon,  ClockIcon, DownloadIcon, FileTextIcon, HomeIcon, RefreshCcw, Search, X, XCircleIcon, XIcon } from 'lucide-vue-next'
   
   // Remplacer toutes les références aux icônes par des composants SVG simples
-  const ClockIcon = { template: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
-  const CheckCircleIcon = { template: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
-  const XCircleIcon = { template: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
+  // const ClockIcon = { template: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
+  // const CheckCircleIcon = { template: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
+  // const XCircleIcon = { template: '<svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>' }
   
   // Data
   const dataLoading = ref(true)
@@ -1980,10 +1969,10 @@
   const getStatusClass = (status) => {
     const classes = {
       'En attente': 'bg-yellow-100 text-yellow-800',
-      'Actif': 'bg-green-100 text-green-800',
-      'Rejeté': 'bg-red-100 text-red-800',
+      'Actif': 'bg-green-100 success-color',
+      'Rejeté': 'bg-red-100 error-color',
       'Brouillon': 'bg-gray-100 text-gray-800',
-      'Rupture': 'bg-orange-100 text-orange-800'
+      'Rupture': 'bg-red-100 error-color'
     }
     return classes[status] || 'bg-gray-100 text-gray-800'
   }
@@ -2202,15 +2191,6 @@
   
   ::-webkit-scrollbar-thumb:hover {
     background: #a8a8a8;
-  }
-  
-  /* Focus styles for accessibility */
-  button:focus,
-  input:focus,
-  select:focus,
-  textarea:focus {
-    outline: 2px solid #F65A11;
-    outline-offset: 2px;
   }
   
   /* Smooth transitions */

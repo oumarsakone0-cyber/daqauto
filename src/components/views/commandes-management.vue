@@ -59,11 +59,11 @@
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
               <div  role="menu">
-                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
                    <FileTextIcon class="w-4 h-4 mr-2 error-color" />
                   Exporter en PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
+                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
                   <FileTextIcon class="w-4 h-4 mr-1 green-color" />
                   Exporter en Excel
                 </button>
@@ -234,7 +234,7 @@
           <div class="flex space-y-3 sm:space-y-0 sm:flex-row sm:items-center sm:justify-between sm:gap-4">
             <div class="relative flex-1 max-w-full sm:max-w-md">
               <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-                <Search  class="w-4 h-4 text-black" />
+                <Search  class="w-4 h-4 text-gray-500" />
               </div>
               <input 
                 v-model="searchQuery"
@@ -354,12 +354,8 @@
                 </td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', getStatusClass(order.statut)]">
-                    <span v-if="order.statut === 'en_attente'"><Clock class="h-3 w-3" /></span>
-                    <span v-else-if="order.statut === 'confirmee'"><CheckCircle class="h-3 w-3" /></span>
-                    <span v-else-if="order.statut === 'en_livraison'"><Truck class="h-3 w-3" /></span>
-                    <span v-else-if="order.statut === 'livree'"><PackageIcon class="h-3 w-3" /></span>
-                    <span v-else-if="order.statut === 'annulee'"><XIcon class="h-3 w-3" /></span>
-                    {{ getStatusLabel(order.statut) }}
+                    <component :is="getStatusIcon(order.statut)" class="h-3 w-3" />
+                    {{ getStatusLabel(order.statut), console.log(order.statut)  }}
                   </span>
                 </td>
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
@@ -421,7 +417,6 @@
             <span class="text-gray-700 hidden sm:inline">Éléments par page</span>
             <span class="text-gray-700 sm:hidden">Par page</span>
             <div class="w-15">
-              
               <select 
                 v-model="itemsPerPage"
                 @change="handleItemsPerPageChange"
@@ -463,8 +458,8 @@
                 :class="[
                   'relative inline-flex items-center px-2 sm:px-4 py-1.5 sm:py-2 border text-xs sm:text-sm font-medium rounded-lg transition-colors',
                   currentPage === page 
-                    ? 'bg-orange' 
-                    : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
+                      ? 'bg-orange' 
+                      : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                 ]"
               >
                 {{ page }}
@@ -490,12 +485,10 @@
         <div class="p-6">
           <div class="flex items-center mb-4">
             <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4', getConfirmationIconClass()]">
-              <img :src="getConfirmationIcon()" alt="Icon" class="w-6 h-6" />
-              <!-- <span v-if="order.statut === 'en_attente'"><Clock class="h-3 w-3" /></span>
-              <span v-else-if="order.statut === 'confirmee'"><CheckCircle class="h-3 w-3" /></span>
-              <span v-else-if="order.statut === 'en_livraison'"><Truck class="h-3 w-3" /></span>
-              <span v-else-if="order.statut === 'livree'"><PackageIcon class="h-3 w-3" /></span>
-              <span v-else-if="order.statut === 'annulee'"><XIcon class="h-3 w-3" /></span> -->
+              <!-- < :src="getConfirmationIcon()" alt="Icon" class="w-6 h-6" /> -->
+               <CheckCircle class="h-3 w-3" />
+               <!-- TODO: Ajouter les icones -->
+              <!-- <component :is="getConfirmationIcon()" class="h-3 w-3" /> -->
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">{{ getConfirmationTitle() }}</h3>
@@ -550,11 +543,7 @@
                 </div>
               </div>
               <span :class="['inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium', getStatusClass(selectedOrder.statut)]">
-                <!-- <span v-if="order.statut === 'en_attente'"><Clock class="h-3 w-3" /></span>
-                <span v-else-if="order.statut === 'confirmee'"><CheckCircle class="h-3 w-3" /></span>
-                <span v-else-if="order.statut === 'en_livraison'"><Truck class="h-3 w-3" /></span>
-                <span v-else-if="order.statut === 'livree'"><PackageIcon class="h-3 w-3" /></span>
-                <span v-else-if="order.statut === 'annulee'"><XIcon class="h-3 w-3 primary-color" /></span> -->
+                <component :is="getStatusIcon(selectedOrder.statut)" class="h-3 w-3" />
                 {{ getStatusLabel(selectedOrder.statut) }}
               </span>
             </div>
@@ -1150,7 +1139,7 @@ const getConfirmationMessage = () => {
 
 const getConfirmationIcon = () => {
   switch (confirmationAction.value) {
-    default: return ''
+    default: return 'CheckCircle2Icon'
   }
 }
 
@@ -1575,14 +1564,24 @@ const getStatusLabel = (status) => {
   }
   return labels[status] || status
 }
+const getStatusIcon = (status) => {
+    const icons = {
+      'en_attente': Clock,
+      'confirmee': CheckCircle,
+      'en_livraison': Truck,
+      'livree': PackageIcon,
+      'annulee': XIcon
+    }
+    return icons[status] 
+  }
 
 const getStatusClass = (status) => {
   const classes = {
     'en_attente': 'bg-yellow-100 text-yellow-800',
-    'confirmee': 'bg-blue-100 text-blue-800',
-    'en_livraison': 'bg-purple-100 text-purple-800',
-    'livree': 'bg-green-100 text-green-800',
-    'annulee': 'bg-red-100 text-red-800'
+    'confirmee': 'bg-green-100 success-color',
+    'en_livraison': 'bg-orange-100 blue-color',
+    'livree': 'bg-orange-100 primary-color',
+    'annulee': 'bg-red-100 error-color'
   }
   return classes[status] || 'bg-gray-100 text-gray-800'
 }
