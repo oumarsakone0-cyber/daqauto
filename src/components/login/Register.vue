@@ -104,24 +104,47 @@
           <form @submit.prevent="handleSubmit" class="space-y-6">
             <!-- Étape 1: Informations personnelles -->
             <div v-if="currentStep === 0" class="space-y-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
-             <div >
+              <label class="flex text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
+               <div v-if="registerData.pathPicture.length > 0" class="mb-4" >
+                  <div class="w-16 h-16 sm:w-18 sm:h-18  rounded-full flex items-center justify-center mx-auto mb-4 relative">
 
-              <input
-                  type="file"
-                  accept="image/*"
-                  v-modele="registerData.pathPicture"
-                  @change="onFileChange"
-                  id="profilePic"
-                 class="input-style"
-              />
-              <!-- <label for="profilePic" class="btn-degrade-orange m-3">
-                  Charger la Photo
-                </label> -->
+                    <div class="absolute flex items-center justify-center mx-auto">
+                          <img
+                            :src="registerData.pathPicture[0].preview"
+                            alt="Image de profil"
+                            class="w-16 h-16 sm:w-18 sm:h-18 object-cover rounded-full "
+                          >
+                        <XIcon
+                          @click="registerData.pathPicture = []"
+                          class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full p-1 cursor-pointer"
+                          title="Supprimer l'image"
+                        />
+                    </div>
+                  </div>
               </div>
+             <div v-else class="text-center">
+              <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <User class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400 cursor-pointer" @click="$refs.fileInput.click()"  />
+                </div>
+              </div>
+              <input
+                  ref="fileInput"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  @change="handleProfileImageUpload"
+                  class="hidden"
+                >
+                <button
+                  type="button"
+                  @click="$refs.fileInput.click()"
+                  class="flex items-center justify-center text-sm font-medium mx-auto mb-4 btn-degrade-orange h-10"
+                >
+                  Parcourir les fichiers
+                </button>
               <!-- Nom complet -->
               <div>
-                <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2">
+                <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2 mt-3">
                   Nom complet <span class="error-color">*</span>
                 </label>
                 <div class="relative">
@@ -570,6 +593,7 @@
   import { useRouter } from 'vue-router'
   import { usersApi } from '../../services/api.js'
   import countries from '/src/assets/countries.json'
+import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
   const router = useRouter()
   
@@ -597,7 +621,7 @@
   ]
   
   const registerData = reactive({
-    pathPicture:'',
+    pathPicture:[],
     fullName: '',
     email: '',
     phone: '',
@@ -715,6 +739,29 @@
   const goToLogin = () => {
     router.push('/login')
   }
+
+  //Function pour chnger la photo de profile
+  const handleProfileImageUpload = (event) => {
+  const files = Array.from(event.target.files)
+  const remainingSlots = 8 - registerData.pathPicture.length
+  
+  files.slice(0, remainingSlots).forEach(file => {
+    if (file.size <= 10 * 1024 * 1024) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        registerData.pathPicture= [{
+        file: file,
+        preview: e.target.result,
+        uploading: false,
+        uploadProgress: 0,
+        uploaded: false,
+        url: null
+      }]
+      }
+      reader.readAsDataURL(file)
+    }
+  })
+}
   
   // Fonction pour réinitialiser le mot de passe
   const handleForgotPassword = async () => {
