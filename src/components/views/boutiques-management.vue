@@ -205,7 +205,8 @@
                         </div>
                         <button 
                           @click="viewBoutiqueBoostDetails(boutique)"
-                          class="btn-outline h-10 w-30 mt-1  items-center justify-center"
+                          style="border-radius: 8px; margin-top:10px"
+                          class="btn-outline h-10 mt-1  items-center justify-center"
                         >
                           Voir détails
                         </button>
@@ -233,7 +234,7 @@
                           <button 
                             @click="viewBoutiqueBoostDetails(boutique)"
                             style="border-radius: 8px"
-                            class="btn-outline h-10 flex-1 text-2xl"
+                            class="btn-outline h-10 flex-1 "
                           >
                             Détails
                           </button>
