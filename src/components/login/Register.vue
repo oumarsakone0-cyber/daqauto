@@ -500,12 +500,13 @@
           <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
               Vous avez déjà un compte ?
-              <router-link
-                to="/login"
-                class="font-medium text-orange hover:text-orange-600"
+              <button
+                type="button"
+                @click="handleLogin"
+                class="bg-lightgray"
               >
                 Se connecter
-              </router-link>
+              </button>
             </p>
           </div>
         </div>
@@ -611,7 +612,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   const error = ref('')
   const successMessage = ref('')
   const forgotPasswordEmail = ref('')
-  let countryList = ref([''])
+  let countryList = ref([])
   
   
   const steps = [
@@ -646,6 +647,9 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
    
   // Computed properties
+   const handleLogin = () => {
+    router.push('/login')
+  }
   const passwordStrength = computed(() => {
     
     const password = registerData.password
@@ -700,13 +704,11 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
   // Methods
  const getCountryList=()=> {
-
   for (let index = 0; index < countries.length; index++) {
 
-     countryList= countries[index].name;
+     countryList.value.push(countries[index].name);
     
   }
-  console.log(countryList.value);
   return countries.map(c => c.name);
 }
 
