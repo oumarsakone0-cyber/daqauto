@@ -533,7 +533,7 @@
         <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center">
           <div class="flex gap-2 sm:gap-3 order-2 sm:order-1">
             <button
-              @click="$emit('edit', product)"
+              @click="editProduct(product)"
               class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3  text-white rounded-lg text-sm font-medium  transition-all active:scale-95 flex items-center justify-center btn-degrade-orange"
             >
               <EditIcon class="w-4 h-4 mr-2" />
@@ -782,6 +782,13 @@ const handleBackdropClick = (event) => {
     emit('close')
   }
 }
+
+const editProduct = (product)=>{
+  emit('close');
+  emit('edit', product);
+}
+
+
 
 const hasVehicleSpecs = computed(() => {
   return props.product && (

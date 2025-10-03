@@ -1105,12 +1105,14 @@
       :user-id="currentUser?.id"
       @close="showAddProductModal = false"
       @save="handleAddProduct"
+      
     />
 
     <ViewProductModal 
       v-if="showViewModal" 
       :product="selectedProduct"
       @close="showViewModal = false"
+      @edit="editProduct"
     />
 
     <EditProductModal 
