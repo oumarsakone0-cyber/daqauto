@@ -261,25 +261,25 @@
       id: 1,
       title: 'Confirmation de commande',
       preview: 'Votre commande a été confirmée...',
-      content: 'Bonjour,\n\nVotre commande #{orderNumber} a été confirmée et sera traitée dans les plus brefs délais.\n\nCordialement,\nL\'équipe Ali Adjamé'
+      content: 'Bonjour,\n\nVotre commande #{orderNumber} a été confirmée et sera traitée dans les plus brefs délais.\n\nCordialement,\nL\'équipe Daq Auto'
     },
     {
       id: 2,
       title: 'Suivi de livraison',
       preview: 'Votre colis est en route...',
-      content: 'Bonjour,\n\nVotre commande #{orderNumber} a été expédiée. Vous pouvez suivre votre colis avec le numéro de suivi : {trackingNumber}\n\nCordialement,\nL\'équipe Ali Adjamé'
+      content: 'Bonjour,\n\nVotre commande #{orderNumber} a été expédiée. Vous pouvez suivre votre colis avec le numéro de suivi : {trackingNumber}\n\nCordialement,\nL\'équipe Daq Auto'
     },
     {
       id: 3,
       title: 'Support technique',
       preview: 'Nous avons bien reçu votre demande...',
-      content: 'Bonjour,\n\nNous avons bien reçu votre demande de support. Notre équipe technique va examiner votre problème et vous répondra dans les 24h.\n\nCordialement,\nL\'équipe Ali Adjamé'
+      content: 'Bonjour,\n\nNous avons bien reçu votre demande de support. Notre équipe technique va examiner votre problème et vous répondra dans les 24h.\n\nCordialement,\nL\'équipe Daq Auto'
     },
     {
       id: 4,
       title: 'Promotion spéciale',
       preview: 'Offre exclusive pour vous...',
-      content: 'Bonjour,\n\nNous avons une offre spéciale rien que pour vous ! Profitez de -20% sur votre prochaine commande avec le code SPECIAL20.\n\nCordialement,\nL\'équipe Ali Adjamé'
+      content: 'Bonjour,\n\nNous avons une offre spéciale rien que pour vous ! Profitez de -20% sur votre prochaine commande avec le code SPECIAL20.\n\nCordialement,\nL\'équipe Daq Auto'
     }
   ]
   

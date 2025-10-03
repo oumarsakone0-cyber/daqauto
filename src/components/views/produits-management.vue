@@ -1843,7 +1843,7 @@ import {  CheckCircleIcon, ChevronDownIcon,  ClockIcon, DownloadIcon, FileTextIc
       // Add title and header
       doc.setFontSize(20)
       doc.setTextColor(246, 90, 17) // Orange color
-      doc.text('AliAdjamé - Gestion Admin des Produits', 20, 20)
+      doc.text('DaqAuto - Gestion Admin des Produits', 20, 20)
       
       // Add date
       doc.setFontSize(12)

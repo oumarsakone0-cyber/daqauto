@@ -1824,7 +1824,7 @@ const subscribeToPlan = async (planType) => {
       showPremiumModal.value = false
       
       // Afficher le modal de notification
-      premiumNotificationMessage.value = 'Votre demande d\'abonnement a été reçue. Un agent AliAdjame vous contactera sous 24h pour finaliser la souscription.'
+      premiumNotificationMessage.value = 'Votre demande d\'abonnement a été reçue. Un agent Daq Auto vous contactera sous 24h pour finaliser la souscription.'
       showPremiumNotificationModal.value = true
       
       await loadPremiumData()

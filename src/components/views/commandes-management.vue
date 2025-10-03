@@ -1374,7 +1374,7 @@ const exportToExcel = () => {
     // Générer le nom de fichier avec la date
     const now = new Date()
     const dateStr = now.toISOString().split('T')[0]
-    const filename = `Commandes_AliAdjame_${dateStr}.xlsx`
+    const filename = `Commandes_DaqAuto_${dateStr}.xlsx`
     
     // Sauvegarder le fichier
     XLSX.writeFile(wb, filename)
@@ -1408,7 +1408,7 @@ const exportToPDF = () => {
     doc.setTextColor(255, 255, 255)
     doc.setFontSize(18)
     doc.setFont('helvetica', 'bold')
-    doc.text('AliAdjamé - Export des Commandes', 15, 16)
+    doc.text('DaqAuto - Export des Commandes', 15, 16)
     
     // Date d'export
     doc.setFontSize(10)
@@ -1501,11 +1501,11 @@ const exportToPDF = () => {
     doc.setTextColor(...darkColor)
     doc.setFontSize(8)
     doc.setFont('helvetica', 'normal')
-    doc.text('AliAdjamé - Système de gestion des commandes', 15, 200)
+    doc.text('DaqAuto - Système de gestion des commandes', 15, 200)
     doc.text(`Page 1 - Généré le ${new Date().toLocaleDateString('fr-FR')}`, 200, 200)
     
     // Sauvegarder le PDF
-    doc.save(`Commandes_AliAdjame_${new Date().toISOString().split('T')[0]}.pdf`)
+    doc.save(`Commandes_DaqAuto_${new Date().toISOString().split('T')[0]}.pdf`)
     
     showNotificationMessage('success', 'Export PDF réussi', `PDF généré avec ${Math.min(filteredOrders.value.length, 50)} commandes`)
     
@@ -1871,9 +1871,9 @@ const generateReceiptPDF = (order) => {
     // Sous-titre élégant
     doc.setFontSize(8)
     doc.setFont('helvetica', 'normal')
-    doc.text('AliAdjamé - Marketplace Premium', 28, 18)
+    doc.text('Daq Auto - Marketplace Premium', 28, 18)
     doc.text('📞 +225 01 53 67 60 62', 28, 23)
-    doc.text('✉️ commandes@aliadjame.com', 28, 28)
+    doc.text('✉️ commandes@daqauto.com', 28, 28)
     
     // Ligne décorative
     doc.setDrawColor(...accentColor)
@@ -2061,7 +2061,7 @@ const generateReceiptPDF = (order) => {
     doc.line(5, 145, 100, 145)
     
     // Sauvegarder le PDF
-    doc.save(`Recu_AliAdjame_${order.numero_commande}.pdf`)
+    doc.save(`Recu_DaqAuto_${order.numero_commande}.pdf`)
     
     showNotificationMessage('success', 'Reçu généré', `Le reçu stylé pour la commande ${order.numero_commande} a été téléchargé`)
     
