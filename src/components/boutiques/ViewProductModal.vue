@@ -1,16 +1,15 @@
 <template>
   <!-- Overlay avec arrière-plan sombre -->
   <div 
-    class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-0 sm:p-4"
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
     @click="handleBackdropClick"
   >
     <div 
-      class="bg-white w-full h-screen sm:h-auto sm:max-h-[95vh] sm:max-w-5xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out"
+      class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
       @click.stop
     >
       <!-- Animation de fond luxueuse -->
-      <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl">
-        <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
+      <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl " style="background-color: #ffffff00;">
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
       </div>

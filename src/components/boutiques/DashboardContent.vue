@@ -60,11 +60,11 @@
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 ">
               <div role="menu">
-                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem" >
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 btn-gray" role="menuitem" >
                   <FileTextIcon class="w-4 h-4 mr-2 error-color" />
                   Exporter en PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-degrade-orange" role="menuitem">
+                <button @click="exportToExcel" class="flex items-center text-sm btn-gray" role="menuitem">
                   <FileTextIcon class="w-4 h-4 mr-1 green-color" />
                   Exporter en Excel
                 </button>
@@ -173,7 +173,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center justify-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-200 to-orange-300 rounded-lg flex items-center justify-center">
-                <CalendarIcon class="w-5 h-5 sm:w-6 sm:h-6 text-orange-700" />
+                <CalendarIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
             </div>
             <p class="text-xs sm:text-sm text-gray-600 text-center mb-2 sm:mb-3">Période</p>
@@ -182,7 +182,7 @@
               @change="updateStats"
               class="input-style"
             >
-              <option value="all">Tout</option>
+              <option value="all">Toutes</option>
               <option value="today">Aujourd'hui</option>
               <option value="week">Cette semaine</option>
               <option value="month">Ce mois</option>
@@ -195,7 +195,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-blue-200 to-blue-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <PackageIcon class="w-5 h-5 sm:w-6 sm:h-6 text-blue-700" />
+                <PackageIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Total Produits</p>
@@ -219,7 +219,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <CheckCircleIcon class="w-5 h-5 sm:w-6 sm:h-6 text-green-700" />
+                <CheckCircleIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Produits Actifs</p>
@@ -243,7 +243,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-200 to-orange-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <WarehouseIcon class="w-5 h-5 sm:w-6 sm:h-6 text-orange-700" />
+                <WarehouseIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Stock Total</p>
@@ -253,10 +253,10 @@
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
                 <span class="truncate">
-                  <span class="text-red-600">Rupture: {{ detailedStats.outOfStock }}</span> | 
+                  <span class="error-color">Rupture: {{ detailedStats.outOfStock }}</span> | 
                   <span class="text-yellow-600">Faible: {{ detailedStats.lowStock }}</span>
                 </span>
-                <span :class="detailedStats.outOfStock > 0 ? 'text-red-600' : detailedStats.lowStock > 0 ? 'text-yellow-600' : 'text-green-600'" class="flex-shrink-0">
+                <span :class="detailedStats.outOfStock > 0 ? 'error-color' : detailedStats.lowStock > 0 ? 'text-yellow-600' : 'text-green-600'" class="flex-shrink-0">
                   {{ detailedStats.outOfStock > 0 ? 'Attention' : detailedStats.lowStock > 0 ? 'Surveiller' : 'Bon' }}
                 </span>
               </div>
@@ -276,7 +276,7 @@
           <div class="px-4 sm:px-6 py-4 sm:py-6">
             <div class="flex items-center mb-3 sm:mb-4">
               <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <EyeIcon class="w-5 h-5 sm:w-6 sm:h-6 text-purple-700" />
+                <EyeIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
                 <p class="text-xs sm:text-sm text-gray-600">Vues Totales</p>
@@ -561,7 +561,7 @@
                 :class="[
                   'relative inline-flex items-center px-2 sm:px-4 py-1.5 sm:py-2 border text-xs sm:text-sm font-medium rounded-lg transition-colors',
                   currentPage === page 
-                    ? 'z-10 bg-gradient-to-r from-orange-500 to-orange-600 border-orange-500 text-white' 
+                    ? 'bg-orange' 
                     : 'bg-white border-gray-300 text-gray-500 hover:bg-gray-50'
                 ]"
               >
@@ -588,17 +588,15 @@
         <div class="p-6 border-b border-gray-200">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-lg flex items-center justify-center">
+              <div class="w-12 h-12 bg-orange rounded-lg flex items-center justify-center">
                 <CrownIcon class="w-6 h-6 text-white" />
               </div>
               <div>
                 <h2 class="text-2xl font-bold text-gray-900">Plans Premium</h2>
-                <p class="text-gray-600">Choisissez le plan qui correspond à vos besoins pour {{ currentBoutique?.name || 'votre boutique' }}</p>
+                <p class="text-gray-600">Choisissez le plan qui correspond à vos besoins pour <span class="font-bold text-gray-800">{{ currentBoutique?.name || 'votre boutique' }}</span> </p>
               </div>
             </div>
-            <button @click="showPremiumModal = false" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
-              <XIcon class="w-5 h-5 text-gray-500" />
-            </button>
+              <XIcon @click="showPremiumModal = false" class="w-7 h-7 text-gray-700 cursor-pointer" />
           </div>
         </div>
 
@@ -641,15 +639,15 @@
                 
                 <ul class="space-y-3 mb-6 text-sm text-gray-600">
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-blue-500 mr-2" />
                     Jusqu'à 15 produits
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-blue-500 mr-2" />
                     Gestion des produits
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-blue-500 mr-2" />
                     Support par email
                   </li>
                 </ul>
@@ -665,18 +663,18 @@
             </div>
 
             <!-- Plan Business -->
-            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-300 hover:border-orange-400 transition-all relative">
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-300 hover:border-green-400 transition-all relative">
               <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1 rounded-full text-xs font-medium">
+                <span class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-1 rounded-full text-xs font-medium">
                   Populaire
                 </span>
               </div>
               <div class="text-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-orange-500 to-orange-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <WarehouseIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Boutique Moyenne</h3>
-                <div class="text-3xl font-bold text-orange-600 mb-1">5 000 FCFA</div>
+                <div class="text-3xl font-bold text-green-500 mb-1">5 000 FCFA</div>
                 <div class="text-sm text-gray-600 mb-4">Abonnement Année</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">50 produits</div>
                 
@@ -702,7 +700,7 @@
                 <button 
                   @click="subscribeToPlan('business')" 
                   :disabled="premiumLoading"
-                  class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50"
+                  class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 submit-btn h-11"
                 >
                   {{ premiumLoading ? 'Traitement...' : 'Choisir ce plan' }}
                 </button>
@@ -710,31 +708,31 @@
             </div>
 
             <!-- Plan Enterprise -->
-            <div class="bg-gradient-to-br from-purple-50 to-purple-100 rounded-xl p-6 border-2 border-purple-200 hover:border-purple-300 transition-all">
+            <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-200 hover:border-orange-300 transition-all">
               <div class="text-center">
-                <div class="w-16 h-16 bg-gradient-to-br from-purple-500 to-purple-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                <div class="w-16 h-16 bg-orange rounded-full flex items-center justify-center mx-auto mb-4">
                   <CrownIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Grande Boutique</h3>
-                <div class="text-3xl font-bold text-purple-600 mb-1">10 000 FCFA</div>
+                <div class="text-3xl font-bold primary-color mb-1">10 000 FCFA</div>
                 <div class="text-sm text-gray-600 mb-4">Abonnement Année</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">120 produits</div>
                 
                 <ul class="space-y-3 mb-6 text-sm text-gray-600">
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
                     Jusqu'à 120 produits
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
                     Toutes les fonctionnalités
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
                     Rapport journalier
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
                     Support 24/7
                   </li>
                 </ul>
@@ -742,7 +740,7 @@
                 <button 
                   @click="subscribeToPlan('enterprise')" 
                   :disabled="premiumLoading"
-                  class="w-full bg-gradient-to-r from-purple-500 to-purple-600 text-white py-3 rounded-lg font-medium hover:from-purple-600 hover:to-purple-700 transition-all disabled:opacity-50"
+                  class="w-full py-3 rounded-lg font-medium  transition-all disabled:opacity-50 btn-degrade-orange h-11"
                 >
                   {{ premiumLoading ? 'Traitement...' : 'Choisir ce plan' }}
                 </button>
@@ -786,17 +784,15 @@
         <div class="p-6 border-b border-gray-200">
           <div class="flex items-center justify-between">
             <div class="flex items-center space-x-3">
-              <div class="w-12 h-12 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-lg flex items-center justify-center">
-                <ZapIcon class="w-6 h-6 text-yellow-900" />
+              <div class="w-12 h-12 bg-orange rounded-lg flex items-center justify-center">
+                <ZapIcon class="w-6 h-6 text-white" />
               </div>
               <div>
                 <h2 class="text-2xl font-bold text-gray-900">Booster le produit</h2>
                 <p class="text-gray-600">{{ selectedProductForBoost?.name }}</p>
               </div>
             </div>
-            <button @click="closeBoostModal" class="w-10 h-10 rounded-lg bg-gray-100 hover:bg-gray-200 flex items-center justify-center transition-colors">
-              <XIcon class="w-5 h-5 text-gray-500" />
-            </button>
+              <XIcon @click="closeBoostModal" class="w-7 h-7 text-gray-700 cursor-pointer" />
           </div>
         </div>
 
@@ -806,12 +802,12 @@
             <h3 class="text-lg font-semibold text-gray-900 mb-4">Choisissez votre formule de boost</h3>
             
             <!-- Option Boost Standard -->
-            <div class="bg-gradient-to-br from-yellow-50 to-yellow-100 rounded-xl p-6 border-2 border-yellow-200 hover:border-yellow-300 transition-all cursor-pointer" @click="selectBoostOption('basic')">
+            <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200 hover:border-green-300 transition-all cursor-pointer" @click="selectBoostOption('basic')">
               <div class="flex items-center justify-between">
                 <div class="flex-1">
                   <div class="flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-yellow-400 to-yellow-500 rounded-lg flex items-center justify-center">
-                      <TrendingUpIcon class="w-5 h-5 text-yellow-900" />
+                    <div class="w-10 h-10 bg-gradient-to-br from-green-400 to-green-500 rounded-lg flex items-center justify-center">
+                      <TrendingUpIcon class="w-5 h-5 text-white" />
                     </div>
                     <div>
                       <h3 class="text-lg font-bold text-gray-900">Boost Basic</h3>
@@ -834,7 +830,7 @@
                   </ul>
                 </div>
                 <div class="text-right">
-                  <div class="text-2xl font-bold text-yellow-600">1 000 FCFA</div>
+                  <div class="text-2xl font-bold text-green-600">1 000 FCFA</div>
                   <div class="text-sm text-gray-500">par semaine</div>
                 </div>
               </div>
@@ -843,14 +839,14 @@
             <!-- Option Boost Premium -->
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-200 hover:border-orange-300 transition-all cursor-pointer relative" @click="selectBoostOption('premium')">
               <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                <span class="bg-gradient-to-r from-orange-500 to-orange-600 text-white px-4 py-1 rounded-full text-xs font-medium">
+                <span class="bg-orange text-white px-4 py-1 rounded-full text-xs font-medium">
                   Recommandé
                 </span>
               </div>
               <div class="flex items-center justify-between">
                 <div class="flex-1">
                   <div class="flex items-center space-x-3 mb-3">
-                    <div class="w-10 h-10 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
+                    <div class="w-10 h-10 bg-orange rounded-lg flex items-center justify-center">
                       <RocketIcon class="w-5 h-5 text-white" />
                     </div>
                     <div>
@@ -860,25 +856,25 @@
                   </div>
                   <ul class="space-y-2 text-sm text-gray-600 mb-4">
                     <li class="flex items-center">
-                      <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                      <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                       Produit en première position
                     </li>
                     <li class="flex items-center">
-                      <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                      <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                       Affichage page d'accueil
                     </li>
                     <li class="flex items-center">
-                      <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                      <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                       Publicité réseaux sociaux
                     </li>
                     <li class="flex items-center">
-                      <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
+                      <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                       Badge "Produit Vedette"
                     </li>
                   </ul>
                 </div>
                 <div class="text-right">
-                  <div class="text-2xl font-bold text-orange-600">2 500 FCFA</div>
+                  <div class="text-2xl font-bold primary-color">2 500 FCFA</div>
                   <div class="text-sm text-gray-500">par semaine</div>
                 </div>
               </div>
@@ -891,8 +887,8 @@
             <div class="bg-gray-50 rounded-lg p-4 border border-gray-200">
               <div class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
-                  <div :class="selectedBoostOption === 'basic' ? 'bg-gradient-to-br from-yellow-400 to-yellow-500' : 'bg-gradient-to-br from-orange-500 to-orange-600'" class="w-10 h-10 rounded-lg flex items-center justify-center">
-                    <component :is="selectedBoostOption === 'basic' ? TrendingUpIcon : RocketIcon" class="w-5 h-5" :class="selectedBoostOption === 'basic' ? 'text-yellow-900' : 'text-white'" />
+                  <div :class="selectedBoostOption === 'basic' ? 'bg-gradient-to-br from-green-400 to-green-500' : 'bg-orange'" class="w-10 h-10 rounded-lg flex items-center justify-center">
+                    <component :is="selectedBoostOption === 'basic' ? TrendingUpIcon : RocketIcon" class="w-5 h-5 text-white"  />
                   </div>
                   <div>
                     <h4 class="font-semibold text-gray-900">
@@ -903,7 +899,7 @@
                     </p>
                   </div>
                 </div>
-                <button @click="resetBoostSelection" class="text-sm text-orange-600 hover:text-orange-700 font-medium">
+                <button @click="resetBoostSelection" class="btn-outline h-11" style="border-radius: 8px;  ">
                   Changer
                 </button>
               </div>
@@ -922,14 +918,14 @@
                     :key="duration.weeks"
                     @click="selectDuration(duration.weeks)"
                     :class="[
-                      'p-3 rounded-lg border-2 text-center transition-all',
+                      'h-15',
                       selectedDuration === duration.weeks 
-                        ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                        : 'border-gray-200 hover:border-gray-300'
+                        ? 'btn-degrade-orange' 
+                        : 'btn-gray'
                     ]"
                   >
                     <div class="font-semibold">{{ duration.weeks }} semaine{{ duration.weeks > 1 ? 's' : '' }}</div>
-                    <div class="text-sm text-gray-600">{{ formatPrice(duration.price) }}</div>
+                    <div class="text-sm text-gray-800">{{ formatPrice(duration.price) }}</div>
                   </button>
                 </div>
               </div>
@@ -940,9 +936,9 @@
                 <input 
                   id="start-date"
                   v-model="boostStartDate"
-                  type="date" 
+                  type="date"
                   :min="minStartDate"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-orange-500"
+                  class="input-style"
                   @change="updateEndDate"
                 >
               </div>
@@ -970,7 +966,7 @@
                     </p>
                   </div>
                   <div class="text-right">
-                    <div class="text-2xl font-bold text-blue-600">{{ formatPrice(totalCost) }}</div>
+                    <div class="text-2xl font-bold primary-color">{{ formatPrice(totalCost) }}</div>
                     <div class="text-sm text-gray-500">{{ formatPrice(weeklyPrice) }} / semaine</div>
                   </div>
                 </div>
@@ -979,10 +975,10 @@
 
             <!-- Boutons d'action -->
             <div class="flex space-x-3 pt-4">
-              <button @click="resetBoostSelection" class="flex-1 px-4 py-3 border border-gray-300 rounded-lg text-gray-700 font-medium hover:bg-gray-50 transition-colors">
+              <button @click="resetBoostSelection" class="flex-1 btn-gray">
                 Retour
               </button>
-              <button @click="proceedToPayment" :disabled="!isConfigurationValid || boostLoading" class="flex-1 px-4 py-3 bg-gradient-to-r from-green-500 to-green-600 text-white font-medium rounded-lg hover:from-green-600 hover:to-green-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed">
+              <button @click="proceedToPayment" :disabled="!isConfigurationValid || boostLoading" class="flex-1 submit-btn">
                 {{ boostLoading ? 'Traitement...' : 'Valider la demande' }}
               </button>
             </div>
@@ -1028,7 +1024,7 @@
             <!-- Bouton de fermeture -->
             <button 
               @click="closePremiumNotificationModal"
-              class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all"
+              class="btn-degrade-orange w-full h-11"
             >
               Compris, merci !
             </button>
@@ -1093,7 +1089,7 @@
             <!-- Bouton de fermeture -->
             <button 
               @click="closeBoostNotificationModal"
-              class="w-full bg-gradient-to-r from-orange-500 to-orange-600 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all"
+              class="w-full bg-orange text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all"
             >
               Compris, merci !
             </button>

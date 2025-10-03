@@ -10,7 +10,6 @@
     >
        <!-- Animation de fond luxueuse  -->
       <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl">
-        <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
       </div>

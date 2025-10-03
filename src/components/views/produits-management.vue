@@ -46,9 +46,9 @@
           </div>
           
           <!-- Actions mobiles optimisées -->
-          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
+          <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3" >
             <!-- Export dropdown -->
-            <div class="relative">
+            <div class="relative" >
               <button 
                 @click="showExportDropdown = !showExportDropdown"
                 class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-sm font-medium btn-degrade-orange"
@@ -61,11 +61,11 @@
                 <div class="py-1" role="menu">
                 </div>
                 <div  role="menu">
-                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2   btn-gray" role="menuitem">
                    <FileTextIcon   class="w-4 h-4 mr-2 error-color" />
                   Exporter en PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
+                <button @click="exportToExcel" class="flex items-center text-sm  btn-gray" role="menuitem">
                   <FileTextIcon class="w-4 h-4 mr-1 green-color" />
                   Exporter en Excel
                 </button>
