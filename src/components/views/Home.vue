@@ -123,42 +123,20 @@
   
     <!-- Navigation Bottom Mobile -->
     <nav class="mobile-bottom-nav mobile-only">
-      <div class="nav-item active">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V6l-3-4z"/>
-          <polyline points="9,22 9,12 15,12 15,22"/>
-        </svg>
-        <span>Accueil</span>
-      </div>
-      <div class="nav-item">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <circle cx="11" cy="11" r="8"/>
-          <path d="M21 21l-4.35-4.35"/>
-        </svg>
-        <span>Recherche</span>
-      </div>
-      <div class="nav-item">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M6 2L3 6v14a2 2 0 0 0-2 2H5a2 2 0 0 0-2-2V6l-3-4z"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <path d="M16 10a4 4 0 0 1-8 0"/>
-        </svg>
-        <span>Panier</span>
-        <span class="cart-badge bg-orange">2</span>
-      </div>
-      <div class="nav-item">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-        </svg>
-        <span>Messages</span>
-      </div>
-      <div class="nav-item">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-          <circle cx="12" cy="7" r="4"/>
-        </svg>
-        <span>Profil</span>
-      </div>
+       <div
+          v-for="(tab, index) in navTabs"
+          :key="tab.label"
+          :class="['nav-item cursor-pointer', { active: activeTab === index }]"
+          @click="handleNavClick(index)"
+        >
+        <component :is="tab.icon" class="h-6 w-6 " />
+            
+            <!-- Place ici ton SVG selon tab.icon ou garde les SVG existants -->
+            <span>{{ tab.label }}</span>
+            <!-- Exemple pour le badge du panier -->
+            <span v-if="tab.label === 'Panier'" class="cart-badge bg-orange">2</span>
+        </div>
+      
     </nav>
   
     <!-- Bouton Flottant Mobile 
@@ -218,6 +196,7 @@ import RecommendedProductsSection from '../home/RecommendedProductsSection.vue'
 // Chat
 import ChatModal from '../product/modals/ChatModal2.vue'
 import ChatWindow from '../product/modals/ChatWindow.vue' // Composant desktop
+import {  HomeIcon, MessageSquareText, SearchIcon, ShoppingCartIcon, User } from 'lucide-vue-next'
 
 // État du chat
 const isChatModalOpen = ref(false)
@@ -267,6 +246,10 @@ const handleSendMessage = (message) => {
 }
   // Router pour la navigation
   const router = useRouter()
+
+
+  // Onglet actif (index)
+const activeTab = ref(0)
   
   // États pour les catégories
   const categories = ref([])
@@ -293,6 +276,19 @@ const handleSendMessage = (message) => {
   const slideWidth = ref(220)
   const visibleSlides = ref(6)
   
+
+  // Liste des onglets de navigation
+const navTabs = [
+  { label: 'Accueil', route: '/', icon: HomeIcon },
+  { label: 'Recherche', route: '/search', icon: SearchIcon },
+  { label: 'Panier', route: '/cart', icon: ShoppingCartIcon },
+  { label: 'Messages', route: '/messages', icon: MessageSquareText },
+  { label: 'Profil', route: '/profile', icon: User }
+]
+
+
+
+
   // Avantages
   const benefits = ref([
   {
@@ -467,6 +463,12 @@ const handleSendMessage = (message) => {
       description: '30 jours pour changer d\'avis'
     }
   ])
+
+  // Fonction pour changer d’onglet et naviguer
+function handleNavClick(index) {
+  activeTab.value = index
+  router.push(navTabs[index].route)
+}
   
   // Méthodes pour la navigation des images
   const nextImage = (productIndex) => {
