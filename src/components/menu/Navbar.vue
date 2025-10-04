@@ -427,7 +427,8 @@
           <input 
             type="text" 
             placeholder="Trouvez tout ce que vous cherchez..." 
-            class="mobile-search-input"
+            
+            class="input-style"
             v-model="searchQuery"
             @input="handleSearchInput"
             ref="mobileSearchInput"

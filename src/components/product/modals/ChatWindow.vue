@@ -23,8 +23,7 @@
   >
 
     <div
-      class="flex items-center justify-between px-4 py-3 text-white relative overflow-hidden"
-      style="background: linear-gradient(160deg, #0c0c0c, #fc4618, #0c0c0c)"
+      class="flex items-center justify-between px-4 py-3 text-white relative overflow-hidden bg-degrade-orange"
     >
 
       <div class="absolute inset-0 opacity-10">
@@ -60,10 +59,8 @@
         @click="toggleChat"
         class="relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
-          <line x1="18" y1="6" x2="6" y2="18"/>
-          <line x1="6" y1="6" x2="18" y2="18"/>
-        </svg>
+      <XIcon class="h-7 w-7 text-white"/>
+        
       </button>
     </div>
 
@@ -218,6 +215,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useChatStore } from '../../../stores/chat'
+import { X, XIcon } from 'lucide-vue-next'
 
 interface Product {
   name: string

@@ -196,9 +196,11 @@ import RecommendedProductsSection from '../home/RecommendedProductsSection.vue'
 // Chat
 import ChatModal from '../product/modals/ChatModal2.vue'
 import ChatWindow from '../product/modals/ChatWindow.vue' // Composant desktop
+import { useChatStore } from '../../stores/chat'
 import {  HomeIcon, MessageSquareText, SearchIcon, ShoppingCartIcon, User } from 'lucide-vue-next'
 
 // État du chat
+const chat = useChatStore()
 const isChatModalOpen = ref(false)
 const isDesktopChatOpen = ref(false)
 const chatMessages = ref([
@@ -282,7 +284,7 @@ const navTabs = [
   { label: 'Accueil', route: '/', icon: HomeIcon },
   { label: 'Recherche', route: '/search', icon: SearchIcon },
   { label: 'Panier', route: '/cart', icon: ShoppingCartIcon },
-  { label: 'Messages', route: '/messages', icon: MessageSquareText },
+  { label: 'Messages', route: chat, icon: MessageSquareText },
   { label: 'Profil', route: '/profile', icon: User }
 ]
 
@@ -467,6 +469,10 @@ const navTabs = [
   // Fonction pour changer d’onglet et naviguer
 function handleNavClick(index) {
   activeTab.value = index
+  if (navTabs[index].label === 'Messages') {
+    chat.openChat()
+    return
+  }
   router.push(navTabs[index].route)
 }
   
