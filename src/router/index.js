@@ -158,7 +158,7 @@ const routes = [
       hideNavigation: true,
     },
   },
-
+ 
   //POUR LES BOUTIQUES
   {
     path: "/boutique-admin/login",

@@ -5,7 +5,7 @@
       
       <div class="bg-gray-900 text-white text-sm py-2">
         <div class="container mx-auto px-4 flex justify-between items-center">
-          <span class="hidden sm:block">We're offering free shipping on all orders over $50!</span>
+          <span class="hidden sm:block">We're offering free shipping on all orders over $50! </span>
           <span class="sm:hidden">Free shipping over $50!</span>
           <div class="flex items-center gap-4 text-sm">
             <span class="hidden md:block">English</span>
@@ -189,13 +189,15 @@
               <span>Se connecter / S'inscrire</span>
               <span>Mon Dashboard</span>
             </div> -->
-            <div class="user-account" @click="goToAuthentication">
+            <div class="user-account">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
-              <span>Se connecter / S'inscrire</span>
-              <span>Mon Dashboard</span>
+              <span v-if="currentUser && currentUser.email">
+                 {{ currentUser.full_name }}
+              </span>
+              <span @click="goToAuthentication" v-else>Se connecter / S'inscrire</span>
             </div>
             
             <div class="cart">
@@ -370,7 +372,7 @@
           <a href="#" class="nav-item">Suivre une commande</a>
           <a href="#" class="nav-item">Faire une réclamation</a>
           <a href="#" class="nav-item">Vendre sur Daq Auto</a>
-          <a href="#" class="nav-item">Comment avoir plus de clients</a>
+          <a href="/boutique-admin/login" class="nav-item">Espace Fournisseur</a>
         </nav>
       </div>
     </div>
@@ -791,6 +793,7 @@ const mobileMenuLevel = ref(1)
 const selectedMobileCategory = ref(null)
 const selectedMobileSubcategory = ref(null)
 const mobileSearchInput = ref(null)
+const currentUser = ref(null)
 
 // Recherches récentes et populaires pour mobile
 const recentSearches = ref(['iPhone 15', 'Écouteurs sans fil', 'Montre connectée'])
@@ -1558,6 +1561,14 @@ onMounted(async () => {
   loadCache()
   
   const savedLang = localStorage.getItem('preferred-language')
+  const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+  const user = JSON.parse(userData)
+  currentUser.value = {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      boutiques: user.boutiques || []
+    }
   const savedSelectedLang = localStorage.getItem('selected-language')
   
   if (savedSelectedLang) {

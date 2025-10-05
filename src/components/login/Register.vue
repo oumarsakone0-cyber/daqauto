@@ -228,9 +228,9 @@
               </div>
             </div>
   
-            <!-- Étape 2: Informations du magasin -->
+            <!-- Étape 2: Informations du magasin 
             <div v-if="currentStep === 1" class="space-y-4">
-              <!-- Nom du magasin -->
+              <!-- Nom du magasin 
               <div>
                 <label for="companyName" class="block text-sm font-medium text-gray-700 mb-2">
                   Nom de votre entreprise <span class="error-color">*</span>
@@ -258,7 +258,7 @@
                 </div>
               </div>
   
-              <!-- Pays -->
+              <!-- Pays 
               <div>
                 <label for="country" class="block text-sm font-medium text-gray-700 mb-2">
                   Votre Pays <span class="error-color">*</span>
@@ -283,7 +283,7 @@
                 </div>
               </div>
   
-              <!-- Ville -->
+              <!-- Ville 
               <div>
                 <label for="city" class="block text-sm font-medium text-gray-700 mb-2">
                   Votre Ville
@@ -303,9 +303,10 @@
                 </div>
               </div>
             </div>
+             -->
   
             <!-- Étape 3: Sécurité et finalisation -->
-            <div v-if="currentStep === 2" class="space-y-4">
+            <div v-if="currentStep === 1" class="space-y-4">
               <!-- Mot de passe -->
               <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
@@ -442,17 +443,6 @@
               </div>
   
               <!-- Résumé du compte -->
-              <div class="bg-gray-50 rounded-lg p-4 mt-6">
-                <h4 class="font-medium text-gray-900 mb-2">Résumé de votre compte</h4>
-                <div class="text-sm text-gray-600 space-y-1">
-                  <p><strong>Nom:</strong> {{ registerData.fullName || 'Non défini' }}</p>
-                  <p><strong>Email:</strong> {{ registerData.email || 'Non défini' }}</p>
-                  <p><strong>Téléphone:</strong> {{ registerData.phone || 'Non défini' }}</p>
-                  <p><strong>Entreprise:</strong> {{ registerData.companyName || 'Non défini' }}</p>
-                  <p><strong>Pays:</strong> {{ registerData.country || 'Non défini' }}</p>
-                  <p><strong>Ville:</strong> {{ registerData.city ? (registerData.city.length > 50 ? registerData.city.substring(0, 50) + '...' : registerData.city) : 'Non définie' }}</p>
-                </div>
-              </div>
             </div>
   
             <!-- Navigation Buttons -->
@@ -617,7 +607,6 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
   const steps = [
     { title: 'Informations personnelles' },
-    { title: 'Informations sur l\'entreprise' },
     { title: 'Sécurité et finalisation' }
   ]
   
@@ -721,7 +710,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
       isCheckingEmail.value = true
       
       // Appel à l'API pour vérifier l'email
-      const response = await usersApi.checkEmail(email);
+      const response = await usersApi.checkEmail2(email);
       return response.data.exists;
       
     } catch (err) {
@@ -795,6 +784,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
   // Fonction pour soumettre le formulaire d'inscription
   const handleSubmit = async () => {
+    console.log('lala')
     if (!validateCurrentStep()) return
     
     try {
@@ -807,16 +797,11 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
         email: registerData.email,
         phone: registerData.phone,
         password: registerData.password,
-        store_name: registerData.companyName,
-        business_type: registerData.country,
-        market: registerData.market,
-        store_address: registerData.city,
-        store_description: '',
-        accept_marketing: registerData.acceptMarketing
+        pays: 'aucun'
       }
       
       // Appel à l'API pour créer le compte
-      const response = await usersApi.register(userData);
+      const response = await usersApi.register_client(userData);
       
       successMessage.value = response.message || 'Compte créé avec succès ! Redirection vers la connexion...'
       
@@ -863,18 +848,6 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
         isValid = false
       }
     } else if (currentStep.value === 1) {
-      // Validation étape 2
-      if (!registerData.companyName.trim()) {
-        validationErrors.companyName = 'Le nom du magasin est requis'
-        isValid = false
-      }
-      
-      if (!registerData.country) {
-        validationErrors.country = 'Le type de commerce est requis'
-        isValid = false
-      }
-      
-    } else if (currentStep.value === 2) {
       // Validation étape 3
       if (!registerData.password) {
         validationErrors.password = 'Le mot de passe est requis'

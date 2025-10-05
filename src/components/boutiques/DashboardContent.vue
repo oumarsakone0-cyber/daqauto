@@ -1,7 +1,9 @@
 <template>
   <div class="min-h-screen bg-gray-50 relative overflow-hidden">
+    
     <!-- Animation de fond luxueuse avec couleurs plus intenses -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      
       <!-- Gradient animé principal -->
       <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
       
@@ -29,6 +31,7 @@
 
     <!-- Container responsive avec largeur adaptative -->
     <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+      <Navbar/>
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
         <router-link to="/" class="hover:text-gray-700">
@@ -1140,6 +1143,7 @@ import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { productsApi, premiumApi, boostApi } from '../../services/api'
 import { ElMessageBox, ElMessage } from 'element-plus'
 // Dans les imports
+import Navbar from './Navbar.vue'
 import AddProductModal from './AddProductModal.vue'
 import ViewProductModal from './ViewProductModal.vue'
 import EditProductModal from './EditProductModal.vue'

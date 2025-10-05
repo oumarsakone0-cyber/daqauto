@@ -342,7 +342,7 @@
         password: loginData.password
       }
   
-      const response = await usersApi.login(loginPayload)
+      const response = await usersApi.login_client(loginPayload)
       console.log('Réponse login API:', response)
   
       if (response.success) {
@@ -374,7 +374,7 @@
         })
   
         setTimeout(() => {
-            router.push('/boutique-admin/dashboard')
+            router.push('/')
         }, 1500)
   
       } else {

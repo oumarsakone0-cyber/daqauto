@@ -29,6 +29,7 @@
   
       <!-- Container responsive avec largeur adaptative -->
       <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+         <Navbar/>
         <!-- Breadcrumb -->
         <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
           <router-link to="/" class="hover:text-gray-700">
@@ -1199,6 +1200,7 @@
   </template>
   
   <script setup>
+  import Navbar from '../boutiques/Navbar.vue'
   import { ref, computed, onMounted } from 'vue'
   import * as XLSX from 'xlsx'
   import jsPDF from 'jspdf'

@@ -2,10 +2,11 @@
   <div class="bg-cream">
     <!-- Main Layout -->
     <div class="flex-1 flex flex-col">
-      <!-- Auto Translator - Position fixe en haut à droite -->
+      <!-- Auto Translator - Position fixe en haut à droite 
       <div class="fixed top-4 right-4 z-50">
         <AutoTranslator />
       </div>
+       -->
       <!-- Navbar -->
       <Navbar 
         v-if="!hideNavbar"

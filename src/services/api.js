@@ -1795,13 +1795,47 @@ export const usersApi = {
   },
 
   /**
+  * Vérifier si un email existe déjà
+   * @param {string} email - Email à vérifier
+   * @returns {Promise} Résultat de la vérification
+   */
+  async checkEmail2(email) {
+    try {
+      const response = await apiClient.get("/users.php", {
+        params: {
+          action: "check-client",
+          email,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw this.handleError(error, "Erreur lors de la vérification de l'email")
+    }
+  },
+
+  /**
+   * Enregistrer un nouvel utilisateur
+   * @param {Object} userData - Données de l'utilisateur
+   * @returns {Promise} Utilisateur créé
+   */ 
+  async register(userData) {
+    try {
+      const response = await apiClient.post("/users.php?action=register", userData)
+      return response.data
+    } catch (error) {
+      throw this.handleError(error, "Erreur lors de la création du compte")
+    }
+  },
+
+
+  /**
    * Enregistrer un nouvel utilisateur
    * @param {Object} userData - Données de l'utilisateur
    * @returns {Promise} Utilisateur créé
    */
-  async register(userData) {
+  async register_client(userData) {
     try {
-      const response = await apiClient.post("/users.php?action=register", userData)
+      const response = await apiClient.post("/users.php?action=register_client", userData)
       return response.data
     } catch (error) {
       throw this.handleError(error, "Erreur lors de la création du compte")
@@ -1816,6 +1850,27 @@ export const usersApi = {
   async login(loginData) {
     try {
       const response = await apiClient.post("/users.php?action=login", loginData)
+
+      // Sauvegarder le token et les données utilisateur si la connexion réussit
+      if (response.data.success && response.data.data?.token) {
+        localStorage.setItem("auth_token", response.data.data.token)
+        localStorage.setItem("user_data", JSON.stringify(response.data.data.user))
+      }
+
+      return response.data
+    } catch (error) {
+      throw this.handleError(error, "Erreur lors de la connexion")
+    }
+  },
+
+  /**
+   * Connecter un utilisateur
+   * @param {Object} loginData - Données de connexion
+   * @returns {Promise} Informations de l'utilisateur connecté
+   */
+  async login_client(loginData) {
+    try {
+      const response = await apiClient.post("/users.php?action=login_client", loginData)
 
       // Sauvegarder le token et les données utilisateur si la connexion réussit
       if (response.data.success && response.data.data?.token) {
