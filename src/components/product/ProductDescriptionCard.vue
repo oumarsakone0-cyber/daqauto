@@ -13,20 +13,11 @@
               {{ tab.label }}
             </button>
           </div>
-          
+         
           <div class="tab-content">
-            <!-- Onglet Description du produit -->
-            <div v-if="activeTab === 0" class="product-description">
-              <h2 class="section-title">Description du produit</h2>
-              
-              <div class="description-content">
-                <p>{{ product.description || 'Aucune description disponible.' }}</p>
-              </div>
-              
-            </div>
-            
-            <!-- Onglet Spécifications -->
-            <div v-if="activeTab === 1" class="product-specifications">
+             <!-- Onglet Spécifications -->
+           
+            <div v-if="activeTab === 0" class="product-specifications">
               <h2 class="section-title">Spécifications</h2>
               
               <div class="specifications-table">
@@ -75,7 +66,15 @@
                 </div>
               </div>
             </div>
-            
+            <!-- Onglet Description du produit -->
+            <div v-if="activeTab === 1" class="product-description">
+              <h2 class="section-title">Description du produit</h2>
+              
+              <div class="description-content">
+                <p>{{ product.description || 'Aucune description disponible.' }}</p>
+              </div>
+              
+            </div>
             <!-- Onglet Avis -->
             <div v-if="activeTab === 2" class="product-reviews">
               <h2 class="section-title">Avis clients</h2>
@@ -164,8 +163,9 @@
   const activeTab = ref(0)
   
   const productTabs = [
-    { label: "Détails du produit" },
     { label: "Spécifications" },
+    { label: "Autres Spécifications" },
+    
     { label: "Avis" }
   ]
   </script>
@@ -242,22 +242,9 @@
     margin-bottom: 24px;
   }
   
-  .description-images {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
-    gap: 16px;
-  }
   
-  .description-image {
-    width: 100%;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: transform 0.3s ease;
-  }
   
-  .description-image:hover {
-    transform: scale(1.05);
-  }
+  
   
   .specifications-table {
     display: flex;
