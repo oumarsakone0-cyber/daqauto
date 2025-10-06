@@ -1,8 +1,8 @@
 <template>
   <button
-    v-if="!isOpen"
+    v-if="!isOpen && !chatStore.isMobile"
     @click="toggleChat"
-    class="fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
+    class="fixed bottom-16 right-6 w-16 h-16 rounded-full shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
     style="background: linear-gradient(160deg, #fe9700, #fc4618)"
   >
     <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
@@ -21,28 +21,17 @@
     style="z-index: 1111;"
     class="fixed inset-0 md:inset-auto md:bottom-6 md:right-6 md:w-[700px] md:h-[600px] bg-white md:rounded-xl shadow-2xl z-50 flex flex-col overflow-hidden"
   >
-
     <div
       class="flex items-center justify-between px-4 py-3 text-white relative overflow-hidden bg-degrade-orange"
     >
-
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
       </div>
 
-
-      <button
-        @click="toggleSidebar"
-        class="md:hidden relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
-      >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <line x1="3" y1="12" x2="21" y2="12"/>
-          <line x1="3" y1="6" x2="21" y2="6"/>
-          <line x1="3" y1="18" x2="21" y2="18"/>
-        </svg>
-      </button>
-
-    
+      <div>
+        <MenuIcon class="md:hidden relative h-9 w-9 pr-2 cursor-pointer" @click="toggleSidebar" />
+      </div>
+      
       <div class="flex items-center gap-3 flex-1 relative z-10">
         <img
           :src="activeConversation.avatar"
@@ -54,15 +43,12 @@
           <span class="text-xs opacity-90">{{ activeConversation.status }}</span>
         </div>
       </div>
-
-      <button
-        @click="toggleChat"
-        class="relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
-      >
-      <XIcon class="h-7 w-7 text-white"/>
+      <div class="flex items-center justify-end flex-1 md:flex-none relative">
+        <XIcon class="h-7 w-7 text-white cursor-pointer" @click="toggleChat"/>
+      </div>
         
-      </button>
     </div>
+    
 
     <div class="flex flex-1 overflow-hidden">
 
@@ -72,25 +58,17 @@
           showSidebar ? 'translate-x-0' : '-translate-x-full md:translate-x-0'
         ]"
       >
-        <div class="md:hidden flex items-center justify-between p-4 border-b border-gray-200 bg-white">
-          <h2 class="font-semibold text-gray-800">Conversations</h2>
-          <button
-            @click="toggleSidebar"
-            class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <line x1="19" y1="12" x2="5" y2="12"/>
-              <polyline points="12 19 5 12 12 5"/>
-            </svg>
-          </button>
+        <div class="md:hidden flex items-center justify-between px-4 py-3 border-b border-gray-200 bg-degrade-orange">
+          <h2 class="font-semibold text-white">Conversations</h2>
+          <ChevronRightIcon class="h-7 w-7 text-white cursor-pointer" @click="toggleSidebar" />
         </div>
 
-        <div class="p-3 border-b border-gray-200 bg-white">
+        <div class="p-3 border-b border-gray-200 bg-white text-gray-400">
           <input
             v-model="searchQuery"
             type="text"
             placeholder="Rechercher..."
-            class="w-full px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
+            class="input-style h-8"
           />
         </div>
 
@@ -101,14 +79,14 @@
             @click="selectConversation(conv.id)"
             :class="[
               'flex items-center gap-3 p-3 cursor-pointer transition-colors border-b border-gray-100',
-              activeConversation.id === conv.id ? 'bg-orange-50' : 'hover:bg-gray-100'
+              activeConversation.id === conv.id ? 'bg-orange-100' : 'hover:bg-gray-100'
             ]"
           >
             <div class="relative">
               <img
                 :src="conv.avatar"
                 :alt="conv.name"
-                class="w-12 h-12 rounded-full object-cover"
+                class="w-7 h-7 rounded-full object-cover"
               />
               <span
                 v-if="conv.online"
@@ -155,10 +133,9 @@
                     <h4 class="font-semibold text-sm text-gray-800 mb-1">{{ message.product.name }}</h4>
                     <p class="text-xs text-gray-600 mb-2">{{ message.product.shop }}</p>
                     <div class="flex items-center justify-between">
-                      <span class="text-orange-600 font-bold text-base">{{ formatPrice(message.product.price) }}</span>
+                      <span class="primary-color font-bold text-base">{{ formatPrice(message.product.price) }}</span>
                       <div v-if="message.product.rating" class="flex items-center gap-1 text-xs">
-                        <span class="text-yellow-500">⭐</span>
-                        <span class="text-gray-600 font-medium">{{ message.product.rating }}</span>
+                        <span class="text-gray-600 font-medium">⭐ {{ message.product.rating }}</span>
                       </div>
                     </div>
                   </div>
@@ -192,18 +169,15 @@
               @keypress.enter="sendMessage"
               type="text"
               placeholder="Tapez votre message..."
-              class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
+              class="input-style"
             />
             <button
               @click="sendMessage"
               :disabled="!newMessage.trim()"
-              class="w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              style="background: linear-gradient(160deg, #fe9700, #fc4618)"
+              style="border-radius: 100%;"
+              class="h-13 rounded-full flex items-center justify-center transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed bg-orange"
             >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-                <line x1="22" y1="2" x2="11" y2="13"/>
-                <polygon points="22,2 15,22 11,13 2,9 22,2"/>
-              </svg>
+              <SendIcon class="w-5 h-5 text-white" />
             </button>
           </div>
         </div>
@@ -215,7 +189,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useChatStore } from '../../../stores/chat'
-import { X, XIcon } from 'lucide-vue-next'
+import { ChevronRightIcon, MenuIcon, SendIcon, XIcon } from 'lucide-vue-next'
 
 interface Product {
   name: string
@@ -368,7 +342,7 @@ const activeConversation = computed(() => {
 const filteredConversations = computed(() => {
   if (!searchQuery.value) return conversations.value
   return conversations.value.filter(c =>
-    c.name.toLowerCase().includes(searchQuery.value.toLowerCase())
+    c.name.toLowerCase().includes(searchQuery.value.toLowerCase()) 
   )
 })
 

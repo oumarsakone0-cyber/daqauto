@@ -138,46 +138,7 @@
         </div>
       
     </nav>
-  
-    <!-- Bouton Flottant Mobile 
-    <button 
-      class="floating-chat-btn mobile-only"
-      @click="openChatModal"
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-    </button>
-
-    <!-- Bouton Flottant Desktop 
-    <button 
-      class="floating-chat-btn-desktop desktop-only"
-      @click="toggleDesktopChat"
-    >
-      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
-        <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-      </svg>
-      <span class="chat-btn-text">Chat</span>
-    </button>
-
-    <!-- Modal mobile (existante) 
-    <ChatModal
-      v-if="isChatModalOpen"
-      :supplier="currentSupplier"
-      :chat-messages="chatMessages"
-      @close="closeChatModal"
-      @send-message="handleSendMessage"
-    />
-
-    <!-- Fenêtre de chat desktop 
-    <ChatWindow
-      :is-open="isDesktopChatOpen"
-      :supplier="currentSupplier"
-      :chat-messages="chatMessages"
-      @close="closeDesktopChat"
-      @send-message="handleSendMessage"
-    />
-    -->
+    
 
   </div>
 </template>
