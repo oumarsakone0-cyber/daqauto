@@ -23,16 +23,6 @@
                 <p>{{ product.description || 'Aucune description disponible.' }}</p>
               </div>
               
-              <div class="description-images" v-if="productImages.length > 1">
-                <img 
-                  v-for="(img, index) in productImages.slice(1)" 
-                  :key="index" 
-                  :src="img" 
-                  :alt="`Description ${index + 1}`" 
-                  class="description-image" 
-                  @click="$emit('openImageModal', index + 1)"
-                >
-              </div>
             </div>
             
             <!-- Onglet Spécifications -->
