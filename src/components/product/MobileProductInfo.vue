@@ -221,7 +221,7 @@
   }
   
   const formatFCFA = (montant) => {
-    return Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
+    return Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $US'
   }
   </script>
   

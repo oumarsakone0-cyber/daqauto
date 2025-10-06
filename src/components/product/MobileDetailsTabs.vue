@@ -13,15 +13,8 @@
       </div>
       
       <div class="tab-content">
-        <!-- Description -->
-        <div v-if="activeTab === 0" class="tab-panel">
-          <div class="description-content">
-            <p>{{ product.description || 'Aucune description disponible.' }}</p>
-          </div>
-        </div>
-        
         <!-- Spécifications -->
-        <div v-if="activeTab === 1" class="tab-panel">
+        <div v-if="activeTab === 0" class="tab-panel">
           <div class="specs-list">
             <div class="spec-item">
               <span class="spec-label">SKU:</span>
@@ -41,6 +34,14 @@
             </div>
           </div>
         </div>
+        <!-- Description -->
+        <div v-if="activeTab === 1" class="tab-panel">
+          <div class="description-content">
+            <p>{{ product.description || 'Aucune description disponible.' }}</p>
+          </div>
+        </div>
+        
+        
         
         <!-- Avis -->
         <div v-if="activeTab === 2" class="tab-panel">
@@ -62,49 +63,6 @@
           </div>
         </div>
         
-        <!-- Livraison -->
-        <div v-if="activeTab === 3" class="tab-panel">
-          <div class="shipping-info">
-            <div class="shipping-method">
-              <div class="method-header">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#fe7900"  stroke-width="2">
-                  <rect x="1" y="3" width="15" height="13"></rect>
-                  <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-                  <circle cx="5.5" cy="18.5" r="2.5"></circle>
-                  <circle cx="18.5" cy="18.5" r="2.5"></circle>
-                </svg>
-                <span>Livraison Abidjan</span>
-              </div>
-              <div class="method-details">
-                <div class="method-time">1-2 jours</div>
-                <div class="primary-color font-bold">1500 - 3000 FCFA</div>
-              </div>
-            </div>
-            
-            <div class="shipping-method">
-              <div class="method-header">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#Fe7900" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <polyline points="12 6 12 12 16 14"></polyline>
-                </svg>
-                <span>Livraison Intérieur</span>
-              </div>
-              <div class="method-details">
-                <div class="method-time">3-7 jours</div>
-                <div class="primary-color font-bold">3000 - 8000 FCFA</div>
-              </div>
-            </div>
-            
-            <div class="payment-methods">
-              <h4>Méthodes de paiement</h4>
-              <div class="payment-list">
-                <div class="payment-item">💰 Paiement à la livraison</div>
-                <div class="payment-item">📱 Mobile Money</div>
-                <div class="payment-item">🏦 Virement bancaire</div>
-              </div>
-            </div>
-          </div>
-        </div>
       </div>
     </div>
   </template>
@@ -124,10 +82,9 @@
   const activeTab = ref(0)
   
   const tabs = [
-    { label: "Description" },
     { label: "Spécifications" },
+    { label: "Description" },
     { label: "Avis" },
-    { label: "Livraison" }
   ]
   </script>
   

@@ -212,6 +212,7 @@
   
   .tab-button.active {
     color: #fe9700;
+    border: none;
     font-weight: 600;
   }
   
