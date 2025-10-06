@@ -338,7 +338,7 @@
                     :key="subcategory.id"
                     class="subcategory-column"
                   >
-                    <div class="subcategory-title" @click="navigateToSubcategory(subcategory)">{{ subcategory.name }}</div>
+                    <div class="subcategory-title" @click="navigateToSubcategory(subcategory)">{{getBeforeChar(subcategory.name, '→') }}</div>
                     <ul class="sub-subcategories-list">
                       <li 
                         v-for="subSubcategory in subcategory.sub_subcategories" 
@@ -1288,6 +1288,11 @@ const viewAllResults = () => {
   clearSearch();
   closeMobileSearch();
 };
+
+function getBeforeChar(str, char) {
+  const idx = str.indexOf(char);
+  return idx !== -1 ? str.slice(0, idx) : str;
+}
 
 // New navigation functions for categories
 const navigateToCategory = (category) => {

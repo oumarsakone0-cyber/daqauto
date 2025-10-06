@@ -18,9 +18,6 @@
              <!-- Onglet Spécifications -->
            
             <div v-if="activeTab === 0" class="product-specifications">
-              <!-- <h2 class="section-title">Spécifications</h2> -->
-              
-              <!-- filepath: e:\Projet DAQ\daqauto\src\components\product\ProductDescriptionCard.vue -->
                 <div class="specifications-table two-columns">
                   <div class="spec-group">
                     <h3 class="spec-group-title">Informations générales</h3>
