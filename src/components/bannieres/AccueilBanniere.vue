@@ -236,6 +236,7 @@ const fetchMostViewedProducts = async () => {
     const response = await productsApi.getMostViewedProducts()
     
     if (response.success && response.data) {
+      console.log('Produits les plus vus récupérés:', response.data)  
       // Assigner les groupes de produits
       popularProducts.value = response.data.top_3_products.map(product => ({
         id: product.id,
