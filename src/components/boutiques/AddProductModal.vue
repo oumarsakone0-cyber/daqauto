@@ -106,7 +106,7 @@
           <div v-show="currentStep === 0" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <InfoIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Informations de base</h3>
@@ -115,7 +115,7 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div class="sm:col-span-2">
                   <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                    Nom du produit <span class="primary-color">*</span>
+                    Nom du produit <span class="error-color">*</span>
                   </label>
                   <input
                     id="name"
@@ -199,7 +199,7 @@
 
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                    Catégorie <span class="primary-color">*</span>
+                    Catégorie <span class="error-color">*</span>
                   </label>
                   <select
                     id="category"
@@ -208,6 +208,7 @@
                     required
                     :disabled="categoriesLoading"
                     class="text-sm sm:text-base input-style"
+                    placeholder=""
                   >
                     <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
                     <option v-for="category in categories" :key="category.id" :value="category.id">
@@ -218,7 +219,7 @@
 
                 <div>
                   <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                    Sous-catégorie <span class="primary-color">*</span>
+                    Sous-catégorie <span class="error-color">*</span>
                   </label>
                   <select
                     id="subcategory"
@@ -290,7 +291,7 @@
           <div v-show="currentStep === 1" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-degrade-orange">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-orange">
                   <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
@@ -302,14 +303,15 @@
                 
                 <div>
                   <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
-                    État du véhicule
+                    État du véhicule <span class="error-color">*</span>
                   </label>
                   <select
                     id="vehicle_condition"
                     v-model="productData.vehicle_condition"
                     class="text-sm sm:text-base input-style"
+                    required
                   >
-                    <option value="">Tous les états</option>
+                    <option value="">Selectionner l'état du véhicule</option>
                     <option value="new">Neuf</option>
                     <option value="used">Occasion</option>
                     <option value="refurbished">Reconditionné</option>
@@ -318,7 +320,7 @@
 
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
-                    Marque
+                    Marque <span class="error-color">*</span>
                   </label>
                   <input
                     id="vehicle_make"
@@ -326,12 +328,13 @@
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: Mercedes, Volvo, Scania"
+                    required
                   >
                 </div>
 
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
-                    Modèle
+                    Modèle <span class="error-color">*</span>
                   </label>
                   <input
                     id="vehicle_model"
@@ -339,6 +342,7 @@
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: Actros, FH, R-Series"
+                    required
                   >
                 </div>
 
@@ -351,7 +355,7 @@
                     v-model="productData.drive_type"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Tous les types</option>
+                    <option value="">Selectionner le type de transmission</option>
                     <option value="4x2">4X2</option>
                     <option value="6x2">6X2</option>
                     <option value="6x4">6X4</option>
@@ -364,7 +368,7 @@
 
                 <div>
                   <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
-                    Année
+                    Année <span class="error-color">*</span>
                   </label>
                   <input
                     id="vehicle_year"
@@ -374,6 +378,7 @@
                     :max="new Date().getFullYear() + 1"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 2020"
+                    required
                   >
                 </div>
 
@@ -386,7 +391,7 @@
                     v-model="productData.fuel_type"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Tous les carburants</option>
+                    <option value="">Selectionner le type de carburant</option>
                     <option value="diesel">Diesel</option>
                     <option value="electric">Électrique</option>
                     <option value="hybrid">Hybride</option>
@@ -540,7 +545,7 @@
           <div v-show="currentStep === 2" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-degrade-orange">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-orange">
                   <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
@@ -597,7 +602,7 @@
                       <button
                         type="button"
                         @click="removeEngineNumber(index)"
-                        class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                        class="px-3 py-2 btn-deconnexion"
                       >
                         <XIcon class="w-4 h-4" />
                       </button>
@@ -605,7 +610,7 @@
                     <button
                       type="button"
                       @click="addEngineNumber"
-                      class="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-600 hover:border-orange-400 hover:text-orange-600 transition-colors"
+                      class="submit-btn w-full"
                     >
                       + Ajouter un numéro de moteur
                     </button>
@@ -673,17 +678,17 @@
           <div v-show="currentStep === 3" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <DollarSignIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                 Prix unitaire 
+              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-6">
+                 <!-- Prix unitaire  -->
                 <div>
                   <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                    Prix unitaire ($) <span class="primary-color">*</span>
+                    Prix unitaire ($) <span class="error-color">*</span>
                   </label>
                   <input
                     id="unit_price"
@@ -699,7 +704,7 @@
 
                 <div>
                   <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                    Stock initial <span class="primary-color">*</span>
+                    Stock initial <span class="error-color">*</span>
                   </label>
                   <input
                     id="stock"
@@ -721,7 +726,6 @@
                     id="unit_type"
                     v-model="productData.unit_type"
                     class="text-sm sm:text-base input-style"
-                    style="color: black;"
                   >
                     <option v-for="unit in availableUnitTypes" :key="unit.value" :value="unit.value">
                       {{ unit.label }}
@@ -739,7 +743,7 @@
                     class="checkbox-style"
                   >
                   <label for="wholesale-price" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                    <ZapIcon class="w-4 h-4  mr-1" />
+                    <ZapIcon class="w-4 h-4  mr-1 primary-color" />
                     Activer le prix de gros
                   </label>
                 </div>
@@ -780,7 +784,7 @@
              Couleurs 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <PaletteIcon class="w-4 h-4 text-white " />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Couleurs</h3>
@@ -835,7 +839,7 @@
 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-degrade-orange">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-orange">
                   <RulerIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
@@ -897,7 +901,7 @@
              Images 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-degrade-orange">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-orange">
                   <ImageIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Images du produit</h3>
@@ -957,7 +961,7 @@
                     </button>
                     <div 
                       v-if="index === 0"
-                      class="absolute bottom-2 left-2 px-2 py-1 bg-orange-500 text-white text-xs rounded-md "
+                      class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md "
                     >
                       Principal
                     </div>
@@ -968,7 +972,7 @@
 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <VideoIcon class="w-4 h-4 text-white" />
                 </div>
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vidéo (optionnel)</h3>
@@ -1071,7 +1075,7 @@
               type="button"
               @click.prevent="handlePreviousStep"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-cancel"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-gray"
             >
               <ChevronLeftIcon class="w-4 h-4 mr-2 inline" />
               Précédent
@@ -1083,7 +1087,7 @@
               type="button"
               @click.prevent="handleCloseModal"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-cancel"
+              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-gray"
             >
               Annuler
             </button>
@@ -1309,7 +1313,7 @@ const canProceedToNextStep = computed(() => {
     case 0:
       return !!(productData.name && productData.category_id && productData.subcategory_id)
     case 1:
-      return true
+      return !!(productData.vehicle_condition && productData.vehicle_make && productData.vehicle_model && productData.vehicle_year)
     case 2:
       return true
     case 3:
@@ -1799,81 +1803,9 @@ onMounted(() => {
 
 <style scoped>
 
-/* Couleurs personnalisées */
-.primary-color {
-  color: #fe7900;
-}
-.primary-background {
-  background-color: #fe7900;
-}
-.bg-degrade-orange {
-  background: linear-gradient(90deg, #fe7900, #ff5a01);
- 
-}
-
-
-
-
-
-.bg-lightgray {
-  background-color: #F9FAFB;
-}
-.bg-lightgray:hover {
-  background-color: #F3F4F6;
-  border: 1px solid #D1D5DB;
-}
-
-
-.bg-orange-500 {
-  background-color: #F65A11;
-}
-
-.bg-orange-600 {
-  background-color: #e54a0a;
-}
-
-.hover\:bg-orange-600:hover {
-  background-color: #e54a0a;
-}
-
-.hover\:bg-orange-700:hover {
-  background-color: #d1440a;
-}
-
-.focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
-  background-color: #d1440a;
-}
-
-.focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
-}
-
-.focus\:border-orange-500:focus {
-  border-color: #F65A11;
-}
-
-.text-orange-600 {
-  color: #e54a0a;
-}
-
-.border-orange-500 {
-  border-color: #F65A11;
-}
-
 /* Amélioration pour les interactions tactiles */
 .touch-manipulation {
   touch-action: manipulation;
-}
-.btn-cancel {
-  background-color: #d5dee7;
-  color: #374151;
-  border: 1px solid #d1d5db;      /* Bordure gris */
-  transition: background 0.2s, color 0.2s;
-}
-.btn-cancel:hover {
-  background-color: #cbd5e1;      /* Gris plus foncé au survol */
-  color: #1f2937;                 /* Texte plus foncé au survol */
 }
 
 /* Styles pour l'éditeur WYSIWYG */
