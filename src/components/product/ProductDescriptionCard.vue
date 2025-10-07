@@ -21,38 +21,47 @@
                 <div class="specifications-table two-columns">
                   <div class="spec-group">
                     <h3 class="spec-group-title">Informations générales</h3>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Conditions</div>
-                      <div class="spec-value">{{ product.vehicle_condition || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.vehicle_condition || 'N/A'}}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Make</div>
                       <div class="spec-value">{{ product.vehicle_make || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Model</div>
                       <div class="spec-value">{{ product.vehicle_model || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Category</div>
                       <div class="spec-value">{{ product.category_name || 'N/A'}}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Drive Type</div>
                       <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Year</div>
                       <div class="spec-value">{{ product.vehicle_year || 'N/A'}}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Fuel Type</div>
                       <div class="spec-value">{{ product.fuel_type || 'N/A' }}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Transmission</div>
                       <div class="spec-value">{{ product.transmission_type || 'N/A'}}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Engine</div>
                       <div class="spec-value">{{ product.engine_brand || 'N/A' }}</div>
@@ -65,20 +74,32 @@
                       <div class="spec-name">Engine Emmissions</div>
                       <div class="spec-value">{{ product.engine_emissions || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Mileage</div>
                       <div class="spec-value">{{ product.vehicle_mileage || 'N/A' }}</div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Couleur</div>
-                      <div class="spec-value">{{ product.color || 'N/A' }}</div>
+                      <div class="spec-name">Couleurs</div>
+                      <div v-for="color in product.colors" :key="color.id" >
+                        <div  class="spec-value">
+                          <div>
+                            <span 
+                              class="inline-block w-6 h-6 rounded-full border border-gray-300 mr-2" 
+                              :style="{ backgroundColor: color.hex_value || '#FFFFFF' }"
+                            ></span>
+                          </div>
+                          {{ color.name || 'N/A' }}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div class="spec-group">
                     <h3 class="spec-group-title">Détails techniques</h3>
                     <div class="spec-row">
                       <div class="spec-name">VIN / Chassis NO.</div>
-                      <div class="spec-value">{{ product.vin || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.vin || 'N/A'  }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Engine Number</div>
@@ -141,6 +162,14 @@
               
               <div class="description-content">
                 <p>{{ product.description || 'Aucune description disponible.' }}</p>
+              </div>
+              <div v-if="product.description_plus" >
+
+                <h2 class="section-title">Plus de Description</h2>
+                
+                <div class="description-content">
+                  <p>{{ product.description_plus || 'Aucune description disponible.' }}</p>
+                </div>
               </div>
               
             </div>
