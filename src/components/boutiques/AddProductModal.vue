@@ -1,5 +1,4 @@
 <template>
-  <!-- Overlay avec arrière-plan sombre -->
   <div 
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
     @click="handleBackdropClick"
@@ -8,13 +7,11 @@
       class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
       @click.stop
     >
-      <!-- Animation de fond luxueuse -->
       <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl" style="background-color: #ffffff00;">
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
       </div>
 
-      <!-- Header fixe -->
       <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
@@ -30,7 +27,6 @@
           <XIcon @click="closeModal" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
 
-        <!-- Messages d'état -->
         <div v-if="error || isLoading || categoriesError || categoriesLoading" class="mt-4">
           <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
             <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
@@ -43,8 +39,7 @@
               <span class="text-sm">{{ categoriesError }}</span>
               <button 
                 @click="fetchCategories" 
-                class="ml-2 px-2 py-1 text-xs error-background-color
-                "
+                class="ml-2 px-2 py-1 text-xs error-background-color"
               >
                 Réessayer
               </button>
@@ -62,7 +57,6 @@
           </div>
         </div>
 
-        <!-- Indicateur d'étapes -->
         <div class="mt-4">
           <div class="flex items-center justify-between">
             <div 
@@ -106,11 +100,9 @@
         </div>
       </div>
 
-      <!-- Contenu scrollable -->
       <div class="overflow-y-auto h-[calc(100vh-200px)] sm:h-auto sm:max-h-[calc(60vh)] px-4 sm:px-6 py-6 relative z-5" style="color: white;">
         <form @submit.prevent="handleSubmit" class="space-y-6 sm:space-y-8">
           
-          <!-- Étape 1: Informations de base -->
           <div v-show="currentStep === 0" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -121,7 +113,6 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <!-- Nom du produit -->
                 <div class="sm:col-span-2">
                   <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                     Nom du produit <span class="primary-color">*</span>
@@ -136,7 +127,6 @@
                   >
                 </div>
 
-                <!-- Description courte -->
                 <div class="sm:col-span-2">
                   <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                     Description courte
@@ -150,7 +140,6 @@
                   ></textarea>
                 </div>
 
-                <!-- Description détaillée WYSIWYG -->
                 <div class="sm:col-span-2">
                   <div class="flex items-center mb-3">
                     <input 
@@ -167,7 +156,7 @@
                   
                   <div v-if="productData.hasDetailedDescription">
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                      <!-- Barre d'outils WYSIWYG -->
+                       Barre d'outils WYSIWYG 
                       <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
                         <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
                         <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
@@ -183,7 +172,6 @@
                           <option value="h3">Titre 3</option>
                         </select>
                       </div>
-                      <!-- Zone d'édition -->
                       <div 
                         ref="wysiwygEditor"
                         contenteditable="true"
@@ -196,7 +184,19 @@
                   </div>
                 </div>
 
-                <!-- Catégorie -->
+                <div class="sm:col-span-2">
+                  <label for="other_description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Autres descriptions
+                  </label>
+                  <textarea
+                    id="other_description"
+                    v-model="productData.other_description"
+                    rows="4"
+                    class="text-sm sm:text-base input-style resize-none"
+                    placeholder="Ajoutez d'autres informations pertinentes..."
+                  ></textarea>
+                </div>
+
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                     Catégorie <span class="primary-color">*</span>
@@ -216,7 +216,6 @@
                   </select>
                 </div>
 
-                <!-- Sous-catégorie -->
                 <div>
                   <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
                     Sous-catégorie <span class="primary-color">*</span>
@@ -228,7 +227,6 @@
                     required
                     :disabled="!productData.category_id || categoriesLoading"
                     class="text-sm sm:text-base input-style"
-                    
                   >
                     <option value="">Sélectionner une sous-catégorie</option>
                     <option v-for="subcategory in availableSubcategories" :key="subcategory.id" :value="subcategory.id">
@@ -237,7 +235,6 @@
                   </select>
                 </div>
 
-                <!-- Sous-sous-catégorie -->
                 <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
                   <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                     Sous-sous-catégorie
@@ -248,7 +245,6 @@
                     @change="updateSubSubSubcategories"
                     :disabled="!productData.subcategory_id || categoriesLoading"
                     class="text-sm sm:text-base input-style"
-                    
                   >
                     <option value="">Sélectionner une sous-sous-catégorie (optionnel)</option>
                     <option v-for="subsubcategory in availableSubSubcategories" :key="subsubcategory.id" :value="subsubcategory.id">
@@ -257,7 +253,6 @@
                   </select>
                 </div>
 
-                <!-- Sous-sous-sous-catégorie -->
                 <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
                   <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                     Sous-sous-sous-catégorie
@@ -276,7 +271,6 @@
                   </select>
                 </div>
 
-                <!-- Tags -->
                 <div class="sm:col-span-2">
                   <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
                     Tags (optionnel)
@@ -287,14 +281,12 @@
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
-                   
                   >
                 </div>
               </div>
             </div>
           </div>
 
-          <!-- Étape 2: Spécifications Véhicule -->
           <div v-show="currentStep === 1" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -307,7 +299,7 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <!-- Condition -->
+                
                 <div>
                   <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
                     État du véhicule
@@ -324,7 +316,6 @@
                   </select>
                 </div>
 
-                <!-- Make -->
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                     Marque
@@ -338,7 +329,6 @@
                   >
                 </div>
 
-                <!-- Model -->
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                     Modèle
@@ -352,7 +342,6 @@
                   >
                 </div>
 
-                <!-- Drive Type -->
                 <div>
                   <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Type de transmission
@@ -373,7 +362,6 @@
                   </select>
                 </div>
 
-                <!-- Year -->
                 <div>
                   <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
                     Année
@@ -389,7 +377,6 @@
                   >
                 </div>
 
-                <!-- Fuel Type -->
                 <div>
                   <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Type de carburant
@@ -409,11 +396,147 @@
                     <option value="unknown">Inconnu</option>
                   </select>
                 </div>
+
+                <div>
+                  <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
+                    Date de production
+                  </label>
+                  <input
+                    id="production_date"
+                    v-model="productData.production_date"
+                    type="date"
+                    class="text-sm sm:text-base input-style"
+                  >
+                </div>
+
+                <div>
+                  <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
+                    Pays d'origine
+                  </label>
+                  <input
+                    id="country_of_origin"
+                    v-model="productData.country_of_origin"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Allemagne, Chine, Japon"
+                  >
+                </div>
+
+                <div>
+                  <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
+                    Empattement (mm)
+                  </label>
+                  <input
+                    id="wheelbase"
+                    v-model="productData.wheelbase"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 3800"
+                  >
+                </div>
+
+                <div>
+                  <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
+                    GVW - Poids total en charge (kg)
+                  </label>
+                  <input
+                    id="gvw"
+                    v-model="productData.gvw"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 25000"
+                  >
+                </div>
+
+                <div>
+                  <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Capacité de charge utile (kg)
+                  </label>
+                  <input
+                    id="payload_capacity"
+                    v-model="productData.payload_capacity"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 15000"
+                  >
+                </div>
+
+                <div>
+                  <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type de cabine
+                  </label>
+                  <input
+                    id="cabin_type"
+                    v-model="productData.cabin_type"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Cabine courte, Cabine longue"
+                  >
+                </div>
+
+                <div>
+                  <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
+                    Poids à vide (Tonnes)
+                  </label>
+                  <input
+                    id="curb_weight"
+                    v-model="productData.curb_weight"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 10000"
+                  >
+                </div>
+
+                <div>
+                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Capacité du réservoir (L)
+                  </label>
+                  <input
+                    id="fuel_tank_capacity"
+                    v-model="productData.fuel_tank_capacity"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 400"
+                  >
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Dimensions (L x l x H) en mm
+                  </label>
+                  <div class="grid grid-cols-3 gap-2">
+                    <input
+                      v-model="productData.dimensions_length"
+                      type="number"
+                      min="0"
+                      class="text-sm sm:text-base input-style"
+                      placeholder="Longueur"
+                    >
+                    <input
+                      v-model="productData.dimensions_width"
+                      type="number"
+                      min="0"
+                      class="text-sm sm:text-base input-style"
+                      placeholder="Largeur"
+                    >
+                    <input
+                      v-model="productData.dimensions_height"
+                      type="number"
+                      min="0"
+                      class="text-sm sm:text-base input-style"
+                      placeholder="Hauteur"
+                    >
+                  </div>
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Étape 3: Caractéristiques Techniques -->
           <div v-show="currentStep === 2" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -427,7 +550,6 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                <!-- Transmission -->
                 <div>
                   <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Transmission
@@ -443,7 +565,6 @@
                   </select>
                 </div>
 
-                <!-- Engine Brand -->
                 <div>
                   <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
                     Marque du moteur
@@ -461,7 +582,36 @@
                   </select>
                 </div>
 
-                <!-- Mileage -->
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Numéros de moteur
+                  </label>
+                  <div class="space-y-2">
+                    <div v-for="(engineNumber, index) in productData.engine_numbers" :key="index" class="flex gap-2">
+                      <input
+                        v-model="productData.engine_numbers[index]"
+                        type="text"
+                        class="flex-1 text-sm sm:text-base input-style"
+                        :placeholder="`Numéro de moteur ${index + 1}`"
+                      >
+                      <button
+                        type="button"
+                        @click="removeEngineNumber(index)"
+                        class="px-3 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      @click="addEngineNumber"
+                      class="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm font-medium text-gray-600 hover:border-orange-400 hover:text-orange-600 transition-colors"
+                    >
+                      + Ajouter un numéro de moteur
+                    </button>
+                  </div>
+                </div>
+
                 <div class="sm:col-span-2">
                   <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
                     Kilométrage (km)
@@ -477,11 +627,49 @@
                   >
                   <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
                 </div>
+
+                <div>
+                  <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type de suspension
+                  </label>
+                  <input
+                    id="suspension_type"
+                    v-model="productData.suspension_type"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Pneumatique, Mécanique"
+                  >
+                </div>
+
+                <div>
+                  <label for="brake_system" class="block text-sm font-medium text-gray-700 mb-2">
+                    Système de freinage
+                  </label>
+                  <input
+                    id="brake_system"
+                    v-model="productData.brake_system"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: ABS, EBS"
+                  >
+                </div>
+
+                <div>
+                  <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
+                    Taille des pneus
+                  </label>
+                  <input
+                    id="tyre_size"
+                    v-model="productData.tyre_size"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 315/80R22.5"
+                  >
+                </div>
               </div>
             </div>
           </div>
 
-          <!-- Étape 4: Prix et Stock -->
           <div v-show="currentStep === 3" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
@@ -492,7 +680,7 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-                <!-- Prix unitaire -->
+                 Prix unitaire 
                 <div>
                   <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
                     Prix unitaire ($) <span class="primary-color">*</span>
@@ -506,12 +694,9 @@
                     required
                     class="text-sm sm:text-base input-style"
                     placeholder="15000"
-                    
-
                   >
                 </div>
 
-                <!-- Stock initial -->
                 <div>
                   <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
                     Stock initial <span class="primary-color">*</span>
@@ -525,11 +710,9 @@
                     required
                     class="text-sm sm:text-base input-style"
                     placeholder="50"
-                  
                   >
                 </div>
 
-                <!-- Type d'unité -->
                 <div>
                   <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Type d'unité
@@ -547,7 +730,6 @@
                 </div>
               </div>
 
-              <!-- Prix de gros -->
               <div class="mt-6">
                 <div class="flex items-center mb-4">
                   <input 
@@ -594,9 +776,8 @@
             </div>
           </div>
 
-          <!-- Étape 5: Variantes -->
           <div v-show="currentStep === 4" class="space-y-6">
-            <!-- Couleurs -->
+             Couleurs 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
@@ -627,7 +808,6 @@
                 </div>
               </div>
 
-              <!-- Couleur personnalisée -->
               <div class="border-t border-gray-200 pt-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une couleur personnalisée</label>
                 <div class="flex gap-2">
@@ -653,7 +833,6 @@
               </div>
             </div>
 
-            <!-- Tailles -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-degrade-orange">
@@ -662,7 +841,6 @@
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
               </div>
 
-              <!-- Type de taille -->
               <div class="mb-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Type de taille</label>
                 <select 
@@ -694,7 +872,6 @@
                 </button>
               </div>
               
-              <!-- Taille personnalisée -->
               <div v-if="productData.sizeType" class="border-t border-gray-200 pt-4">
                 <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une taille personnalisée</label>
                 <div class="flex gap-2">
@@ -716,9 +893,8 @@
             </div>
           </div>
 
-          <!-- Étape 6: Images -->
           <div v-show="currentStep === 5" class="space-y-6">
-            <!-- Images -->
+             Images 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-degrade-orange">
@@ -750,7 +926,6 @@
                 <p class="text-xs text-gray-500 mt-2">PNG, JPG jusqu'à 10MB par image (max 8)</p>
               </div>
 
-              <!-- Aperçu des images -->
               <div v-if="productData.images.length > 0" class="mt-6">
                 <h4 class="text-sm font-medium text-gray-700 mb-3">Images sélectionnées</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
@@ -791,7 +966,6 @@
               </div>
             </div>
 
-            <!-- Vidéo -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-degrade-orange">
@@ -820,11 +994,24 @@
                   >
                 </div>
               </div>
-              
+
               <div v-if="productData.video" class="mt-6">
                 <video :src="productData.video.preview" controls class="w-full max-w-md mx-auto rounded-lg shadow-lg">
                   Votre navigateur ne supporte pas la lecture de vidéos.
                 </video>
+                
+                <div v-if="productData.video.uploading" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full"></div>
+                    <span class="text-sm text-gray-700">Téléchargement de la vidéo: {{ productData.video.uploadProgress }}%</span>
+                  </div>
+                </div>
+                
+                <div v-if="productData.video.uploaded" class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center space-x-2">
+                  <CheckIcon class="w-4 h-4 text-green-600" />
+                  <span class="text-sm text-green-700">Vidéo téléchargée avec succès</span>
+                </div>
+                
                 <button 
                   @click="removeVideo"
                   type="button"
@@ -835,7 +1022,6 @@
               </div>
             </div>
 
-            <!-- Statut et résumé -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center mb-6">
                 <input 
@@ -850,7 +1036,6 @@
                 </label>
               </div>
 
-              <!-- Résumé -->
               <div class="bg-gray-50 rounded-lg p-4">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
                   <FileTextIcon class="w-5 h-5  mr-2 primary-color" />
@@ -871,16 +1056,15 @@
                   </div>
                 </div>
               </div>
+
             </div>
           </div>
 
         </form>
       </div>
 
-      <!-- Footer fixe avec navigation -->
       <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 sm:px-6 py-4 sm:rounded-b-2xl z-50">
         <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center">
-          <!-- Navigation étapes -->
           <div class="flex gap-2 sm:gap-3 order-2 sm:order-1">
             <button
               v-if="currentStep > 0"
@@ -894,7 +1078,6 @@
             </button>
           </div>
 
-          <!-- Actions principales -->
           <div class="flex gap-2 sm:gap-3 order-1 sm:order-2">
             <button
               type="button"
@@ -983,30 +1166,33 @@ const cloudinaryConfig = {
   cloudName: 'daaavha4z',
   uploadPreset: 'aliadjame',
   apiKey: 'wy0Eh-uA0Y0Ci3nyODix0b3WejA',
-  uploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/image/upload'
+  imageUploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/image/upload',
+  videoUploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/video/upload'
 }
 
 const steps = [
   { title: 'Informations' },
-  { title: 'Spécifications' }, // Added vehicle specifications step
-  { title: 'Techniques' },     // Added technical characteristics step  
+  { title: 'Spécifications' },
+  { title: 'Techniques' },
   { title: 'Prix & Stock' },
   { title: 'Variantes' },
   { title: 'Images' }
 ]
 
+//  Added new fields to productData
 const productData = reactive({
   name: '',
   description: '',
   detailed_description: '',
   hasDetailedDescription: false,
+  other_description: '',
   category_id: '',
   subcategory_id: '',
   subsubcategory_id: '',
-  subsubsubcategory_id: '', // Nouveau champ pour le 4ème niveau
+  subsubsubcategory_id: '',
   tags: '',
-  unit_price: '', // Changed to string to handle empty input better
-  stock: '',     // Changed to string to handle empty input better
+  unit_price: '',
+  stock: '',
   unit_type: 'quantity',
   hasWholesalePrice: false,
   wholesale_price: null,
@@ -1027,7 +1213,22 @@ const productData = reactive({
   fuel_type: '',
   transmission_type: '',
   engine_brand: '',
-  vehicle_mileage: null
+  engine_numbers: [],
+  vehicle_mileage: null,
+  production_date: '',
+  country_of_origin: '',
+  wheelbase: null,
+  gvw: null,
+  payload_capacity: null,
+  cabin_type: '',
+  suspension_type: '',
+  brake_system: '',
+  tyre_size: '',
+  dimensions_length: null,
+  dimensions_width: null,
+  dimensions_height: null,
+  curb_weight: null,
+  fuel_tank_capacity: null
 })
 
 // Types de tailles
@@ -1108,11 +1309,10 @@ const canProceedToNextStep = computed(() => {
     case 0:
       return !!(productData.name && productData.category_id && productData.subcategory_id)
     case 1:
-      return true // Vehicle specifications are optional
+      return true
     case 2:
-      return true // Technical characteristics are optional
+      return true
     case 3:
-      // Validation for price and stock step (moved from step 1)
       const hasValidPrice = productData.unit_price !== null && 
                            productData.unit_price !== '' && 
                            productData.unit_price !== undefined && 
@@ -1125,9 +1325,9 @@ const canProceedToNextStep = computed(() => {
       
       return hasValidPrice && hasValidStock
     case 4:
-      return true // Variants are optional
+      return true
     case 5:
-      return true // Images are optional
+      return true
     default:
       return false
   }
@@ -1148,42 +1348,6 @@ const canSubmit = computed(() => {
 const getCategoryName = (id) => {
   const category = categories.value.find(cat => cat.id === id)
   return category ? category.name : ''
-}
-
-const getSubcategoryName = (id) => {
-  for (const category of categories.value) {
-    const subcategory = (category.subcategories || []).find(sub => sub.id === id)
-    if (subcategory) return subcategory.name
-  }
-  return ''
-}
-
-const getSubSubcategoryName = (id) => {
-  for (const category of categories.value) {
-    for (const subcategory of (category.subcategories || [])) {
-      if (subcategory.sub_subcategories) {
-        const subsubcategory = subcategory.sub_subcategories.find(subsub => subsub.id === id)
-        if (subsubcategory) return subsubcategory.name
-      }
-    }
-  }
-  return ''
-}
-
-const getSubSubSubcategoryName = (id) => {
-  for (const category of categories.value) {
-    for (const subcategory of (category.subcategories || [])) {
-      if (subcategory.sub_subcategories) {
-        for (const subsubcategory of subcategory.sub_subcategories) {
-          if (subsubcategory.sub_sub_subcategories) {
-            const subsubsubcategory = subsubcategory.sub_sub_subcategories.find(subsubsub => subsubsub.id === id)
-            if (subsubsubcategory) return subsubsubcategory.name
-          }
-        }
-      }
-    }
-  }
-  return ''
 }
 
 const availableColors = ref([
@@ -1212,6 +1376,15 @@ const availableUnitTypes = ref([
   { value: 'length_cm', label: 'Longueur (cm)' },
   { value: 'area_m2', label: 'Surface (m²)' }
 ])
+
+//  Added engine number management functions
+const addEngineNumber = () => {
+  productData.engine_numbers.push('')
+}
+
+const removeEngineNumber = (index) => {
+  productData.engine_numbers.splice(index, 1)
+}
 
 // Méthodes
 const fetchCategories = async () => {
@@ -1251,12 +1424,12 @@ const updateDetailedDescription = () => {
 const updateSubcategories = () => {
   productData.subcategory_id = ''
   productData.subsubcategory_id = ''
-  productData.subsubsubcategory_id = '' // Réinitialiser aussi le 4ème niveau
+  productData.subsubsubcategory_id = ''
 }
 
 const updateSubSubcategories = () => {
   productData.subsubcategory_id = ''
-  productData.subsubsubcategory_id = '' // Réinitialiser aussi le 4ème niveau
+  productData.subsubsubcategory_id = ''
 }
 
 const updateSubSubSubcategories = () => {
@@ -1380,26 +1553,16 @@ const removeVideo = () => {
   productData.videoUrl = ''
 }
 
-// Méthodes de navigation améliorées
 const handleNextStep = async () => {
-  console.log('handleNextStep appelé, currentStep:', currentStep.value)
-  console.log('Données actuelles:', {
-    unit_price: productData.unit_price,
-    stock: productData.stock,
-    canProceed: canProceedToNextStep.value
-  })
-  
-  // Effacer les erreurs précédentes
   error.value = null
   
   if (!canProceedToNextStep.value) {
-    if (currentStep.value === 3) { // Check for the price/stock step
+    if (currentStep.value === 3) {
       error.value = 'Veuillez remplir correctement le prix unitaire et le stock avant de continuer'
     } else {
       error.value = 'Veuillez remplir tous les champs obligatoires'
     }
     
-    // Effacer l'erreur après 3 secondes
     setTimeout(() => {
       error.value = null
     }, 3000)
@@ -1409,30 +1572,19 @@ const handleNextStep = async () => {
   
   if (currentStep.value < steps.length - 1) {
     currentStep.value++
-    console.log('Nouveau currentStep:', currentStep.value)
-    
-    // Attendre le prochain tick pour s'assurer que le DOM est mis à jour
     await nextTick()
   }
 }
 
 const handlePreviousStep = async () => {
-  console.log('handlePreviousStep appelé, currentStep:', currentStep.value)
-  
   if (currentStep.value > 0) {
     currentStep.value--
-    console.log('Nouveau currentStep:', currentStep.value)
-    
-    // Effacer les erreurs
     error.value = null
-    
-    // Attendre le prochain tick pour s'assurer que le DOM est mis à jour
     await nextTick()
   }
 }
 
 const handleCloseModal = () => {
-  console.log('handleCloseModal appelé')
   closeModal()
 }
 
@@ -1455,7 +1607,7 @@ const uploadImageToCloudinary = async (image, index) => {
     formData.append('api_key', cloudinaryConfig.apiKey)
     formData.append('public_id', fileName)
     
-    const response = await axios.post(cloudinaryConfig.uploadUrl, formData, {
+    const response = await axios.post(cloudinaryConfig.imageUploadUrl, formData, {
       headers: {
         'Content-Type': 'multipart/form-data'
       },
@@ -1483,6 +1635,7 @@ const uploadImageToCloudinary = async (image, index) => {
   }
 }
 
+//  Updated video upload to use Cloudinary
 const uploadVideoToCloudinary = async (video) => {
   try {
     productData.video.uploading = true
@@ -1497,19 +1650,15 @@ const uploadVideoToCloudinary = async (video) => {
     formData.append('public_id', fileName)
     formData.append('resource_type', 'video')
     
-    const response = await axios.post(
-      `https://api.cloudinary.com/v1_1/${cloudinaryConfig.cloudName}/video/upload`, 
-      formData, 
-      {
-        headers: {
-          'Content-Type': 'multipart/form-data'
-        },
-        onUploadProgress: (progressEvent) => {
-          const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          productData.video.uploadProgress = percentCompleted
-        }
+    const response = await axios.post(cloudinaryConfig.videoUploadUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        productData.video.uploadProgress = percentCompleted
       }
-    )
+    })
     
     if (response.data && response.data.secure_url) {
       productData.video.url = response.data.secure_url
@@ -1546,10 +1695,12 @@ const uploadAllMedia = async () => {
   loadingMessage.value = 'Médias téléchargés avec succès!'
 }
 
+//  Updated prepareDataForSubmission to include new fields
 const prepareDataForSubmission = () => {
   const formData = {
     name: productData.name,
     description: productData.description,
+    other_description: productData.other_description,
     category_id: productData.category_id,
     subcategory_id: productData.subcategory_id,
     subsubcategory_id: productData.subsubcategory_id,
@@ -1562,7 +1713,6 @@ const prepareDataForSubmission = () => {
     colors: productData.colors,
     sizes: productData.sizes,
     size_type: productData.sizeType,
-    // Vehicle specific fields
     vehicle_condition: productData.vehicle_condition,
     vehicle_make: productData.vehicle_make,
     vehicle_model: productData.vehicle_model,
@@ -1571,10 +1721,25 @@ const prepareDataForSubmission = () => {
     fuel_type: productData.fuel_type,
     transmission_type: productData.transmission_type,
     engine_brand: productData.engine_brand,
-    vehicle_mileage: productData.vehicle_mileage
+    engine_numbers: productData.engine_numbers.filter(num => num.trim() !== ''),
+    vehicle_mileage: productData.vehicle_mileage,
+    production_date: productData.production_date,
+    country_of_origin: productData.country_of_origin,
+    wheelbase: productData.wheelbase,
+    gvw: productData.gvw,
+    payload_capacity: productData.payload_capacity,
+    cabin_type: productData.cabin_type,
+    suspension_type: productData.suspension_type,
+    brake_system: productData.brake_system,
+    tyre_size: productData.tyre_size,
+    curb_weight: productData.curb_weight,
+    fuel_tank_capacity: productData.fuel_tank_capacity
   }
   
-  // N'inclure la description détaillée que si elle est activée
+  if (productData.dimensions_length || productData.dimensions_width || productData.dimensions_height) {
+    formData.dimensions = `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}`
+  }
+  
   if (productData.hasDetailedDescription && productData.detailed_description) {
     formData.detailed_description = productData.detailed_description
   }
@@ -1627,7 +1792,6 @@ const handleBackdropClick = (event) => {
   }
 }
 
-// Charger les catégories au montage du composant
 onMounted(() => {
   fetchCategories()
 })

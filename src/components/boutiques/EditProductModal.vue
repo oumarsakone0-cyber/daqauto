@@ -1,5 +1,4 @@
-<template>
-   <!-- Overlay avec arrière-plan sombre  -->
+<template> 
   <div 
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
     @click="handleBackdropClick"
@@ -8,13 +7,11 @@
       class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
       @click.stop
     >
-       <!-- Animation de fond luxueuse  -->
       <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl">
         <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
         <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
       </div>
   
-       <!-- Header fixe  -->
       <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
         <div class="flex items-center justify-between">
           <div class="flex items-center space-x-3">
@@ -30,7 +27,6 @@
             <XIcon @click="closeModal" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
   
-         <!-- Messages d'état  -->
         <div v-if="error || isLoading || categoriesError || categoriesLoading" class="mt-4">
           <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
             <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
@@ -62,11 +58,9 @@
         </div>
       </div>
   
-       <!-- Contenu scrollable  -->
       <div class="overflow-y-auto h-[calc(100vh-200px)] sm:h-auto sm:max-h-[calc(60vh)] px-4 sm:px-6 py-6 relative z-5">
         <form @submit.prevent="handleSubmit" class="space-y-6 sm:space-y-8" v-if="editData">
-          
-           <!-- Informations de base  -->
+           
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -76,7 +70,7 @@
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               <!-- Nom du produit  -->
+             
               <div class="sm:col-span-2">
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
                   Nom du produit <span class="primary-color">*</span>
@@ -91,7 +85,6 @@
                 >
               </div>
   
-               <!-- Description courte  -->
               <div class="sm:col-span-2">
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                   Description courte
@@ -105,7 +98,6 @@
                 ></textarea>
               </div>
 
-               <!-- Description détaillée WYSIWYG  -->
               <div class="sm:col-span-2">
                 <div class="flex items-center mb-3">
                   <input 
@@ -122,7 +114,7 @@
                 
                 <div v-if="editData.hasDetailedDescription">
                   <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                     <!-- Barre d'outils WYSIWYG  -->
+                      
                     <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
                       <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
                       <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic " title="Italique" style="background-color: lightgray; color: black;">I</button>
@@ -138,7 +130,6 @@
                         <option value="h3">Titre 3</option>
                       </select>
                     </div>
-                     <!-- Zone d'édition  -->
                     <div 
                       ref="wysiwygEditor"
                       contenteditable="true"
@@ -150,8 +141,7 @@
                   </div>
                 </div>
               </div>
-  
-               <!-- Catégorie  -->
+   
               <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                   Catégorie <span class="primary-color">*</span>
@@ -170,8 +160,7 @@
                   </option>
                 </select>
               </div>
-  
-               <!-- Sous-catégorie  -->
+   
               <div>
                 <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-catégorie <span class="primary-color">*</span>
@@ -191,7 +180,6 @@
                 </select>
               </div>
   
-               <!-- Sous-sous-catégorie  -->
               <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-sous-catégorie
@@ -210,7 +198,6 @@
                 </select>
               </div>
   
-               <!-- Sous-sous-sous-catégorie  -->
               <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
                   Sous-sous-sous-catégorie
@@ -228,7 +215,6 @@
                 </select>
               </div>
 
-               <!-- Tags  -->
               <div class="sm:col-span-2">
                 <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
                   Tags (optionnel)
@@ -244,7 +230,6 @@
             </div>
           </div>
 
-           <!-- Spécifications Véhicule  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
@@ -256,7 +241,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               <!-- Condition  -->
+               
               <div>
                 <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
                   État du véhicule
@@ -273,7 +258,6 @@
                 </select>
               </div>
 
-               <!-- Make  -->
               <div>
                 <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                   Marque
@@ -287,7 +271,6 @@
                 >
               </div>
 
-               <!-- Model  -->
               <div>
                 <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                   Modèle
@@ -301,7 +284,6 @@
                 >
               </div>
 
-               <!-- Drive Type  -->
               <div>
                 <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type de transmission
@@ -322,7 +304,6 @@
                 </select>
               </div>
 
-               <!-- Year  -->
               <div>
                 <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
                   Année
@@ -337,8 +318,7 @@
                   placeholder="Ex: 2020"
                 >
               </div>
-
-               <!-- Fuel Type  -->
+ 
               <div>
                 <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type de carburant
@@ -358,10 +338,185 @@
                   <option value="unknown">Inconnu</option>
                 </select>
               </div>
+
+              <div>
+                <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
+                  Date de production
+                </label>
+                <input
+                  id="production_date"
+                  v-model="editData.production_date"
+                  type="date"
+                  class="text-sm sm:text-base input-style"
+                >
+              </div>
+
+              <div>
+                <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
+                  Pays d'origine
+                </label>
+                <input
+                  id="country_of_origin"
+                  v-model="editData.country_of_origin"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: Chine, Allemagne, Suède"
+                >
+              </div>
+
+              <div>
+                <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
+                  Empattement (mm)
+                </label>
+                <input
+                  id="wheelbase"
+                  v-model="editData.wheelbase"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 3800"
+                >
+              </div>
+
+              <div>
+                <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
+                  PTAC (kg)
+                </label>
+                <input
+                  id="gvw"
+                  v-model="editData.gvw"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 25000"
+                >
+              </div>
+
+              <div>
+                <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                  Capacité de charge utile (kg)
+                </label>
+                <input
+                  id="payload_capacity"
+                  v-model="editData.payload_capacity"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 15000"
+                >
+              </div>
+
+              <div>
+                <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Type de cabine
+                </label>
+                <input
+                  id="cabin_type"
+                  v-model="editData.cabin_type"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: Cabine courte, Cabine longue"
+                >
+              </div>
+
+              <div>
+                <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Type de suspension
+                </label>
+                <input
+                  id="suspension_type"
+                  v-model="editData.suspension_type"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: Pneumatique, Mécanique"
+                >
+              </div>
+
+              <div>
+                <label for="brake_system" class="block text-sm font-medium text-gray-700 mb-2">
+                  Système de freinage
+                </label>
+                <input
+                  id="brake_system"
+                  v-model="editData.brake_system"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: ABS, EBS"
+                >
+              </div>
+
+              <div>
+                <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
+                  Taille des pneus
+                </label>
+                <input
+                  id="tyre_size"
+                  v-model="editData.tyre_size"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 295/80R22.5"
+                >
+              </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Dimensions (L x l x H) en mm
+                </label>
+                <div class="grid grid-cols-3 gap-3">
+                  <input
+                    v-model="editData.dimension_length"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Longueur"
+                  >
+                  <input
+                    v-model="editData.dimension_width"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Largeur"
+                  >
+                  <input
+                    v-model="editData.dimension_height"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Hauteur"
+                  >
+                </div>
+              </div>
+
+              <div>
+                <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
+                  Poids à vide (kg)
+                </label>
+                <input
+                  id="curb_weight"
+                  v-model="editData.curb_weight"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 10000"
+                >
+              </div>
+
+              <div>
+                <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                  Capacité du réservoir (L)
+                </label>
+                <input
+                  id="fuel_tank_capacity"
+                  v-model="editData.fuel_tank_capacity"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 400"
+                >
+              </div>
             </div>
           </div>
 
-           <!-- Caractéristiques Techniques  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -374,7 +529,7 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               <!-- Transmission  -->
+                  
               <div>
                 <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Transmission
@@ -390,7 +545,6 @@
                 </select>
               </div>
 
-               <!-- Engine Brand  -->
               <div>
                 <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
                   Marque du moteur
@@ -408,7 +562,40 @@
                 </select>
               </div>
 
-               <!-- Mileage  -->
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Numéros de moteur
+                </label>
+                <div class="space-y-2">
+                  <div 
+                    v-for="(engineNumber, index) in editData.engine_numbers" 
+                    :key="index"
+                    class="flex gap-2"
+                  >
+                    <input
+                      v-model="editData.engine_numbers[index]"
+                      type="text"
+                      class="flex-1 text-sm sm:text-base input-style"
+                      placeholder="Ex: ENG123456789"
+                    >
+                    <button
+                      type="button"
+                      @click="removeEngineNumber(index)"
+                      class="px-3 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors"
+                    >
+                      <XIcon class="w-4 h-4" />
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    @click="addEngineNumber"
+                    class="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-600 hover:border-orange-400 hover:text-orange-600 transition-colors"
+                  >
+                    + Ajouter un numéro de moteur
+                  </button>
+                </div>
+              </div>
+
               <div class="sm:col-span-2">
                 <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
                   Kilométrage (km)
@@ -424,10 +611,21 @@
                 >
                 <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
               </div>
+              <div class="sm:col-span-2">
+                <label for="other_description" class="block text-sm font-medium text-gray-700 mb-2">
+                  Autres descriptions
+                </label>
+                <textarea
+                  id="other_description"
+                  v-model="editData.other_description"
+                  rows="4"
+                  class="input-style"
+                  placeholder="Ajoutez d'autres informations pertinentes sur le véhicule..."
+                ></textarea>
+              </div>
             </div>
           </div>
   
-           <!-- Prix et Stock  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -437,7 +635,7 @@
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
-               <!-- Prix unitaire  -->
+              
               <div>
                 <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
                   Prix unitaire ($) <span class="text-red-500">*</span>
@@ -453,8 +651,7 @@
                   placeholder="15000"
                 >
               </div>
-  
-               <!-- Stock initial  -->
+   
               <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
                   Stock <span class="primary-color">*</span>
@@ -471,7 +668,6 @@
                 >
               </div>
   
-               <!-- Type d'unité  -->
               <div>
                 <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type d'unité
@@ -488,7 +684,6 @@
               </div>
             </div>
   
-             <!-- Prix de gros  -->
             <div class="mt-6">
               <div class="flex items-center mb-4">
                 <input 
@@ -534,7 +729,6 @@
             </div>
           </div>
   
-           <!-- Couleurs  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -565,7 +759,6 @@
               </div>
             </div>
 
-             <!-- Couleur personnalisée  -->
             <div class="border-t border-gray-200 pt-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une couleur personnalisée</label>
               <div class="flex gap-2">
@@ -589,10 +782,9 @@
                 </button>
               </div>
             </div>
-
-             <!-- Ajout des tableaux de tracking pour les couleurs  -->
+ 
             <div v-if="colorsToAdd.length > 0 || colorsToRemove.length > 0" class="mt-6 space-y-4">
-               <!-- Couleurs à ajouter  -->
+                Couleurs à ajouter  
               <div v-if="colorsToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-2">Couleurs à ajouter :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -610,7 +802,6 @@
                 </div>
               </div>
 
-               <!-- Couleurs à supprimer  -->
               <div v-if="colorsToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium error-color mb-2">Couleurs à supprimer :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -630,7 +821,6 @@
             </div>
           </div>
   
-           <!-- Tailles  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -639,7 +829,6 @@
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
             </div>
 
-             <!-- Type de taille  -->
             <div class="mb-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Type de taille</label>
               <select 
@@ -671,7 +860,6 @@
               </button>
             </div>
 
-             <!-- Taille personnalisée  -->
             <div v-if="editData.sizeType" class="border-t border-gray-200 pt-4">
               <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une taille personnalisée</label>
               <div class="flex gap-2">
@@ -691,9 +879,8 @@
               </div>
             </div>
 
-             <!-- Ajout des tableaux de tracking pour les tailles  -->
             <div v-if="sizesToAdd.length > 0 || sizesToRemove.length > 0" class="mt-6 space-y-4">
-               Tailles à ajouter 
+                Tailles à ajouter  
               <div v-if="sizesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-2">Tailles à ajouter :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -707,7 +894,6 @@
                 </div>
               </div>
 
-               <!-- Tailles à supprimer  -->
               <div v-if="sizesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium error-color mb-2">Tailles à supprimer :</h4>
                 <div class="flex flex-wrap gap-2">
@@ -795,7 +981,6 @@
                   <XIcon class="w-4 h-4" />
                 </button>
                 
-                 <!-- Boutons de réorganisation  -->
                 <div class="absolute bottom-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
                   <button
                     v-if="index > 0"
@@ -818,10 +1003,8 @@
                 </div>
               </div>
             </div>
-
-             <!-- Ajout des tableaux de tracking pour les images  -->
+ 
             <div v-if="imagesToAdd.length > 0 || imagesToRemove.length > 0" class="space-y-4">
-               <!-- Images à ajouter  -->
               <div v-if="imagesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium text-green-800 mb-3">Images à ajouter ({{ imagesToAdd.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -850,7 +1033,6 @@
                 </div>
               </div>
 
-               <!-- Images à supprimer  -->
               <div v-if="imagesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
                 <h4 class="text-sm font-medium error-color mb-3">Images à supprimer ({{ imagesToRemove.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
@@ -880,7 +1062,6 @@
               </div>
             </div>
 
-             <!-- Message si aucune image  -->
             <div v-if="editData.images.length === 0" class="text-center py-8 text-gray-500">
               <ImageIcon class="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>Aucune image ajoutée</p>
@@ -888,7 +1069,6 @@
             </div>
           </div>
 
-           <!-- Vidéo  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -922,17 +1102,35 @@
               <video :src="editData.video.preview || editData.video.url" controls class="w-full max-w-md mx-auto rounded-lg shadow-lg">
                 Votre navigateur ne supporte pas la lecture de vidéos.
               </video>
+              
+              <div v-if="editData.video.uploading" class="mt-4">
+                <div class="flex items-center justify-center space-x-2">
+                  <div class="animate-spin rounded-full h-5 w-5 border-2 border-orange-500 border-t-transparent"></div>
+                  <span class="text-sm text-gray-600">Upload en cours... {{ editData.video.uploadProgress }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
+                  <div 
+                    class="bg-orange h-2 rounded-full transition-all duration-300"
+                    :style="{ width: `${editData.video.uploadProgress}%` }"
+                  ></div>
+                </div>
+              </div>
+
+              <div v-if="editData.video.uploaded" class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-2">
+                <CheckCircleIcon class="w-5 h-5 text-green-600" />
+                <span class="text-sm text-green-700">Vidéo téléchargée avec succès</span>
+              </div>
+
               <button 
                 @click="removeVideo"
                 type="button"
-                class="mt-4 px-4 py-2 error-background-color text-white rounded-lg  transition-colors font-medium"
+                class="mt-4 px-4 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
               >
                 Supprimer la vidéo
               </button>
             </div>
           </div>
   
-           <!-- Statut  -->
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center mb-6">
               <input 
@@ -951,7 +1149,6 @@
         </form>
       </div>
   
-       <!-- Footer fixe avec navigation  -->
       <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 sm:px-6 py-4 sm:rounded-b-2xl z-50">
         <div class="flex gap-2 sm:gap-3">
           <button
@@ -1062,7 +1259,24 @@ const editData = ref({
   fuel_type: '',
   transmission_type: '',
   engine_brand: '',
-  vehicle_mileage: null
+  vehicle_mileage: null,
+  // New fields
+  engine_numbers: [],
+  production_date: '',
+  country_of_origin: '',
+  wheelbase: null,
+  gvw: null,
+  payload_capacity: null,
+  cabin_type: '',
+  suspension_type: '',
+  brake_system: '',
+  tyre_size: '',
+  dimension_length: null,
+  dimension_width: null,
+  dimension_height: null,
+  curb_weight: null,
+  fuel_tank_capacity: null,
+  other_description: ''
 })
 
 const hasWholesalePrice = ref(false)
@@ -1320,9 +1534,25 @@ const addCustomSize = () => {
   }
 }
 
+const addEngineNumber = () => {
+  editData.value.engine_numbers.push('')
+}
+
+const removeEngineNumber = (index) => {
+  editData.value.engine_numbers.splice(index, 1)
+}
+
 const closeModal = () => {
   error.value = null
   emit('close')
+}
+
+const cloudinaryConfig = {
+  cloudName: 'daaavha4z',
+  uploadPreset: 'aliadjame',
+  apiKey: 'wy0Eh-uA0Y0Ci3nyODix0b3WejA',
+  imageUploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/image/upload',
+  videoUploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/video/upload'
 }
 
 const handleSubmit = async () => {
@@ -1338,7 +1568,13 @@ const handleSubmit = async () => {
       uploadImageToCloudinary(image, index)
     )
     
-    const uploadedUrls = await Promise.all(uploadPromises)
+    await Promise.all(uploadPromises)
+
+    // Upload de la vidéo si nécessaire
+    if (editData.value.video && editData.value.video.file && !editData.value.video.uploaded) {
+      loadingMessage.value = 'Téléchargement de la vidéo...'
+      await uploadVideoToCloudinary(editData.value.video)
+    }
     
     // Préparer les URLs finales des images
     const finalImageUrls = editData.value.images.map(image => {
@@ -1385,7 +1621,24 @@ const handleSubmit = async () => {
       fuel_type: editData.value.fuel_type,
       transmission_type: editData.value.transmission_type,
       engine_brand: editData.value.engine_brand,
-      vehicle_mileage: editData.value.vehicle_mileage
+      vehicle_mileage: editData.value.vehicle_mileage,
+      // New fields
+      engine_numbers: editData.value.engine_numbers.filter(num => num.trim() !== ''),
+      production_date: editData.value.production_date,
+      country_of_origin: editData.value.country_of_origin,
+      wheelbase: editData.value.wheelbase,
+      gvw: editData.value.gvw,
+      payload_capacity: editData.value.payload_capacity,
+      cabin_type: editData.value.cabin_type,
+      suspension_type: editData.value.suspension_type,
+      brake_system: editData.value.brake_system,
+      tyre_size: editData.value.tyre_size,
+      dimension_length: editData.value.dimension_length,
+      dimension_width: editData.value.dimension_width,
+      dimension_height: editData.value.dimension_height,
+      curb_weight: editData.value.curb_weight,
+      fuel_tank_capacity: editData.value.fuel_tank_capacity,
+      other_description: editData.value.other_description
     }
 
     // N'inclure la description détaillée que si elle est activée
@@ -1416,13 +1669,6 @@ const handleBackdropClick = (event) => {
   if (event.target === event.currentTarget) {
     closeModal()
   }
-}
-
-const cloudinaryConfig = {
-  cloudName: 'daaavha4z',
-  uploadPreset: 'aliadjame',
-  apiKey: 'wy0Eh-uA0Y0Ci3nyODix0b3WejA',
-  uploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/image/upload'
 }
 
 const handleImageUpload = (event) => {
@@ -1475,6 +1721,8 @@ const handleVideoUpload = (event) => {
       }
     }
     reader.readAsDataURL(file)
+  } else if (file) {
+    error.value = 'La vidéo est trop volumineuse (max 50MB)'
   }
 }
 
@@ -1529,7 +1777,7 @@ const uploadImageToCloudinary = async (image, index) => {
     formData.append('api_key', cloudinaryConfig.apiKey)
     formData.append('public_id', fileName)
     
-    const response = await fetch(cloudinaryConfig.uploadUrl, {
+    const response = await fetch(cloudinaryConfig.imageUploadUrl, {
       method: 'POST',
       body: formData
     })
@@ -1540,6 +1788,7 @@ const uploadImageToCloudinary = async (image, index) => {
       image.url = data.secure_url
       image.uploading = false
       image.uploaded = true
+      image.uploadProgress = 100
       return data.secure_url
     } else {
       throw new Error('Réponse Cloudinary invalide')
@@ -1548,6 +1797,60 @@ const uploadImageToCloudinary = async (image, index) => {
     console.error(`Erreur lors du téléchargement de l'image ${index}:`, error)
     image.uploading = false
     return null
+  }
+}
+
+const uploadVideoToCloudinary = async (video) => {
+  try {
+    video.uploading = true
+    video.uploadProgress = 0
+    
+    const fileName = `product_video_${Date.now()}_${video.file.name.replace(/\s+/g, '_')}`
+    
+    const formData = new FormData()
+    formData.append('file', video.file)
+    formData.append('upload_preset', cloudinaryConfig.uploadPreset)
+    formData.append('api_key', cloudinaryConfig.apiKey)
+    formData.append('public_id', fileName)
+    formData.append('resource_type', 'video')
+    
+    const xhr = new XMLHttpRequest()
+    
+    return new Promise((resolve, reject) => {
+      xhr.upload.addEventListener('progress', (e) => {
+        if (e.lengthComputable) {
+          video.uploadProgress = Math.round((e.loaded / e.total) * 100)
+        }
+      })
+      
+      xhr.addEventListener('load', () => {
+        if (xhr.status === 200) {
+          const data = JSON.parse(xhr.responseText)
+          if (data && data.secure_url) {
+            video.url = data.secure_url
+            video.uploading = false
+            video.uploaded = true
+            video.uploadProgress = 100
+            resolve(data.secure_url)
+          } else {
+            reject(new Error('Réponse Cloudinary invalide'))
+          }
+        } else {
+          reject(new Error(`Erreur HTTP: ${xhr.status}`))
+        }
+      })
+      
+      xhr.addEventListener('error', () => {
+        reject(new Error('Erreur réseau'))
+      })
+      
+      xhr.open('POST', cloudinaryConfig.videoUploadUrl)
+      xhr.send(formData)
+    })
+  } catch (error) {
+    console.error('Erreur lors du téléchargement de la vidéo:', error)
+    video.uploading = false
+    throw error
   }
 }
 
@@ -1578,8 +1881,8 @@ watch(() => props.product, (newProduct) => {
       colors: [...(newProduct.colors || [])],
       sizes: [...(newProduct.sizes || [])],
       sizeType: newProduct.size_type || '',
-      images: existingImages, // Images existantes
-      video: newProduct.video_url ? { url: newProduct.video_url, preview: newProduct.video_url } : null,
+      images: existingImages,
+      video: newProduct.video_url ? { url: newProduct.video_url, preview: newProduct.video_url, uploaded: true } : null,
       is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
       wholesale_price: newProduct.wholesale_price || null,
       wholesale_min_qty: newProduct.wholesale_min_qty || null,
@@ -1592,7 +1895,24 @@ watch(() => props.product, (newProduct) => {
       fuel_type: newProduct.fuel_type || '',
       transmission_type: newProduct.transmission_type || '',
       engine_brand: newProduct.engine_brand || '',
-      vehicle_mileage: newProduct.vehicle_mileage || null
+      vehicle_mileage: newProduct.vehicle_mileage || null,
+      // New fields
+      engine_numbers: Array.isArray(newProduct.engine_numbers) ? [...newProduct.engine_numbers] : [],
+      production_date: newProduct.production_date || '',
+      country_of_origin: newProduct.country_of_origin || '',
+      wheelbase: newProduct.wheelbase || null,
+      gvw: newProduct.gvw || null,
+      payload_capacity: newProduct.payload_capacity || null,
+      cabin_type: newProduct.cabin_type || '',
+      suspension_type: newProduct.suspension_type || '',
+      brake_system: newProduct.brake_system || '',
+      tyre_size: newProduct.tyre_size || '',
+      dimension_length: newProduct.dimension_length || null,
+      dimension_width: newProduct.dimension_width || null,
+      dimension_height: newProduct.dimension_height || null,
+      curb_weight: newProduct.curb_weight || null,
+      fuel_tank_capacity: newProduct.fuel_tank_capacity || null,
+      other_description: newProduct.other_description || ''
     }
     
     originalColors.value = [...(newProduct.colors || [])]
@@ -1679,8 +1999,6 @@ onMounted(() => {
 [contenteditable="true"] u {
   text-decoration: underline;
 }
-
-
 
 /* Effet de verre dépoli */
 .backdrop-blur-sm {
