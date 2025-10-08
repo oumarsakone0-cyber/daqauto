@@ -176,6 +176,16 @@
                 Description
               </h4>
               <p class="text-gray-700 leading-relaxed text-sm sm:text-lg">{{ product.description }}</p>
+              <br/>
+              <div v-if="product.description_plus">
+                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">Plus de Description</h4>
+                              
+                    <div class="text-gray-700 leading-relaxed text-sm sm:text-lg">
+                       <p>{{ product.description_plus || 'Aucune description disponible.' }}</p>
+                    </div>
+              </div>
+             
+              
             </div>
 
             <!-- Grille d'informations -->

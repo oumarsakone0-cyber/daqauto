@@ -36,7 +36,7 @@
         </div>
         <!-- Description -->
         <div v-if="activeTab === 1" class="tab-panel">
-          <div class="description-content">
+          <div class="description-content" >
             <p>{{ product.description || 'Aucune description disponible.' }}</p>
           </div>
         </div>

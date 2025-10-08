@@ -16,8 +16,7 @@
          
           <div class="tab-content">
              <!-- Onglet Spécifications -->
-           
-            <div v-if="activeTab === 0" class="product-specifications">
+              <div v-if="activeTab === 0" class="product-specifications">
                 <div class="specifications-table two-columns">
                   <div class="spec-group">
                     <h3 class="spec-group-title">Informations générales</h3>
@@ -181,14 +180,13 @@
               <h2 class="section-title">Description du produit</h2>
               
               <div class="description-content">
-                <p>{{ product.description || 'Aucune description disponible.' }}</p>
+                <p>{{ product.description || 'Aucune description disponible.'}}</p>
               </div>
               <div v-if="product.description_plus" >
 
                 <h2 class="section-title">Plus de Description</h2>
                 
-                <div class="description-content">
-                  <p>{{ product.description_plus || 'Aucune description disponible.' }}</p>
+                <div class="description-content" v-html="product.description_plus">
                 </div>
               </div>
               
@@ -282,7 +280,7 @@
   
   const productTabs = [
     { label: "Spécifications" },
-    { label: "Autres Spécifications" },
+    { label: "Autres Détails" },
     
     { label: "Avis" }
   ]

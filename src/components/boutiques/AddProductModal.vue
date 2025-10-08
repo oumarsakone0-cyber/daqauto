@@ -115,46 +115,24 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div class="sm:col-span-2">
                   <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                    Nom du produit <span class="error-color">*</span>
+                    Nom du produit 
                   </label>
                   <input
                     id="name"
                     v-model="productData.name"
                     type="text"
                     required
+                    disabled="true"
                     class=" text-sm sm:text-base  input-style"
-                    placeholder="Ex: T-shirt Premium Coton"
+                    placeholder="Le nom du produit sera généré automatiquement"
                   >
                 </div>
 
                 <div class="sm:col-span-2">
-                  <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                    Description courte
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                    Description détaillée (WYSIWYG) <span class="error-color">*</span>
                   </label>
-                  <textarea
-                    id="description"
-                    v-model="productData.description"
-                    rows="3"
-                    class="text-sm sm:text-base  input-style resize-none"
-                    placeholder="Décrivez votre produit..."
-                  ></textarea>
-                </div>
-
-                <div class="sm:col-span-2">
-                  <div class="flex items-center mb-3">
-                    <input 
-                      v-model="productData.hasDetailedDescription"
-                      id="detailed-description-toggle"
-                      type="checkbox"
-                      class="checkbox-style"
-                    >
-                    <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                      <EditIcon class="w-4 h-4  mr-1" style="color:#fe7900" />
-                      Activer la description détaillée (WYSIWYG)
-                    </label>
-                  </div>
-                  
-                  <div v-if="productData.hasDetailedDescription">
+                  <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
                        Barre d'outils WYSIWYG 
                       <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
@@ -184,18 +162,7 @@
                   </div>
                 </div>
 
-                <div class="sm:col-span-2">
-                  <label for="other_description" class="block text-sm font-medium text-gray-700 mb-2">
-                    Autres descriptions
-                  </label>
-                  <textarea
-                    id="other_description"
-                    v-model="productData.other_description"
-                    rows="4"
-                    class="text-sm sm:text-base input-style resize-none"
-                    placeholder="Ajoutez d'autres informations pertinentes..."
-                  ></textarea>
-                </div>
+                
 
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
@@ -348,7 +315,7 @@
 
                 <div>
                   <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de transmission
+                    Type de transmission <span class="error-color">*</span>
                   </label>
                   <select
                     id="drive_type"
@@ -670,6 +637,19 @@
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 315/80R22.5"
                   >
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="other_description" class="block text-sm font-medium text-gray-700 mb-2">
+                    Autres descriptions
+                  </label>
+                  <textarea
+                    id="other_description"
+                    v-model="productData.other_description"
+                    rows="4"
+                    class="text-sm sm:text-base input-style resize-none"
+                    placeholder="Ajoutez d'autres informations pertinentes..."
+                  ></textarea>
                 </div>
               </div>
             </div>
@@ -1186,7 +1166,6 @@ const steps = [
 //  Added new fields to productData
 const productData = reactive({
   name: '',
-  description: '',
   detailed_description: '',
   hasDetailedDescription: false,
   other_description: '',
@@ -1311,10 +1290,11 @@ const availableSubSubSubcategories = computed(() => {
 const canProceedToNextStep = computed(() => {
   switch (currentStep.value) {
     case 0:
-      return !!(productData.name && productData.category_id && productData.subcategory_id)
+      return !!(productData.detailed_description && productData.category_id && productData.subcategory_id)
     case 1:
-      return !!(productData.vehicle_condition && productData.vehicle_make && productData.vehicle_model && productData.vehicle_year)
+      return !!(productData.vehicle_condition && productData.vehicle_make && productData.vehicle_model && productData.vehicle_year && productData.drive_type)
     case 2:
+      getProductName();
       return true
     case 3:
       const hasValidPrice = productData.unit_price !== null && 
@@ -1557,6 +1537,22 @@ const removeVideo = () => {
   productData.videoUrl = ''
 }
 
+const getProductName = () => {
+  const categorieName= getCategoryName(productData.category_id);
+  productData.vehicle_condition= productData.vehicle_condition.charAt(0).toUpperCase() + productData.vehicle_condition.slice(1).toLowerCase();
+  
+  productData.name = [
+                    productData.vehicle_condition,
+                    productData.vehicle_year,
+                    productData.vehicle_make,
+                    productData.vehicle_model,
+                    categorieName,
+                    productData.drive_type
+                  ].filter(Boolean).join(' ');
+
+  return productData.name
+}
+
 const handleNextStep = async () => {
   error.value = null
   
@@ -1566,6 +1562,7 @@ const handleNextStep = async () => {
     } else {
       error.value = 'Veuillez remplir tous les champs obligatoires'
     }
+      
     
     setTimeout(() => {
       error.value = null
@@ -1703,7 +1700,6 @@ const uploadAllMedia = async () => {
 const prepareDataForSubmission = () => {
   const formData = {
     name: productData.name,
-    description: productData.description,
     other_description: productData.other_description,
     category_id: productData.category_id,
     subcategory_id: productData.subcategory_id,
