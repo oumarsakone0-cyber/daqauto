@@ -68,7 +68,7 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Engine Power</div>
-                      <div class="spec-value">{{ product.power || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.power || 'N/A', console.log("Produuits",product) }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Engine Emmissions</div>
@@ -101,54 +101,74 @@
                       <div class="spec-name">VIN / Chassis NO.</div>
                       <div class="spec-value">{{ product.vin || 'N/A'  }}</div>
                     </div>
+                    <!-- TODO: parcourir la liste des numéros de moteur -->
                     <div class="spec-row">
-                      <div class="spec-name">Engine Number</div>
-                      <div class="spec-value">{{ product.engine_number || 'N/A' }}</div>
+                      <div class="spec-name">Engine Numbers</div>
+                      <div class="spec-value">
+                        <ul v-if="product.engine_numbers && product.engine_numbers.length">
+                          <li v-for="engineNumber in product.engine_numbers" :key="engineNumber.id">
+                            {{ engineNumber || 'N/A' }}
+                          </li>
+                        </ul>
+                        <span v-else>N/A</span>
+                      </div>
                     </div>
+                    <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Production date</div>
                       <div class="spec-value">{{ product.production_date || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Country of Origin</div>
                       <div class="spec-value">{{ product.country_of_origin || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Wheelbase</div>
                       <div class="spec-value">{{ product.wheelbase || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">GVW</div>
                       <div class="spec-value">{{ product.gvw || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Payload Capacity</div>
                       <div class="spec-value">{{ product.payload_capacity || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Cabin Type</div>
                       <div class="spec-value">{{ product.cabin_type || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Suspension Type</div>
                       <div class="spec-value">{{ product.suspension_type || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Brake System</div>
                       <div class="spec-value">{{ product.brake_system || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Type Size</div>
                       <div class="spec-value">{{ product.type_size || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Dimensions (L x l x H)</div>
                       <div class="spec-value">{{ product.dimensions || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Curb Weight</div>
                       <div class="spec-value">{{ product.curb_weight || 'N/A' }}</div>
                     </div>
+                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Fuel Tank Capacity</div>
                       <div class="spec-value">{{ product.fuel_tank_capacity || 'N/A' }}</div>
