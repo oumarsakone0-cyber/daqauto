@@ -105,17 +105,17 @@
             <!-- Étape 1: Informations personnelles -->
             <div v-if="currentStep === 0" class="space-y-4">
               <label class="flex text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
-               <div v-if="registerData.pathPicture.length > 0" class="mb-4" >
+               <div v-if="registerData.profileImage.length > 0" class="mb-4" >
                   <div class="w-16 h-16 sm:w-18 sm:h-18  rounded-full flex items-center justify-center mx-auto mb-4 relative">
 
                     <div class="absolute flex items-center justify-center mx-auto">
                           <img
-                            :src="registerData.pathPicture[0].preview"
+                            :src="registerData.profileImage[0].preview"
                             alt="Image de profil"
                             class="w-16 h-16 sm:w-18 sm:h-18 object-cover rounded-full "
                           >
                         <XIcon
-                          @click="registerData.pathPicture = []"
+                          @click="registerData.profileImage = []"
                           class="absolute -top-2 -right-2 w-5 h-5 bg-red-500 text-white rounded-full p-1 cursor-pointer"
                           title="Supprimer l'image"
                         />
@@ -611,7 +611,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   ]
   
   const registerData = reactive({
-    pathPicture:[],
+    profileImage:[],
     fullName: '',
     email: '',
     phone: '',
@@ -734,13 +734,13 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   //Function pour chnger la photo de profile
   const handleProfileImageUpload = (event) => {
   const files = Array.from(event.target.files)
-  const remainingSlots = 8 - registerData.pathPicture.length
+  const remainingSlots = 8 - registerData.profileImage.length
   
   files.slice(0, remainingSlots).forEach(file => {
     if (file.size <= 10 * 1024 * 1024) {
       const reader = new FileReader()
       reader.onload = (e) => {
-        registerData.pathPicture= [{
+        registerData.profileImage= [{
         file: file,
         preview: e.target.result,
         uploading: false,
@@ -793,6 +793,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
       
       // Préparer les données pour l'API
       const userData = {
+        profile_image: registerData.profileImage,
         full_name: registerData.fullName,
         email: registerData.email,
         phone: registerData.phone,

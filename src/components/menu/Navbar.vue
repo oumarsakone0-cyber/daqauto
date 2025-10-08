@@ -190,10 +190,11 @@
               <span>Mon Dashboard</span>
             </div> -->
             <div class="user-account">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <svg v-if="currentUser && !currentUser.profile_image" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                 <circle cx="12" cy="7" r="4"/>
               </svg>
+              <img v-if="currentUser && currentUser.profile_image" :src="currentUser.profile_image" alt="Profile" class="h-8 w-8 rounded-full" />
               <span v-if="currentUser && currentUser.email">
                  {{ currentUser.full_name }}
               </span>
@@ -213,6 +214,11 @@
                    {{ cartCount }}
                    </div></div>
             </div>
+
+          </div>
+          <div class="user-account">
+            
+            <LogOut  v-if="currentUser && currentUser.email" class="h-6 w-6 text-gray-600 cursor-pointer" />
           </div>
         </div>
         
@@ -722,6 +728,7 @@
 import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { categoriesApi, productsApi } from '../../services/api.js';
+import { LogOut } from 'lucide-vue-next';
 
 const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
 const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
