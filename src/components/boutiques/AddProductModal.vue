@@ -700,7 +700,7 @@
 
                 <div>
                   <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type d'unité
+                    Unité
                   </label>
                   <select
                     id="unit_type"
@@ -731,7 +731,7 @@
                 <div v-if="productData.hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label for="wholesale_price" class="block text-sm font-medium text-gray-700 mb-2">
-                      Prix de gros (FCFA)
+                      Prix de gros
                     </label>
                     <input
                       id="wholesale_price"
