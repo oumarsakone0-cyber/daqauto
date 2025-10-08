@@ -73,7 +73,7 @@
              
               <div class="sm:col-span-2">
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom du produit <span class="primary-color">*</span>
+                  Nom du produit <span class="error-color">*</span>
                 </label>
                 <input
                   id="name"
@@ -144,7 +144,7 @@
    
               <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                  Catégorie <span class="primary-color">*</span>
+                  Catégorie <span class="error-color">*</span>
                 </label>
                 <select
                   id="category"
@@ -163,7 +163,7 @@
    
               <div>
                 <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                  Sous-catégorie <span class="primary-color">*</span>
+                  Sous-catégorie <span class="error-color">*</span>
                 </label>
                 <select
                   id="subcategory"
@@ -244,14 +244,14 @@
                
               <div>
                 <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
-                  État du véhicule
+                  État du véhicule 
                 </label>
                 <select
                   id="vehicle_condition"
                   v-model="editData.vehicle_condition"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Tous les états</option>
+                  <option value="">Selectionner l'état du véhicule</option>
                   <option value="new">Neuf</option>
                   <option value="used">Occasion</option>
                   <option value="refurbished">Reconditionné</option>
@@ -581,7 +581,7 @@
                     <button
                       type="button"
                       @click="removeEngineNumber(index)"
-                      class="px-3 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors"
+                      class="px-3 py-2 btn-deconnexion"
                     >
                       <XIcon class="w-4 h-4" />
                     </button>
@@ -589,7 +589,7 @@
                   <button
                     type="button"
                     @click="addEngineNumber"
-                    class="w-full px-4 py-2 border-2 border-dashed border-gray-300 rounded-lg text-sm text-gray-600 hover:border-orange-400 hover:text-orange-600 transition-colors"
+                    class="w-full submit-btn"
                   >
                     + Ajouter un numéro de moteur
                   </button>
@@ -638,7 +638,7 @@
               
               <div>
                 <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                  Prix unitaire ($) <span class="text-red-500">*</span>
+                  Prix unitaire ($) <span class="error-color">*</span>
                 </label>
                 <input
                   id="unit_price"
@@ -654,7 +654,7 @@
    
               <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                  Stock <span class="primary-color">*</span>
+                  Stock <span class="error-color">*</span>
                 </label>
                 <input
                   id="stock"
@@ -963,7 +963,7 @@
                   v-if="index === 0"
                   class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md"
                 >
-                  
+                  Principale
                 </div>
                 <div v-if="image.uploading" class="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
                   <div class="text-white text-sm font-medium">{{ image.uploadProgress }}%</div>
@@ -973,33 +973,19 @@
                   <CheckIcon class="h-4 w-4" />
                 </div>
                 
-                <button
-                  type="button"
-                  @click="removeImage(index)"
-                  class="absolute -top-2 -right-2 w-6 h-6  text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity error-background-color"
-                >
-                  <XIcon class="w-4 h-4" />
-                </button>
+              <XIcon class="absolute -top-1 -right-1 w-4 h-4 error-color opacity-0 group-hover:opacity-100 transition-opacity"  @click="removeImage(index)" />
                 
                 <div class="absolute bottom-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  <button
-                    v-if="index > 0"
-                    type="button"
-                    @click="moveImageUp(index)"
-                    class="w-6 h-6 bg-orange text-white rounded-full flex items-center justify-center"
-                    title="Déplacer vers la gauche"
-                  >
-                    <ChevronLeftIcon class="w-3 h-3" />
-                  </button>
-                  <button
-                    v-if="index < editData.images.length - 1"
-                    type="button"
-                    @click="moveImageDown(index)"
-                    class="w-6 h-6 bg-orange text-white rounded-full flex items-center justify-center"
-                    title="Déplacer vers la droite"
-                  >
-                    <ChevronRightIcon class="w-3 h-3" />
-                  </button>
+                  
+                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-between shadow cursor-pointer" title="Déplacer vers la gauche">
+                  <ChevronLeftIcon class="w-4 h-4 text-black cursor-pointer" @click="moveImageUp(index)" />
+                </div>
+                  
+                  
+                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow cursor-pointer" title="Déplacer vers la droite">
+
+                  <ChevronRightIcon class="w-4 h-4 text-black cursor-pointer"  @click="moveImageDown(index)" />
+                </div>
                 </div>
               </div>
             </div>
