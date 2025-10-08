@@ -7,8 +7,16 @@
         <div class="supplier-info">
           <h3 class="supplier-name">{{ supplier.name }}</h3>
           <div class="supplier-badges">
-            <span v-if="supplier.premium" class="badge primary-color">Premium</span>
-            <span v-if="supplier.verify" class="badge success-color">Vérifié</span>
+            
+            <!-- <div v-if="supplier.verify"> -->
+              <BadgeCheckIcon  class="h-4 w-4 blue-color inline-block " />
+              <span  class="badge blue-color">Vérifié</span>
+            <!-- </div> -->
+            <!-- <div v-if="supplier.premium"> -->
+              <img src="../../assets/premium.png" alt="Premium" class="inline-block h-4 w-4" />
+              <span  class="badge primary-color">Premium</span>
+            <!-- </div> -->
+            
           </div>
           <div class="supplier-location">
             <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -76,7 +84,8 @@
   </template>
   
   <script setup>
-  import { defineProps, defineEmits } from 'vue'
+  import { BadgeCheckIcon } from 'lucide-vue-next';
+import { defineProps, defineEmits } from 'vue'
   
   const props = defineProps({
     supplier: Object
@@ -135,7 +144,7 @@
   }
   
   .badge {
-    padding: 2px 8px;
+    padding-right: 10px;
     border-radius: 12px;
     font-size: 11px;
     font-weight: 600;
