@@ -16,8 +16,8 @@
          
           <div class="tab-content">
              <!-- Onglet Spécifications -->
-              <div v-if="activeTab === 0" class="product-specifications">
-                <div class="specifications-table two-columns">
+              <div v-if="activeTab === 0" >
+                <div class="specifications-table">
                   <div class="spec-group">
                     <h3 class="spec-group-title">Informations générales</h3>
                     <!-- verifié -->
@@ -67,7 +67,7 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Engine Power</div>
-                      <div class="spec-value">{{ product.power || 'N/A', console.log("Produuits",product) }}</div>
+                      <div class="spec-value">{{ product.power || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Engine Emmissions</div>

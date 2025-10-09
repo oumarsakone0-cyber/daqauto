@@ -279,15 +279,15 @@
                     required
                   >
                     <option value="">Selectionner l'état du véhicule</option>
-                    <option value="new">Neuf</option>
-                    <option value="used">Occasion</option>
-                    <option value="refurbished">Reconditionné</option>
+                    <option value="New">Neuf</option>
+                    <option value="Used">Occasion</option>
+                    <option value="Refurbished">Reconditionné</option>
                   </select>
                 </div>
 
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
-                    Marque <span class="error-color">*</span>
+                    Marque du véhicule <span class="error-color">*</span>
                   </label>
                   <input
                     id="vehicle_make"
@@ -301,7 +301,7 @@
 
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
-                    Modèle <span class="error-color">*</span>
+                    Modèle du véhicule <span class="error-color">*</span>
                   </label>
                   <input
                     id="vehicle_model"
@@ -359,13 +359,13 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Selectionner le type de carburant</option>
-                    <option value="diesel">Diesel</option>
-                    <option value="electric">Électrique</option>
-                    <option value="hybrid">Hybride</option>
-                    <option value="cng">CNG</option>
-                    <option value="lng">LNG</option>
-                    <option value="hydrogen">Hydrogène</option>
-                    <option value="unknown">Inconnu</option>
+                    <option value="Diesel">Diesel</option>
+                    <option value="Electric">Électrique</option>
+                    <option value="Hybrid">Hybride</option>
+                    <option value="CNG">CNG</option>
+                    <option value="LNG">LNG</option>
+                    <option value="Hydrogen">Hydrogène</option>
+                    <option value="Unknown">Inconnu</option>
                   </select>
                 </div>
 
@@ -396,7 +396,7 @@
 
                 <div>
                   <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                    Empattement (mm)
+                    Empattement
                   </label>
                   <input
                     id="wheelbase"
@@ -479,7 +479,7 @@
 
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Dimensions (L x l x H) en mm
+                    Dimensions (L x l x H) (m)
                   </label>
                   <div class="grid grid-cols-3 gap-2">
                     <input
@@ -524,7 +524,7 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Transmission
+                   Type de Transmission
                   </label>
                   <select
                     id="transmission_type"
@@ -532,8 +532,8 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Toutes les transmissions</option>
-                    <option value="automatic">Automatique</option>
-                    <option value="manual">Manuelle</option>
+                    <option value="Automatic">Automatique</option>
+                    <option value="Manual">Manuelle</option>
                   </select>
                 </div>
 
@@ -547,11 +547,67 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Sélectionnez une marque</option>
-                    <option value="weichai">Weichai</option>
-                    <option value="yuchai">Yuchai</option>
-                    <option value="sinotruck">Sinotruck</option>
-                    <option value="man">MAN</option>
+                    <option value="Weichai">Weichai</option>
+                    <option value="Yuchai">Yuchai</option>
+                    <option value="Sinotruck">Sinotruck</option>
+                    <option value="Man">MAN</option>
                   </select>
+                </div>
+                <div>
+                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Puissance du Moteur (ch/kW)
+                  </label>
+                  <input
+                    id="power"
+                    v-model="productData.power"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 400"
+                  >
+                </div>
+                <div>
+                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Émissions du moteur (g/km)
+                  </label>
+                  <input
+                    id="fuel_tank_capacity"
+                    v-model="productData.engine_emissions"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 40"
+                  >
+                </div>
+                <div class="sm:col-span-2">
+                  <label class="block text-sm font-medium text-gray-700 mb-2">
+                    Numéros VIN / Num Chassis
+                  </label>
+                  <div class="space-y-2">
+                    <div v-for="(vin, index) in productData.vin" :key="index" class="flex gap-2">
+                      <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
+                      <input
+                        v-model="productData.vin[index]"
+                        type="text"
+                        class="flex-1 text-sm sm:text-base input-style"
+                        :placeholder="`Numéro VIN ${index + 1}`"
+                      >
+                      <button
+                        type="button"
+                        @click="removeEngineVin(index)"
+                        class="px-3 py-2 btn-deconnexion"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+                    </div>
+                    <button
+                      type="button"
+                      @click="addEngineVin"
+                      class="submit-btn w-full"
+                    >
+                      + Ajouter un numéro VIN
+                    </button>
+                  </div>
                 </div>
 
                 <div class="sm:col-span-2">
@@ -560,6 +616,7 @@
                   </label>
                   <div class="space-y-2">
                     <div v-for="(engineNumber, index) in productData.engine_numbers" :key="index" class="flex gap-2">
+                      <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
                         v-model="productData.engine_numbers[index]"
                         type="text"
@@ -584,7 +641,7 @@
                   </div>
                 </div>
 
-                <div class="sm:col-span-2">
+                <div >
                   <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
                     Kilométrage (km)
                   </label>
@@ -632,7 +689,7 @@
                   </label>
                   <input
                     id="tyre_size"
-                    v-model="productData.tyre_size"
+                    v-model="productData.type_size"
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 315/80R22.5"
@@ -1027,13 +1084,16 @@
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div class="space-y-2">
-                    <p><span class="font-medium text-gray-700">Nom:</span> <span class="text-gray-900">{{ productData.name || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Nom du produit:</span> <span class="text-gray-900">{{ productData.name || 'Non défini' }}</span></p>
                     <p><span class="font-medium text-gray-700">Catégorie:</span> <span class="text-gray-900">{{ getCategoryName(productData.category_id) || 'Non définie' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Prix:</span> <span class="text-gray-900">{{ productData.unit_price ? productData.unit_price + ' FCFA' : 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Stock:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Prix unitaire ($):</span> <span class="text-gray-900">{{ productData.unit_price ? productData.unit_price  : 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Stock initial:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Prix de gros:</span> <span class="text-gray-900">{{ productData.wholesale_price || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Quantité minimale:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
                   </div>
                   <div class="space-y-2">
-                    <p><span class="font-medium text-gray-700">Couleurs:</span> <span class="text-gray-900">{{ productData.colors.length }} sélectionnée(s)</span></p>
+                    <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
+                    <p><span class="font-medium text-gray-700">Unité:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
                     <p><span class="font-medium text-gray-700">Tailles:</span> <span class="text-gray-900">{{ productData.sizes.length }} sélectionnée(s)</span></p>
                     <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
                     <p><span class="font-medium text-gray-700">Vidéo:</span> <span class="text-gray-900">{{ productData.video ? 'Oui' : 'Non' }}</span></p>
@@ -1041,6 +1101,165 @@
                 </div>
               </div>
 
+
+              <div class="specifications-table two-columns">
+                  <div class="spec-group">
+                    <h3 class="spec-group-title">Informations générales</h3>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Condition du véhicule</div>
+                      <div class="spec-value">{{ productData.vehicle_condition || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Marque du véhicule</div>
+                      <div class="spec-value">{{ productData.vehicle_make || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Modèle du véhicule</div>
+                      <div class="spec-value">{{ productData.vehicle_model || 'N/A' }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Type de transmission</div>
+                      <div class="spec-value">{{ productData.drive_type || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Année</div>
+                      <div class="spec-value">{{ productData.vehicle_year || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Type de carburant</div>
+                      <div class="spec-value">{{ productData.fuel_type || 'N/A' }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Type de Transmission</div>
+                      <div class="spec-value">{{ productData.transmission_type || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Marque du moteur</div>
+                      <div class="spec-value">{{ productData.engine_brand || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Puissance du Moteur (ch/kW)</div>
+                      <div class="spec-value">{{ productData.power || 'N/A', console.log("Produuits",productData) }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Émissions du moteur (g/km)</div>
+                      <div class="spec-value">{{ productData.engine_emissions || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Kilométrage (km)</div>
+                      <div class="spec-value">{{ productData.vehicle_mileage || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Système de freinage</div>
+                      <div class="spec-value">{{ productData.brake_system || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Taille des pneus</div>
+                      <div class="spec-value">{{ productData.type_size || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Dimensions (L x l x H) (m)</div>
+                      <div class="spec-value">{{ `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}` }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row overflow-x-auto items-center">
+                      <div class="spec-name">Couleurs</div>
+                      <div v-for="color in productData.colors" :key="color.hex_value" >
+                        <div  class="spec-value ">
+                          <div>
+                            <span 
+                              class="inline-block w-6 h-6 rounded-full border border-gray-300 mr-2" 
+                              :style="{ backgroundColor: color || '#FFFFFF' }"
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="spec-group">
+                    <h3 class="spec-group-title">Détails techniques</h3>
+                    <div class="spec-row">
+                      <div class="spec-name"> Numéros VIN / Num Chassis</div>
+                      <div class="spec-value">
+                        <ul v-if="productData.vin && productData.vin.length">
+                          <li v-for="vin in productData.vin" :key="vin.id">
+                            {{ vin }}
+                          </li>
+                        </ul>
+                        <span v-else>N/A</span>
+                      </div>
+                    </div>
+                    <!-- TODO: parcourir la liste des numéros de moteur -->
+                    <div class="spec-row">
+                      <div class="spec-name">Numéros de moteur</div>
+                      <div class="spec-value">
+                        <ul v-if="productData.engine_numbers && productData.engine_numbers.length">
+                          <li v-for="engineNumber in productData.engine_numbers" :key="engineNumber.id">
+                            {{ engineNumber }}
+                          </li>
+                        </ul>
+                        <span v-else>N/A</span>
+                      </div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Date de production</div>
+                      <div class="spec-value">{{ productData.production_date || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Pays d'origine</div>
+                      <div class="spec-value">{{ productData.country_of_origin || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Empattement</div>
+                      <div class="spec-value">{{ productData.wheelbase || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">GVW - Poids total en charge (kg)</div>
+                      <div class="spec-value">{{ productData.gvw || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Capacité de charge utile (kg)</div>
+                      <div class="spec-value">{{ productData.payload_capacity || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Type de cabine</div>
+                      <div class="spec-value">{{ productData.cabin_type || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Type de suspension</div>
+                      <div class="spec-value">{{ productData.suspension_type || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Poids à vide (Tonnes)</div>
+                      <div class="spec-value">{{ productData.curb_weight || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Capacité du réservoir (L)</div>
+                      <div class="spec-value">{{ productData.fuel_tank_capacity || 'N/A' }}</div>
+                    </div>
+                  </div>
+                </div>
             </div>
           </div>
 
@@ -1197,6 +1416,9 @@ const productData = reactive({
   transmission_type: '',
   engine_brand: '',
   engine_numbers: [],
+  vin: [],
+  power: '',
+  engine_emissions: '',
   vehicle_mileage: null,
   production_date: '',
   country_of_origin: '',
@@ -1206,7 +1428,7 @@ const productData = reactive({
   cabin_type: '',
   suspension_type: '',
   brake_system: '',
-  tyre_size: '',
+  type_size: '',
   dimensions_length: null,
   dimensions_width: null,
   dimensions_height: null,
@@ -1368,6 +1590,14 @@ const addEngineNumber = () => {
 
 const removeEngineNumber = (index) => {
   productData.engine_numbers.splice(index, 1)
+}
+//  Added engine VIN management functions
+const addEngineVin = () => {
+  productData.vin.push('')
+}
+
+const removeEngineVin = (index) => {
+  productData.vin.splice(index, 1)
 }
 
 // Méthodes
@@ -1722,6 +1952,9 @@ const prepareDataForSubmission = () => {
     transmission_type: productData.transmission_type,
     engine_brand: productData.engine_brand,
     engine_numbers: productData.engine_numbers.filter(num => num.trim() !== ''),
+    vin: productData.vin.filter(num => num.trim() !== ''),
+    power: productData.power,
+    engine_emissions: productData.engine_emissions,
     vehicle_mileage: productData.vehicle_mileage,
     production_date: productData.production_date,
     country_of_origin: productData.country_of_origin,
@@ -1731,9 +1964,10 @@ const prepareDataForSubmission = () => {
     cabin_type: productData.cabin_type,
     suspension_type: productData.suspension_type,
     brake_system: productData.brake_system,
-    tyre_size: productData.tyre_size,
+    tyre_size: productData.type_size,
     curb_weight: productData.curb_weight,
     fuel_tank_capacity: productData.fuel_tank_capacity
+  
   }
   
   if (productData.dimensions_length || productData.dimensions_width || productData.dimensions_height) {
@@ -1798,6 +2032,55 @@ onMounted(() => {
 </script>
 
 <style scoped>
+
+ .specifications-table {
+    display: flex;
+    gap: 24px;
+  }
+
+  .spec-group {
+    flex: 1 1 0;
+    min-width: 0;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .spec-group-title {
+    padding: 12px 16px;
+    background: #f5f5f5;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .spec-row {
+    display: flex;
+    border-top: 1px solid #e8e8e8;
+  }
+  
+  .spec-row:first-of-type {
+    border-top: none;
+  }
+  
+  .spec-name,
+  .spec-value {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .spec-name {
+    width: 40%;
+    background: #fafafa;
+    color: #666;
+    border-right: 1px solid #e8e8e8;
+  }
+  
+  .spec-value {
+    width: 60%;
+    color: #333;
+  }
 
 /* Amélioration pour les interactions tactiles */
 .touch-manipulation {
