@@ -82,7 +82,7 @@
             :class="[
               canAddMoreProducts()
                 ?'submit-btn'
-                : 'bg-gray-400 cursor-not-allowed'
+                : 'btn-gray'
             ]"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
@@ -1675,6 +1675,7 @@ const fetchProducts = async () => {
     
     if (response.success) {
       products.value = response.data || []
+      console.log("Produits chargés:", products.value)
     } else {
       error.value = response.error || 'Erreur lors du chargement des produits'
     }

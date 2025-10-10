@@ -129,7 +129,7 @@
                 </div>
 
                 <div class="sm:col-span-2">
-                  <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                  <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
                     Description détaillée (WYSIWYG) <span class="error-color">*</span>
                   </label>
                   <div >
@@ -702,7 +702,7 @@
                   </label>
                   <textarea
                     id="other_description"
-                    v-model="productData.other_description"
+                    v-model="productData.description_plus"
                     rows="4"
                     class="text-sm sm:text-base input-style resize-none"
                     placeholder="Ajoutez d'autres informations pertinentes..."
@@ -1385,9 +1385,9 @@ const steps = [
 //  Added new fields to productData
 const productData = reactive({
   name: '',
-  detailed_description: '',
+  description: '',
   hasDetailedDescription: false,
-  other_description: '',
+  description_plus: '',
   category_id: '',
   subcategory_id: '',
   subsubcategory_id: '',
@@ -1399,6 +1399,7 @@ const productData = reactive({
   hasWholesalePrice: false,
   wholesale_price: null,
   wholesale_min_qty: null,
+  colors_names: [],
   colors: [],
   sizes: [],
   sizeType: '',
@@ -1512,7 +1513,7 @@ const availableSubSubSubcategories = computed(() => {
 const canProceedToNextStep = computed(() => {
   switch (currentStep.value) {
     case 0:
-      return !!(productData.detailed_description && productData.category_id && productData.subcategory_id)
+      return !!(productData.description && productData.category_id && productData.subcategory_id)
     case 1:
       return !!(productData.vehicle_condition && productData.vehicle_make && productData.vehicle_model && productData.vehicle_year && productData.drive_type)
     case 2:
@@ -1632,7 +1633,7 @@ const formatHeading = (event) => {
 }
 
 const updateDetailedDescription = () => {
-  productData.detailed_description = wysiwygEditor.value.innerHTML
+  productData.description = wysiwygEditor.value.innerHTML
 }
 
 const updateSubcategories = () => {
@@ -1669,10 +1670,18 @@ const getSizePlaceholder = (sizeType) => {
 
 const toggleColor = (color) => {
   const index = productData.colors.indexOf(color)
+
   if (index > -1) {
     productData.colors.splice(index, 1)
+    productData.colors_names.splice(index, 1)
   } else {
     productData.colors.push(color)
+    const colorObj = availableColors.value.find(c => c.value === color)
+    if (colorObj) {
+      productData.colors_names.push(colorObj.name)
+    } else {
+      productData.colors_names.push('Personnalisé')
+    }
   }
 }
 
@@ -1698,6 +1707,7 @@ const addCustomColor = () => {
         value: customColor.value.value
       })
       productData.colors.push(customColor.value.value)
+      productData.colors_names.push(customColor.value.name)
     }
     
     customColor.value = { name: '', value: '#000000' }
@@ -1930,7 +1940,7 @@ const uploadAllMedia = async () => {
 const prepareDataForSubmission = () => {
   const formData = {
     name: productData.name,
-    other_description: productData.other_description,
+    description_plus: productData.description_plus,
     category_id: productData.category_id,
     subcategory_id: productData.subcategory_id,
     subsubcategory_id: productData.subsubcategory_id,
@@ -1974,8 +1984,8 @@ const prepareDataForSubmission = () => {
     formData.dimensions = `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}`
   }
   
-  if (productData.hasDetailedDescription && productData.detailed_description) {
-    formData.detailed_description = productData.detailed_description
+  if (productData.hasDetailedDescription && productData.description) {
+    formData.description = productData.description
   }
   
   if (productData.hasWholesalePrice) {
@@ -1993,7 +2003,7 @@ const prepareDataForSubmission = () => {
   if (productData.videoUrl) {
     formData.video_url = productData.videoUrl
   }
-  
+  console.log('Données préparées pour la soumission:', formData)
   return formData
 }
 
@@ -2029,6 +2039,7 @@ const handleBackdropClick = (event) => {
 onMounted(() => {
   fetchCategories()
 })
+
 </script>
 
 <style scoped>

@@ -85,34 +85,34 @@
                 >
               </div>
   
-              <div class="sm:col-span-2">
+              <!-- <div class="sm:col-span-2">
                 <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
                   Description courte
                 </label>
                 <textarea
                   id="description"
-                  v-model="editData.description"
+                  v-model="editData.description_plus"
                   rows="3"
                   class="input-style"
                   placeholder="Décrivez votre produit..."
                 ></textarea>
-              </div>
+              </div> -->
 
               <div class="sm:col-span-2">
                 <div class="flex items-center mb-3">
-                  <input 
+                  <!-- <input 
                     v-model="editData.hasDetailedDescription"
                     id="detailed-description-toggle"
                     type="checkbox"
                     class="checkbox-style"
-                  >
+                  > -->
                   <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                     <EditIcon class="w-4 h-4 primary-color mr-1" />
                     Activer la description détaillée (WYSIWYG)
                   </label>
                 </div>
                 
-                <div v-if="editData.hasDetailedDescription">
+                <div >
                   <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
                       
                     <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
@@ -156,7 +156,7 @@
                 >
                   <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
                   <option v-for="category in categories" :key="category.id" :value="category.id">
-                    {{ category.name }}
+                    {{ category.name, console.log("editData",editData) }}
                   </option>
                 </select>
               </div>
@@ -210,7 +210,7 @@
                 >
                   <option value="">Sélectionner une sous-sous-sous-catégorie (optionnel)</option>
                   <option v-for="subsubsubcategory in availableSubSubSubcategories" :key="subsubsubcategory.id" :value="subsubsubcategory.id">
-                    {{ subsubsubcategory.name }}
+                    {{ subsubsubcategory.name  }}
                   </option>
                 </select>
               </div>
@@ -294,13 +294,13 @@
                   class="text-sm sm:text-base input-style"
                 >
                   <option value="">Tous les types</option>
-                  <option value="4x2">4X2</option>
-                  <option value="6x2">6X2</option>
-                  <option value="6x4">6X4</option>
-                  <option value="6x6">6X6</option>
-                  <option value="8x4">8X4</option>
-                  <option value="8x6">8X6</option>
-                  <option value="8x8">8X8</option>
+                  <option value="4x2">4x2</option>
+                  <option value="6x2">6x2</option>
+                  <option value="6x4">6x4</option>
+                  <option value="6x6">6x6</option>
+                  <option value="8x4">8x4</option>
+                  <option value="8x6">8x6</option>
+                  <option value="8x8">8x8</option>
                 </select>
               </div>
 
@@ -451,7 +451,7 @@
                 </label>
                 <input
                   id="tyre_size"
-                  v-model="editData.tyre_size"
+                  v-model="editData.type_size"
                   type="text"
                   class="text-sm sm:text-base input-style"
                   placeholder="Ex: 295/80R22.5"
@@ -617,7 +617,7 @@
                 </label>
                 <textarea
                   id="other_description"
-                  v-model="editData.other_description"
+                  v-model="editData.description_plus"
                   rows="4"
                   class="input-style"
                   placeholder="Ajoutez d'autres informations pertinentes sur le véhicule..."
@@ -1217,8 +1217,8 @@ const newImages = ref([])
 const editData = ref({
   id: null,
   name: '',
+  description_plus: '',
   description: '',
-  detailed_description: '',
   hasDetailedDescription: false,
   category_id: '',
   subcategory_id: '',
@@ -1256,7 +1256,7 @@ const editData = ref({
   cabin_type: '',
   suspension_type: '',
   brake_system: '',
-  tyre_size: '',
+  type_size: '',
   dimension_length: null,
   dimension_width: null,
   dimension_height: null,
@@ -1450,7 +1450,8 @@ const formatHeading = (event) => {
 }
 
 const updateDetailedDescription = () => {
-  editData.value.detailed_description = wysiwygEditor.value.innerHTML
+  editData.value.description = wysiwygEditor.value.innerHTML
+  console.log('Description mise à jour:', editData.value.description)
 }
 
 const updateSubcategories = () => {
@@ -1577,6 +1578,7 @@ const handleSubmit = async () => {
     const formData = {
       id: editData.value.id,
       name: editData.value.name,
+      description_plus: editData.value.description_plus,
       description: editData.value.description,
       category_id: editData.value.category_id,
       subcategory_id: editData.value.subcategory_id,
@@ -1618,19 +1620,18 @@ const handleSubmit = async () => {
       cabin_type: editData.value.cabin_type,
       suspension_type: editData.value.suspension_type,
       brake_system: editData.value.brake_system,
-      tyre_size: editData.value.tyre_size,
+      tyre_size: editData.value.type_size,
       dimension_length: editData.value.dimension_length,
       dimension_width: editData.value.dimension_width,
       dimension_height: editData.value.dimension_height,
       curb_weight: editData.value.curb_weight,
       fuel_tank_capacity: editData.value.fuel_tank_capacity,
-      other_description: editData.value.other_description
     }
 
-    // N'inclure la description détaillée que si elle est activée
-    if (editData.value.hasDetailedDescription && editData.value.detailed_description) {
-      formData.detailed_description = editData.value.detailed_description
-    }
+    // // N'inclure la description détaillée que si elle est activée
+    // if (editData.value.hasDetailedDescription && editData.value.description) {
+    //   formData.description = editData.value.description
+    // }
 
     if (hasWholesalePrice.value && editData.value.wholesale_price) {
       formData.wholesale_price = parseFloat(editData.value.wholesale_price)
@@ -1849,18 +1850,18 @@ watch(() => props.product, (newProduct) => {
       }
       return imageUrl.url || imageUrl
     })
-    
+    console.log("newProduct:", newProduct)
     editData.value = {
       id: newProduct.id,
       name: newProduct.name || '',
+      description_plus: newProduct.description_plus || '',
       description: newProduct.description || '',
-      detailed_description: newProduct.detailed_description || '',
       hasDetailedDescription: !!(newProduct.detailed_description),
       category_id: newProduct.category_id || '',
       subcategory_id: newProduct.subcategory_id || '',
       subsubcategory_id: newProduct.subsubcategory_id || '',
       subsubsubcategory_id: newProduct.subsubsubcategory_id || '',
-      tags: newProduct.tags || '',
+      tags: newProduct.tags || 'teste tags',
       unit_price: newProduct.unit_price || null,
       stock: newProduct.stock || null,
       unit_type: newProduct.unit_type || 'quantity',
@@ -1892,7 +1893,7 @@ watch(() => props.product, (newProduct) => {
       cabin_type: newProduct.cabin_type || '',
       suspension_type: newProduct.suspension_type || '',
       brake_system: newProduct.brake_system || '',
-      tyre_size: newProduct.tyre_size || '',
+      type_size: newProduct.tyre_size || '',
       dimension_length: newProduct.dimension_length || null,
       dimension_width: newProduct.dimension_width || null,
       dimension_height: newProduct.dimension_height || null,
@@ -1911,14 +1912,15 @@ watch(() => props.product, (newProduct) => {
     
     // Vérifier si le produit a un prix de gros
     hasWholesalePrice.value = !!(newProduct.wholesale_price && newProduct.wholesale_price > 0)
-
+    
     // Mettre à jour l'éditeur WYSIWYG si nécessaire
-    if (editData.value.hasDetailedDescription && wysiwygEditor.value) {
+    if (wysiwygEditor.value) {
       nextTick(() => {
-        wysiwygEditor.value.innerHTML = editData.value.detailed_description || ''
+        wysiwygEditor.value.innerHTML = editData.value.description || ''
       })
     }
   }
+  console.log("editData après mise à jour:", editData.value)
 }, { immediate: true })
 
 // Charger les catégories au montage du composant
