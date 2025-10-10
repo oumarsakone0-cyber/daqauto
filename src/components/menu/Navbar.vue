@@ -216,7 +216,7 @@
             </div>
 
           </div>
-          <div class="user-account">
+          <div class="user-account" @click="handleLogout()" >
             
             <LogOut  v-if="currentUser && currentUser.email" class="h-6 w-6 text-gray-600 cursor-pointer" />
           </div>
@@ -729,6 +729,7 @@ import { computed, nextTick, onMounted, onUnmounted, ref, watch } from 'vue';
 import { useRouter } from 'vue-router';
 import { categoriesApi, productsApi } from '../../services/api.js';
 import { LogOut } from 'lucide-vue-next';
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
 const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
@@ -1474,6 +1475,35 @@ const selectSuggestion = (suggestion) => {
   }
 };
 
+const handleLogout = async () => {
+  try {
+    await ElMessageBox.confirm(
+      'Voulez-vous vraiment vous déconnecter ?',
+      'Confirmation',
+      {
+        confirmButtonText: 'Oui',
+        cancelButtonText: 'Annuler',
+        type: 'warning',
+      },
+    )
+
+    localStorage.removeItem('authToken')
+    sessionStorage.removeItem('authToken')
+    localStorage.removeItem('user')
+    sessionStorage.removeItem('user')
+    localStorage.removeItem('rememberMe')
+
+    ElMessage({
+      type: 'success',
+      message: 'Déconnexion réussie'
+    })
+
+    window.location.href = '/'
+  } catch (error) {
+    // Annulé
+  }
+}
+
 const highlightMatch = (suggestion) => {
   if (!searchQuery.value) return suggestion;
   
@@ -1635,6 +1665,7 @@ window.navbarDebug = {
 </script>
 
 <style scoped>
+
 
 .navbar-container {
   font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;

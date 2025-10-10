@@ -40,14 +40,9 @@
           <h3 class="font-semibold text-base">Messagerie</h3>
         </div>
 
-        <button
-          @click="toggleChat"
-          class="relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
-        >
-          <XIcon class="h-7 w-7 text-white"/>
-        </button>
-      </div>
-
+         <XIcon @click="toggleChat" class=" relative h-7 w-7 text-white cursor-pointer"/>
+    </div>
+    
       <!-- Login prompt content -->
       <div class="flex-1 flex items-center justify-center p-8">
         <div class="max-w-md w-full text-center space-y-6">
@@ -121,12 +116,7 @@
           </div>
         </div>
 
-        <button
-          @click="toggleChat"
-          class="relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
-        >
-          <XIcon class="h-7 w-7 text-white"/>
-        </button>
+        <XIcon @click="toggleChat" class=" relative h-7 w-7 text-white cursor-pointer"/>
       </div>
 
       <div class="flex flex-1 overflow-hidden">
@@ -279,7 +269,7 @@
 <script setup lang="ts">
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useChatStore } from '../../../stores/chat'
-import { X, XIcon } from 'lucide-vue-next'
+import { XIcon } from 'lucide-vue-next'
 
 interface Product {
   name: string

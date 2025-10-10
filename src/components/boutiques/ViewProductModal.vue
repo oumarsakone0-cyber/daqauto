@@ -211,7 +211,7 @@
                   <div class="text-sm text-gray-500 mb-1">Numéros de moteur</div>
                   <div class="font-semibold text-gray-900 uppercase">
                     <ul v-if="product.engine_numbers && product.engine_numbers.length">
-                          <li v-for="engine_number in product.engine_numbers" :key="engine_number">>                           
+                          <li v-for="engine_number in product.engine_numbers" :key="engine_number">                          
                             {{ engine_number }}
                           </li>
                         </ul>
