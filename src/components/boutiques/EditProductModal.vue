@@ -294,13 +294,13 @@
                   class="text-sm sm:text-base input-style"
                 >
                   <option value="">Tous les types</option>
-                  <option value="4x2">4x2</option>
-                  <option value="6x2">6x2</option>
-                  <option value="6x4">6x4</option>
-                  <option value="6x6">6x6</option>
-                  <option value="8x4">8x4</option>
-                  <option value="8x6">8x6</option>
-                  <option value="8x8">8x8</option>
+                  <option value="4X2">4x2</option>
+                  <option value="6X2">6x2</option>
+                  <option value="6X4">6x4</option>
+                  <option value="6X6">6x6</option>
+                  <option value="8X4">8x4</option>
+                  <option value="8X6">8x6</option>
+                  <option value="8X8">8x8</option>
                 </select>
               </div>
 
@@ -1574,7 +1574,6 @@ const handleSubmit = async () => {
     }).filter(Boolean)
     
     loadingMessage.value = 'Modification en cours...'
-    
     const formData = {
       id: editData.value.id,
       name: editData.value.name,
@@ -1912,7 +1911,7 @@ watch(() => props.product, (newProduct) => {
     
     // Vérifier si le produit a un prix de gros
     hasWholesalePrice.value = !!(newProduct.wholesale_price && newProduct.wholesale_price > 0)
-    
+
     // Mettre à jour l'éditeur WYSIWYG si nécessaire
     if (wysiwygEditor.value) {
       nextTick(() => {

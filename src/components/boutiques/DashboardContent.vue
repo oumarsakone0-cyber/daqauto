@@ -2290,12 +2290,15 @@ const handleLogout = async () => {
 
 const handleAddProduct = async (productData) => {
   try {
+
+
     const response = await productsApi.createProduct(productData, {
       boutique_id: currentBoutique.value.id,
       user_id: currentUser.value.id
     })
     
     if (response.success) {
+      console.log('Produit créé avec succès:', response.data);
       showAddProductModal.value = false
       await fetchProducts()
       await loadStats(selectedPeriod.value)

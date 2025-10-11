@@ -23,7 +23,7 @@
                     <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Conditions</div>
-                      <div class="spec-value">{{ product.vehicle_condition || 'N/A'}}</div>
+                      <div class="spec-value">{{ product.vehicle_condition || 'N/A', console.log("Produit chargé sur détails:", product)}}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
@@ -155,7 +155,7 @@
                     <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Type Size</div>
-                      <div class="spec-value">{{ product.type_size || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.tyre_size || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
@@ -284,6 +284,7 @@
     
     { label: "Avis" }
   ]
+  
   </script>
   
   <style scoped>
