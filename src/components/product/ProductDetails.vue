@@ -28,6 +28,7 @@
               {{ formatFCFA(product.unit_price) }}
             </span>
           </div>
+          ( FOB )
         </div>
         
         <div class="price-table" v-if="product.wholesale_price && product.wholesale_min_qty">
@@ -78,7 +79,7 @@
         
         <div class="total-price">
           <span class="total-label">Total:</span>
-          <span class="total-value primary-color">{{ formatFCFA(calculateTotal()) }}</span>
+          <span class="total-value primary-color">{{ formatFCFA(calculateTotal()) }}</span> ( FOB )
         </div>
         
         <!-- Affichage des frais de livraison pour quantité simple 

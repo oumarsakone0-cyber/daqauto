@@ -15,7 +15,7 @@
       </div>
       <div class="mobile-grid-info">
         <h3 class="mobile-grid-title">{{ product.name }}</h3>
-        <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }}</div>
+        <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }} </div>
         <div class="wholesale-price" style="margin-bottom: 8px;" v-if="product.wholesale_price || product.wholesalePrice">
             <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs :</span>
             <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
@@ -119,7 +119,7 @@
     
           <div class="product-pricing">
             <div class="unit-price">
-              <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }}</span>
+              <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }} <span style="font-size: 12px;">(FOB)</span></span>
               <span v-if="product.originalPrice" class="original-price">{{ formatPrice(product.originalPrice) }}</span>
             </div>
             <div class="wholesale-price" v-if="product.wholesale_price || product.wholesalePrice">

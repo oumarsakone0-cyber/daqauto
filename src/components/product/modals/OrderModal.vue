@@ -49,8 +49,8 @@
                 </div>
               </div>
               <div class="product-price primary-color">
-                {{ formatFCFA(calculateSubtotal()) }}
-              </div>
+                {{ formatFCFA(calculateSubtotal()) }} 
+              </div> ( FOB )
             </div>
           </div>
   
@@ -156,7 +156,7 @@
               -->
               <div class="total-row total primary-color">
                 <span>Total:</span>
-                <span>{{ formatFCFA(calculateSubtotal()) }}</span>
+                <span>{{ formatFCFA(calculateSubtotal()) }} <span style="font-size: 13px; color: gray">( FOB )</span></span>
               </div>
             </div>
   

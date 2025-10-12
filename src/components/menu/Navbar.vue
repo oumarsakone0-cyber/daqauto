@@ -1601,6 +1601,7 @@ onMounted(async () => {
   console.log('[v0] Navbar with MyMemory Translation mounted')
   
   loadCache()
+   loadCategories();
   
   const savedLang = localStorage.getItem('preferred-language')
   const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
@@ -1628,7 +1629,6 @@ onMounted(async () => {
     }, 2000)
   }
   
-  loadCategories();
   
   // Listen for clicks to close dropdowns
   document.addEventListener('click', handleClickOutside);
@@ -1636,6 +1636,7 @@ onMounted(async () => {
 });
 
 onUnmounted(() => {
+  loadCategories();
   // Clean up event listeners
   document.removeEventListener('click', handleClickOutside);
   document.removeEventListener('keydown', handleEscapeKey);
