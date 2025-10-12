@@ -141,6 +141,7 @@
 
 <script setup>
 import { ref, nextTick, watch, onMounted, onUnmounted } from 'vue'
+import { formatPrice } from '../../../services/formatPrice'
 
 const props = defineProps({
   isOpen: {
@@ -479,14 +480,6 @@ const getProductData = (message) => {
       rating: null
     }
   }
-}
-
-const formatPrice = (price) => {
-  if (!price) return 'Prix non disponible'
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(price)
 }
 
 const formatTime = (timestamp) => {

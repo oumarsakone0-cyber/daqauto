@@ -9,7 +9,7 @@
           </div>
           <div class="store-product-info">
             <div class="store-product-title">{{ storeProduct.name }}</div>
-            <div class="store-product-price">{{ formatFCFA(storeProduct.unit_price) }}</div>
+            <div class="store-product-price">{{ formatPrice(storeProduct.unit_price) }}</div>
           </div>
         </div>
       </div>
@@ -18,6 +18,7 @@
   
   <script setup>
   import { defineProps, defineEmits } from 'vue'
+  import { formatPrice } from '../../services/formatPrice'
   
   const props = defineProps({
     storeProducts: Array
@@ -27,13 +28,6 @@
     'viewStoreProduct'
   ])
   
-  const formatFCFA = (montant) => {
-   return Number(montant).toLocaleString('en-US', { 
-    style: 'currency', 
-    currency: 'USD',
-    minimumFractionDigits: 2 
-  })
-  }
   </script>
   
   <style scoped>

@@ -18,7 +18,7 @@
             </div>
             <div class="product-info">
               <h4 class="product-name">{{ product.name }}</h4>
-              <div class="product-price">{{ formatFCFA(product.unit_price) }}</div>
+              <div class="product-price">{{ formatPrice(product.unit_price) }}</div>
             </div>
           </div>
           
@@ -85,6 +85,7 @@
   
   <script setup>
   import { defineProps, defineEmits } from 'vue'
+  import { formatPrice } from '../../../services/formatPrice'
   
   const props = defineProps({
     product: Object,
@@ -97,9 +98,6 @@
     'copyLink'
   ])
   
-  const formatFCFA = (montant) => {
-    return Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
-  }
   </script>
   
   <style scoped>

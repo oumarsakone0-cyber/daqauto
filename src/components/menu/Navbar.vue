@@ -8,8 +8,8 @@
           <span class="hidden sm:block">We're offering free shipping on all orders over $50! </span>
           <span class="sm:hidden">Free shipping over $50!</span>
           <div class="flex items-center gap-4 text-sm">
-            <span class="hidden md:block">English</span>
-            <span class="hidden lg:block">United States (USD $)</span>
+            <span class="hidden md:block">{{languet.Langue}}</span>
+            <span class="hidden lg:block">({{ languet.code }})</span>
             <span class="lg:hidden">USD $</span>
           </div>
         </div>
@@ -730,6 +730,9 @@ import { useRouter } from 'vue-router';
 import { categoriesApi, productsApi } from '../../services/api.js';
 import { LogOut } from 'lucide-vue-next';
 import { ElMessageBox, ElMessage } from 'element-plus'
+import { useCurrencyStore } from '../../stores/currency.js'
+
+const currencyStore = useCurrencyStore()
 
 const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
 const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
@@ -764,6 +767,7 @@ const categories = ref([])
 const isLoadingCategories = ref(false)
 const categoriesError = ref('')
 const activeCategory = ref(null)
+const languet = ref('English')
 
 // === États pour le panier ===
 const cartCount = ref(0)
@@ -772,6 +776,7 @@ const cartCount = ref(0)
 const showLanguageDropdown = ref(false)
 const selectedLanguage = ref({
   code: 'FR',
+  currency: 'XOF',
   label: 'FR / F CFA',
   flag: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png'
 })
@@ -779,16 +784,32 @@ const selectedLanguage = ref({
 const languages = ref([
   {
     code: 'FR',
-    label: 'FR / F CFA',
+    currency: 'EUR',
+    Langue: 'Francais',
+    label: 'FR / EURO',
     flag: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png'
   },
   {
-    code: 'EN',
+    code: 'EN-USD',
+    langCode: 'EN',
+    Langue: 'English',
+    currency: 'USD',
     label: 'EN / USD',
     flag: 'https://flagcdn.com/w20/us.png'
   },
   {
-    code: 'CI',
+    code: 'EN-NGN',
+    langCode: 'EN',
+    Langue: 'English',
+    currency: 'NGN',
+    label: 'EN / NGN',
+    flag: 'https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg'
+  },
+  {
+    code: 'FR-XOF',
+    langCode: 'FR',
+    Langue: 'Francais',
+    currency: 'XOF',
     label: 'FR / XOF',
     flag: 'https://flagcdn.com/w20/ci.png'
   }
@@ -1063,24 +1084,32 @@ const toggleLanguageWithTranslation = async () => {
   showLanguageDropdown.value = false
 }
 
-const selectLanguageWithTranslation = async (lang) => {
+const selectLanguageWithTranslation = async (langOption) => {
+  languet.value = langOption
   if (isTranslating.value) return
-  
-  selectedLanguage.value = lang
+
+  // 1️⃣ Gestion de la devise AVANT la langue
+  if (langOption.currency) {
+    currencyStore.currency = langOption.currency
+    localStorage.setItem('preferred-currency', langOption.currency)
+  }
+
+  // 2️⃣ Gestion de la langue
+  selectedLanguage.value = langOption
   showLanguageDropdown.value = false
-  
-  // If selecting English variant, translate the page
-  if (lang.code === 'EN' && currentLanguage.value === 'fr') {
+
+  if (langOption.langCode === 'EN' && currentLanguage.value === 'fr') {
     currentLanguage.value = 'en'
     await translatePage()
-  } else if (lang.code !== 'EN' && currentLanguage.value === 'en') {
+  } else if (langOption.langCode !== 'EN' && currentLanguage.value === 'en') {
     currentLanguage.value = 'fr'
     restoreOriginalTexts()
   }
-  
+
   localStorage.setItem('preferred-language', currentLanguage.value)
-  localStorage.setItem('selected-language', JSON.stringify(lang))
+  localStorage.setItem('selected-language', JSON.stringify(langOption))
 }
+
 
 const toggleLanguageDropdown = () => {
   if (!isTranslating.value) {
@@ -1370,14 +1399,6 @@ const navigateToSubSubcategory = (subSubcategory) => {
 
 const handleImageError = (event) => {
   event.target.src = 'https://www.svgrepo.com/show/422038/product.svg';
-};
-
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'XOF',
-    minimumFractionDigits: 0
-  }).format(price);
 };
 
 const getMatchTypeLabel = (matchType) => {

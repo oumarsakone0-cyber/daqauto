@@ -31,7 +31,7 @@
               </div>
               <div class="summary-item">
                 <span class="item-label">Total:</span>
-                <span class="total-amount primary-color">{{ formatFCFA(orderData.total) }}</span>
+                <span class="total-amount primary-color">{{ formatPrice(orderData.total) }}</span>
               </div>
             </div>
             
@@ -88,6 +88,7 @@
   
   <script setup>
   import { defineProps, defineEmits } from 'vue'
+  import { formatPrice } from '../../../services/formatPrice'
   
   const props = defineProps({
     orderData: Object
@@ -97,9 +98,6 @@
     'close'
   ])
   
-  const formatFCFA = (montant) => {
-    return Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
-  }
   
   const getDeliveryAddress = () => {
     if (props.orderData.type_livraison === 'retrait') {

@@ -449,16 +449,14 @@
           <!-- Icon Selection -->
           <div class="form-group">
             <label class="form-label">Icône</label>
-            <div class="icon-selector">
-              <div 
-                v-for="icon in availableIcons" 
-                :key="icon.name"
-                :class="['icon-option', { selected: formData.icon === icon.name }]"
-                @click="formData.icon = icon.name"
-              >
-                <component :is="icon.component"/>
-              </div>
-            </div>
+             <input 
+              v-model="formData.icon" 
+              type="text" 
+              class="input-style" 
+              style="padding-left: 15px;"
+              placeholder="icône ici"
+              required
+            >
           </div>
 
           <!-- Image Upload -->

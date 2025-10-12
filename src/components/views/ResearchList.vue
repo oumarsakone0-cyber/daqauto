@@ -266,6 +266,7 @@ import SideBar from '../menu/FilterSide.vue'
 import { productsApi, categoriesApi } from '../../services/api.js'
 import ProductCard from '../home/ProductCard.vue'
 import AlibabaStyleSection from '../pages/AlibabaStyleSection.vue'
+import { formatPrice } from '../../services/formatPrice'
 
 export default {
   name: 'ResultatView',
@@ -310,12 +311,6 @@ export default {
       return Object.keys(activeFilters.value).length > 0
     })
 
-    const formatFCFA = (montant) => {
-      return (
-        Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) +
-        ' F CFA'
-      )
-    };
 
     const handleImageError = (event) => {
       event.target.src = 'https://t3.ftcdn.net/jpg/00/38/91/48/360_F_38914811_jQRpNpxUHrAlJs6lVzKYZPQAPE0A3CKc.jpg'
@@ -481,11 +476,11 @@ export default {
     // Formater la plage de prix
     const formatPriceRange = (min, max) => {
       if (min && max) {
-        return `${formatFCFA(min)} - ${formatFCFA(max)}`
+        return `${formatPrice(min)} - ${formatPrice(max)}`
       } else if (min) {
-        return `Min: ${formatFCFA(min)}`
+        return `Min: ${formatPrice(min)}`
       } else if (max) {
-        return `Max: ${formatFCFA(max)}`
+        return `Max: ${formatPrice(max)}`
       }
       return ''
     }
@@ -720,7 +715,6 @@ export default {
       bannerBackgroundImage,
 
       // Méthodes
-      formatFCFA,
       handleImageError,
       loadProducts,
       handleFilterChange,
