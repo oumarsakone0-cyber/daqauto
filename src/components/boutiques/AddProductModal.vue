@@ -128,42 +128,6 @@
                   >
                 </div>
 
-                <div class="sm:col-span-2">
-                  <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
-                    Description détaillée (WYSIWYG) <span class="error-color">*</span>
-                  </label>
-                  <div >
-                    <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                       Barre d'outils WYSIWYG 
-                      <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
-                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
-                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné" style="background-color: lightgray; color: black;">U</button>
-                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
-                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
-                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
-                          <option value="">Titre</option>
-                          <option value="h1">Titre 1</option>
-                          <option value="h2">Titre 2</option>
-                          <option value="h3">Titre 3</option>
-                        </select>
-                      </div>
-                      <div 
-                        ref="wysiwygEditor"
-                        contenteditable="true"
-                        @input="updateDetailedDescription"
-                        class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
-                        style="white-space: pre-wrap;"
-                        placeholder="Décrivez votre produit en détail..."
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-
-                
-
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                     Catégorie <span class="error-color">*</span>
@@ -237,6 +201,39 @@
                       {{ subsubsubcategory.name }}
                     </option>
                   </select>
+                </div>
+                <div class="sm:col-span-2">
+                  <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
+                    Description détaillée (WYSIWYG) <span class="error-color">*</span>
+                  </label>
+                  <div >
+                    <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
+                       Barre d'outils WYSIWYG 
+                      <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
+                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
+                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
+                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné" style="background-color: lightgray; color: black;">U</button>
+                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
+                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
+                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
+                          <option value="">Titre</option>
+                          <option value="h1">Titre 1</option>
+                          <option value="h2">Titre 2</option>
+                          <option value="h3">Titre 3</option>
+                        </select>
+                      </div>
+                      <div 
+                        ref="wysiwygEditor"
+                        contenteditable="true"
+                        @input="updateDetailedDescription"
+                        class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
+                        style="white-space: pre-wrap;"
+                        placeholder="Décrivez votre produit en détail..."
+                      ></div>
+                    </div>
+                  </div>
                 </div>
 
                 <div class="sm:col-span-2">
