@@ -286,28 +286,38 @@
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                     Marque du véhicule <span class="error-color">*</span>
                   </label>
-                  <input
+                  <select
                     id="vehicle_make"
-                    v-model="productData.vehicle_make"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Mercedes, Volvo, Scania"
                     required
+                    @change="updateModelid"
+                    :disabled="brandsLoading"
+                    v-model="productData.vehicle_brand_id"
+                    class="text-sm sm:text-base input-style"
                   >
+                    <option value="">{{ brandsLoading ? 'Chargement...' : 'Selectionner la marque du véhicule' }}</option>
+                    <option v-for="make in brands" :key="make.id" :value="make.id">
+                      {{ make.name }}
+                    </option>
+                  </select>
                 </div>
 
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                     Modèle du véhicule <span class="error-color">*</span>
                   </label>
-                  <input
+                  <select
                     id="vehicle_model"
-                    v-model="productData.vehicle_model"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Actros, FH, R-Series"
+                    v-model="productData.vehicle_model_id"
                     required
+                    @change="updateFuelType"
+                    :disabled="!productData.vehicle_brand_id || brandsLoading"
+                    class="text-sm sm:text-base input-style"
                   >
+                    <option value="">Selectionner le modèle du véhicule</option>
+                    <option v-for="model in availableModels" :key="model.id" :value="model.id">
+                      {{ model.name  }}
+                    </option>
+                  </select>
                 </div>
 
                 <div>
@@ -350,20 +360,31 @@
                   <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Type de carburant
                   </label>
-                  <select
+                  <input
+                    type="text"
+                    :value="productData.fuel_type"
+                    disabled
+                    class="text-sm sm:text-base input-style bg-gray-100 cursor-not-allowed"
+                    placeholder="Le type de carburant sera défini automatiquement"
+                  >
+                  <!-- <input v-else
+                    type="text"
+                    value="Le type de carburant sera défini automatiquement"
+                    disabled
+                    class="text-sm sm:text-base input-style bg-gray-100 cursor-not-allowed"
+                  > -->
+                  <!-- <select
                     id="fuel_type"
                     v-model="productData.fuel_type"
+                    :disabled="!productData.vehicle_model_id || brandsLoading"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Selectionner le type de carburant</option>
-                    <option value="Diesel">Diesel</option>
-                    <option value="Electric">Électrique</option>
-                    <option value="Hybrid">Hybride</option>
-                    <option value="CNG">CNG</option>
-                    <option value="LNG">LNG</option>
-                    <option value="Hydrogen">Hydrogène</option>
-                    <option value="Unknown">Inconnu</option>
-                  </select>
+                    <option value="">{{ brandsLoading ? 'Chargement...' : 'Type de carburant' }}</option>
+                    <option value=availableFuelType :key="model.id" :value="productData.fuel_type">
+                      {{ productData.fuel_type }}
+                    </option>
+                    
+                  </select> -->
                 </div>
 
                 <div>
@@ -605,32 +626,6 @@
                       + Ajouter un numéro VIN
                     </button>
                   </div>
-                </div>
-
-                <div>
-                  <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
-                    Power
-                  </label>
-                  <input
-                    id="tyre_size"
-                    v-model="productData.power"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Power"
-                  >
-                </div>
-
-                <div>
-                  <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine mission
-                  </label>
-                  <input
-                    id="tyre_size"
-                    v-model="productData.engine_emission"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Emission"
-                  >
                 </div>
 
                 <div class="sm:col-span-2">
@@ -1136,12 +1131,12 @@
                     <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Marque du véhicule</div>
-                      <div class="spec-value">{{ productData.vehicle_make || 'N/A' }}</div>
+                      <div class="spec-value">{{getBrandName( productData.vehicle_brand_id) || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Modèle du véhicule</div>
-                      <div class="spec-value">{{ productData.vehicle_model || 'N/A' }}</div>
+                      <div class="spec-value">{{getModelName( productData.vehicle_model_id) || 'N/A' }}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
@@ -1170,7 +1165,7 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Puissance du Moteur (ch/kW)</div>
-                      <div class="spec-value">{{ productData.power || 'N/A', console.log("Produuits",productData) }}</div>
+                      <div class="spec-value">{{ productData.power || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Émissions du moteur (g/km)</div>
@@ -1351,7 +1346,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted, nextTick } from 'vue'
 import axios from 'axios'
-import { categoriesApi } from '../../services/api'
+import { categoriesApi , brandsApi } from '../../services/api'
 import { 
   Plus as PlusIcon,
   X as XIcon,
@@ -1386,6 +1381,11 @@ const wysiwygEditor = ref(null)
 const categories = ref([])
 const categoriesLoading = ref(false)
 const categoriesError = ref(null)
+
+//Models
+const brands = ref([])
+const brandsLoading = ref(false)
+const brandsError = ref(null)
 
 // Configuration Cloudinary
 const cloudinaryConfig = {
@@ -1432,8 +1432,8 @@ const productData = reactive({
   videoUrl: '',
   is_active: true,
   vehicle_condition: '',
-  vehicle_make: '',
-  vehicle_model: '',
+  vehicle_brand_id: '',
+  vehicle_model_id: '',
   drive_type: '',
   vehicle_year: null,
   fuel_type: '',
@@ -1509,6 +1509,7 @@ const availableSubcategories = computed(() => {
   return category ? category.subcategories || [] : []
 })
 
+
 const availableSubSubcategories = computed(() => {
   for (const category of categories.value) {
     const subcategory = (category.subcategories || []).find(sub => sub.id === productData.subcategory_id)
@@ -1533,12 +1534,27 @@ const availableSubSubSubcategories = computed(() => {
   return []
 })
 
+// Les types de models en focntion de la marque
+const availableModels = computed(() => {
+ const  models = brands.value.find(cat => cat.id === productData.vehicle_brand_id)
+ 
+  return models ? models.models || [] : []
+})
+
+const availableFuelType = computed(() => {
+  const  modelsObject = availableModels.value 
+ const  fuelType =modelsObject.find(model => model.id === productData.vehicle_model_id)
+ productData.fuel_type= fuelType ? fuelType.fuel_type || '' : ''
+  return fuelType ? fuelType.fuel_type || '' : ''
+})
+
+// Validation des étapes
 const canProceedToNextStep = computed(() => {
   switch (currentStep.value) {
     case 0:
       return !!(productData.description && productData.category_id && productData.subcategory_id)
     case 1:
-      return !!(productData.vehicle_condition && productData.vehicle_make && productData.vehicle_model && productData.vehicle_year && productData.drive_type)
+      return !!(productData.vehicle_condition && productData.vehicle_brand_id && productData.vehicle_model_id && productData.vehicle_year && productData.drive_type)
     case 2:
       getProductName();
       return true
@@ -1578,6 +1594,16 @@ const canSubmit = computed(() => {
 const getCategoryName = (id) => {
   const category = categories.value.find(cat => cat.id === id)
   return category ? category.name : ''
+}
+
+const getBrandName = (id) => {
+  const brand = brands.value.find(cat => cat.id === id)
+  return brand ? brand.name : ''
+}
+
+const getModelName = (id) => {
+  const model = availableModels.value.find(cat => cat.id === id)
+  return model ? model.name : ''
 }
 
 const availableColors = ref([
@@ -1641,6 +1667,21 @@ const fetchCategories = async () => {
   }
 }
 
+const fetchMakes = async () => {
+  try {
+    brandsLoading.value = true
+    brandsError.value = null
+    
+    const response = await brandsApi.getBrands()
+    brands.value = response.data || []
+  } catch (err) {
+    console.error('Erreur lors du chargement des catégories:', err)
+    brandsError.value = 'Impossible de charger les catégories. Veuillez réessayer.'
+  } finally {
+    brandsLoading.value = false
+  }
+}
+
 const formatText = (command) => {
   document.execCommand(command, false, null)
   wysiwygEditor.value.focus()
@@ -1676,6 +1717,14 @@ const updateSubSubSubcategories = () => {
 
 const updateAvailableSizes = () => {
   productData.sizes = []
+}
+
+const updateModelid = () => {
+  productData.vehicle_model_id = ""
+  productData.fuel_type = ""
+}
+const updateFuelType = () => {
+  productData.fuel_type = availableFuelType.value
 }
 
 const getSizePlaceholder = (sizeType) => {
@@ -1801,15 +1850,14 @@ const removeVideo = () => {
 }
 
 const getProductName = () => {
-  const categorieName= getCategoryName(productData.category_id);
   productData.vehicle_condition= productData.vehicle_condition.charAt(0).toUpperCase() + productData.vehicle_condition.slice(1).toLowerCase();
   
   productData.name = [
                     productData.vehicle_condition,
                     productData.vehicle_year,
-                    productData.vehicle_make,
-                    productData.vehicle_model,
-                    categorieName,
+                    getBrandName( productData.vehicle_brand_id),
+                    getModelName(  productData.vehicle_model_id),
+                    getCategoryName(productData.category_id),
                     productData.drive_type
                   ].filter(Boolean).join(' ');
 
@@ -1980,8 +2028,8 @@ const prepareDataForSubmission = () => {
     sizes: productData.sizes,
     size_type: productData.sizeType,
     vehicle_condition: productData.vehicle_condition,
-    vehicle_make: productData.vehicle_make,
-    vehicle_model: productData.vehicle_model,
+    vehicle_make:getBrandName( productData.vehicle_brand_id),
+    vehicle_model:getModelName( productData.vehicle_model_id) ,
     drive_type: productData.drive_type,
     vehicle_year: productData.vehicle_year,
     fuel_type: productData.fuel_type,
@@ -2059,7 +2107,8 @@ const handleBackdropClick = (event) => {
 }
 
 onMounted(() => {
-  fetchCategories()
+  fetchCategories(),
+  fetchMakes()
 })
 
 // Données du nouveau produit:

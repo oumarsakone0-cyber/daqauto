@@ -1024,6 +1024,7 @@ export const categoriesApi = {
       throw productsApi.handleError(error, "Erreur lors de la récupération des catégories")
     }
   },
+  
 
   /**
    * Récupérer les statistiques des catégories
@@ -1743,6 +1744,24 @@ export const sizesApi = {
       return response.data
     } catch (error) {
       throw productsApi.handleError(error, "Erreur lors de la récupération des tailles")
+    }
+  },
+}
+
+// Service API pour les marques
+export const brandsApi = {
+  /**
+   * Récupérer toutes les marques disponibles
+   * @returns {Promise} Liste des tailles groupées par catégorie
+   */
+  async getBrands() {
+    try {
+      const response = await apiClient.get("/products.php", {
+        params: { action: "model_list" },
+      })
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de la récupération des Marques")
     }
   },
 }
