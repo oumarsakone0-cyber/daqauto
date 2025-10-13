@@ -22,10 +22,10 @@
           <div class="price-range">
             <div class="price-value primary-color">
               <span v-if="product.wholesale_price && product.wholesale_min_qty">
-                {{ formatFCFA(product.wholesale_price) }} - {{ formatFCFA(product.unit_price) }}
+                {{ formatPrice(product.wholesale_price) }} - {{ formatPrice(product.unit_price) }}
               </span>
               <span v-else>
-                {{ formatFCFA(product.unit_price) }}
+                {{ formatPrice(product.unit_price) }}
               </span>
             </div>
           </div>
@@ -33,11 +33,11 @@
           <div class="price-breakdown" v-if="product.wholesale_price && product.wholesale_min_qty">
             <div class="price-item">
               <span class="price-qty">1-{{ product.wholesale_min_qty - 1 }} pcs:</span>
-              <span class="price-amount">{{ formatFCFA(product.unit_price) }}</span>
+              <span class="price-amount">{{ formatPrice(product.unit_price) }}</span>
             </div>
             <div class="price-item">
               <span class="price-qty">{{ product.wholesale_min_qty }}+ pcs:</span>
-              <span class="price-amount">{{ formatFCFA(product.wholesale_price) }}</span>
+              <span class="price-amount">{{ formatPrice(product.wholesale_price) }}</span>
             </div>
           </div>
         </div>
@@ -113,15 +113,15 @@
         <div class="total-breakdown">
           <div class="total-item">
             <span>Sous-total:</span>
-            <span>{{ formatFCFA(calculateTotal()) }}</span>
+            <span>{{ formatPrice(calculateTotal()) }}</span>
           </div>
           <div class="total-item" v-if="currentShippingCost > 0">
             <span>Livraison:</span>
-            <span>{{ formatFCFA(currentShippingCost) }}</span>
+            <span>{{ formatPrice(currentShippingCost) }}</span>
           </div>
           <div class="total-item total primary-color">
             <span>Total:</span>
-            <span>{{ formatFCFA(calculateTotal() + currentShippingCost) }}</span>
+            <span>{{ formatPrice(calculateTotal() + currentShippingCost) }}</span>
           </div>
         </div>
       </div>
@@ -131,6 +131,7 @@
   <script setup>
   import { computed, defineProps, defineEmits } from 'vue'
   import ProductVariants from './ProductVariants.vue'
+  import { formatPrice } from '../../services/formatPrice'
   import ShippingSection from './ShippingSection.vue'
   
   const props = defineProps({
@@ -220,9 +221,6 @@
     return price
   }
   
-  const formatFCFA = (montant) => {
-    return Number(montant).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $US'
-  }
   </script>
   
   <style scoped>

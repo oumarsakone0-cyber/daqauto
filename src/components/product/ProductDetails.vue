@@ -22,12 +22,13 @@
           <div class="price-label">Prix:</div>
           <div class="price-value primary-color">
             <span v-if="product.wholesale_price && product.wholesale_min_qty">
-              {{ formatFCFA(product.wholesale_price) }} - {{ formatFCFA(product.unit_price) }}
+              {{ formatPrice(product.wholesale_price) }} - {{ formatPrice(product.unit_price) }}
             </span>
             <span v-else>
-              {{ formatFCFA(product.unit_price) }}
+              {{ formatPrice(product.unit_price) }}
             </span>
           </div>
+          ( FOB )
         </div>
         
         <div class="price-table" v-if="product.wholesale_price && product.wholesale_min_qty">
@@ -38,8 +39,8 @@
           </div>
           <div class="price-table-row">
             <div class="price-table-cell">Prix</div>
-            <div class="price-table-cell">{{ formatFCFA(product.unit_price) }}</div>
-            <div class="price-table-cell">{{ formatFCFA(product.wholesale_price) }}</div>
+            <div class="price-table-cell">{{ formatPrice(product.unit_price) }}</div>
+            <div class="price-table-cell">{{ formatPrice(product.wholesale_price) }}</div>
           </div>
         </div>
       </div>
@@ -78,14 +79,14 @@
         
         <div class="total-price">
           <span class="total-label">Total:</span>
-          <span class="total-value primary-color">{{ formatFCFA(calculateTotal()) }}</span>
+          <span class="total-value primary-color">{{ formatPrice(calculateTotal()) }}</span> ( FOB )
         </div>
         
         <!-- Affichage des frais de livraison pour quantité simple 
         <div v-if="!hasVariants && currentShippingCost > 0" class="shipping-cost-simple">
           <div class="shipping-cost-header">
             <span class="shipping-cost-label">Frais de livraison:</span>
-            <span class="primary-color">{{ formatFCFA(currentShippingCost) }}</span>
+            <span class="primary-color">{{ formatPrice(currentShippingCost) }}</span>
           </div>
           <div class="shipping-cost-details">
             <span class="shipping-method">{{ getShippingMethodName() }}</span>
@@ -97,7 +98,7 @@
         <!-- Total avec livraison -->
         <div v-if="!hasVariants && currentShippingCost > 0" class="grand-total">
           <span class="grand-total-label">Total avec livraison:</span>
-          <span class="grand-total-value primary-color">{{ formatFCFA(calculateTotal() + currentShippingCost) }}</span>
+          <span class="grand-total-value primary-color">{{ formatPrice(calculateTotal() + currentShippingCost) }}</span>
         </div>
         
         <div class="action-buttons">
@@ -133,6 +134,7 @@
   <script setup>
   import { computed, defineProps, defineEmits } from 'vue'
   import ProductVariants from './ProductVariants.vue'
+  import { formatPrice } from '../../services/formatPrice'
   import ShippingSection from './ShippingSection.vue'
   
   const props = defineProps({
@@ -275,13 +277,6 @@
     return 'Retrait à Adjamé'
   }
   
-  const formatFCFA = (montant) => {
-   return Number(montant).toLocaleString('en-US', { 
-    style: 'currency', 
-    currency: 'USD',
-    minimumFractionDigits: 2 
-  })
-  }
   </script>
   
   <style scoped>

@@ -15,7 +15,7 @@
       </div>
       <div class="mobile-grid-info">
         <h3 class="mobile-grid-title">{{ product.name }}</h3>
-        <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }}</div>
+        <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }} </div>
         <div class="wholesale-price" style="margin-bottom: 8px;" v-if="product.wholesale_price || product.wholesalePrice">
             <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs :</span>
             <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
@@ -119,7 +119,7 @@
     
           <div class="product-pricing">
             <div class="unit-price">
-              <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }}</span>
+              <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }} <span style="font-size: 12px;"></span></span>
               <span v-if="product.originalPrice" class="original-price">{{ formatPrice(product.originalPrice) }}</span>
             </div>
             <div class="wholesale-price" v-if="product.wholesale_price || product.wholesalePrice">
@@ -194,6 +194,7 @@
 <script setup>
     import { ref, computed, defineProps, defineEmits } from 'vue'
     import ChatModal from '../product/modals/ChatModal2.vue'
+    import { formatPrice } from '../../services/formatPrice'
 import ChatDesktop from '../product/modals/ChatWindow.vue'
 import ChatApiClient from '../../services/chat-api-client'
     
@@ -302,35 +303,6 @@ import ChatApiClient from '../../services/chat-api-client'
     }
     
     // Fonction pour formater les prix en FCFA
-    const formatPrice = (price, currency = 'USD') => {
-      if (!price) return '0 FCFA'
-    
-      const exchangeRates = {
-        EUR: 655.957,
-        XOF: 1,
-        USD: 600
-      }
-    
-      const convertToFcfa = (amount, fromCurrency) => {
-        const rate = exchangeRates[fromCurrency]
-        if (!rate) throw new Error(`Taux de conversion manquant pour ${fromCurrency}`)
-        return amount * rate
-      }
-    
-      let priceInFcfa
-    
-      if (currency === 'USD') {
-        priceInFcfa = price
-      } else {
-        priceInFcfa = convertToFcfa(price, currency)
-      }
-    
-      return new Intl.NumberFormat('fr-FR', {
-        style: 'currency',
-        currency: 'USD',
-        minimumFractionDigits: 0
-      }).format(priceInFcfa)
-    }
     
     // Gestionnaires d'événements
     const handleProductClick = () => {

@@ -607,6 +607,32 @@
                   </div>
                 </div>
 
+                <div>
+                  <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
+                    Power
+                  </label>
+                  <input
+                    id="tyre_size"
+                    v-model="productData.power"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Power"
+                  >
+                </div>
+
+                <div>
+                  <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine mission
+                  </label>
+                  <input
+                    id="tyre_size"
+                    v-model="productData.engine_emission"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Emission"
+                  >
+                </div>
+
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Numéros de moteur

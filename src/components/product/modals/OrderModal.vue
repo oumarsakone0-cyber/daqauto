@@ -49,7 +49,7 @@
                 </div>
               </div>
               <div class="product-price primary-color">
-                {{ formatFCFA(calculateSubtotal()) }}
+                {{ formatPrice(calculateSubtotal()) }} 
               </div>
             </div>
           </div>
@@ -96,7 +96,7 @@
               <div class="shipping-info">
                 <div class="shipping-method">
                   <span class="method-name">{{ getShippingMethodName() }}</span>
-                  <span class="method-cost">{{ formatFCFA(getFinalShippingCost()) }}</span>
+                  <span class="method-cost">{{ formatPrice(getFinalShippingCost()) }}</span>
                 </div>
                 <div class="shipping-destination">
                   {{ getShippingDestination() }}
@@ -146,17 +146,17 @@
             <div class="order-total">
               <div class="total-row text-gray-500">
                 <span>Sous-total:</span>
-                <span>{{ formatFCFA(calculateSubtotal()) }}</span>
+                <span>{{ formatPrice(calculateSubtotal()) }}</span>
               </div>
 <!--               
               <div class="total-row">
                 <span>Livraison:</span>
-                <span>{{ formatFCFA(getFinalShippingCost()) }}</span>
+                <span>{{ formatPrice(getFinalShippingCost()) }}</span>
               </div>
               -->
               <div class="total-row total primary-color">
                 <span>Total:</span>
-                <span>{{ formatFCFA(calculateSubtotal()) }}</span>
+                <span>{{ formatPrice(calculateSubtotal()) }} <span style="font-size: 13px; color: gray">( FOB )</span></span>
               </div>
             </div>
   
@@ -183,6 +183,7 @@
   
   <script setup>
   import { computed, defineProps, defineEmits } from 'vue'
+  import { formatPrice } from '../../../services/formatPrice'
   import { 
   X as XIcon,} from 'lucide-vue-next'
   const props = defineProps({
@@ -581,10 +582,6 @@
     const tp = props.product?.tp || 1
     const types = { 1: 'Moto', 2: 'Mini-camion', 3: 'Gros camion' }
     return types[tp] || 'Standard'
-  }
-  
-  const formatFCFA = (montant) => {
-    return Number(montant || 0).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $'
   }
   
   // ===== FONCTIONS DE DEBUG =====

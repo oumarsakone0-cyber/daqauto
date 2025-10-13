@@ -270,6 +270,7 @@
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useChatStore } from '../../../stores/chat'
 import { XIcon } from 'lucide-vue-next'
+import { formatPrice } from '../../../services/formatPrice'
 
 interface Product {
   name: string
@@ -576,13 +577,6 @@ const sendMessage = () => {
 
   newMessage.value = ''
   scrollToBottom()
-}
-
-const formatPrice = (price: number) => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(price)
 }
 
 const formatTime = (timestamp: Date) => {
