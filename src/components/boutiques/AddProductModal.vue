@@ -264,23 +264,6 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                
-                <div>
-                  <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
-                    État du véhicule <span class="error-color">*</span>
-                  </label>
-                  <select
-                    id="vehicle_condition"
-                    v-model="productData.vehicle_condition"
-                    class="text-sm sm:text-base input-style"
-                    required
-                  >
-                    <option value="">Selectionner l'état du véhicule</option>
-                    <option value="New">Neuf</option>
-                    <option value="Used">Occasion</option>
-                    <option value="Refurbished">Reconditionné</option>
-                  </select>
-                </div>
 
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
@@ -300,7 +283,23 @@
                     </option>
                   </select>
                 </div>
-
+                
+                <div>
+                  <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
+                    État du véhicule <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="vehicle_condition"
+                    v-model="productData.vehicle_condition"
+                    class="text-sm sm:text-base input-style"
+                    required
+                  >
+                    <option value="">Selectionner l'état du véhicule</option>
+                    <option value="New">Neuf</option>
+                    <option value="Used">Occasion</option>
+                    <option value="Refurbished">Reconditionné</option>
+                  </select>
+                </div>
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                     Modèle du véhicule <span class="error-color">*</span>
@@ -319,7 +318,34 @@
                     </option>
                   </select>
                 </div>
-
+<div>
+                  <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
+                    Année <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="vehicle_year"
+                    v-model="productData.vehicle_year"
+                    type="number"
+                    min="1990"
+                    :max="new Date().getFullYear() + 1"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 2020"
+                    required
+                  >
+                </div>
+                
+                <div>
+                  <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type de carburant
+                  </label>
+                  <input
+                    type="text"
+                    :value="productData.fuel_type"
+                    disabled
+                    class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
+                    placeholder="Le type de carburant sera défini automatiquement"
+                  >
+                </div>
                 <div>
                   <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Type de transmission <span class="error-color">*</span>
@@ -339,53 +365,9 @@
                     <option value="8x8">8X8</option>
                   </select>
                 </div>
+                
 
-                <div>
-                  <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
-                    Année <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="vehicle_year"
-                    v-model="productData.vehicle_year"
-                    type="number"
-                    min="1990"
-                    :max="new Date().getFullYear() + 1"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 2020"
-                    required
-                  >
-                </div>
-
-                <div>
-                  <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de carburant
-                  </label>
-                  <input
-                    type="text"
-                    :value="productData.fuel_type"
-                    disabled
-                    class="text-sm sm:text-base input-style bg-gray-100 cursor-not-allowed"
-                    placeholder="Le type de carburant sera défini automatiquement"
-                  >
-                  <!-- <input v-else
-                    type="text"
-                    value="Le type de carburant sera défini automatiquement"
-                    disabled
-                    class="text-sm sm:text-base input-style bg-gray-100 cursor-not-allowed"
-                  > -->
-                  <!-- <select
-                    id="fuel_type"
-                    v-model="productData.fuel_type"
-                    :disabled="!productData.vehicle_model_id || brandsLoading"
-                    class="text-sm sm:text-base input-style"
-                  >
-                    <option value="">{{ brandsLoading ? 'Chargement...' : 'Type de carburant' }}</option>
-                    <option value=availableFuelType :key="model.id" :value="productData.fuel_type">
-                      {{ productData.fuel_type }}
-                    </option>
-                    
-                  </select> -->
-                </div>
+                
 
                 <div>
                   <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
