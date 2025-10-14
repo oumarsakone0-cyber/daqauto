@@ -371,7 +371,7 @@
 
                 <div>
                   <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
-                    Date de production
+                    Date de production <span class="error-color">*</span>
                   </label>
                   <input
                     id="production_date"
@@ -383,7 +383,7 @@
 
                 <div>
                   <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
-                    Pays d'origine
+                    Pays d'origine <span class="error-color">*</span>
                   </label>
                   <input
                     id="country_of_origin"
@@ -396,7 +396,7 @@
 
                 <div>
                   <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                    Empattement
+                    Empattement <span class="error-color">*</span>
                   </label>
                   <input
                     id="wheelbase"
@@ -410,7 +410,7 @@
 
                 <div>
                   <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
-                    GVW - Poids total en charge (kg)
+                    GVW - Poids total en charge (kg) <span class="error-color">*</span>
                   </label>
                   <input
                     id="gvw"
@@ -424,7 +424,7 @@
 
                 <div>
                   <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Capacité de charge utile (kg)
+                    Capacité de charge utile (kg) <span class="error-color">*</span>
                   </label>
                   <input
                     id="payload_capacity"
@@ -438,7 +438,7 @@
 
                 <div>
                   <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de cabine
+                    Type de cabine <span class="error-color">*</span>
                   </label>
                   <input
                     id="cabin_type"
@@ -451,7 +451,7 @@
 
                 <div>
                   <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
-                    Poids à vide (Tonnes)
+                    Poids à vide (Tonnes) <span class="error-color">*</span>
                   </label>
                   <input
                     id="curb_weight"
@@ -465,7 +465,7 @@
 
                 <div>
                   <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Capacité du réservoir (L)
+                    Capacité du réservoir (L) <span class="error-color">*</span>
                   </label>
                   <input
                     id="fuel_tank_capacity"
@@ -479,7 +479,7 @@
 
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Dimensions (L x l x H) (m)
+                    Dimensions (L x l x H) (m) <span class="error-color">*</span>
                   </label>
                   <div class="grid grid-cols-3 gap-2">
                     <input
@@ -528,7 +528,7 @@
                   </label>
                   <select
                     id="transmission_type"
-                    v-model="productData.transmission_type"
+                    v-mode"
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Toutes les transmissions</option>
@@ -1138,7 +1138,7 @@
                     <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Type de Transmission</div>
-                      <div class="spec-value">{{ productData.transmission_type || 'N/A'}}</div>
+                      <div class="spec-value"> || 'N/A'}}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
@@ -1536,7 +1536,14 @@ const canProceedToNextStep = computed(() => {
     case 0:
       return !!(productData.description && productData.category_id && productData.subcategory_id)
     case 1:
-      return !!(productData.vehicle_condition && productData.vehicle_brand_id && productData.vehicle_model_id && productData.vehicle_year && productData.drive_type)
+      return !!(productData.vehicle_condition && productData.vehicle_brand_id 
+      && productData.vehicle_model_id && productData.vehicle_year && productData.drive_type 
+      && productData.fuel_type && productData.country_of_origin 
+      && productData.dimensions_height && productData.dimensions_width 
+      && productData.dimensions_length && productData.fuel_tank_capacity 
+      && productData.curb_weight && productData.cabin_type && productData.payload_capacity
+      && productData.gvw && productData.production_date && productData.wheelbase
+    )
     case 2:
       getProductName();
       return true

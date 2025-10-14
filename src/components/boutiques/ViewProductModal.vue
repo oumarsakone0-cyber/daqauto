@@ -524,7 +524,7 @@
               <div class="flex flex-wrap gap-2">
                 <span 
                 v-if="product.tags"
-                  v-for="(tag, index) in product.tags" 
+                  v-for="(tag, index) in getTagsArray(product.tags)" 
                   :key="index"
                   class="px-3 py-2 bg-blue-100 primary-color text-sm rounded-xl font-medium hover:bg-blue-200 transition-colors"
                 >
@@ -802,6 +802,12 @@ watch(() => props.product, () => {
   currentImageIndex.value = 0
   activeTab.value = 'details'
 })
+
+const getTagsArray = (tags) =>{
+  if (!tags) return [];
+  if (Array.isArray(tags)) return tags;
+  return tags.split(',').map(tag => tag.trim()).filter(tag => tag.length > 0);
+}
 
 const selectImage = (index) => {
   currentImageIndex.value = index
