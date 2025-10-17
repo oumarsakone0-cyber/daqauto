@@ -602,19 +602,20 @@
                     </button>
                   </div>
                 </div>
+                
 
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Numéros de moteur
+                    Modèle du véhicule ( Trim )
                   </label>
                   <div class="space-y-2">
-                    <div v-for="(engineNumber, index) in productData.engine_numbers" :key="index" class="flex gap-2">
+                    <div v-for="(trim, index) in productData.trim" :key="index" class="flex gap-2">
                       <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
-                        v-model="productData.engine_numbers[index]"
+                        v-model="productData.trim[index]"
                         type="text"
                         class="flex-1 text-sm sm:text-base input-style"
-                        :placeholder="`Numéro de moteur ${index + 1}`"
+                        :placeholder="`Numéro trim ${index + 1}`"
                       >
                       <button
                         type="button"
@@ -629,9 +630,21 @@
                       @click="addEngineNumber"
                       class="submit-btn w-full"
                     >
-                      + Ajouter un numéro de moteur
+                      + Ajouter un numéro Trim
                     </button>
                   </div>
+                </div>
+                <div >
+                  <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    Numéro de moteur
+                  </label>
+                  <input
+                    id="vehicle_number"
+                    v-model="productData.engine_number"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: FHEGEJGE776JH8"
+                  >
                 </div>
 
                 <div >
@@ -1146,6 +1159,11 @@
                   </div>
                   <div class="spec-group">
                     <h3 class="spec-group-title">Détails techniques</h3>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Numéro du moteur</div>
+                      <div class="spec-value">{{ productData.engine_number || 'N/A' }}</div>
+                    </div>
                     <div class="spec-row">
                       <div class="spec-name"> Numéros VIN / Num Chassis</div>
                       <div class="spec-value">
@@ -1159,11 +1177,11 @@
                     </div>
                     <!-- TODO: parcourir la liste des numéros de moteur -->
                     <div class="spec-row">
-                      <div class="spec-name">Numéros de moteur</div>
+                      <div class="spec-name">Numéros Trim</div>
                       <div class="spec-value">
-                        <ul v-if="productData.engine_numbers && productData.engine_numbers.length">
-                          <li v-for="engineNumber in productData.engine_numbers" :key="engineNumber.id">
-                            {{ engineNumber }}
+                        <ul v-if="productData.trim && productData.trim.length">
+                          <li v-for="trim in productData.trim" :key="trim.id">
+                            {{ trim }}
                           </li>
                         </ul>
                         <span v-else>N/A</span>
@@ -1375,8 +1393,9 @@ const productData = reactive({
   fuel_type: '',
   transmission_type: '',
   engine_brand: '',
-  engine_numbers: [],
+  trim: [],
   vin: [],
+  engine_number: "",
   power: '',
   engine_emissions: '',
   vehicle_mileage: null,
@@ -1539,11 +1558,11 @@ const availableUnitTypes = ref([
 
 //  Added engine number management functions
 const addEngineNumber = () => {
-  productData.engine_numbers.push('')
+  productData.trim.push('')
 }
 
 const removeEngineNumber = (index) => {
-  productData.engine_numbers.splice(index, 1)
+  productData.trim.splice(index, 1)
 }
 //  Added engine VIN management functions
 const addEngineVin = () => {
@@ -1908,8 +1927,9 @@ const prepareDataForSubmission = () => {
     fuel_type: productData.fuel_type,
     transmission_type: productData.transmission_type,
     engine_brand: productData.engine_brand,
-    engine_numbers: productData.engine_numbers.filter(num => num.trim() !== ''),
+    trim: productData.trim.filter(num => num.trim() !== ''),
     vin: productData.vin.filter(num => num.trim() !== ''),
+    engine_number: productData.engine_number,
     power: productData.power,
     engine_emissions: productData.engine_emissions,
     vehicle_mileage: productData.vehicle_mileage,
