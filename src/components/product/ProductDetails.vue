@@ -46,7 +46,7 @@
       </div>
   
       <!-- Variantes du produit -->
-      <ProductVariants 
+      <!-- <ProductVariants 
         v-if="hasVariants"
         :product-colors="productColors"
         :product-sizes="productSizes"
@@ -62,16 +62,16 @@
         @update-variant-size="$emit('updateVariantSize', $event.variantIndex, $event.sizeIndex)"
         @update-variant-color="$emit('updateVariantColor', $event.variantIndex, $event.colorIndex)"
         @update-variant-quantity="$emit('updateVariantQuantity', $event.variantIndex, $event.quantity)"
-      />
+      /> -->
   
       
   
       <div class="order-section">
-        <div class="quantity-selector" v-if="!hasVariants">
+        <div class="quantity-selector" >
           <div class="quantity-label">Quantité:</div>
           <div class="quantity-controls">
             <button class="quantity-btn" @click="$emit('decreaseQuantity')" :disabled="quantity <= 1">-</button>
-            <input type="number" :value="quantity" @input="$emit('updateQuantity', parseInt($event.target.value))" min="1" :max="product.stock" class="quantity-input">
+            <input type="number" :value="quantity" @input="$emit('updateQuantity', parseInt($event.target.value))" min="1" :max="product.stock" class="quantity-input  focus:border-ring-2 focus:ring-0">
             <button class="quantity-btn" @click="$emit('increaseQuantity')" :disabled="quantity >= product.stock">+</button>
           </div>
           <div class="quantity-available">{{ product.stock }} pièces disponibles</div>
@@ -82,19 +82,6 @@
           <span class="total-value primary-color">{{ formatPrice(calculateTotal()) }}</span> ( FOB )
         </div>
         
-        <!-- Affichage des frais de livraison pour quantité simple 
-        <div v-if="!hasVariants && currentShippingCost > 0" class="shipping-cost-simple">
-          <div class="shipping-cost-header">
-            <span class="shipping-cost-label">Frais de livraison:</span>
-            <span class="primary-color">{{ formatPrice(currentShippingCost) }}</span>
-          </div>
-          <div class="shipping-cost-details">
-            <span class="shipping-method">{{ getShippingMethodName() }}</span>
-            <span class="shipping-destination">{{ getShippingDestination() }}</span>
-          </div>
-        </div>
-        -->
-  
         <!-- Total avec livraison -->
         <div v-if="!hasVariants && currentShippingCost > 0" class="grand-total">
           <span class="grand-total-label">Total avec livraison:</span>
@@ -427,21 +414,51 @@
     color: #333;
     margin-bottom: 12px;
   }
+  .quantity-input {
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    -moz-appearance: textfield; /* Firefox */
+    appearance: none;
+    width: auto;
+    height: 50px;
+    border: 1px solid #d9d9d9;
+    color: #333;
+    border-left: none;
+    border-right: none;
+    text-align: center;
+    font-size: 18px;
+  }
+
+  /* WebKit (Chrome, Safari, Edge) - supprime les deux boutons */
+  .quantity-input::-webkit-outer-spin-button,
+  .quantity-input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+  }
+
+  /* Firefox - assure l'affichage comme champ texte */
+  .quantity-input[type="number"] {
+    -moz-appearance: textfield;
+    appearance: textfield;
+  }
   
   .quantity-controls {
+    -webkit-appearance: none; /* Chrome, Safari, Edge */
+    -moz-appearance: textfield; /* Firefox */
+    appearance: none;
     display: flex;
     align-items: center;
-    height: 40px;
+    height: auto;
     margin-bottom: 8px;
     color: gray;
   }
   
   .quantity-btn {
-    width: 40px;
-    height: 40px;
+    width: auto;
+    height: 50px;
+    font-size: 26px;
     border: 1px solid #d9d9d9;
     background: #fff;
-    font-size: 18px;
+    /* font-size: 18px; */
     display: flex;
     align-items: center;
     justify-content: center;
@@ -462,7 +479,7 @@
     cursor: not-allowed;
   }
   
-  .quantity-input {
+  /* .quantity-input {
     width: 60px;
     height: 40px;
     border: 1px solid #d9d9d9;
@@ -471,7 +488,7 @@
     text-align: center;
     font-size: 16px;
     font-weight: 500;
-  }
+  } */
   
   .quantity-available {
     font-size: 14px;
