@@ -889,64 +889,6 @@
               </div>
             </div>
 
-            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
-              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-orange">
-                  <RulerIcon class="w-4 h-4 text-white" />
-                </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
-              </div>
-
-              <div class="mb-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Type de taille</label>
-                <select 
-                  v-model="productData.sizeType"
-                  @change="updateAvailableSizes"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option value="">Sélectionner le type de taille</option>
-                  <option v-for="sizeType in sizeTypes" :key="sizeType.value" :value="sizeType.value">
-                    {{ sizeType.label }}
-                  </option>
-                </select>
-              </div>
-              
-              <div v-if="productData.sizeType" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 mb-4">
-                <button
-                  v-for="size in currentAvailableSizes"
-                  :key="size"
-                  type="button"
-                  @click="toggleSize(size)"
-                  :class="[
-                    'px-3 py-2 sm:px-4 sm:py-3 rounded-lg border-2 transition-all duration-200 text-xs sm:text-sm font-medium',
-                    productData.sizes.includes(size)
-                      ? ' btn-degrade-orange'
-                      : 'border-gray-300  text-gray-700 hover:border-orange-400 bg-lightgray'
-                  ]"
-                >
-                  {{ size }}
-                </button>
-              </div>
-              
-              <div v-if="productData.sizeType" class="border-t border-gray-200 pt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une taille personnalisée</label>
-                <div class="flex gap-2">
-                  <input 
-                    v-model="customSize"
-                    type="text" 
-                    :placeholder="getSizePlaceholder(productData.sizeType)"
-                    class="flex-1  text-sm input-style"
-                  >
-                  <button 
-                    @click="addCustomSize"
-                    type="button"
-                    class="font-medium text-sm btn-degrade-orange"
-                  >
-                    Ajouter
-                  </button>
-                </div>
-              </div>
-            </div>
           </div>
 
           <div v-show="currentStep === 5" class="space-y-6">
@@ -1109,7 +1051,6 @@
                   <div class="space-y-2">
                     <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
                     <p><span class="font-medium text-gray-700">Unité:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Tailles:</span> <span class="text-gray-900">{{ productData.sizes.length }} sélectionnée(s)</span></p>
                     <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
                     <p><span class="font-medium text-gray-700">Vidéo:</span> <span class="text-gray-900">{{ productData.video ? 'Oui' : 'Non' }}</span></p>
                   </div>
@@ -1138,7 +1079,7 @@
                     <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Type de transmission</div>
-                      <div class="spec-value">{{ productData.drive_type || 'N/A'}}</div>
+                      <div class="spec-value">  {{ productData.drive_type || 'N/A'}}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
@@ -1153,7 +1094,7 @@
                     <!-- verifié -->
                     <div class="spec-row">
                       <div class="spec-name">Type de Transmission</div>
-                      <div class="spec-value"> || 'N/A'}}</div>
+                      <div class="spec-value">{{ productData.transmission_type || 'N/A' }}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
@@ -1368,7 +1309,6 @@ const emit = defineEmits(['close', 'save'])
 
 const currentStep = ref(0)
 const customColor = ref({ name: '', value: '#000000' })
-const customSize = ref('')
 const isLoading = ref(false)
 const loadingMessage = ref('')
 const error = ref(null)
@@ -1422,8 +1362,6 @@ const productData = reactive({
   wholesale_min_qty: null,
   colors_names: [],
   colors: [],
-  sizes: [],
-  sizeType: '',
   images: [],
   imageUrls: [],
   video: null,
@@ -1458,49 +1396,8 @@ const productData = reactive({
   fuel_tank_capacity: null
 })
 
-// Types de tailles
-const sizeTypes = ref([
-  { 
-    value: 'clothing', 
-    label: 'Tailles de vêtements',
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
-  },
-  { 
-    value: 'shoes', 
-    label: 'Pointures de chaussures',
-    sizes: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47']
-  },
-  { 
-    value: 'storage', 
-    label: 'Capacité de stockage',
-    sizes: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB']
-  },
-  { 
-    value: 'screen', 
-    label: 'Taille d\'écran',
-    sizes: ['5.5"', '6.1"', '6.7"', '13"', '15"', '17"', '21"', '24"', '27"', '32"']
-  },
-  { 
-    value: 'ring', 
-    label: 'Taille de bague',
-    sizes: ['48', '50', '52', '54', '56', '58', '60', '62', '64', '66', '68']
-  },
-  { 
-    value: 'watch', 
-    label: 'Taille de bracelet de montre',
-    sizes: ['38mm', '40mm', '42mm', '44mm', '45mm', '49mm']
-  },
-  { 
-    value: 'custom', 
-    label: 'Tailles personnalisées',
-    sizes: []
-  }
-])
 
-const currentAvailableSizes = computed(() => {
-  const sizeType = sizeTypes.value.find(type => type.value === productData.sizeType)
-  return sizeType ? sizeType.sizes : []
-})
+
 
 const availableSubcategories = computed(() => {
   const category = categories.value.find(cat => cat.id === productData.category_id)
@@ -1725,9 +1622,6 @@ const updateSubSubSubcategories = () => {
   productData.subsubsubcategory_id = ''
 }
 
-const updateAvailableSizes = () => {
-  productData.sizes = []
-}
 
 const updateModelid = () => {
   productData.vehicle_model_id = ""
@@ -1737,18 +1631,6 @@ const updateFuelType = () => {
   productData.fuel_type = availableFuelType.value
 }
 
-const getSizePlaceholder = (sizeType) => {
-  const placeholders = {
-    'clothing': 'Ex: M, L, XL...',
-    'shoes': 'Ex: 42, 43, 44...',
-    'storage': 'Ex: 128GB, 256GB...',
-    'screen': 'Ex: 15", 17"...',
-    'ring': 'Ex: 54, 56, 58...',
-    'watch': 'Ex: 42mm, 44mm...',
-    'custom': 'Ex: Taille personnalisée...'
-  }
-  return placeholders[sizeType] || 'Ex: Taille personnalisée...'
-}
 
 const toggleColor = (color) => {
   const index = productData.colors.indexOf(color)
@@ -1767,14 +1649,6 @@ const toggleColor = (color) => {
   }
 }
 
-const toggleSize = (size) => {
-  const index = productData.sizes.indexOf(size)
-  if (index > -1) {
-    productData.sizes.splice(index, 1)
-  } else {
-    productData.sizes.push(size)
-  }
-}
 
 const addCustomColor = () => {
   if (customColor.value.name && customColor.value.value) {
@@ -1796,16 +1670,7 @@ const addCustomColor = () => {
   }
 }
 
-const addCustomSize = () => {
-  if (customSize.value && !currentAvailableSizes.value.includes(customSize.value)) {
-    const sizeType = sizeTypes.value.find(type => type.value === productData.sizeType)
-    if (sizeType) {
-      sizeType.sizes.push(customSize.value)
-      productData.sizes.push(customSize.value)
-    }
-    customSize.value = ''
-  }
-}
+
 
 const handleImageUpload = (event) => {
   const files = Array.from(event.target.files)
@@ -2035,8 +1900,6 @@ const prepareDataForSubmission = () => {
     tags: productData.tags,
     is_active: productData.is_active,
     colors: productData.colors,
-    sizes: productData.sizes,
-    size_type: productData.sizeType,
     vehicle_condition: productData.vehicle_condition,
     vehicle_make:getBrandName( productData.vehicle_brand_id),
     vehicle_model:getModelName( productData.vehicle_model_id) ,
