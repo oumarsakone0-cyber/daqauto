@@ -797,6 +797,33 @@ const mediaCount = computed(() => {
   return count
 })
 
+// import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
+// // ...existing code...
+
+// // référence vers l'éditeur WYSIWYG
+// const wysiwygEditor2 = ref(null)
+
+// // initialise le contenu de l'éditeur au montage
+// onMounted(() => {
+//   if (wysiwygEditor2.value) {
+//     wysiwygEditor2.value.innerHTML = productData.description_plus || ''
+//   }
+// })
+
+// // synchronise l'éditeur quand productData.description_plus change (mise à jour depuis le code)
+// watch(() => productData.description_plus, (val) => {
+//   if (!wysiwygEditor2.value) return
+//   const html = val || ''
+//   if (wysiwygEditor2.value.innerHTML !== html) {
+//     wysiwygEditor2.value.innerHTML = html
+//   }
+// })
+
+// // mise à jour de la variable quand l'utilisateur édite le contenu
+// const updateOtherDescription = () => {
+//   productData.description_plus = wysiwygEditor2.value?.innerHTML || ''
+// }
+
 // Réinitialiser l'index quand le produit change
 watch(() => props.product, () => {
   currentImageIndex.value = 0
