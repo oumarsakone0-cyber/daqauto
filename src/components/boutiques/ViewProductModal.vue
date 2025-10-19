@@ -292,7 +292,7 @@
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Type de pneus</div>
+                  <div class="text-sm text-gray-500 mb-1">Taille des pneus</div>
                   <div class="font-semibold text-gray-900">
                     {{product.tyre_size || "N/A"}}
                   </div>

@@ -517,7 +517,7 @@
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
-                   Type de Transmission
+                   Boîte de Vitesse
                   </label>
                   <select
                     id="transmission_type"
@@ -1372,7 +1372,7 @@ const steps = [
   { title: 'Spécifications' },
   { title: 'Techniques' },
   { title: 'Prix & Stock' },
-  { title: 'Variantes' },
+  { title: 'Couleurs' },
   { title: 'Images' }
 ]
 

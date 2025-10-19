@@ -84,22 +84,6 @@
                   placeholder="Ex: T-shirt Premium Coton"
                 >
               </div>
-  
-              <!-- <div class="sm:col-span-2">
-                <label for="description" class="block text-sm font-medium text-gray-700 mb-2">
-                  Description courte
-                </label>
-                <textarea
-                  id="description"
-                  v-model="editData.description_plus"
-                  rows="3"
-                  class="input-style"
-                  placeholder="Décrivez votre produit..."
-                ></textarea>
-              </div> -->
-
-              
-   
               <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
                   Catégorie <span class="error-color">*</span>
@@ -173,45 +157,6 @@
                 </select>
               </div>
               <div class="sm:col-span-2">
-                <div class="flex items-center mb-3">
-                 
-                  <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                    <EditIcon class="w-4 h-4 primary-color mr-1" />
-                    Activer la description détaillée (WYSIWYG)
-                  </label>
-                </div>
-                
-                <div >
-                  <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                      
-                    <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                      <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
-                      <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic " title="Italique" style="background-color: lightgray; color: black;">I</button>
-                      <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline " title="Souligné" style="background-color: lightgray; color: black;">U</button>
-                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                      <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
-                      <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
-                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                      <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
-                        <option value="">Titre</option>
-                        <option value="h1">Titre 1</option>
-                        <option value="h2">Titre 2</option>
-                        <option value="h3">Titre 3</option>
-                      </select>
-                    </div>
-                    <div 
-                      ref="wysiwygEditor"
-                      contenteditable="true"
-                      @input="updateDetailedDescription"
-                      class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
-                      style="white-space: pre-wrap;"
-                      placeholder="Décrivez votre produit en détail..."
-                    ></div>
-                  </div>
-                </div>
-              </div>
-
-              <div class="sm:col-span-2">
                 <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
                   Tags (optionnel)
                 </label>
@@ -237,7 +182,18 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-               
+               <div>
+                <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
+                  Marque du véhicule
+                </label>
+                <input
+                  id="vehicle_make"
+                  v-model="editData.vehicle_make"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: Mercedes, Volvo, Scania"
+                >
+              </div>
               <div>
                 <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
                   État du véhicule 
@@ -254,22 +210,11 @@
                 </select>
               </div>
 
-              <div>
-                <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
-                  Marque
-                </label>
-                <input
-                  id="vehicle_make"
-                  v-model="editData.vehicle_make"
-                  type="text"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: Mercedes, Volvo, Scania"
-                >
-              </div>
+              
 
               <div>
                 <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
-                  Modèle
+                  Modèle du véhicule
                 </label>
                 <input
                   id="vehicle_model"
@@ -278,6 +223,39 @@
                   class="text-sm sm:text-base input-style"
                   placeholder="Ex: Actros, FH, R-Series"
                 >
+              </div>
+              <div>
+                <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
+                  Année
+                </label>
+                <input
+                  id="vehicle_year"
+                  v-model="editData.vehicle_year"
+                  type="number"
+                  min="1990"
+                  :max="new Date().getFullYear() + 1"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 2020"
+                >
+              </div>
+               <div>
+                <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Type de carburant
+                </label>
+                <select
+                  id="fuel_type"
+                  v-model="editData.fuel_type"
+                  class="text-sm sm:text-base input-style"
+                >
+                  <option value="">Tous les carburants</option>
+                  <option value="diesel">Diesel</option>
+                  <option value="electric">Électrique</option>
+                  <option value="hybrid">Hybride</option>
+                  <option value="cng">CNG</option>
+                  <option value="lng">LNG</option>
+                  <option value="hydrogen">Hydrogène</option>
+                  <option value="unknown">Inconnu</option>
+                </select>
               </div>
 
               <div>
@@ -299,42 +277,6 @@
                   <option value="8X8">8x8</option>
                 </select>
               </div>
-
-              <div>
-                <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
-                  Année
-                </label>
-                <input
-                  id="vehicle_year"
-                  v-model="editData.vehicle_year"
-                  type="number"
-                  min="1990"
-                  :max="new Date().getFullYear() + 1"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 2020"
-                >
-              </div>
- 
-              <div>
-                <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de carburant
-                </label>
-                <select
-                  id="fuel_type"
-                  v-model="editData.fuel_type"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option value="">Tous les carburants</option>
-                  <option value="diesel">Diesel</option>
-                  <option value="electric">Électrique</option>
-                  <option value="hybrid">Hybride</option>
-                  <option value="cng">CNG</option>
-                  <option value="lng">LNG</option>
-                  <option value="hydrogen">Hydrogène</option>
-                  <option value="unknown">Inconnu</option>
-                </select>
-              </div>
-
               <div>
                 <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
                   Date de production
@@ -376,7 +318,7 @@
 
               <div>
                 <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
-                  PTAC (kg)
+                  GVW - Poids Total en Charge (kg)
                 </label>
                 <input
                   id="gvw"
@@ -414,7 +356,267 @@
                   placeholder="Ex: Cabine courte, Cabine longue"
                 >
               </div>
+              <div>
+                <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Poids à vide (Tonnes)
+                </label>
+                <input
+                  id="suspension_type"
+                  v-model="editData.curb_weight"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: Pneumatique, Mécanique"
+                >
+              </div>
+              <div>
+                <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                  Capacité du réservoir (L)
+                </label>
+                <input
+                  id="fuel_tank_capacity"
+                  v-model="editData.fuel_tank_capacity"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 400"
+                >
+              </div>
 
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Dimensions (L x l x H) en mm
+                </label>
+                <div class="grid grid-cols-3 gap-3">
+                  <input
+                    v-model="editData.dimension_length"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Longueur"
+                  >
+                  <input
+                    v-model="editData.dimension_width"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Largeur"
+                  >
+                  <input
+                    v-model="editData.dimension_height"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Hauteur"
+                  >
+                </div>
+              </div>
+              <div class="sm:col-span-2">
+                <div class="flex items-center mb-3">
+                 
+                  <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
+                    <EditIcon class="w-4 h-4 primary-color mr-1" />
+                    Autres Spécifications (WYSIWYG)
+                  </label>
+                </div>
+                
+                <div >
+                  <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
+                      
+                    <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
+                      <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
+                      <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic " title="Italique" style="background-color: lightgray; color: black;">I</button>
+                      <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline " title="Souligné" style="background-color: lightgray; color: black;">U</button>
+                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                      <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
+                      <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
+                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                      <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
+                        <option value="">Titre</option>
+                        <option value="h1">Titre 1</option>
+                        <option value="h2">Titre 2</option>
+                        <option value="h3">Titre 3</option>
+                      </select>
+                    </div>
+                    <div 
+                      ref="wysiwygEditor"
+                      contenteditable="true"
+                      @input="updateDetailedDescription"
+                      class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
+                      style="white-space: pre-wrap;"
+                      placeholder="Décrivez votre produit en détail..."
+                    ></div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
+                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                </svg>
+              </div>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Caractéristiques Techniques</h3>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                  
+              <div>
+                <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Boîte de Vitesse
+                </label>
+                <select
+                  id="transmission_type"
+                  v-model="editData.transmission_type"
+                  class="text-sm sm:text-base input-style"
+                >
+                  <option value="">Toutes les transmissions</option>
+                  <option value="automatic">Automatique</option>
+                  <option value="manual">Manuelle</option>
+                </select>
+              </div>
+
+              <div>
+                <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                  Marque du moteur
+                </label>
+                <select
+                  id="engine_brand"
+                  v-model="editData.engine_brand"
+                  class="text-sm sm:text-base input-style"
+                >
+                  <option value="">Sélectionnez une marque</option>
+                  <option value="weichai">Weichai</option>
+                  <option value="yuchai">Yuchai</option>
+                  <option value="sinotruck">Sinotruck</option>
+                  <option value="man">MAN</option>
+                </select>
+              </div>
+              <div>
+                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Puissance du Moteur (ch/kW)
+                  </label>
+                  <input
+                    id="power"
+                    v-model="editData.power"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 400"
+                  >
+                </div>
+                <div>
+                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Émissions du moteur (g/km)
+                  </label>
+                  <input
+                    id="fuel_tank_capacity"
+                    v-model="editData.engine_emissions"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 40"
+                  >
+                </div>
+
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Numéros VIN / Num Chassis
+                </label>
+                <div class="space-y-2">
+                  <div 
+                    v-for="(vin, index) in editData.vin" 
+                    :key="index"
+                    class="flex gap-2"
+                  >
+                    <input
+                      v-model="editData.vin[index]"
+                      type="text"
+                      class="flex-1 text-sm sm:text-base input-style"
+                      placeholder="Ex: ENG123456789"
+                    >
+                    <button
+                      type="button"
+                      @click="removeVin(index)"
+                      class="px-3 py-2 btn-deconnexion"
+                    >
+                      <XIcon class="w-4 h-4" />
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    @click="addVin"
+                    class="w-full submit-btn"
+                  >
+                    + Ajouter un numéro 
+                  </button>
+                </div>
+              </div>
+              <div class="sm:col-span-2">
+                <label class="block text-sm font-medium text-gray-700 mb-2">
+                  Modèle du véhicule ( Trim )
+                </label>
+                <div class="space-y-2">
+                  <div 
+                    v-for="(engineNumber, index) in editData.vehicle_trim" 
+                    :key="index"
+                    class="flex gap-2"
+                  >
+                    <input
+                      v-model="editData.vehicle_trim[index]"
+                      type="text"
+                      class="flex-1 text-sm sm:text-base input-style"
+                      placeholder="Ex: ENG123456789"
+                    >
+                    <button
+                      type="button"
+                      @click="removeVehicleTrim(index)"
+                      class="px-3 py-2 btn-deconnexion"
+                    >
+                      <XIcon class="w-4 h-4" />
+                    </button>
+                  </div>
+                  <button
+                    type="button"
+                    @click="addVehicleTrim"
+                    class="w-full submit-btn"
+                  >
+                    + Ajouter un numéro Trim
+                  </button>
+                </div>
+              </div>
+              <div >
+                <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
+                  numéro du moteur
+                </label>
+                <input
+                  id="vehicle_mileage"
+                  v-model="editData.engine_numbers"
+                  type="number"
+                  min="0"
+                  max="200000"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: FHEGEJGE776JH8"
+                >
+              </div>
+              <div >
+                <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
+                  Kilométrage (km)
+                </label>
+                <input
+                  id="vehicle_mileage"
+                  v-model="editData.vehicle_mileage"
+                  type="number"
+                  min="0"
+                  max="200000"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 150000"
+                >
+                <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
+              </div>
               <div>
                 <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type de suspension
@@ -453,160 +655,6 @@
                   placeholder="Ex: 295/80R22.5"
                 >
               </div>
-
-              <div class="sm:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Dimensions (L x l x H) en mm
-                </label>
-                <div class="grid grid-cols-3 gap-3">
-                  <input
-                    v-model="editData.dimension_length"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Longueur"
-                  >
-                  <input
-                    v-model="editData.dimension_width"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Largeur"
-                  >
-                  <input
-                    v-model="editData.dimension_height"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Hauteur"
-                  >
-                </div>
-              </div>
-
-              <div>
-                <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
-                  Poids à vide (kg)
-                </label>
-                <input
-                  id="curb_weight"
-                  v-model="editData.curb_weight"
-                  type="number"
-                  min="0"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 10000"
-                >
-              </div>
-
-              <div>
-                <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                  Capacité du réservoir (L)
-                </label>
-                <input
-                  id="fuel_tank_capacity"
-                  v-model="editData.fuel_tank_capacity"
-                  type="number"
-                  min="0"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 400"
-                >
-              </div>
-            </div>
-          </div>
-
-          <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
-            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
-                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
-                </svg>
-              </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Caractéristiques Techniques</h3>
-            </div>
-
-            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  
-              <div>
-                <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Transmission
-                </label>
-                <select
-                  id="transmission_type"
-                  v-model="editData.transmission_type"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option value="">Toutes les transmissions</option>
-                  <option value="automatic">Automatique</option>
-                  <option value="manual">Manuelle</option>
-                </select>
-              </div>
-
-              <div>
-                <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
-                  Marque du moteur
-                </label>
-                <select
-                  id="engine_brand"
-                  v-model="editData.engine_brand"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option value="">Sélectionnez une marque</option>
-                  <option value="weichai">Weichai</option>
-                  <option value="yuchai">Yuchai</option>
-                  <option value="sinotruck">Sinotruck</option>
-                  <option value="man">MAN</option>
-                </select>
-              </div>
-
-              <div class="sm:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Numéros de moteur
-                </label>
-                <div class="space-y-2">
-                  <div 
-                    v-for="(engineNumber, index) in editData.engine_numbers" 
-                    :key="index"
-                    class="flex gap-2"
-                  >
-                    <input
-                      v-model="editData.engine_numbers[index]"
-                      type="text"
-                      class="flex-1 text-sm sm:text-base input-style"
-                      placeholder="Ex: ENG123456789"
-                    >
-                    <button
-                      type="button"
-                      @click="removeEngineNumber(index)"
-                      class="px-3 py-2 btn-deconnexion"
-                    >
-                      <XIcon class="w-4 h-4" />
-                    </button>
-                  </div>
-                  <button
-                    type="button"
-                    @click="addEngineNumber"
-                    class="w-full submit-btn"
-                  >
-                    + Ajouter un numéro de moteur
-                  </button>
-                </div>
-              </div>
-
-              <div class="sm:col-span-2">
-                <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
-                  Kilométrage (km)
-                </label>
-                <input
-                  id="vehicle_mileage"
-                  v-model="editData.vehicle_mileage"
-                  type="number"
-                  min="0"
-                  max="200000"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 150000"
-                >
-                <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
-              </div>
               <div class="sm:col-span-2">
                 <label for="other_description" class="block text-sm font-medium text-gray-700 mb-2">
                   Autres descriptions
@@ -619,6 +667,44 @@
                   placeholder="Ajoutez d'autres informations pertinentes sur le véhicule..."
                 ></textarea>
               </div>
+              <div class="sm:col-span-2">
+                <div class="flex items-center mb-3">
+                 
+                  <label for="wysiwygEditor2" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
+                    <EditIcon class="w-4 h-4 primary-color mr-1" />
+                    Autres descriptions (WYSIWYG)
+                  </label>
+                </div>
+                
+                <div >
+                  <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
+                      
+                    <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
+                      <button type="button" @click="formatText2('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
+                      <button type="button" @click="formatText2('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic " title="Italique" style="background-color: lightgray; color: black;">I</button>
+                      <button type="button" @click="formatText2('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline " title="Souligné" style="background-color: lightgray; color: black;">U</button>
+                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                      <button type="button" @click="formatText2('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
+                      <button type="button" @click="formatText2('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
+                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                      <select @change="formatHeading2($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
+                        <option value="">Titre</option>
+                        <option value="h1">Titre 1</option>
+                        <option value="h2">Titre 2</option>
+                        <option value="h3">Titre 3</option>
+                      </select>
+                    </div>
+                    <div 
+                      ref="wysiwygEditor2"
+                      contenteditable="true"
+                      @input="updateDescriptionPlus"
+                      class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
+                      style="white-space: pre-wrap;"
+                      placeholder="Décrivez votre produit en détail..."
+                    ></div>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
   
@@ -630,7 +716,7 @@
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
             </div>
   
-            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
+            <div class="grid grid-cols-1 sm:grid-cols-2  gap-4 sm:gap-6">
               
               <div>
                 <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
@@ -663,10 +749,24 @@
                   placeholder="50"
                 >
               </div>
+              <div>
+                  <label for="available" class="block text-sm font-medium text-gray-700 mb-2">
+                    Disponibilité du produit
+                  </label>
+                  <select
+                    id="available"
+                    v-model="editData.disponibility"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option v-for="available in availability" :key="available.value" :value="available.value">
+                      {{ available.label }}
+                    </option>
+                  </select>
+                </div>
   
               <div>
                 <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type d'unité
+                  Unité
                 </label>
                 <select
                   id="unit_type"
@@ -816,95 +916,6 @@
               </div>
             </div>
           </div>
-  
-          <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
-            <div class="flex items-center space-x-3 mb-4 sm:mb-6">
-              <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
-                <RulerIcon class="w-4 h-4 text-white" />
-              </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Tailles</h3>
-            </div>
-
-            <div class="mb-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Type de taille</label>
-              <select 
-                v-model="editData.sizeType"
-                @change="updateAvailableSizes"
-                class="text-sm sm:text-base input-style"
-              >
-                <option value="">Sélectionner le type de taille</option>
-                <option v-for="sizeType in sizeTypes" :key="sizeType.value" :value="sizeType.value">
-                  {{ sizeType.label }}
-                </option>
-              </select>
-            </div>
-  
-            <div v-if="editData.sizeType" class="grid grid-cols-4 sm:grid-cols-6 lg:grid-cols-8 gap-2 mb-4">
-              <button
-                v-for="size in currentAvailableSizes"
-                :key="size"
-                type="button"
-                @click="toggleSize(size)"
-                :class="[
-                  'px-3 py-2 sm:px-4 sm:py-3 rounded-lg border-2 transition-all duration-200 text-xs sm:text-sm font-medium',
-                  editData.sizes.includes(size)
-                    ? 'border-orange-500 bg-orange primary-color'
-                    : 'border-gray-300 bg-white text-gray-700 hover:border-gray-400'
-                ]"
-              >
-                {{ size }}
-              </button>
-            </div>
-
-            <div v-if="editData.sizeType" class="border-t border-gray-200 pt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une taille personnalisée</label>
-              <div class="flex gap-2">
-                <input 
-                  v-model="customSize"
-                  type="text" 
-                  :placeholder="getSizePlaceholder(editData.sizeType)"
-                  class="flex-1 transition-all text-sm input-style"
-                >
-                <button 
-                  @click="addCustomSize"
-                  type="button"
-                  class="px-4 py-2 btn-degrade-orange rounded-lg  transition-all font-medium text-sm"
-                >
-                  Ajouter
-                </button>
-              </div>
-            </div>
-
-            <div v-if="sizesToAdd.length > 0 || sizesToRemove.length > 0" class="mt-6 space-y-4">
-                Tailles à ajouter  
-              <div v-if="sizesToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-green-800 mb-2">Tailles à ajouter :</h4>
-                <div class="flex flex-wrap gap-2">
-                  <span 
-                    v-for="size in sizesToAdd" 
-                    :key="size"
-                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-green-100 text-green-800"
-                  >
-                    {{ size }}
-                  </span>
-                </div>
-              </div>
-
-              <div v-if="sizesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium error-color mb-2">Tailles à supprimer :</h4>
-                <div class="flex flex-wrap gap-2">
-                  <span 
-                    v-for="size in sizesToRemove" 
-                    :key="size"
-                    class="inline-flex items-center px-2 py-1 rounded-md text-xs font-medium bg-red-100 error-color"
-                  >
-                    {{ size }}
-                  </span>
-                </div>
-              </div>
-            </div>
-          </div>
-  
           <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center space-x-3 mb-4 sm:mb-6">
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
@@ -1195,6 +1206,7 @@ const isLoading = ref(false)
 const loadingMessage = ref('')
 const error = ref(null)
 const wysiwygEditor = ref(null)
+const wysiwygEditor2 = ref(null)
 const customColor = ref({ name: '', value: '#000000' })
 const customSize = ref('')
 
@@ -1241,8 +1253,13 @@ const editData = ref({
   transmission_type: '',
   engine_brand: '',
   vehicle_mileage: null,
+  power:"",
+  engine_emissions:'',
   // New fields
-  engine_numbers: [],
+  vin: [],
+  vehicle_trim:[],
+  engine_numbers:"",
+  disponibility:"",
   production_date: '',
   country_of_origin: '',
   wheelbase: null,
@@ -1413,6 +1430,11 @@ const getSizePlaceholder = (sizeType) => {
   return placeholders[sizeType] || 'Ex: Taille personnalisée...'
 }
 
+const availability = ref([
+  { value: 'available', label: 'Disponible' },
+  { value: 'unavailable', label: 'Indisponible' },
+  { value: 'on_order', label: 'Sur Commande' },
+])
 // Méthodes
 const fetchCategories = async () => {
   try {
@@ -1446,7 +1468,24 @@ const formatHeading = (event) => {
 
 const updateDetailedDescription = () => {
   editData.value.description = wysiwygEditor.value.innerHTML
-  console.log('Description mise à jour:', editData.value.description)
+}
+
+const formatText2 = (command) => {
+  document.execCommand(command, false, null)
+  wysiwygEditor2.value.focus()
+}
+
+const formatHeading2 = (event) => {
+  const heading = event.target.value
+  if (heading) {
+    document.execCommand('formatBlock', false, heading)
+    event.target.value = ''
+    wysiwygEditor2.value.focus()
+  }
+}
+
+const updateDescriptionPlus = () => {
+  editData.value.description_plus = wysiwygEditor2.value.innerHTML
 }
 
 const updateSubcategories = () => {
@@ -1516,12 +1555,21 @@ const addCustomSize = () => {
   }
 }
 
-const addEngineNumber = () => {
-  editData.value.engine_numbers.push('')
+// VIN
+const addVin = () => {
+  editData.value.vin.push('')
 }
 
-const removeEngineNumber = (index) => {
-  editData.value.engine_numbers.splice(index, 1)
+const removeVin = (index) => {
+  editData.value.vin.splice(index, 1)
+}
+// vehicle_trim
+const addVehicleTrim = () => {
+  editData.value.vehicle_trim.push('')
+}
+
+const removeVehicleTrim = (index) => {
+  editData.value.vehicle_trim.splice(index, 1)
 }
 
 const closeModal = () => {
@@ -1604,8 +1652,13 @@ const handleSubmit = async () => {
       transmission_type: editData.value.transmission_type,
       engine_brand: editData.value.engine_brand,
       vehicle_mileage: editData.value.vehicle_mileage,
+      power: editData.power,
+      engine_emissions: editData.engine_emissions,
       // New fields
-      engine_numbers: editData.value.engine_numbers.filter(num => num.trim() !== ''),
+      vin: editData.value.vin.filter(num => num.trim() !== ''),
+      vehicle_trim: editData.value.vehicle_trim.filter(num => num.trim() !== ''),
+      engine_numbers: editData.engine_numbers,
+      disponibility: editData.disponibility,
       production_date: editData.value.production_date,
       country_of_origin: editData.value.country_of_origin,
       wheelbase: editData.value.wheelbase,
@@ -1872,8 +1925,13 @@ watch(() => props.product, (newProduct) => {
       transmission_type: newProduct.transmission_type || '',
       engine_brand: newProduct.engine_brand || '',
       vehicle_mileage: newProduct.vehicle_mileage || null,
+      engine_emissions:newProduct.engine_emissions,
+      power:newProduct.power,
       // New fields
-      engine_numbers: Array.isArray(newProduct.engine_numbers) ? [...newProduct.engine_numbers] : [],
+      vin: Array.isArray(newProduct.vin) ? [...newProduct.vin] : [],
+      vehicle_trim:Array.isArray(newProduct.vehicle_trim) ? [...newProduct.vehicle_trim] : [],
+      engine_numbers:newProduct.engine_numbers,
+      disponibility: newProduct.disponibility,
       production_date: newProduct.production_date || '',
       country_of_origin: newProduct.country_of_origin || '',
       wheelbase: newProduct.wheelbase || null,
