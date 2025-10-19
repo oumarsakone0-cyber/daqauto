@@ -89,10 +89,20 @@
           <div v-if="activeTab === 'vehicle'" class="space-y-4 sm:space-y-8">
             <!-- Informations générales du véhicule -->
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
-              <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                Informations Véhicule
-              </h4>
+             <div class="grid grid-cols-2">
+               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                 <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
+                 Informations Véhicule
+               </h4>
+               <apn class="text-gray-400">disponibilité du véhicule : 
+                <div class="inline-flex">
+                  <span v-if="product.disponibility === 'available'" class="text-green-600">Disponible</span>
+                    <span v-else-if="product.disponibility === 'unavailable'" class="text-red-600">Indisponible</span>
+                    <span v-else-if="product.disponibility === 'on_order'" class="text-orange-600">Sur Commande</span>
+                    <span v-else>{{ product.disponibility }}</span>
+               </div>
+              </apn>
+             </div>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div v-if="product.vehicle_condition" class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">État</div>
@@ -168,6 +178,10 @@
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Numéro de stockage</div>
+                  <div class="font-semibold text-gray-900">{{ product.stock_number }}</div>
+                </div>
+                <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Type de transmission</div>
                   <div class="font-semibold text-gray-900">{{ product.drive_type }}</div>
                 </div>
@@ -193,14 +207,15 @@
                   <div class="font-semibold text-gray-900 uppercase">{{ product.power || "N/A"}}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Emmissions du moteur</div>
-                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_emissions || "N/A"}}</div>
+                  <div class="text-sm text-gray-500 mb-1">Numéro du moteur</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_number || "N/A"}}</div>
                 </div>
+                
                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Numéros VIN / Num Chassis</div>
                   <div class="font-semibold text-gray-900 uppercase">
-                    <ul v-if="product.vin && product.vin.length">
-                          <li v-for="vin in product.vin" :key="vin">
+                    <ul v-if="product.vin_numbers && product.vin_numbers.length">
+                          <li v-for="vin in product.vin_numbers" :key="vin">
                             {{ vin }}
                           </li>
                         </ul>
@@ -208,15 +223,19 @@
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Numéros de moteur</div>
+                  <div class="text-sm text-gray-500 mb-1">Numéros Trim</div>
                   <div class="font-semibold text-gray-900 uppercase">
-                    <ul v-if="product.engine_numbers && product.engine_numbers.length">
-                          <li v-for="engine_number in product.engine_numbers" :key="engine_number">                          
-                            {{ engine_number }}
+                    <ul v-if="product.trim_number && product.trim_number.length">
+                          <li v-for="trim_number in product.trim_number" :key="trim_number">                          
+                            {{ trim_number }}
                           </li>
                         </ul>
                         <span v-else>N/A</span>
                   </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Emmissions du moteur</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_emissions || "N/A"}}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Empattement</div>
@@ -260,6 +279,31 @@
                     {{product.fuel_tank_capacity || "N/A"}}
                   </div>
               </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Système de freinage</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.brake_system || "N/A"}}
+                  </div>
+              </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Dimensions</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.dimensions || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Type de pneus</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.tyre_size || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Unité</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.unit_type || "N/A"}}
+                  </div>
+                </div>
+                
               </div>
             </div>
 

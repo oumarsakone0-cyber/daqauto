@@ -609,10 +609,10 @@
                     Modèle du véhicule ( Trim )
                   </label>
                   <div class="space-y-2">
-                    <div v-for="(trim, index) in productData.trim" :key="index" class="flex gap-2">
+                    <div v-for="(trim, index) in productData.trim_number" :key="index" class="flex gap-2">
                       <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
-                        v-model="productData.trim[index]"
+                        v-model="productData.trim_number[index]"
                         type="text"
                         class="flex-1 text-sm sm:text-base input-style"
                         :placeholder="`Numéro trim ${index + 1}`"
@@ -789,7 +789,7 @@
                   </label>
                   <select
                     id="available"
-                    v-model="productData.availability"
+                    v-model="productData.disponibility"
                     class="text-sm sm:text-base input-style"
                   >
                     <option v-for="available in availability" :key="available.value" :value="available.value">
@@ -1076,7 +1076,7 @@
                     <p><span class="font-medium text-gray-700">Quantité minimale:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
                   </div>
                   <div class="space-y-2">
-                    <p><span class="font-medium text-gray-700">Disponibilité du produit:</span> <span class="text-gray-900">{{ productData.availability }}</span></p>
+                    <p><span class="font-medium text-gray-700">Disponibilité du produit:</span> <span class="text-gray-900">{{ productData.disponibility }}</span></p>
                     <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
                     <p><span class="font-medium text-gray-700">Unité:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
                     <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
@@ -1194,8 +1194,8 @@
                     <div class="spec-row">
                       <div class="spec-name">Numéros Trim</div>
                       <div class="spec-value">
-                        <ul v-if="productData.trim && productData.trim.length">
-                          <li v-for="trim in productData.trim" :key="trim.id">
+                        <ul v-if="productData.trim_number && productData.trim_number.length">
+                          <li v-for="trim in productData.trim_number" :key="trim.id">
                             {{ trim }}
                           </li>
                         </ul>
@@ -1390,7 +1390,7 @@ const productData = reactive({
   unit_price: '',
   stock: '',
   unit_type: 'quantity',
-  availability: 'available',
+  disponibility: 'available',
   hasWholesalePrice: false,
   wholesale_price: null,
   wholesale_min_qty: null,
@@ -1409,7 +1409,7 @@ const productData = reactive({
   fuel_type: '',
   transmission_type: '',
   engine_brand: '',
-  trim: [],
+  trim_number: [],
   vin: [],
   engine_number: "",
   power: '',
@@ -1507,7 +1507,7 @@ const canProceedToNextStep = computed(() => {
                            productData.stock !== undefined && 
                            Number(productData.stock) >= 0
       
-      return hasValidPrice && hasValidStock && !!productData.availability
+      return hasValidPrice && hasValidStock && !!productData.disponibility
     case 4:
       return true
     case 5:
@@ -1581,11 +1581,11 @@ const availability = ref([
 
 //  Added engine number management functions
 const addEngineNumber = () => {
-  productData.trim.push('')
+  productData.trim_number.push('')
 }
 
 const removeEngineNumber = (index) => {
-  productData.trim.splice(index, 1)
+  productData.trim_number.splice(index, 1)
 }
 //  Added engine VIN management functions
 const addEngineVin = () => {
@@ -1939,7 +1939,7 @@ const prepareDataForSubmission = () => {
     wholesale_min_qty: productData.hasWholesalePrice ? parseInt(productData.wholesale_min_qty) : null,
     stock: parseInt(productData.stock),
     unit_type: productData.unit_type,
-    availability:productData.availability,
+    disponibility:productData.disponibility,
     tags: productData.tags,
     is_active: productData.is_active,
     colors: productData.colors,
@@ -1951,7 +1951,7 @@ const prepareDataForSubmission = () => {
     fuel_type: productData.fuel_type,
     transmission_type: productData.transmission_type,
     engine_brand: productData.engine_brand,
-    trim: productData.trim.filter(num => num.trim() !== ''),
+    trim_number: productData.trim_number.filter(num => num.trim() !== ''),
     vin: productData.vin.filter(num => num.trim() !== ''),
     engine_number: productData.engine_number,
     power: productData.power,
