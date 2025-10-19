@@ -529,31 +529,40 @@
                   Numéros VIN / Num Chassis
                 </label>
                 <div class="space-y-2">
-                  <div 
-                    v-for="(vin, index) in editData.vin" 
-                    :key="index"
-                    class="flex gap-2"
-                  >
-                    <input
-                      v-model="editData.vin[index]"
-                      type="text"
-                      class="flex-1 text-sm sm:text-base input-style"
-                      placeholder="Ex: ENG123456789"
+                  <div v-if="editData.vin_numbers && editData.vin_numbers.length" class="space-y-2">
+                    <div
+                      v-for="(vin,index) in editData.vin_numbers"
+                      :key="index"
+                      class="flex gap-2 items-center"
                     >
-                    <button
-                      type="button"
-                      @click="removeVin(index)"
-                      class="px-3 py-2 btn-deconnexion"
-                    >
-                      <XIcon class="w-4 h-4" />
-                    </button>
+                    <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
+                      <input
+                        v-model="editData.vin_numbers[index]"
+                        type="text"
+                        class="flex-1 text-sm sm:text-base input-style"
+                        placeholder="Ex: ENG123456789"
+                      />
+                      <button
+                        type="button"
+                        @click="removeVin(index)"
+                        class="px-3 py-2 btn-deconnexion"
+                        title="Supprimer ce VIN"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
+
+                  <div v-else class="text-sm text-gray-500">
+                    Aucun VIN enregistré.
+                  </div>
+
                   <button
                     type="button"
                     @click="addVin"
-                    class="w-full submit-btn"
+                    class="w-full submit-btn mt-2"
                   >
-                    + Ajouter un numéro 
+                    + Ajouter un numéro
                   </button>
                 </div>
               </div>
@@ -562,31 +571,40 @@
                   Modèle du véhicule ( Trim )
                 </label>
                 <div class="space-y-2">
-                  <div 
-                    v-for="(engineNumber, index) in editData.vehicle_trim" 
-                    :key="index"
-                    class="flex gap-2"
-                  >
-                    <input
-                      v-model="editData.vehicle_trim[index]"
-                      type="text"
-                      class="flex-1 text-sm sm:text-base input-style"
-                      placeholder="Ex: ENG123456789"
+                  <div v-if="editData.trim_number && editData.trim_number.length" class="space-y-2">
+                    <div
+                      v-for="(vin,index) in editData.trim_number"
+                      :key="index"
+                      class="flex gap-2 items-center"
                     >
-                    <button
-                      type="button"
-                      @click="removeVehicleTrim(index)"
-                      class="px-3 py-2 btn-deconnexion"
-                    >
-                      <XIcon class="w-4 h-4" />
-                    </button>
+                    <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
+                      <input
+                        v-model="editData.trim_number[index]"
+                        type="text"
+                        class="flex-1 text-sm sm:text-base input-style"
+                        placeholder="Ex: ENG123456789"
+                      />
+                      <button
+                        type="button"
+                        @click="removeVehicleTrim(index)"
+                        class="px-3 py-2 btn-deconnexion"
+                        title="Supprimer ce VIN"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+                    </div>
                   </div>
+
+                  <div v-else class="text-sm text-gray-500">
+                    Aucun Numéro Trim enregistré.
+                  </div>
+
                   <button
                     type="button"
                     @click="addVehicleTrim"
-                    class="w-full submit-btn"
+                    class="w-full submit-btn mt-2"
                   >
-                    + Ajouter un numéro Trim
+                    + Ajouter un numéro
                   </button>
                 </div>
               </div>
@@ -656,18 +674,6 @@
                   class="text-sm sm:text-base input-style"
                   placeholder="Ex: 295/80R22.5"
                 >
-              </div>
-              <div class="sm:col-span-2">
-                <label for="other_description" class="block text-sm font-medium text-gray-700 mb-2">
-                  Autres descriptions
-                </label>
-                <textarea
-                  id="other_description"
-                  v-model="editData.description_plus"
-                  rows="4"
-                  class="input-style"
-                  placeholder="Ajoutez d'autres informations pertinentes sur le véhicule..."
-                ></textarea>
               </div>
               <div class="sm:col-span-2">
                 <div class="flex items-center mb-3">
@@ -1263,8 +1269,8 @@ const editData = ref({
   power:"",
   engine_emissions:'',
   // New fields
-  vin: [],
-  vehicle_trim:[],
+  vin_numbers: [],
+  trim_number:[],
   engine_numbers:"",
   disponibility:"",
   production_date: '',
@@ -1580,19 +1586,19 @@ function parseDimensions(dimensions) {
 
 // VIN
 const addVin = () => {
-  editData.value.vin.push('')
+  editData.value.vin_numbers.push('')
 }
 
 const removeVin = (index) => {
-  editData.value.vin.splice(index, 1)
+  editData.value.vin_numbers.splice(index, 1)
 }
 // vehicle_trim
 const addVehicleTrim = () => {
-  editData.value.vehicle_trim.push('')
+  editData.value.trim_number.push('')
 }
 
 const removeVehicleTrim = (index) => {
-  editData.value.vehicle_trim.splice(index, 1)
+  editData.value.trim_number.splice(index, 1)
 }
 
 const closeModal = () => {
@@ -1673,13 +1679,13 @@ const handleSubmit = async () => {
       transmission_type: editData.value.transmission_type,
       engine_brand: editData.value.engine_brand,
       vehicle_mileage: editData.value.vehicle_mileage,
-      power: editData.power,
-      engine_emissions: editData.engine_emissions,
+      power: editData.value.power,
+      engine_emissions: editData.value.engine_emissions,
       // New fields
-      vin: editData.value.vin.filter(num => num.trim() !== ''),
-      vehicle_trim: editData.value.vehicle_trim.filter(num => num.trim() !== ''),
-      engine_numbers: editData.engine_numbers,
-      disponibility: editData.disponibility,
+      vin_numbers: editData.value.vin_numbers.filter(num => num.trim() !== ''),
+      trim_number: editData.value.trim_number.filter(num => num.trim() !== ''),
+      engine_numbers: editData.value.engine_numbers,
+      disponibility: editData.value.disponibility,
       production_date: editData.value.production_date,
       country_of_origin: editData.value.country_of_origin,
       wheelbase: editData.value.wheelbase,
@@ -1914,6 +1920,7 @@ watch(() => props.product, (newProduct) => {
       }
       return imageUrl.url || imageUrl
     })
+    console.log("new:", newProduct)
     editData.value = {
       id: newProduct.id,
       name: newProduct.name || '',
@@ -1946,10 +1953,10 @@ watch(() => props.product, (newProduct) => {
       engine_brand: newProduct.engine_brand || '',
       vehicle_mileage: newProduct.vehicle_mileage || null,
       engine_emissions:newProduct.engine_emissions,
-      power:newProduct.power,
+      power: newProduct.power,
       // New fields
-      vin: Array.isArray(newProduct.vin) ? [...newProduct.vin] : [],
-      vehicle_trim:Array.isArray(newProduct.vehicle_trim) ? [...newProduct.vehicle_trim] : [],
+      vin_numbers: Array.isArray(newProduct.vin_numbers) ? [...newProduct.vin_numbers] : [],
+      trim_number:Array.isArray(newProduct.trim_number) ? [...newProduct.trim_number] : [],
       engine_numbers:newProduct.engine_numbers,
       disponibility: newProduct.disponibility,
       production_date: newProduct.production_date || '',
@@ -1982,15 +1989,33 @@ watch(() => props.product, (newProduct) => {
     // Vérifier si le produit a un prix de gros
     hasWholesalePrice.value = !!(newProduct.wholesale_price && newProduct.wholesale_price > 0)
 
-    // Mettre à jour l'éditeur WYSIWYG si nécessaire
-    if (wysiwygEditor.value) {
-      nextTick(() => {
-        wysiwygEditor.value.innerHTML = editData.value.description || ''
-      })
-    }
+    
   }
+  // Mettre à jour l'éditeur WYSIWYG si nécessaire
+  nextTick(() => {
+    if (wysiwygEditor.value) {
+      const html = editData.value.description || ''
+      if (wysiwygEditor.value.innerHTML !== html) {
+        wysiwygEditor.value.innerHTML = html
+      }
+    }
+    if (wysiwygEditor2.value) {
+      const html2 = editData.value.description_plus || ''
+      if (wysiwygEditor2.value.innerHTML !== html2) {
+        wysiwygEditor2.value.innerHTML = html2
+      }
+    }
+  })
   console.log("editData après mise à jour:", editData.value)
 }, { immediate: true })
+
+watch(() => editData.value.description_plus, (val) => {
+  if (!wysiwygEditor2.value) return
+  const html = val || ''
+  if (wysiwygEditor2.value.innerHTML !== html) {
+    wysiwygEditor2.value.innerHTML = html
+  }
+})
 
 // Charger les catégories au montage du composant
 onMounted(() => {

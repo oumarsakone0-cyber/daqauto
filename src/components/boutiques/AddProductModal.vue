@@ -577,7 +577,7 @@
                     Numéros VIN / Num Chassis
                   </label>
                   <div class="space-y-2">
-                    <div v-for="(vin, index) in productData.vin" :key="index" class="flex gap-2">
+                    <div v-for="(vin, index) in productData.vin" :key="index" class="flex gap-2 items-center">
                       <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
                         v-model="productData.vin[index]"
@@ -609,7 +609,7 @@
                     Modèle du véhicule ( Trim )
                   </label>
                   <div class="space-y-2">
-                    <div v-for="(trim, index) in productData.trim_number" :key="index" class="flex gap-2">
+                    <div v-for="(trim, index) in productData.trim_number" :key="index" class="flex gap-2 items-center">
                       <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
                         v-model="productData.trim_number[index]"
