@@ -246,8 +246,8 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">{{ brandsLoading ? 'Chargement...' : 'Selectionner la marque du véhicule' }}</option>
-                    <option v-for="make in brands" :key="make.id" :value="make.id">
-                      {{ make.name }}
+                    <option v-for="brand in brands" :key="brand.id" :value="brand.id">
+                      {{ brand.name }}
                     </option>
                   </select>
                 </div>

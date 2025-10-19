@@ -38,7 +38,7 @@
             <div class="flex-1">
               <span class="text-sm">{{ categoriesError }}</span>
               <button 
-                @click="fetchCategories" 
+                @click="fetchMethodes" 
                 class="ml-2 px-2 py-1 error-background-color text-white rounded text-xs hover:bg-red-700 transition-colors"
               >
                 Réessayer
@@ -186,13 +186,19 @@
                 <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                   Marque du véhicule
                 </label>
-                <input
-                  id="vehicle_make"
-                  v-model="editData.vehicle_make"
-                  type="text"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: Mercedes, Volvo, Scania"
-                >
+                <select
+                    id="vehicle_make"
+                    required
+                    @change="updateModelid"
+                    :disabled="brandsLoading"
+                    v-model="editData.vehicle_make"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">{{ brandsLoading ? 'Chargement...' : 'Selectionner la marque du véhicule' }}</option>
+                    <option v-for="brand in brands" :key="brand.id" :value="brand.name">
+                      {{ brand.name }}
+                    </option>
+                  </select>
               </div>
               <div>
                 <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
@@ -209,20 +215,23 @@
                   <option value="refurbished">Reconditionné</option>
                 </select>
               </div>
-
-              
-
               <div>
                 <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                   Modèle du véhicule
                 </label>
-                <input
-                  id="vehicle_model"
-                  v-model="editData.vehicle_model"
-                  type="text"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: Actros, FH, R-Series"
-                >
+                <select
+                    id="vehicle_model"
+                    v-model="editData.vehicle_model"
+                    required
+                    @change="updateFuelType"
+                    :disabled="!editData.vehicle_make || brandsLoading"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Selectionner le modèle du véhicule</option>
+                    <option v-for="model in availableModels" :key="model.name" :value="model.name">
+                      {{ model.name  }}
+                    </option>
+                  </select>
               </div>
               <div>
                 <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
@@ -242,7 +251,14 @@
                 <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Type de carburant
                 </label>
-                <select
+                <input
+                    type="text"
+                    v-model="editData.fuel_type"
+                    disabled
+                    class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
+                    placeholder="Le type de carburant sera défini automatiquement"
+                  >
+                <!-- <select
                   id="fuel_type"
                   v-model="editData.fuel_type"
                   class="text-sm sm:text-base input-style"
@@ -255,7 +271,7 @@
                   <option value="lng">LNG</option>
                   <option value="hydrogen">Hydrogène</option>
                   <option value="unknown">Inconnu</option>
-                </select>
+                </select> -->
               </div>
 
               <div>
@@ -1176,7 +1192,7 @@
 
 <script setup>
 import { ref, reactive, computed, onMounted, watch, nextTick } from 'vue'
-import { categoriesApi } from '../../services/api'
+import { categoriesApi,brandsApi } from '../../services/api'
 import { 
   Edit as EditIcon,
   X as XIcon,
@@ -1199,6 +1215,11 @@ const props = defineProps({
   'boutique-id': [String, Number],
   'user-id': [String, Number]
 })
+
+//Models
+const brands = ref([])
+const brandsLoading = ref(false)
+const brandsError = ref(null)
 
 const emit = defineEmits(['close', 'save'])
 
@@ -1318,11 +1339,6 @@ const sizeTypes = ref([
   }
 ])
 
-const currentAvailableSizes = computed(() => {
-  const sizeType = sizeTypes.value.find(type => type.value === editData.value.sizeType)
-  return sizeType ? sizeType.sizes : []
-})
-
 const availableColors = ref([
   { name: 'Noir', value: '#000000' },
   { name: 'Blanc', value: '#FFFFFF' },
@@ -1356,14 +1372,6 @@ const colorsToAdd = computed(() => {
 
 const colorsToRemove = computed(() => {
   return originalColors.value.filter(color => !editData.value.colors.includes(color))
-})
-
-const sizesToAdd = computed(() => {
-  return editData.value.sizes.filter(size => !originalSizes.value.includes(size))
-})
-
-const sizesToRemove = computed(() => {
-  return originalSizes.value.filter(size => !editData.value.sizes.includes(size))
 })
 
 const imagesToAdd = computed(() => {
@@ -1417,25 +1425,17 @@ const getColorName = (colorValue) => {
   return color ? color.name : colorValue
 }
 
-const getSizePlaceholder = (sizeType) => {
-  const placeholders = {
-    'clothing': 'Ex: M, L, XL...',
-    'shoes': 'Ex: 42, 43, 44...',
-    'storage': 'Ex: 128GB, 256GB...',
-    'screen': 'Ex: 15", 17"...',
-    'ring': 'Ex: 54, 56, 58...',
-    'watch': 'Ex: 42mm, 44mm...',
-    'custom': 'Ex: Taille personnalisée...'
-  }
-  return placeholders[sizeType] || 'Ex: Taille personnalisée...'
-}
-
 const availability = ref([
   { value: 'available', label: 'Disponible' },
   { value: 'unavailable', label: 'Indisponible' },
   { value: 'on_order', label: 'Sur Commande' },
 ])
 // Méthodes
+const fetchMethodes = async ()=>{
+  await fetchCategories()
+ await  fetchBrands()
+}
+
 const fetchCategories = async () => {
   try {
     categoriesLoading.value = true
@@ -1503,9 +1503,6 @@ const updateSubSubSubcategories = () => {
   editData.value.subsubsubcategory_id = ''
 }
 
-const updateAvailableSizes = () => {
-  editData.value.sizes = []
-}
 
 const toggleColor = (color) => {
   const index = editData.value.colors.indexOf(color)
@@ -1516,14 +1513,6 @@ const toggleColor = (color) => {
   }
 }
 
-const toggleSize = (size) => {
-  const index = editData.value.sizes.indexOf(size)
-  if (index > -1) {
-    editData.value.sizes.splice(index, 1)
-  } else {
-    editData.value.sizes.push(size)
-  }
-}
 
 const addCustomColor = () => {
   if (customColor.value.name && customColor.value.value) {
@@ -1544,14 +1533,39 @@ const addCustomColor = () => {
   }
 }
 
-const addCustomSize = () => {
-  if (customSize.value && !currentAvailableSizes.value.includes(customSize.value)) {
-    const sizeType = sizeTypes.value.find(type => type.value === editData.value.sizeType)
-    if (sizeType) {
-      sizeType.sizes.push(customSize.value)
-      editData.value.sizes.push(customSize.value)
-    }
-    customSize.value = ''
+
+// Les fonctions pour le chargement des marques, modèles et type de carburant des vehicules
+
+const updateModelid = () => {
+  editData.value.vehicle_model = ""
+  editData.value.fuel_type = ""
+}
+
+const updateFuelType = () => {
+  editData.value.fuel_type = availableFuelType.value
+}
+
+const availableModels = computed(() => {
+ const  brand = brands.value.find(cat => cat.name === editData.value.vehicle_make)
+  return brand ? brand.models || [] : []
+})
+
+const availableFuelType = computed(() => {
+ const  model =availableModels.value.find(model => model.name === editData.value.vehicle_model)
+  return model ? model.fuel_type || '' : ''
+})
+
+const fetchBrands = async () => {
+  try {
+    brandsLoading.value = true
+    brandsError.value = null
+    
+    const response = await brandsApi.getBrands()
+    brands.value = response.data || []
+  } catch (err) {
+    brandsError.value = 'Impossible de charger les Marques. Veuillez réessayer.'
+  } finally {
+    brandsLoading.value = false
   }
 }
 
@@ -1640,8 +1654,6 @@ const handleSubmit = async () => {
       imagesToRemove: imagesToRemove.value,
       colorsToAdd: colorsToAdd.value,
       colorsToRemove: colorsToRemove.value,
-      sizesToAdd: sizesToAdd.value,
-      sizesToRemove: sizesToRemove.value,
       // Vehicle specific fields
       vehicle_condition: editData.value.vehicle_condition,
       vehicle_make: editData.value.vehicle_make,
@@ -1972,7 +1984,7 @@ watch(() => props.product, (newProduct) => {
 
 // Charger les catégories au montage du composant
 onMounted(() => {
-  fetchCategories()
+  fetchMethodes()
 })
 </script>
 
