@@ -98,7 +98,7 @@
                 >
                   <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
                   <option v-for="category in categories" :key="category.id" :value="category.id">
-                    {{ category.name, console.log("editData",editData) }}
+                    {{ category.name }}
                   </option>
                 </select>
               </div>
@@ -258,20 +258,6 @@
                     class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
                     placeholder="Le type de carburant sera défini automatiquement"
                   >
-                <!-- <select
-                  id="fuel_type"
-                  v-model="editData.fuel_type"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option value="">Tous les carburants</option>
-                  <option value="diesel">Diesel</option>
-                  <option value="electric">Électrique</option>
-                  <option value="hybrid">Hybride</option>
-                  <option value="cng">CNG</option>
-                  <option value="lng">LNG</option>
-                  <option value="hydrogen">Hydrogène</option>
-                  <option value="unknown">Inconnu</option>
-                </select> -->
               </div>
 
               <div>
@@ -1290,9 +1276,10 @@ const editData = ref({
   suspension_type: '',
   brake_system: '',
   type_size: '',
-  dimension_length: null,
-  dimension_width: null,
-  dimension_height: null,
+  dimensions:'',
+  dimension_length: '',
+  dimension_width: '',
+  dimension_height: '',
   curb_weight: null,
   fuel_tank_capacity: null,
   other_description: ''
@@ -1569,6 +1556,28 @@ const fetchBrands = async () => {
   }
 }
 
+// Methode pour recuperer les longueurs, largeurs et hauteurs
+
+function parseDimensions(dimensions) {
+  if (!dimensions && dimensions !== 0) return { length: null, width: null, height: null }
+  const parts = String(dimensions)
+    .trim()
+    .replace(/\s+/g, '')         // supprime les espaces
+    .split(/[x×\*X]/)            // sépare par x, ×, *, X
+    .filter(Boolean)
+
+  const toNum = (s) => {
+    const n = parseFloat(String(s).replace(',', '.'))
+    return Number.isFinite(n) ? n : null
+  }
+
+  return {
+    length: parts[0] ? toNum(parts[0]) : null,
+    width:  parts[1] ? toNum(parts[1]) : null,
+    height: parts[2] ? toNum(parts[2]) : null
+  }
+}
+
 // VIN
 const addVin = () => {
   editData.value.vin.push('')
@@ -1680,11 +1689,11 @@ const handleSubmit = async () => {
       suspension_type: editData.value.suspension_type,
       brake_system: editData.value.brake_system,
       tyre_size: editData.value.type_size,
-      dimension_length: editData.value.dimension_length,
-      dimension_width: editData.value.dimension_width,
-      dimension_height: editData.value.dimension_height,
       curb_weight: editData.value.curb_weight,
       fuel_tank_capacity: editData.value.fuel_tank_capacity,
+      dimensions: editData.value.dimension_length || editData.value.dimension_width || editData.value.dimension_height
+        ? `${editData.value.dimension_length || 0}x${editData.value.dimension_width || 0}x${editData.value.dimension_height || 0}`
+        : null,
     }
 
 
@@ -1905,7 +1914,6 @@ watch(() => props.product, (newProduct) => {
       }
       return imageUrl.url || imageUrl
     })
-    console.log("newProduct:", newProduct)
     editData.value = {
       id: newProduct.id,
       name: newProduct.name || '',
@@ -1953,13 +1961,15 @@ watch(() => props.product, (newProduct) => {
       suspension_type: newProduct.suspension_type || '',
       brake_system: newProduct.brake_system || '',
       type_size: newProduct.tyre_size || '',
-      dimension_length: newProduct.dimension_length || null,
-      dimension_width: newProduct.dimension_width || null,
-      dimension_height: newProduct.dimension_height || null,
+      dimensions: newProduct.dimensions || null,
       curb_weight: newProduct.curb_weight || null,
       fuel_tank_capacity: newProduct.fuel_tank_capacity || null,
-      other_description: newProduct.other_description || ''
     }
+
+    const { length, width, height } = parseDimensions(newProduct.dimensions)
+    editData.value.dimension_length = length
+    editData.value.dimension_width  = width
+    editData.value.dimension_height = height
     
     originalColors.value = [...(newProduct.colors || [])]
     originalSizes.value = [...(newProduct.sizes || [])]
