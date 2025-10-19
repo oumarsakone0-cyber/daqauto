@@ -749,7 +749,7 @@
                 <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-1 sm:gap-6">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-6">
                  <!-- Prix unitaire  -->
                 <div>
                   <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
@@ -783,6 +783,20 @@
                   >
                 </div>
 
+                <div>
+                  <label for="available" class="block text-sm font-medium text-gray-700 mb-2">
+                    Disponibilité du produit
+                  </label>
+                  <select
+                    id="available"
+                    v-model="productData.availability"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option v-for="available in availability" :key="available.value" :value="available.value">
+                      {{ available.label }}
+                    </option>
+                  </select>
+                </div>
                 <div>
                   <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Unité
@@ -1062,6 +1076,7 @@
                     <p><span class="font-medium text-gray-700">Quantité minimale:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
                   </div>
                   <div class="space-y-2">
+                    <p><span class="font-medium text-gray-700">Disponibilité du produit:</span> <span class="text-gray-900">{{ productData.availability }}</span></p>
                     <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
                     <p><span class="font-medium text-gray-700">Unité:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
                     <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
@@ -1375,6 +1390,7 @@ const productData = reactive({
   unit_price: '',
   stock: '',
   unit_type: 'quantity',
+  availability: 'available',
   hasWholesalePrice: false,
   wholesale_price: null,
   wholesale_min_qty: null,
@@ -1483,16 +1499,15 @@ const canProceedToNextStep = computed(() => {
       const hasValidPrice = productData.unit_price !== null && 
                            productData.unit_price !== '' && 
                            productData.unit_price !== undefined && 
-                           Number(productData.unit_price) > 0
+                           Number(productData.unit_price) > 0 
+                           
       
       const hasValidStock = productData.stock !== null && 
                            productData.stock !== '' && 
                            productData.stock !== undefined && 
                            Number(productData.stock) >= 0
-      console.log('specificaztion:', productData.description);
-      console.log('description:', productData.description_plus);
       
-      return hasValidPrice && hasValidStock
+      return hasValidPrice && hasValidStock && !!productData.availability
     case 4:
       return true
     case 5:
@@ -1555,6 +1570,14 @@ const availableUnitTypes = ref([
   { value: 'length_cm', label: 'Longueur (cm)' },
   { value: 'area_m2', label: 'Surface (m²)' }
 ])
+
+const availability = ref([
+  { value: 'available', label: 'Disponible' },
+  { value: 'unavailable', label: 'Indisponible' },
+  { value: 'on_order', label: 'Sur Commande' },
+])
+
+
 
 //  Added engine number management functions
 const addEngineNumber = () => {
@@ -1916,6 +1939,7 @@ const prepareDataForSubmission = () => {
     wholesale_min_qty: productData.hasWholesalePrice ? parseInt(productData.wholesale_min_qty) : null,
     stock: parseInt(productData.stock),
     unit_type: productData.unit_type,
+    availability:productData.availability,
     tags: productData.tags,
     is_active: productData.is_active,
     colors: productData.colors,
