@@ -300,7 +300,7 @@ const handleWebSocketMessage = (data) => {
           // Clear typing indicator after 3 seconds
           setTimeout(() => {
             isTyping.value = false
-          }, 3000)
+          }, 100000)
         }
       }
       break
