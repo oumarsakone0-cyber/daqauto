@@ -173,7 +173,7 @@
                     <h3 class="spec-group-title">Dimensions(mm)</h3>
                     <div class="spec-row">
                       <div class="spec-name">Chassis(mm)</div>
-                      <div class="spec-value">{{ product.dimensions || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.chassis_dimensions || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Frame rear suspension(mm)</div>
@@ -196,11 +196,11 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Front </div>
-                      <div class="spec-value">{{ product.front || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.suspension_front || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Rear</div>
-                      <div class="spec-value">{{ product.rear || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.suspension_rear || 'N/A' }}</div>
                     </div>
                   </div>
                   <div class="spec-group ">
@@ -237,7 +237,7 @@
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Brake System</h3>
                     <div class="spec-row">
-                      <div class="spec-value">{{ product.brake_system || 'N/A' }}</div>
+                      <div class="spec-value"> With {{ product.brake_system || 'N/A' }}</div>
                     </div>
                   </div>
                   <div class="spec-group ">

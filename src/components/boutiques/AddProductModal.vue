@@ -1368,7 +1368,7 @@ const cloudinaryConfig = {
 
 const steps = [
   { title: 'Informations' },
-  { title: 'Spécifications' },
+  { title: 'Technical specification' },
   { title: 'Techniques' },
   { title: 'Prix & Stock' },
   { title: 'Couleurs' },

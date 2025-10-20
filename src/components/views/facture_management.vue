@@ -40,14 +40,14 @@
         <div class="flex items-center gap-3">
           <button 
             @click="resetForm"
-            class="inline-flex items-center px-4 py-2 rounded-lg shadow-sm text-sm font-medium text-gray-700 bg-white border border-gray-300 hover:bg-gray-50 transition-all"
+            class="submit-btn"
           >
             <RefreshCw class="w-4 h-4 mr-2" />
             Réinitialiser
           </button>
           <button 
             @click="downloadPDF"
-            class="inline-flex items-center px-4 py-2 rounded-lg shadow-sm text-sm font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all"
+            class="btn-degrade-orange"
           >
             <Download class="w-4 h-4 mr-2" />
             Télécharger PDF
@@ -61,7 +61,7 @@
         <div class="lg:col-span-1">
           <div class="bg-white shadow-lg rounded-lg border border-gray-100 p-6 sticky top-6">
             <h2 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
-              <FileText class="w-5 h-5 mr-2 text-orange-500" />
+              <FileText class="w-5 h-5 mr-2 primary-color" />
               Informations de la facture
             </h2>
 
@@ -72,7 +72,7 @@
                 <input 
                   v-model="invoice.number" 
                   type="text" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  class="input-style"
                   placeholder="FAC-2025-001"
                 >
               </div>
@@ -82,7 +82,7 @@
                 <input 
                   v-model="invoice.date" 
                   type="date" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  class="input-style"
                 >
               </div>
 
@@ -91,7 +91,7 @@
                 <input 
                   v-model="invoice.dueDate" 
                   type="date" 
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  class="input-style"
                 >
               </div>
             </div>
@@ -99,7 +99,7 @@
             <!-- Informations client -->
             <div class="border-t border-gray-200 pt-6 mb-6">
               <h3 class="text-md font-semibold text-gray-900 mb-4 flex items-center">
-                <User class="w-4 h-4 mr-2 text-orange-500" />
+                <User class="w-4 h-4 mr-2 primary-color" />
                 Informations client
               </h3>
               <div class="space-y-4">
@@ -108,7 +108,7 @@
                   <input 
                     v-model="invoice.client.name" 
                     type="text" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    class="input-style"
                     placeholder="Nom complet"
                   >
                 </div>
@@ -118,7 +118,7 @@
                   <input 
                     v-model="invoice.client.email" 
                     type="email" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    class="input-style"
                     placeholder="email@exemple.com"
                   >
                 </div>
@@ -128,7 +128,7 @@
                   <input 
                     v-model="invoice.client.phone" 
                     type="tel" 
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    class="input-style"
                     placeholder="+225 XX XX XX XX XX"
                   >
                 </div>
@@ -138,7 +138,7 @@
                   <textarea 
                     v-model="invoice.client.address" 
                     rows="3"
-                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                    class="input-style"
                     placeholder="Adresse complète"
                   ></textarea>
                 </div>
@@ -149,12 +149,12 @@
             <div class="border-t border-gray-200 pt-6">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-md font-semibold text-gray-900 flex items-center">
-                  <ShoppingCart class="w-4 h-4 mr-2 text-orange-500" />
+                  <ShoppingCart class="w-4 h-4 mr-2 primary-color" />
                   Articles
                 </h3>
                 <button 
                   @click="addItem"
-                  class="inline-flex items-center px-3 py-1.5 rounded-lg text-xs font-medium text-white bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 transition-all"
+                  class="btn-degrade-orange"
                 >
                   <Plus class="w-3 h-3 mr-1" />
                   Ajouter
@@ -162,7 +162,7 @@
               </div>
 
               <!-- Loading state for products -->
-              <div v-if="loadingProducts" class="text-center py-4 text-sm text-gray-500">
+              <div v-if="loadingProducts" class="text-center py-4 text-sm primary-color">
                 Chargement des produits...
               </div>
 
@@ -173,10 +173,12 @@
                   class="p-4 bg-gray-50 rounded-lg border border-gray-200 relative"
                 >
                   <button 
+                    v-if="invoice.items.length > 1"
                     @click="removeItem(index)"
-                    class="absolute top-2 right-2 p-1 text-red-500 hover:bg-red-50 rounded transition-colors"
+                    style="padding: 1px;"
+                    class="absolute top-0 right-2 btn-outline"
                   >
-                    <X class="w-4 h-4" />
+                    <X class="w-5 h-5" />
                   </button>
 
                   <div class="space-y-3">
@@ -186,7 +188,7 @@
                       <select 
                         v-model="item.productId"
                         @change="onProductSelect(index)"
-                        class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent bg-white"
+                        class="input-style"
                       >
                         <option value="">Sélectionner un produit</option>
                         <option 
@@ -206,7 +208,7 @@
                           v-model.number="item.quantity" 
                           type="number" 
                           min="1"
-                          class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          class="input-style"
                         >
                       </div>
 
@@ -217,7 +219,7 @@
                           v-model.number="item.price" 
                           type="number" 
                           min="0"
-                          class="w-full px-2 py-1.5 text-sm border border-gray-300 rounded focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                          class="input-style"
                         >
                       </div>
                     </div>
@@ -242,7 +244,7 @@
                 min="0"
                 max="100"
                 step="0.01"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                class="input-style"
                 placeholder="18"
               >
             </div>
@@ -253,7 +255,7 @@
               <textarea 
                 v-model="invoice.notes" 
                 rows="3"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm"
+                class="input-style text-sm"
                 placeholder="Conditions de paiement, notes supplémentaires..."
               ></textarea>
             </div>
@@ -267,12 +269,12 @@
             <div class="flex justify-between items-start mb-12 pb-8 border-b-2 border-gray-200">
               <div>
                 <div class="flex items-center mb-4">
-                  <div class="w-12 h-12 bg-gradient-to-br from-orange-500 to-orange-600 rounded-lg flex items-center justify-center mr-4">
+                  <div class="w-12 h-12 bg-orange rounded-lg flex items-center justify-center mr-4">
                     <FileText class="w-6 h-6 text-white" />
                   </div>
                   <div>
                     <h2 class="text-3xl font-bold text-gray-900">FACTURE</h2>
-                    <p class="text-sm text-gray-500">AliAdjamé Marketplace</p>
+                    <p class="text-sm text-gray-500">Daq Auto Marketplace</p>
                   </div>
                 </div>
                 <div class="text-sm text-gray-600 space-y-1">
@@ -284,7 +286,7 @@
               </div>
 
               <div class="text-right">
-                <div class="inline-block px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg mb-4">
+                <div class="inline-block px-4 py-2 bg-orange rounded-lg mb-4">
                   <p class="text-white font-bold text-lg">{{ invoice.number || 'FAC-XXXX-XXX' }}</p>
                 </div>
                 <div class="text-sm text-gray-600 space-y-1">
@@ -297,7 +299,7 @@
             <!-- Informations client -->
             <div class="mb-12">
               <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
-                <h3 class="text-sm font-bold text-orange-800 mb-3 flex items-center">
+                <h3 class="text-sm font-bold primary-color mb-3 flex items-center">
                   <User class="w-4 h-4 mr-2" />
                   FACTURÉ À
                 </h3>
@@ -353,7 +355,7 @@
                   <span class="text-sm font-medium text-gray-600">TVA ({{ invoice.taxRate }}%):</span>
                   <span class="text-sm font-semibold text-gray-900">{{ formatCurrency(tax) }}</span>
                 </div>
-                <div class="flex justify-between items-center py-4 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg px-4">
+                <div class="flex justify-between items-center py-4 bg-orange rounded-lg px-4">
                   <span class="text-base font-bold text-white">TOTAL:</span>
                   <span class="text-2xl font-bold text-white">{{ formatCurrency(total) }}</span>
                 </div>
@@ -374,7 +376,7 @@
               <p class="text-xs text-gray-400 mt-2">
                 AliAdjamé Marketplace - Votre partenaire de confiance
               </p>
-              <p class="text-xs text-orange-500 font-medium mt-3">
+              <p class="text-xs primary-color font-medium mt-3">
                 Facture générée sur DaqAuto.com
               </p>
             </div>
@@ -389,7 +391,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { 
   Home, FileText, User, ShoppingCart, Download, RefreshCw, 
-  Plus, X, Calendar, Phone, Mail, MapPin 
+  Plus, X
 } from 'lucide-vue-next'
 import jsPDF from 'jspdf'
 import { productsApi } from '../../services/api'
@@ -550,9 +552,9 @@ const total = computed(() => {
 
 // Méthodes
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('fr-FR', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
-    currency: 'XOF',
+    currency: 'USD',
     minimumFractionDigits: 0,
     maximumFractionDigits: 0
   }).format(amount || 0)
@@ -614,7 +616,7 @@ const downloadPDF = () => {
   let yPos = 20
   
   // En-tête
-  doc.setFillColor(249, 115, 22) // Orange
+  doc.setFillColor(254, 121, 0) // Orange
   doc.rect(0, 0, pageWidth, 40, 'F')
   
   doc.setTextColor(255, 255, 255)
@@ -662,7 +664,7 @@ const downloadPDF = () => {
   
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(194, 65, 12) // Orange foncé
+  doc.setTextColor(254, 121, 0) // Orange foncé
   doc.text('FACTURÉ À', 25, yPos + 7)
   
   doc.setTextColor(0, 0, 0)
@@ -717,14 +719,14 @@ const downloadPDF = () => {
   doc.text(formatCurrency(tax.value), pageWidth - 25, yPos, { align: 'right' })
   
   yPos += 10
-  doc.setFillColor(249, 115, 22)
+  doc.setFillColor(254, 121, 0)
   doc.rect(pageWidth - 90, yPos - 5, 70, 10, 'F')
   
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(11)
   doc.text('TOTAL:', pageWidth - 85, yPos + 2)
-  doc.text(formatCurrency(total.value), pageWidth - 25, yPos + 2, { align: 'right' })
+  doc.text(formatCurrency(total.value), pageWidth - 30, yPos + 2, { align: 'right' })
   
   yPos += 20
   
@@ -747,7 +749,7 @@ const downloadPDF = () => {
   doc.text('Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com', pageWidth / 2, pageHeight - 20, { align: 'center' })
   doc.text('AliAdjamé Marketplace - Votre partenaire de confiance', pageWidth / 2, pageHeight - 15, { align: 'center' })
   
-  doc.setTextColor(249, 115, 22)
+  doc.setTextColor(254, 121, 0)
   doc.setFont('helvetica', 'bold')
   doc.text('Facture générée sur DaqAuto.com', pageWidth / 2, pageHeight - 10, { align: 'center' })
   
