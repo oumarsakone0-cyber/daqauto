@@ -225,9 +225,9 @@
                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Numéros Trim</div>
                   <div class="font-semibold text-gray-900 uppercase">
-                    <ul v-if="product.trim_number && product.trim_number.length">
-                          <li v-for="trim_number in product.trim_number" :key="trim_number">                          
-                            {{ trim_number }}
+                    <ul v-if="product.trim_numbers && product.trim_numbers.length">
+                          <li v-for="trim_number in product.trim_numbers" :key="trim_number">                          
+                            {{ trim_number , console.log(product.trim_numbers)}}
                           </li>
                         </ul>
                         <span v-else>N/A</span>
@@ -872,6 +872,7 @@ const mediaCount = computed(() => {
 watch(() => props.product, () => {
   currentImageIndex.value = 0
   activeTab.value = 'details'
+  console.log("produit details:",product)
 })
 
 const getTagsArray = (tags) =>{

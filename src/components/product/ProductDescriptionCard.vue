@@ -17,68 +17,28 @@
           <div class="tab-content">
              <!-- Onglet Spécifications -->
               <div v-if="activeTab === 0" >
-                <div class="specifications-table">
-                  <div class="spec-group">
-                    <h3 class="spec-group-title">Informations générales</h3>
-                    <!-- verifié -->
+                <div class="specifications-table grid grid-cols-2 ">
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Overview</h3>
                     <div class="spec-row">
                       <div class="spec-name">Conditions</div>
-                      <div class="spec-value">{{ product.vehicle_condition || 'N/A', console.log("Produit chargé sur détails:", product)}}</div>
+                      <div class="spec-value">{{ product.vehicle_condition || 'N/A'}}</div>
                     </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Make</div>
-                      <div class="spec-value">{{ product.vehicle_make || 'N/A' }}</div>
-                    </div>
-                    <!-- vérifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Model</div>
-                      <div class="spec-value">{{ product.vehicle_model || 'N/A' }}</div>
-                    </div>
-                    <!-- vérifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Category</div>
-                      <div class="spec-value">{{ product.category_name || 'N/A'}}</div>
-                    </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Drive Type</div>
-                      <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
-                    </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Year</div>
-                      <div class="spec-value">{{ product.vehicle_year || 'N/A'}}</div>
-                    </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Fuel Type</div>
-                      <div class="spec-value">{{ product.fuel_type || 'N/A' }}</div>
-                    </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Transmission</div>
-                      <div class="spec-value">{{ product.transmission_type || 'N/A'}}</div>
-                    </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Engine</div>
-                      <div class="spec-value">{{ product.engine_brand || 'N/A' }}</div>
-                    </div>
-                    <div class="spec-row">
-                      <div class="spec-name">Engine Power</div>
-                      <div class="spec-value">{{ product.power || 'N/A' }}</div>
-                    </div>
-                    <div class="spec-row">
-                      <div class="spec-name">Engine Emmissions</div>
-                      <div class="spec-value">{{ product.engine_emissions || 'N/A' }}</div>
-                    </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Mileage</div>
                       <div class="spec-value">{{ product.vehicle_mileage || 'N/A' }}</div>
                     </div>
-                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">VIN / Chassis NO.</div>
+                      <div class="spec-value">
+                        <ul v-if="product.vin_numbers && product.vin_numbers.length">
+                          <li v-for="vin in product.vin_numbers" :key="vin.id">
+                            {{ vin || 'N/A' }}
+                          </li>
+                        </ul>
+                        <span v-else>N/A</span>
+                      </div>
+                    </div>
                     <div class="spec-row">
                       <div class="spec-name">Couleurs</div>
                       <div v-for="color in product.colors" :key="color.id" >
@@ -93,84 +53,226 @@
                         </div>
                       </div>
                     </div>
-                  </div>
-                  <div class="spec-group">
-                    <h3 class="spec-group-title">Détails techniques</h3>
                     <div class="spec-row">
-                      <div class="spec-name">VIN / Chassis NO.</div>
-                      <div class="spec-value">{{ product.vin || 'N/A'  }}</div>
+                      <div class="spec-name">Production date</div>
+                      <div class="spec-value">{{ product.production_date || 'N/A' }}</div>
                     </div>
-                    <!-- TODO: parcourir la liste des numéros de moteur -->
                     <div class="spec-row">
-                      <div class="spec-name">Engine Numbers</div>
+                      <div class="spec-name">Year</div>
+                      <div class="spec-value">{{ product.vehicle_year || 'N/A'}}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Country of Origin</div>
+                      <div class="spec-value">{{ product.country_of_origin || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Stock Number</div>
+                      <div class="spec-value">{{ product.stock_number || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Technical specification</h3>
+                    <div class="spec-row">
+                      <div class="spec-name">Brand</div>
+                      <div class="spec-value">{{ product.vehicle_make || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Model</div>
+                      <div class="spec-value">{{ product.vehicle_model || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Category</div>
+                      <div class="spec-value">{{ product.category_name || 'N/A'}}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name"> vehicle Model ( Trim )</div>
                       <div class="spec-value">
-                        <ul v-if="product.engine_numbers && product.engine_numbers.length">
-                          <li v-for="engineNumber in product.engine_numbers" :key="engineNumber.id">
-                            {{ engineNumber || 'N/A' }}
+                        <ul v-if="product.trim_numbers && product.trim_numbers.length">
+                          <li v-for="vin in product.trim_numbers" :key="vin.id">
+                            {{ vin}}
                           </li>
                         </ul>
                         <span v-else>N/A</span>
                       </div>
                     </div>
-                    <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Production date</div>
-                      <div class="spec-value">{{ product.production_date || 'N/A' }}</div>
+                      <div class="spec-name">Drive Type</div>
+                      <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Country of Origin</div>
-                      <div class="spec-value">{{ product.country_of_origin || 'N/A' }}</div>
-                    </div>
-                    <!-- vérifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Wheelbase</div>
+                      <div class="spec-name">Wheelbases (mm)</div>
                       <div class="spec-value">{{ product.wheelbase || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">GVW</div>
-                      <div class="spec-value">{{ product.gvw || 'N/A' }}</div>
+                      <div class="spec-name">Economic speed/Maximum speed (km/h)</div>
+                      <div class="spec-value">{{ product.speed || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
+                  </div>
+
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Engine</h3>
+                    
                     <div class="spec-row">
-                      <div class="spec-name">Payload Capacity</div>
-                      <div class="spec-value">{{ product.payload_capacity || 'N/A' }}</div>
+                      <div class="spec-name">Number</div>
+                      <div class="spec-value">{{ product.engine_number || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Cabin Type</div>
-                      <div class="spec-value">{{ product.cabin_type || 'N/A' }}</div>
+                      <div class="spec-name">Brand</div>
+                      <div class="spec-value">{{ product.engine_brand || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Suspension Type</div>
-                      <div class="spec-value">{{ product.suspension_type || 'N/A' }}</div>
+                      <div class="spec-name">Model</div>
+                      <div class="spec-value">{{ product.engine_model || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Brake System</div>
-                      <div class="spec-value">{{ product.brake_system || 'N/A' }}</div>
+                      <div class="spec-name">Power</div>
+                      <div class="spec-value">{{ product.power || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Type Size</div>
-                      <div class="spec-value">{{ product.tyre_size || 'N/A' }}</div>
+                      <div class="spec-name">Hor sepower</div>
+                      <div class="spec-value">{{ product.hor_sepower || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Dimensions (L x l x H)</div>
-                      <div class="spec-value">{{ product.dimensions || 'N/A' }}</div>
+                      <div class="spec-name">Emission standards</div>
+                      <div class="spec-value">{{ product.engine_emissions || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Gear box</h3>
+                    <div class="spec-row">
+                      <div class="spec-name">Brand</div>
+                      <div class="spec-value">{{ product.gear_box_brand || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Model</div>
+                      <div class="spec-value">{{ product.gear_box_model || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">type</div>
+                      <div class="spec-value">{{ product.transmission_type || 'N/A'}}</div>
+                    </div>
+                  </div>
+
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Vehicle Weight</h3>
                     <div class="spec-row">
                       <div class="spec-name">Curb Weight</div>
                       <div class="spec-value">{{ product.curb_weight || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Payload Capacity</div>
+                      <div class="spec-value">{{ product.payload_capacity || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Gross Vehicle Weight (GVW)</div>
+                      <div class="spec-value">{{ product.gvw || 'N/A' }}</div>
+                    </div>
+                  </div>
+
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Dimensions(mm)</h3>
+                    <div class="spec-row">
+                      <div class="spec-name">Chassis(mm)</div>
+                      <div class="spec-value">{{ product.dimensions || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Frame rear suspension(mm)</div>
+                      <div class="spec-value">{{ product.frame_rear_suspension || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Overall Dimensions(mm)</div>
+                      <div class="spec-value">{{ product.Overall_dimensions || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Vehicle Dimensions(LxlxH)</div>
+                      <div class="spec-value">{{ product.dimensions || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Suspension</h3>
+                    <div class="spec-row">
+                      <div class="spec-name">Suspension Type</div>
+                      <div class="spec-value">{{ product.suspension_type || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Front </div>
+                      <div class="spec-value">{{ product.front || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Rear</div>
+                      <div class="spec-value">{{ product.rear || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Axles</h3>
+                    <div class="spec-row">
+                      <div class="spec-name">Brand  </div>
+                      <div class="spec-value">{{ product.axles_brand || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Front axle</div>
+                      <div class="spec-value">{{ product.front_axle || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Rear axle</div>
+                      <div class="spec-value">{{ product.rear_axle || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Speed ratio</div>
+                      <div class="spec-value">{{ product.speed_ratio || 'N/A' }}</div>
+                    </div>
+                  </div>
+
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Fuel tank</h3>
                     <div class="spec-row">
                       <div class="spec-name">Fuel Tank Capacity</div>
                       <div class="spec-value">{{ product.fuel_tank_capacity || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Fuel Type</div>
+                      <div class="spec-value">{{ product.fuel_type || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Brake System</h3>
+                    <div class="spec-row">
+                      <div class="spec-value">{{ product.brake_system || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Air filter</h3>
+                    <div class="spec-row">
+                      <div class="spec-value">{{ product.air_filter || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Electrics</h3>
+                    <div class="spec-row">
+                      <div class="spec-value">{{ product.electrics || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Tires</h3>
+                    <div class="spec-row">
+                      <div class="spec-value">{{ product.tires || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Cab</h3>
+                    <div class="spec-row">
+                      <div class="spec-value">{{ product.cab || 'N/A' }}</div>
+                    </div>
+                  </div>
+                  <div class="spec-group ">
+                    <h3 class="spec-group-title">Other Features</h3>
+                     <div class="spec-row">
+                      <div class="spec-name">Cabin Type</div>
+                      <div class="spec-value">{{ product.cabin_type || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Type Size</div>
+                      <div class="spec-value">{{ product.tyre_size || 'N/A' }}</div>
                     </div>
                   </div>
                 </div>
@@ -361,7 +463,6 @@
   }
   
   .specifications-table {
-    display: flex;
     gap: 24px;
   }
   
@@ -372,9 +473,14 @@
     border: 1px solid #e8e8e8;
     border-radius: 8px;
     overflow: hidden;
+    align-items: center;
+    justify-content: center;
   }
   
   .spec-group-title {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 12px 16px;
     background: #f5f5f5;
     font-size: 16px;
@@ -394,6 +500,9 @@
   
   .spec-name,
   .spec-value {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     padding: 12px 16px;
     font-size: 14px;
   }

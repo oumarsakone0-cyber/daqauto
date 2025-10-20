@@ -547,7 +547,7 @@
                   </select>
                 </div>
                 <div>
-                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                  <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
                     Puissance du Moteur (ch/kW)
                   </label>
                   <input
@@ -560,16 +560,15 @@
                   >
                 </div>
                 <div>
-                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Émissions du moteur (g/km)
+                  <label for="engine_emissions" class="block text-sm font-medium text-gray-700 mb-2">
+                    Normes d'émission
                   </label>
                   <input
-                    id="fuel_tank_capacity"
+                    id="engine_emissions"
                     v-model="productData.engine_emissions"
-                    type="number"
-                    min="0"
+                    type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 40"
+                    placeholder="Ex: Euro II"
                   >
                 </div>
                 <div class="sm:col-span-2">
@@ -609,10 +608,10 @@
                     Modèle du véhicule ( Trim )
                   </label>
                   <div class="space-y-2">
-                    <div v-for="(trim, index) in productData.trim_number" :key="index" class="flex gap-2 items-center">
+                    <div v-for="(trim, index) in productData.trim_numbers" :key="index" class="flex gap-2 items-center">
                       <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
-                        v-model="productData.trim_number[index]"
+                        v-model="productData.trim_numbers[index]"
                         type="text"
                         class="flex-1 text-sm sm:text-base input-style"
                         :placeholder="`Numéro trim ${index + 1}`"
@@ -1194,8 +1193,8 @@
                     <div class="spec-row">
                       <div class="spec-name">Numéros Trim</div>
                       <div class="spec-value">
-                        <ul v-if="productData.trim_number && productData.trim_number.length">
-                          <li v-for="trim in productData.trim_number" :key="trim.id">
+                        <ul v-if="productData.trim_numbers && productData.trim_numbers.length">
+                          <li v-for="trim in productData.trim_numbers" :key="trim.id">
                             {{ trim }}
                           </li>
                         </ul>
@@ -1409,7 +1408,7 @@ const productData = reactive({
   fuel_type: '',
   transmission_type: '',
   engine_brand: '',
-  trim_number: [],
+  trim_numbers: [],
   vin: [],
   engine_number: "",
   power: '',
@@ -1581,11 +1580,11 @@ const availability = ref([
 
 //  Added engine number management functions
 const addEngineNumber = () => {
-  productData.trim_number.push('')
+  productData.trim_numbers.push('')
 }
 
 const removeEngineNumber = (index) => {
-  productData.trim_number.splice(index, 1)
+  productData.trim_numbers.splice(index, 1)
 }
 //  Added engine VIN management functions
 const addEngineVin = () => {
@@ -1951,7 +1950,7 @@ const prepareDataForSubmission = () => {
     fuel_type: productData.fuel_type,
     transmission_type: productData.transmission_type,
     engine_brand: productData.engine_brand,
-    trim_number: productData.trim_number.filter(num => num.trim() !== ''),
+    trim_numbers: productData.trim_numbers.filter(num => num.trim() !== ''),
     vin: productData.vin.filter(num => num.trim() !== ''),
     engine_number: productData.engine_number,
     power: productData.power,

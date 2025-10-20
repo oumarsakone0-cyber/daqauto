@@ -571,15 +571,15 @@
                   Modèle du véhicule ( Trim )
                 </label>
                 <div class="space-y-2">
-                  <div v-if="editData.trim_number && editData.trim_number.length" class="space-y-2">
+                  <div v-if="editData.trim_numbers && editData.trim_numbers.length" class="space-y-2">
                     <div
-                      v-for="(vin,index) in editData.trim_number"
+                      v-for="(vin,index) in editData.trim_numbers"
                       :key="index"
                       class="flex gap-2 items-center"
                     >
                     <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
                       <input
-                        v-model="editData.trim_number[index]"
+                        v-model="editData.trim_numbers[index]"
                         type="text"
                         class="flex-1 text-sm sm:text-base input-style"
                         placeholder="Ex: ENG123456789"
@@ -614,10 +614,8 @@
                 </label>
                 <input
                   id="vehicle_mileage"
-                  v-model="editData.engine_numbers"
-                  type="number"
-                  min="0"
-                  max="200000"
+                  v-model="editData.engine_number"
+                  type="text"
                   class="text-sm sm:text-base input-style"
                   placeholder="Ex: FHEGEJGE776JH8"
                 >
@@ -1270,8 +1268,8 @@ const editData = ref({
   engine_emissions:'',
   // New fields
   vin_numbers: [],
-  trim_number:[],
-  engine_numbers:"",
+  trim_numbers:[],
+  engine_number:"",
   disponibility:"",
   production_date: '',
   country_of_origin: '',
@@ -1594,11 +1592,11 @@ const removeVin = (index) => {
 }
 // vehicle_trim
 const addVehicleTrim = () => {
-  editData.value.trim_number.push('')
+  editData.value.trim_numbers.push('')
 }
 
 const removeVehicleTrim = (index) => {
-  editData.value.trim_number.splice(index, 1)
+  editData.value.trim_numbers.splice(index, 1)
 }
 
 const closeModal = () => {
@@ -1683,8 +1681,8 @@ const handleSubmit = async () => {
       engine_emissions: editData.value.engine_emissions,
       // New fields
       vin_numbers: editData.value.vin_numbers.filter(num => num.trim() !== ''),
-      trim_number: editData.value.trim_number.filter(num => num.trim() !== ''),
-      engine_numbers: editData.value.engine_numbers,
+      trim_numbers: editData.value.trim_numbers.filter(num => num.trim() !== ''),
+      engine_number: editData.value.engine_number,
       disponibility: editData.value.disponibility,
       production_date: editData.value.production_date,
       country_of_origin: editData.value.country_of_origin,
@@ -1711,6 +1709,8 @@ const handleSubmit = async () => {
     if (editData.value.video && editData.value.video.url) {
       formData.video_url = editData.value.video.url
     }
+
+    console.log("FormData: ",formData)
     
     emit('save', formData)
     
@@ -1956,8 +1956,8 @@ watch(() => props.product, (newProduct) => {
       power: newProduct.power,
       // New fields
       vin_numbers: Array.isArray(newProduct.vin_numbers) ? [...newProduct.vin_numbers] : [],
-      trim_number:Array.isArray(newProduct.trim_number) ? [...newProduct.trim_number] : [],
-      engine_numbers:newProduct.engine_numbers,
+      trim_numbers:Array.isArray(newProduct.trim_numbers) ? [...newProduct.trim_numbers] : [],
+      engine_number: newProduct.engine_number,
       disponibility: newProduct.disponibility,
       production_date: newProduct.production_date || '',
       country_of_origin: newProduct.country_of_origin || '',
@@ -2006,7 +2006,7 @@ watch(() => props.product, (newProduct) => {
       }
     }
   })
-  console.log("editData après mise à jour:", editData.value)
+  console.log("editData après mise à jour:", editData.value.engine_number)
 }, { immediate: true })
 
 watch(() => editData.value.description_plus, (val) => {
