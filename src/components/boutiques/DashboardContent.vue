@@ -487,6 +487,7 @@
                       <span class="hidden sm:inline">Détails</span>
                       <EyeIcon class="w-4 h-4 sm:hidden" />
                     </button>
+
                     <div class="relative">
                       <button @click="toggleActionMenu(product.id)" class="btn-degrade-purple">
                         <MoreHorizontalIcon class="h-4 w-4 sm:h-5 sm:w-5" />

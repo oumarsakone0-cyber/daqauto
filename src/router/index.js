@@ -20,6 +20,7 @@ import BoutiqueAdminReset from "../components/boutiques/Reset_password.vue"
 import BoutiqueAdminRegister from "../components/boutiques/Register.vue"
 import BoutiqueAdminDashboard from "../components/boutiques/DashboardContent.vue"
 import Boutiquee from "../components/boutiques/Boutique.vue"
+import Facture_management from "../components/views/facture_management.vue"
 
 
 const routes = [
@@ -72,6 +73,15 @@ const routes = [
     path: "/dashboard-admin/commandes",
     name: "dashboard-commandes",
     component: CommandesManagement,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/dashboard-admin/factures",
+    name: "dashboard-factures",
+    component: Facture_management,
     meta: {
       requiresAuth: false,
       hideNavigation: false,
