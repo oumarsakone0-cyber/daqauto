@@ -22,18 +22,18 @@
     </div>
 
     <!-- Container principal -->
-    <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+    <div class="w-full max-w-[1650px] mx-auto px-2 sm:px-6 py-2 sm:py-2 relative z-10">
       <!-- Breadcrumb -->
-      <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
+      <div class="flex items-center text-sm text-gray-500 sm:mb-2">
         <Home class="w-4 h-4 sm:w-5 sm:h-5" />
         <span class="mx-2">/</span>
         <span class="font-medium text-gray-700">Gestion des Factures</span>
       </div>
 
       <!-- Header -->
-      <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
+      <div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-4 sm:mb-5">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Factures</h1>
+          <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Gestion des Factures</h1>
           <p class="text-sm sm:text-base text-gray-600">Créez et gérez vos factures en temps réel</p>
         </div>
         
@@ -56,19 +56,19 @@
       </div>
 
       <!-- Contenu principal : Formulaire + Aperçu -->
-      <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div class="grid grid-cols-1 lg:grid-cols-3 gap-1">
         <!-- Formulaire (1/3) -->
         <div class="lg:col-span-1">
-          <div class="bg-white shadow-lg rounded-lg border border-gray-100 p-6 sticky top-6">
-            <h2 class="text-lg font-bold text-gray-900 mb-6 flex items-center">
+          <div class="bg-white shadow-lg rounded-lg border border-gray-100 p-4 sticky top-6">
+            <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
               <FileText class="w-5 h-5 mr-2 primary-color" />
               Informations de la facture
             </h2>
 
             <!-- Informations générales -->
-            <div class="space-y-4 mb-6">
+            <div class="space-y-2 mb-3">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de facture</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Numéro de facture</label>
                 <input 
                   v-model="invoice.number" 
                   type="text" 
@@ -78,7 +78,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Date de facture</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date de facture</label>
                 <input 
                   v-model="invoice.date" 
                   type="date" 
@@ -87,7 +87,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Date d'échéance</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'échéance</label>
                 <input 
                   v-model="invoice.dueDate" 
                   type="date" 
@@ -97,14 +97,14 @@
             </div>
 
             <!-- Informations client -->
-            <div class="border-t border-gray-200 pt-6 mb-6">
-              <h3 class="text-md font-semibold text-gray-900 mb-4 flex items-center">
+            <div class="mb-3">
+              <h3 class="text-md font-semibold text-gray-900 mb-2 flex items-center">
                 <User class="w-4 h-4 mr-2 primary-color" />
                 Informations client
               </h3>
-              <div class="space-y-4">
+              <div class="space-y-2">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Nom du client</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Nom du client</label>
                   <input 
                     v-model="invoice.client.name" 
                     type="text" 
@@ -114,7 +114,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Email</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Email</label>
                   <input 
                     v-model="invoice.client.email" 
                     type="email" 
@@ -124,7 +124,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
                   <input 
                     v-model="invoice.client.phone" 
                     type="tel" 
@@ -134,7 +134,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Adresse</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
                   <textarea 
                     v-model="invoice.client.address" 
                     rows="3"
@@ -146,7 +146,7 @@
             </div>
 
             <!-- Articles -->
-            <div class="border-t border-gray-200 pt-6">
+            <div class="pt-2">
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-md font-semibold text-gray-900 flex items-center">
                   <ShoppingCart class="w-4 h-4 mr-2 primary-color" />
@@ -154,7 +154,7 @@
                 </h3>
                 <button 
                   @click="addItem"
-                  class="btn-degrade-orange"
+                  class="btn-degrade-orange h-10"
                 >
                   <Plus class="w-3 h-3 mr-1" />
                   Ajouter
@@ -166,7 +166,7 @@
                 Chargement des produits...
               </div>
 
-              <div class="space-y-4 max-h-96 overflow-y-auto">
+              <div class="space-y-2 max-h-96 overflow-y-auto">
                 <div 
                   v-for="(item, index) in invoice.items" 
                   :key="index"
@@ -176,12 +176,12 @@
                     v-if="invoice.items.length > 1"
                     @click="removeItem(index)"
                     style="padding: 1px;"
-                    class="absolute top-0 right-2 btn-outline"
+                    class="absolute top-1 right-2 btn-outline"
                   >
                     <X class="w-5 h-5" />
                   </button>
 
-                  <div class="space-y-3">
+                  <div class="space-y-2">
                     <!-- Replace text input with select dropdown for products -->
                     <div>
                       <label class="block text-xs font-medium text-gray-700 mb-1">Produit</label>
@@ -201,7 +201,7 @@
                       </select>
                     </div>
 
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid grid-cols-2 gap-1">
                       <div>
                         <label class="block text-xs font-medium text-gray-700 mb-1">Quantité</label>
                         <input 
@@ -224,7 +224,7 @@
                       </div>
                     </div>
 
-                    <div class="pt-2 border-t border-gray-300">
+                    <div class="pt-2">
                       <div class="flex justify-between items-center">
                         <span class="text-xs font-medium text-gray-600">Total:</span>
                         <span class="text-sm font-bold text-gray-900">{{ formatCurrency(item.quantity * item.price) }}</span>
@@ -236,8 +236,8 @@
             </div>
 
             <!-- TVA -->
-            <div class="border-t border-gray-200 pt-6 mt-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">TVA (%)</label>
+            <div class="pt-2 mt-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">TVA (%)</label>
               <input 
                 v-model.number="invoice.taxRate" 
                 type="number" 
@@ -250,8 +250,8 @@
             </div>
 
             <!-- Notes -->
-            <div class="border-t border-gray-200 pt-6 mt-6">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Notes / Conditions</label>
+            <div class="pt-2 mt-2">
+              <label class="block text-sm font-medium text-gray-700 mb-1">Notes / Conditions</label>
               <textarea 
                 v-model="invoice.notes" 
                 rows="3"
@@ -264,63 +264,97 @@
 
         <!-- Aperçu de la facture (2/3) -->
         <div class="lg:col-span-2">
-          <div class="bg-white shadow-2xl rounded-lg border border-gray-100 p-8 sm:p-12" id="invoice-preview">
+          <div class="bg-white shadow-2xl rounded-lg border border-gray-100 p-4 sm:p-8" id="invoice-preview">
             <!-- En-tête de la facture -->
-            <div class="flex justify-between items-start mb-12 pb-8 border-b-2 border-gray-200">
+            <div class="flex justify-between items-start mb-5 pb-4 border-b-2 border-gray-200">
               <div>
                 <div class="flex items-center mb-4">
-                  <div class="w-12 h-12 bg-orange rounded-lg flex items-center justify-center mr-4">
-                    <FileText class="w-6 h-6 text-white" />
+                  <div class="w-10 h-10 bg-orange rounded-lg flex items-center justify-center mr-4">
+                    <FileText class="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 class="text-3xl font-bold text-gray-900">FACTURE</h2>
-                    <p class="text-sm text-gray-500">Daq Auto Marketplace</p>
+                    <h2 class="text-2xl font-bold text-gray-900">FACTURE</h2>
+                    <p class="text-xs text-gray-500">DAQ AUTO Marketplace</p>
                   </div>
                 </div>
-                <div class="text-sm text-gray-600 space-y-1">
-                  <p class="font-medium">Daq Auto</p>
-                  <p>Abidjan, Côte d'Ivoire</p>
-                  <p>📞 +225 01 53 67 60 62</p>
-                  <p>✉️ commandes@daqauto.com</p>
-                </div>
               </div>
+              <div class="text-left">
+                <div>
 
-              <div class="text-right">
-                <div class="inline-block px-4 py-2 bg-orange rounded-lg mb-4">
-                  <p class="text-white font-bold text-lg">{{ invoice.number || 'FAC-XXXX-XXX' }}</p>
-                </div>
-                <div class="text-sm text-gray-600 space-y-1">
-                  <p><span class="font-medium">Date:</span> {{ formatDate(invoice.date) }}</p>
-                  <p><span class="font-medium">Échéance:</span> {{ formatDate(invoice.dueDate) }}</p>
+                  <div class="inline-block px-4 py-1 bg-orange rounded-lg mb-1">
+                    <p class="text-white font-bold text-sm">{{ invoice.number || 'FAC-XXXX-XXX' }}</p>
+                  </div>
+                  <div class="text-xs text-gray-600 space-y-0">
+                    <p > Date: <span class="font-bold">{{ formatDate(invoice.date) }} </span></p>
+                    <p> Échéance:  <span class="font-bold">{{ formatDate(invoice.dueDate) }}</span></p>
+                  </div>
                 </div>
               </div>
             </div>
+            <div class="flex justify-between items-start mb-5 pb-5 border-b-2 border-gray-200">
+              <div>
+                <div class="text-xs text-gray-600 space-y-1">
+                  <div class="flex font-bold">
+                    <Building2 class="w-4 h-4 mr-2 mt-0.5"/> 
+                    Seller :
+                  </div>
+                  <div class="flex py-1 gap-2">
+                    <img :src="logo" />
+                    <p class="font-medium">DAQ AUTO</p>
+                  </div>
+                  <p>Abidjan, Côte d'Ivoire</p>
+                  <p>+225 01 53 67 60 62</p>
+                  <p>commandes@daqauto.com</p>
+                  <p>91310000MA1K4T123X</p>
+                </div>
+              </div>
+
+                <div class="text-xs text-gray-600 space-y-1 text-left mr-6">
+                  <div class="flex font-bold">
+                    <UserCheck class="w-4 h-4 mr-2" />
+                    Buyer :
+                  </div>
+                  <div class="text-gray-900 space-y-1">
+                  <p class="font-medium ">{{ invoice.client.name || 'Nom du client' }}</p>
+                  <p >{{ invoice.client.address || 'Adresse du client' }}</p>
+                  <p>{{ invoice.client.phone || '+225 XX XX XX XX XX' }}</p>
+                  <p >{{ invoice.client.email || 'email@exemple.com' }}</p>
+                </div>
+                </div>
+            </div>
 
             <!-- Informations client -->
-            <div class="mb-12">
+            <div class="mb-5">
               <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
-                <h3 class="text-sm font-bold primary-color mb-3 flex items-center">
-                  <User class="w-4 h-4 mr-2" />
-                  FACTURÉ À
+                <h3 class="text-xs font-bold primary-color mb-3 flex items-center">
+                  <LandmarkIcon class="w-3 h-3 mr-2" />
+                  Bank Information
                 </h3>
                 <div class="text-gray-900 space-y-1">
-                  <p class="font-bold text-lg">{{ invoice.client.name || 'Nom du client' }}</p>
-                  <p class="text-sm">{{ invoice.client.email || 'email@exemple.com' }}</p>
-                  <p class="text-sm">{{ invoice.client.phone || '+225 XX XX XX XX XX' }}</p>
-                  <p class="text-sm">{{ invoice.client.address || 'Adresse du client' }}</p>
+                  <p class="text-xs">Beneficiary Name : <span class="font-bold"> DAQ AUTO CO., LTD</span></p>
+                  <p class="text-xs">Bank Name : <span class="font-bold"> Bank of China, Chongqing Branch</span></p>
+                  <p class="text-xs">Account Number : <span class="font-bold"> 123 456 7890</span></p>
+                  <p class="text-xs">SWIFT Code : <span class="font-bold"> BKCHCNBJ600</span></p>
+                  <p class="text-xs">Bank Address : <span class="font-bold"> No. 123 Jiangbei District, Chongqing, China</span></p>
                 </div>
               </div>
             </div>
 
             <!-- Tableau des articles -->
-            <div class="mb-12">
+            <div class="mb-5">
               <table class="w-full">
                 <thead>
                   <tr class="bg-gray-100 border-b-2 border-gray-300">
-                    <th class="text-left py-3 px-4 text-sm font-bold text-gray-700">DESCRIPTION</th>
-                    <th class="text-center py-3 px-4 text-sm font-bold text-gray-700">QTÉ</th>
-                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">PRIX UNIT.</th>
-                    <th class="text-right py-3 px-4 text-sm font-bold text-gray-700">TOTAL</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">NO.</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Product Type</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Description</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Trim / Vehicle Model</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">VIN</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Stock Number</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Color</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Quantity</th>
+                    <th class="text-center py-3 px-1 text-xs font-bold text-gray-700">Unit Price</th>
+                    <th class="text-right py-3 px-1 text-xs font-bold text-gray-700">TOTAL</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -330,10 +364,16 @@
                     :key="index"
                     class="border-b border-gray-200 hover:bg-gray-50 transition-colors"
                   >
-                    <td class="py-4 px-4 text-sm text-gray-900">{{ getProductName(item.productId) || 'Article sans nom' }}</td>
-                    <td class="py-4 px-4 text-sm text-gray-700 text-center">{{ item.quantity }}</td>
-                    <td class="py-4 px-4 text-sm text-gray-700 text-right">{{ formatCurrency(item.price) }}</td>
-                    <td class="py-4 px-4 text-sm font-semibold text-gray-900 text-right">{{ formatCurrency(item.quantity * item.price) }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ index +1 }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ item.product_type || "N/A" }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ item.product_name || "N/A" }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ item.trim_number || "N/A" }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ item.vin || "N/A" }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ item.stock_number || "N/A" }}</td>
+                    <td class="text-center py-4 text-xs text-gray-900">{{ item.color || "N/A" }}</td>
+                    <td class="py-4 text-xs text-gray-700 text-center">{{ item.quantity }}</td>
+                    <td class="py-4 text-xs text-gray-700 text-center">{{ formatCurrency(item.price) }}</td>
+                    <td class="py-4 text-xs font-semibold text-gray-900 text-right">{{ formatCurrency(item.quantity * item.price) }}</td>
                   </tr>
                   <tr v-if="invoice.items.length === 0">
                     <td colspan="4" class="py-8 text-center text-gray-400 text-sm italic">
@@ -348,24 +388,65 @@
             <div class="flex justify-end mb-12">
               <div class="w-full max-w-sm space-y-3">
                 <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                  <span class="text-sm font-medium text-gray-600">Sous-total:</span>
-                  <span class="text-sm font-semibold text-gray-900">{{ formatCurrency(subtotal) }}</span>
+                  <span class="text-xs font-medium text-gray-600">Sous-total:</span>
+                  <span class="text-xs font-semibold text-gray-900">{{ formatCurrency(subtotal) }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                  <span class="text-sm font-medium text-gray-600">TVA ({{ invoice.taxRate }}%):</span>
-                  <span class="text-sm font-semibold text-gray-900">{{ formatCurrency(tax) }}</span>
+                  <span class="text-xs font-medium text-gray-600">TVA ({{ invoice.taxRate }}%):</span>
+                  <span class="text-xs font-semibold text-gray-900">{{ formatCurrency(tax) }}</span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                  <span class="text-xs font-medium text-gray-600">Shipping / Handling :</span>
+                  <span class="text-xs font-semibold text-gray-900"></span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                  <span class="text-xs font-medium text-gray-600">Insurance :</span>
+                  <span class="text-xs font-semibold text-gray-900"></span>
+                </div>
+                <div class="flex justify-between items-center py-2 border-b border-gray-200">
+                  <span class="text-xs font-medium text-gray-600">Sea Shipping :</span>
+                  <span class="text-xs font-semibold text-gray-900"></span>
                 </div>
                 <div class="flex justify-between items-center py-4 bg-orange rounded-lg px-4">
                   <span class="text-base font-bold text-white">TOTAL:</span>
-                  <span class="text-2xl font-bold text-white">{{ formatCurrency(total) }}</span>
+                  <span class="text-xl font-bold text-white">{{ formatCurrency(total) }}</span>
                 </div>
               </div>
             </div>
 
             <!-- Notes -->
             <div v-if="invoice.notes" class="border-t-2 border-gray-200 pt-8">
-              <h3 class="text-sm font-bold text-gray-700 mb-3">NOTES / CONDITIONS</h3>
-              <p class="text-sm text-gray-600 whitespace-pre-line">{{ invoice.notes }}</p>
+              <h3 class="text-sm font-bold text-gray-700 mb-3">Terms & Conditions / 条款与条件</h3>
+              <ul class="text-xs text-gray-700 mb-3 list-disc list-inside" >
+                <li>Incoterm / 国际贸易术语: CIF / FOB / EXW [Specify port ]</li>
+                <li>Payment Terms / 付款方式: T/T — 100% payment received before shipment. </li>
+                <li>Production Time / 生产周期: [e.g. 15–20 working days after deposit ]</li>
+                <li>Estimated Delivery / 预计发货日期: [Insert / 填写] </li>
+                <li>Commercial invoice /商业发票发票说明:This is the final commercial invoice for customs and payment confirmation. / 本文件为正式商业发票，用于清关及付款确认。</li>
+              </ul>
+              <h3 class="text-sm font-bold text-gray-700 mb-3">Shipping & Packaging / 运输与包装</h3>
+              <ul class="text-xs text-gray-700 mb-3 list-disc list-inside" >
+                <li>Mode of Transport / 运输方式: [Sea / Air / Road / ]</li>
+                <li>Port of Loading / 装货港: [Insert ]</li>
+                <li>Port of Destination / 目的港: [Insert ]</li>
+                <li>Port of Destination / 目的港: [Insert ]</li>
+              </ul>
+              <h3 class="text-sm font-bold text-gray-700 mb-3">Declaration / 声明</h3>
+              <p class="text-xs text-gray-700 mb-3">We hereby certify that the goods listed above are of Chinese origin and the details given are true and correct.
+              </p>
+              <p class="text-xs text-gray-700 mb-3">
+
+                兹证明上述货物原产于中国，所列内容真实无误
+              </p>
+              <p class="text-xs text-gray-600 whitespace-pre-line">{{ invoice.notes }}</p>
+            </div>
+            <div class="flex justify-end mb-12">
+              <div class="w-full max-w-sm space-y-3 text-right">
+                <h3 class="text-xs text-gray-700 ">Authorized Signature & Stamp / 授权签字与公司印章</h3>
+                  <h4 class="text-xs text-gray-700">Name / 姓名: [Authorized person / 授权人]</h4>
+                  <h4 class="text-xs text-gray-700">Signature / 签名:___________________</h4>
+                  <h4 class="text-xs text-gray-700">Company Stamp / 公司印章:___________________</h4>
+              </div>
             </div>
 
             <!-- Pied de page -->
@@ -374,7 +455,7 @@
                 Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com
               </p>
               <p class="text-xs text-gray-400 mt-2">
-                AliAdjamé Marketplace - Votre partenaire de confiance
+                DAQ AUTO Marketplace - Votre partenaire de confiance
               </p>
               <p class="text-xs primary-color font-medium mt-3">
                 Facture générée sur DaqAuto.com
@@ -391,10 +472,19 @@
 import { ref, computed, onMounted } from 'vue'
 import { 
   Home, FileText, User, ShoppingCart, Download, RefreshCw, 
-  Plus, X
+  Plus, X,
+  HomeIcon,
+  Building2,
+  User2,
+  User2Icon,
+  UserX2,
+  UserCheck,
+  Banknote,
+  LandmarkIcon
 } from 'lucide-vue-next'
 import jsPDF from 'jspdf'
 import { productsApi } from '../../services/api'
+import logo from "../../assets/favicon.jpg"
 
 const products = ref([])
 const loadingProducts = ref(false)
@@ -417,6 +507,12 @@ const invoice = ref({
   items: [
     {
       productId: '',
+      product_type:'',
+      product_name:"",
+      trim_number:"",
+      vin:"",
+      stock_number:"",
+      color:"",
       quantity: 1,
       price: 0
     }
@@ -527,6 +623,12 @@ const onProductSelect = (index) => {
   
   if (selectedProduct) {
     item.price = selectedProduct.unit_price || selectedProduct.price || 0
+    item.product_type = selectedProduct.category_name || ""
+    item.product_name= selectedProduct.name || ""
+    item.trim_number = selectedProduct.trim_numbers[0] || ""
+    item.vin = selectedProduct.vin_numbers[0] || ""
+    item.stock_number = selectedProduct.stock_number || ""
+    item.color = selectedProduct.color_names[0] || ""
     console.log('[v0] Produit sélectionné:', selectedProduct.name, 'Prix:', item.price)
   }
 }
@@ -626,7 +728,7 @@ const downloadPDF = () => {
   
   doc.setFontSize(10)
   doc.setFont('helvetica', 'normal')
-  doc.text('AliAdjamé Marketplace', 20, 32)
+  doc.text('DAQ AUTO Marketplace', 20, 32)
   
   // Numéro de facture
   doc.setFontSize(12)
@@ -636,16 +738,20 @@ const downloadPDF = () => {
   yPos = 55
   
   // Informations entreprise
+  doc.addImage(logo, 'PNG', 20, yPos-4, 6, 6)
   doc.setTextColor(0, 0, 0)
-  doc.setFontSize(10)
+  doc.setFontSize(12)
   doc.setFont('helvetica', 'bold')
-  doc.text('Daq Auto', 20, yPos)
+  doc.text('DAQ AUTO', 28, yPos)
+  doc.setFontSize(8)
   doc.setFont('helvetica', 'normal')
-  doc.text('Abidjan, Côte d\'Ivoire', 20, yPos + 5)
+  doc.text('Abidjan, Côte d\'Ivoire', 20, yPos + 6)
   doc.text('+225 01 53 67 60 62', 20, yPos + 10)
-  doc.text('commandes@daqauto.com', 20, yPos + 15)
+  doc.text('commandes@daqauto.com', 20, yPos + 14)
+  doc.text('(USCC): 91310000MA1K4T123X', 20, yPos + 18)
   
   // Dates
+  doc.setFontSize(10)
   doc.setFont('helvetica', 'bold')
   doc.text('Date:', pageWidth - 70, yPos, { align: 'left' })
   doc.setFont('helvetica', 'normal')
