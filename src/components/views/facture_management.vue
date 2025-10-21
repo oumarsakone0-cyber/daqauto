@@ -166,7 +166,7 @@
                 Chargement des produits...
               </div>
 
-              <div class="space-y-2 max-h-96 overflow-y-auto">
+              <div class="space-y-2 max-h-150  overflow-y-auto">
                 <div 
                   v-for="(item, index) in invoice.items" 
                   :key="index"
@@ -197,6 +197,54 @@
                           :value="product.id"
                         >
                           {{ product.name }}
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">Numéro VIN</label>
+                      <select 
+                        v-model="item.vin"
+                        class="input-style"
+                      >
+                        <option value="">Sélectionner un numéro VIN</option>
+                        <option 
+                          v-for="vin in selectedVInNumber(item.productId)" 
+                          :key="vin" 
+                          :value="vin"
+                        >
+                          {{ vin }}
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">Numéro Trim</label>
+                      <select 
+                        v-model="item.trim_number"
+                        class="input-style"
+                      >
+                        <option value="">Sélectionner un numéro Trim</option>
+                        <option 
+                          v-for="trim in selectedTrimNumber(item.productId)" 
+                          :key="trim" 
+                          :value="trim"
+                        >
+                          {{ trim}}
+                        </option>
+                      </select>
+                    </div>
+                    <div>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">Couleurs</label>
+                      <select 
+                        v-model="item.color"
+                        class="input-style"
+                      >
+                        <option value="">Sélectionner une couleur</option>
+                        <option 
+                          v-for="color in selectedColors(item.productId)" 
+                          :key="color" 
+                          :value="color"
+                        >
+                          {{color }}
                         </option>
                       </select>
                     </div>
@@ -236,7 +284,7 @@
             </div>
 
             <!-- TVA -->
-            <div class="pt-2 mt-2">
+            <div class="pt-2 mt-2 border-t-2 border-gray-200">
               <label class="block text-sm font-medium text-gray-700 mb-1">TVA (%)</label>
               <input 
                 v-model.number="invoice.taxRate" 
@@ -251,7 +299,7 @@
 
             <!-- Notes -->
             <div class="pt-2 mt-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1">Notes / Conditions</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1"> Autres Notes / Conditions</label>
               <textarea 
                 v-model="invoice.notes" 
                 rows="3"
@@ -291,7 +339,7 @@
                 </div>
               </div>
             </div>
-            <div class="flex justify-between items-start mb-5 pb-5 border-b-2 border-gray-200">
+            <div class="flex justify-between items-start mb-5">
               <div>
                 <div class="text-xs text-gray-600 space-y-1">
                   <div class="flex font-bold">
@@ -321,23 +369,6 @@
                   <p >{{ invoice.client.email || 'email@exemple.com' }}</p>
                 </div>
                 </div>
-            </div>
-
-            <!-- Informations client -->
-            <div class="mb-5">
-              <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
-                <h3 class="text-xs font-bold primary-color mb-3 flex items-center">
-                  <LandmarkIcon class="w-3 h-3 mr-2" />
-                  Bank Information
-                </h3>
-                <div class="text-gray-900 space-y-1">
-                  <p class="text-xs">Beneficiary Name : <span class="font-bold"> DAQ AUTO CO., LTD</span></p>
-                  <p class="text-xs">Bank Name : <span class="font-bold"> Bank of China, Chongqing Branch</span></p>
-                  <p class="text-xs">Account Number : <span class="font-bold"> 123 456 7890</span></p>
-                  <p class="text-xs">SWIFT Code : <span class="font-bold"> BKCHCNBJ600</span></p>
-                  <p class="text-xs">Bank Address : <span class="font-bold"> No. 123 Jiangbei District, Chongqing, China</span></p>
-                </div>
-              </div>
             </div>
 
             <!-- Tableau des articles -->
@@ -384,6 +415,8 @@
               </table>
             </div>
 
+            
+
             <!-- Totaux -->
             <div class="flex justify-end mb-12">
               <div class="w-full max-w-sm space-y-3">
@@ -414,6 +447,23 @@
               </div>
             </div>
 
+            <!-- Bank Informations -->
+            <div class="mb-5">
+              <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-6 border border-orange-200">
+                <h3 class="text-xs font-bold primary-color mb-3 flex items-center">
+                  <LandmarkIcon class="w-3 h-3 mr-2" />
+                  Bank Information
+                </h3>
+                <div class="text-gray-900 space-y-1">
+                  <p class="text-xs">Beneficiary Name : <span class="font-bold"> DAQ AUTO CO., LTD</span></p>
+                  <p class="text-xs">Bank Name : <span class="font-bold"> Bank of China, Chongqing Branch</span></p>
+                  <p class="text-xs">Account Number : <span class="font-bold"> 123 456 7890</span></p>
+                  <p class="text-xs">SWIFT Code : <span class="font-bold"> BKCHCNBJ600</span></p>
+                  <p class="text-xs">Bank Address : <span class="font-bold"> No. 123 Jiangbei District, Chongqing, China</span></p>
+                </div>
+              </div>
+            </div>
+
             <!-- Notes -->
             <div v-if="invoice.notes" class="border-t-2 border-gray-200 pt-8">
               <h3 class="text-sm font-bold text-gray-700 mb-3">Terms & Conditions / 条款与条件</h3>
@@ -438,6 +488,7 @@
 
                 兹证明上述货物原产于中国，所列内容真实无误
               </p>
+              <h3 class="text-sm font-bold text-gray-700 mb-3">Others Notes / Conditions</h3>
               <p class="text-xs text-gray-600 whitespace-pre-line">{{ invoice.notes }}</p>
             </div>
             <div class="flex justify-end mb-12">
@@ -487,6 +538,9 @@ import { productsApi } from '../../services/api'
 import logo from "../../assets/favicon.jpg"
 
 const products = ref([])
+const selected_product_colors = ref([])
+const selected_product_trim_numbers = ref([])
+const selected_product_vin_numbers = ref([])
 const loadingProducts = ref(false)
 
 const currentUser = ref(null)
@@ -616,20 +670,57 @@ const fetchProducts = async () => {
     loadingProducts.value = false
   }
 }
+const selectedColors = (id) => {
+  const items = selected_product_colors.value.find(i => i.id === id)
+  return items ? items.colors : []
+}
+const selectedVInNumber = (id) => {
+  const items = selected_product_vin_numbers.value.find(i => i.id === id)
+  return items ? items.vin_numbers : []
+}
+const selectedTrimNumber = (id) => {
+  const items = selected_product_trim_numbers.value.find(i => i.id === id)
+  return items ? items.trim_numbers : []
+}
 
 const onProductSelect = (index) => {
   const item = invoice.value.items[index]
   const selectedProduct = products.value.find(p => p.id === item.productId)
+  item.color = ""
+  item.vin = ""
+  item.trim_number = ""
   
   if (selectedProduct) {
+    console.log(selectedProduct)
     item.price = selectedProduct.unit_price || selectedProduct.price || 0
     item.product_type = selectedProduct.category_name || ""
     item.product_name= selectedProduct.name || ""
-    item.trim_number = selectedProduct.trim_numbers[0] || ""
-    item.vin = selectedProduct.vin_numbers[0] || ""
     item.stock_number = selectedProduct.stock_number || ""
-    item.color = selectedProduct.color_names[0] || ""
-    console.log('[v0] Produit sélectionné:', selectedProduct.name, 'Prix:', item.price)
+
+    if (!selected_product_colors.value.some(product =>product.id === selectedProduct.id)) {
+      selected_product_colors.value.push(
+            {
+              id:selectedProduct.id,
+              colors:selectedProduct.color_names
+            }
+          )
+    } 
+    if (!selected_product_vin_numbers.value.some(product =>product.id === selectedProduct.id)) {
+      selected_product_vin_numbers.value.push(
+            {
+              id:selectedProduct.id,
+              vin_numbers:selectedProduct.vin_numbers
+            }
+          )
+    } 
+    if (!selected_product_trim_numbers.value.some(product =>product.id === selectedProduct.id)) {
+      selected_product_trim_numbers.value.push(
+            {
+              id:selectedProduct.id,
+              trim_numbers:selectedProduct.trim_numbers
+            }
+          )
+    } 
   }
 }
 
@@ -675,15 +766,24 @@ const formatDate = (dateString) => {
 const addItem = () => {
   invoice.value.items.push({
     productId: '',
-    quantity: 1,
-    price: 0
+      product_type:'',
+      product_name:"",
+      trim_number:"",
+      vin:"",
+      stock_number:"",
+      color:"",
+      quantity: 1,
+      price: 0
   })
+  console.log("items added: ",invoice.value.items)
 }
 
 const removeItem = (index) => {
   if (invoice.value.items.length > 1) {
     invoice.value.items.splice(index, 1)
+    
   }
+  console.log("items removed: ",invoice.value.items)
 }
 
 const resetForm = () => {
@@ -701,6 +801,12 @@ const resetForm = () => {
     items: [
       {
         productId: '',
+        product_type:'',
+        product_name:"",
+        trim_number:"",
+        vin:"",
+        stock_number:"",
+        color:"",
         quantity: 1,
         price: 0
       }
