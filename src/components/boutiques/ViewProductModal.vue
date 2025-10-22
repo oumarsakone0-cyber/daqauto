@@ -717,14 +717,15 @@
               <CopyIcon class="w-4 h-4 mr-2" />
               Dupliquer
             </button>
-            <button
-              @click="$emit('ModalFacture', product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center"
-            >
-              <!-- utilisation directe du composant importé -->
-              <FileTextIcon class="w-4 h-4 mr-2" />
-              Facture Proformat
-            </button>
+            <router-link to="/dashboard-admin/factures">
+              <button 
+                class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center"
+              >
+                <!-- utilisation directe du composant importé -->
+                <FileTextIcon class="w-4 h-4 mr-2" />
+                Facture Proformat
+              </button>
+            </router-link>
           </div>
 
           <div class="flex gap-2 sm:gap-3 order-1 sm:order-2">

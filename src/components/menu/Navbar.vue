@@ -378,7 +378,7 @@
           <a href="#" class="nav-item">Suivre une commande</a>
           <a href="#" class="nav-item">Faire une réclamation</a>
           <a href="#" class="nav-item">Vendre sur Daq Auto</a>
-          <a href="/boutique-admin/login" class="nav-item">Espace Fournisseur</a>
+          <a href="/boutique-admin/dashboard" class="nav-item">Espace Fournisseur</a>
         </nav>
       </div>
     </div>

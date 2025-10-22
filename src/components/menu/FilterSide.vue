@@ -1,978 +1,1257 @@
 <template>
   <div class="filter-sidebar">
+    <div class="filter-header">
+      <h3 class="filter-title">Filtres</h3>
+      <button v-if="hasActiveFilters" @click="resetAllFilters" class="reset-btn">
+        Réinitialiser
+      </button>
+    </div>
+
     <!-- Sous-catégories -->
     <div class="filter-section">
-      <h3 class="filter-title">Sous-catégories</h3>
-      <div class="filter-content">
-        <div v-if="isLoading" class="loading-indicator">
-          <div class="spinner"></div>
-          <span>Chargement...</span>
-        </div>
-        <div v-else-if="subcategories.length === 0" class="empty-state">
-          Aucune sous-catégorie disponible
-        </div>
-        <template v-else>
-          <label class="checkbox-item" v-for="subcategory in subcategories" :key="subcategory.id">
-            <input 
-              type="checkbox" 
-              :value="subcategory.id" 
-              v-model="filters.subcategories"
-              @change="applyFilters"
-            >
-            <span class="checkmark"></span>
-            <span class="checkbox-label">{{ subcategory.name }}</span>
-            <span class="checkbox-count">({{ subcategory.count || 0 }})</span>
-          </label>
-        </template>
+      <div class="filter-section-header" @click="toggleSection('subcategories')">
+        <h4 class="filter-section-title">Sous-catégories</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.subcategories }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.subcategories" class="filter-section-content">
+        <label 
+          v-for="subcategory in subcategories" 
+          :key="subcategory" 
+          class="filter-checkbox-label"
+        >
+          <input 
+            type="checkbox" 
+            :value="subcategory" 
+            v-model="selectedSubcategories"
+            @change="emitFilters"
+          />
+          <span>{{ subcategory }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Marchés / Localisation -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('markets')">
+        <h4 class="filter-section-title">Marchés</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.markets }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.markets" class="filter-section-content">
+        <label 
+          v-for="market in markets" 
+          :key="market" 
+          class="filter-checkbox-label"
+        >
+          <input 
+            type="checkbox" 
+            :value="market" 
+            v-model="selectedMarkets"
+            @change="emitFilters"
+          />
+          <span>{{ market }}</span>
+        </label>
       </div>
     </div>
 
     <!-- Prix -->
     <div class="filter-section">
-      <h3 class="filter-title">Prix</h3>
-      <div class="filter-content">
-        <!-- Tri par prix -->
-        <div class="price-sort-buttons">
-          <button 
-            @click="setSortPrice('ASC')" 
-            class="sort-btn"
-            :class="{ active: filters.sortBy === 'unit_price' && filters.sortOrder === 'ASC' }"
-          >
-            Prix croissant
-          </button>
-          <button 
-            @click="setSortPrice('DESC')" 
-            class="sort-btn"
-            :class="{ active: filters.sortBy === 'unit_price' && filters.sortOrder === 'DESC' }"
-          >
-            Prix décroissant
-          </button>
-        </div>
-
-        <!-- Plage de prix -->
-        <div class="price-range">
-          <div class="price-inputs">
-            <input 
-              type="number" 
-              placeholder="Min" 
-              v-model="filters.minPrice" 
-              class="price-input"
-              @input="debounceApplyFilters"
-            >
-            <span class="price-separator">-</span>
-            <input 
-              type="number" 
-              placeholder="Max" 
-              v-model="filters.maxPrice" 
-              class="price-input"
-              @input="debounceApplyFilters"
-            >
-          </div>
-        </div>
-
-        <!-- Plages prédéfinies -->
+      <div class="filter-section-header" @click="toggleSection('price')">
+        <h4 class="filter-section-title">Prix (FCFA)</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.price }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.price" class="filter-section-content">
+        <!-- Presets de prix -->
         <div class="price-presets">
           <button 
             v-for="preset in pricePresets" 
             :key="preset.label"
-            @click="setPricePreset(preset)"
-            class="preset-btn"
-            :class="{ active: isPricePresetActive(preset) }"
+            @click="applyPricePreset(preset)"
+            class="price-preset-btn"
+            :class="{ 'active': isPricePresetActive(preset) }"
           >
             {{ preset.label }}
           </button>
         </div>
+        
+        <!-- Plage de prix personnalisée -->
+        <div class="price-range">
+          <div class="price-input-group">
+            <label class="price-label">Min</label>
+            <input 
+              type="number" 
+              v-model.number="priceMin" 
+              @input="emitFilters"
+              placeholder="0"
+              class="price-input"
+            />
+          </div>
+          <span class="price-separator">-</span>
+          <div class="price-input-group">
+            <label class="price-label">Max</label>
+            <input 
+              type="number" 
+              v-model.number="priceMax" 
+              @input="emitFilters"
+              placeholder="∞"
+              class="price-input"
+            />
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Options d'achat -->
+    <!-- Marque de véhicule -->
     <div class="filter-section">
-      <h3 class="filter-title">Options d'achat</h3>
-      <div class="filter-content">
-        <label class="checkbox-item">
+      <div class="filter-section-header" @click="toggleSection('vehicleMake')">
+        <h4 class="filter-section-title">Marque</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.vehicleMake }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.vehicleMake" class="filter-section-content">
+        <div class="search-box">
+          <input 
+            type="text" 
+            v-model="vehicleMakeSearch" 
+            placeholder="Rechercher une marque..."
+            class="search-input"
+          />
+        </div>
+        <div class="scrollable-list">
+          <label 
+            v-for="make in filteredVehicleMakes" 
+            :key="make" 
+            class="filter-checkbox-label"
+          >
+            <input 
+              type="checkbox" 
+              :value="make" 
+              v-model="selectedVehicleMakes"
+              @change="emitFilters"
+            />
+            <span>{{ make }}</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- État du véhicule -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('vehicleCondition')">
+        <h4 class="filter-section-title">État</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.vehicleCondition }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.vehicleCondition" class="filter-section-content">
+        <label 
+          v-for="condition in vehicleConditions" 
+          :key="condition.value" 
+          class="filter-checkbox-label"
+        >
           <input 
             type="checkbox" 
-            v-model="filters.wholesaleAvailable"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">Prix de gros disponible</span>
-        </label>
-        <label class="checkbox-item">
-          <input 
-            type="checkbox" 
-            v-model="filters.freeShipping"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">Livraison gratuite</span>
-        </label>
-        <label class="checkbox-item">
-          <input 
-            type="checkbox" 
-            v-model="filters.inStock"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">En stock</span>
-        </label>
-        <label class="checkbox-item">
-          <input 
-            type="checkbox" 
-            v-model="filters.newProducts"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">Nouveaux produits</span>
+            :value="condition.value" 
+            v-model="selectedVehicleConditions"
+            @change="emitFilters"
+          />
+          <span>{{ condition.label }}</span>
         </label>
       </div>
     </div>
 
-    <!-- Note et avis -->
+    <!-- Type de carburant -->
     <div class="filter-section">
-      <h3 class="filter-title">Note minimum</h3>
-      <div class="filter-content">
-        <div class="rating-filter">
-          <label class="radio-item" v-for="rating in ratingOptions" :key="rating.value">
+      <div class="filter-section-header" @click="toggleSection('fuelType')">
+        <h4 class="filter-section-title">Carburant</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.fuelType }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.fuelType" class="filter-section-content">
+        <label 
+          v-for="fuel in fuelTypes" 
+          :key="fuel" 
+          class="filter-checkbox-label"
+        >
+          <input 
+            type="checkbox" 
+            :value="fuel" 
+            v-model="selectedFuelTypes"
+            @change="emitFilters"
+          />
+          <span>{{ fuel }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Type de transmission -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('transmission')">
+        <h4 class="filter-section-title">Transmission</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.transmission }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.transmission" class="filter-section-content">
+        <label 
+          v-for="transmission in transmissionTypes" 
+          :key="transmission" 
+          class="filter-checkbox-label"
+        >
+          <input 
+            type="checkbox" 
+            :value="transmission" 
+            v-model="selectedTransmissionTypes"
+            @change="emitFilters"
+          />
+          <span>{{ transmission }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Type de traction -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('driveType')">
+        <h4 class="filter-section-title">Traction</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.driveType }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.driveType" class="filter-section-content">
+        <label 
+          v-for="drive in driveTypes" 
+          :key="drive" 
+          class="filter-checkbox-label"
+        >
+          <input 
+            type="checkbox" 
+            :value="drive" 
+            v-model="selectedDriveTypes"
+            @change="emitFilters"
+          />
+          <span>{{ drive }}</span>
+        </label>
+      </div>
+    </div>
+
+    <!-- Marque du moteur -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('engineBrand')">
+        <h4 class="filter-section-title">Marque du moteur</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.engineBrand }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.engineBrand" class="filter-section-content">
+        <div class="scrollable-list">
+          <label 
+            v-for="brand in engineBrands" 
+            :key="brand" 
+            class="filter-checkbox-label"
+          >
+            <input 
+              type="checkbox" 
+              :value="brand" 
+              v-model="selectedEngineBrands"
+              @change="emitFilters"
+            />
+            <span>{{ brand }}</span>
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <!-- Année -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('year')">
+        <h4 class="filter-section-title">Année</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.year }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.year" class="filter-section-content">
+        <div class="year-range">
+          <div class="year-input-group">
+            <label class="year-label">De</label>
+            <input 
+              type="number" 
+              v-model.number="yearMin" 
+              @input="emitFilters"
+              :min="1990"
+              :max="currentYear"
+              placeholder="1990"
+              class="year-input"
+            />
+          </div>
+          <span class="year-separator">-</span>
+          <div class="year-input-group">
+            <label class="year-label">À</label>
+            <input 
+              type="number" 
+              v-model.number="yearMax" 
+              @input="emitFilters"
+              :min="1990"
+              :max="currentYear"
+              :placeholder="currentYear.toString()"
+              class="year-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Capacité de charge -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('payload')">
+        <h4 class="filter-section-title">Capacité de charge (tonnes)</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.payload }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.payload" class="filter-section-content">
+        <div class="payload-range">
+          <div class="payload-input-group">
+            <label class="payload-label">Min</label>
+            <input 
+              type="number" 
+              v-model.number="payloadMin" 
+              @input="emitFilters"
+              placeholder="0"
+              step="0.5"
+              class="payload-input"
+            />
+          </div>
+          <span class="payload-separator">-</span>
+          <div class="payload-input-group">
+            <label class="payload-label">Max</label>
+            <input 
+              type="number" 
+              v-model.number="payloadMax" 
+              @input="emitFilters"
+              placeholder="∞"
+              step="0.5"
+              class="payload-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- GVW (Poids total en charge) -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('gvw')">
+        <h4 class="filter-section-title">GVW (tonnes)</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.gvw }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.gvw" class="filter-section-content">
+        <div class="gvw-range">
+          <div class="gvw-input-group">
+            <label class="gvw-label">Min</label>
+            <input 
+              type="number" 
+              v-model.number="gvwMin" 
+              @input="emitFilters"
+              placeholder="0"
+              step="0.5"
+              class="gvw-input"
+            />
+          </div>
+          <span class="gvw-separator">-</span>
+          <div class="gvw-input-group">
+            <label class="gvw-label">Max</label>
+            <input 
+              type="number" 
+              v-model.number="gvwMax" 
+              @input="emitFilters"
+              placeholder="∞"
+              step="0.5"
+              class="gvw-input"
+            />
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Note minimum -->
+    <div class="filter-section">
+      <div class="filter-section-header" @click="toggleSection('rating')">
+        <h4 class="filter-section-title">Note minimum</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.rating }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
+      </div>
+      <div v-show="expandedSections.rating" class="filter-section-content">
+        <div class="rating-options">
+          <label 
+            v-for="rating in [5, 4, 3, 2, 1]" 
+            :key="rating" 
+            class="rating-option"
+          >
             <input 
               type="radio" 
-              name="minRating" 
-              :value="rating.value" 
-              v-model="filters.minRating"
-              @change="applyFilters"
-            >
-            <span class="radio-mark"></span>
-            <div class="rating-display">
-              <div class="stars">
-                <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= rating.value }">★</span>
-              </div>
-              <span class="rating-text">{{ rating.label }}</span>
+              :value="rating" 
+              v-model="minRating"
+              @change="emitFilters"
+              name="rating"
+            />
+            <div class="rating-stars">
+              <span v-for="star in 5" :key="star" class="star" :class="{ 'filled': star <= rating }">
+                ★
+              </span>
+              <span class="rating-text">{{ rating }}+ étoiles</span>
             </div>
           </label>
         </div>
       </div>
     </div>
 
-    <!-- Marchés -->
+    <!-- Options supplémentaires -->
     <div class="filter-section">
-      <h3 class="filter-title">Marchés</h3>
-      <div class="filter-content">
-        <div v-if="markets.length === 0" class="empty-state">
-          Aucun marché disponible
-        </div>
-        <template v-else>
-          <label class="checkbox-item" v-for="market in markets" :key="market.id">
-            <input 
-              type="checkbox" 
-              :value="market.id" 
-              v-model="filters.markets"
-              @change="applyFilters"
-            >
-            <span class="checkmark"></span>
-            <span class="checkbox-label">{{ market.name }}</span>
-            <span class="checkbox-count">({{ market.count || 0 }})</span>
-          </label>
-        </template>
+      <div class="filter-section-header" @click="toggleSection('options')">
+        <h4 class="filter-section-title">Options</h4>
+        <svg 
+          class="chevron-icon" 
+          :class="{ 'rotated': expandedSections.options }"
+          width="16" 
+          height="16" 
+          viewBox="0 0 24 24" 
+          fill="none" 
+          stroke="currentColor" 
+          stroke-width="2"
+        >
+          <polyline points="6 9 12 15 18 9"></polyline>
+        </svg>
       </div>
-    </div>
-
-    <!-- Fournisseur -->
-    <div class="filter-section">
-      <h3 class="filter-title">Fournisseur</h3>
-      <div class="filter-content">
-        <label class="checkbox-item">
+      <div v-show="expandedSections.options" class="filter-section-content">
+        <label class="filter-checkbox-label">
           <input 
             type="checkbox" 
-            v-model="filters.verifiedSupplier"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">Fournisseur vérifié</span>
+            v-model="freeShipping"
+            @change="emitFilters"
+          />
+          <span>Livraison gratuite</span>
         </label>
-        <label class="checkbox-item">
+        <label class="filter-checkbox-label">
           <input 
             type="checkbox" 
-            v-model="filters.experiencedSupplier"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">+ de 2 ans d'expérience</span>
+            v-model="inStock"
+            @change="emitFilters"
+          />
+          <span>En stock</span>
         </label>
-        <label class="checkbox-item">
+        <label class="filter-checkbox-label">
           <input 
             type="checkbox" 
-            v-model="filters.topSupplier"
-            @change="applyFilters"
-          >
-          <span class="checkmark"></span>
-          <span class="checkbox-label">Fournisseur top</span>
+            v-model="verifiedSupplier"
+            @change="emitFilters"
+          />
+          <span>Fournisseur vérifié</span>
         </label>
-      </div>
-    </div>
-
-    <!-- Quantité minimum -->
-    <div class="filter-section">
-      <h3 class="filter-title">Quantité minimum</h3>
-      <div class="filter-content">
-        <div class="quantity-filter">
-          <label class="radio-item">
-            <input 
-              type="radio" 
-              name="minQuantity" 
-              value="" 
-              v-model="filters.minQuantity"
-              @change="applyFilters"
-            >
-            <span class="radio-mark"></span>
-            <span class="radio-label">Toutes quantités</span>
-          </label>
-          <label class="radio-item">
-            <input 
-              type="radio" 
-              name="minQuantity" 
-              value="1" 
-              v-model="filters.minQuantity"
-              @change="applyFilters"
-            >
-            <span class="radio-mark"></span>
-            <span class="radio-label">1 pièce minimum</span>
-          </label>
-          <label class="radio-item">
-            <input 
-              type="radio" 
-              name="minQuantity" 
-              value="10" 
-              v-model="filters.minQuantity"
-              @change="applyFilters"
-            >
-            <span class="radio-mark"></span>
-            <span class="radio-label">10+ pièces</span>
-          </label>
-          <label class="radio-item">
-            <input 
-              type="radio" 
-              name="minQuantity" 
-              value="50" 
-              v-model="filters.minQuantity"
-              @change="applyFilters"
-            >
-            <span class="radio-mark"></span>
-            <span class="radio-label">50+ pièces</span>
-          </label>
-        </div>
-      </div>
-    </div>
-
-    <!-- Actions -->
-    <div class="filter-section">
-      <div class="filter-content">
-        <button class="reset-btn" @click="resetFilters">
-          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8"></path>
-            <path d="M21 3v5h-5"></path>
-            <path d="M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16"></path>
-            <path d="M3 21v-5h5"></path>
-          </svg>
-          Réinitialiser
-        </button>
-      </div>
-    </div>
-
-    <!-- Debug info (à supprimer en production) -->
-    <div v-if="showDebug" class="filter-section debug-section">
-      <h3 class="filter-title">Debug</h3>
-      <div class="filter-content">
-        <pre class="debug-info">{{ JSON.stringify(filters, null, 2) }}</pre>
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import { ref, reactive, onMounted, watch } from 'vue';
-import { useRoute, useRouter } from 'vue-router';
+import { ref, computed } from 'vue'
 
 export default {
   name: 'FilterSide',
-  
-  props: {
-    initialProducts: {
-      type: Array,
-      required: false,
-      default: () => []
-    },
-    showDebug: {
-      type: Boolean,
-      default: false
-    }
-  },
-  
   emits: ['filter-change'],
-  
   setup(props, { emit }) {
-    const route = useRoute();
-    const router = useRouter();
-    const isLoading = ref(false);
-    
-    // Données des filtres
-    const subcategories = ref([]);
-    const markets = ref([]);
+    // Année actuelle
+    const currentYear = new Date().getFullYear()
 
-    // Options de prix prédéfinies
+    // États des sections (ouvertes/fermées)
+    const expandedSections = ref({
+      subcategories: true,
+      markets: true,
+      price: true,
+      vehicleMake: true,
+      vehicleCondition: true,
+      fuelType: false,
+      transmission: false,
+      driveType: false,
+      engineBrand: false,
+      year: false,
+      payload: false,
+      gvw: false,
+      rating: false,
+      options: true
+    })
+
+    // Filtres - Sous-catégories
+    const subcategories = ref([
+      'Cargo Truck',
+      'Dump Truck',
+      'Tractor Truck',
+      'Concrete Mixer Truck',
+      'Tanker Truck',
+      'Refrigerated Truck',
+      'Flatbed Truck',
+      'Box Truck'
+    ])
+    const selectedSubcategories = ref([])
+
+    // Filtres - Marchés
+    const markets = ref([
+      'Abidjan',
+      'Bouaké',
+      'Daloa',
+      'Yamoussoukro',
+      'San-Pédro',
+      'Korhogo',
+      'Man',
+      'Gagnoa'
+    ])
+    const selectedMarkets = ref([])
+
+    // Filtres - Prix
+    const priceMin = ref(null)
+    const priceMax = ref(null)
     const pricePresets = ref([
-      { label: '< 10K', min: 0, max: 10000 },
-      { label: '10K - 50K', min: 10000, max: 50000 },
-      { label: '50K - 100K', min: 50000, max: 100000 },
-      { label: '100K - 500K', min: 100000, max: 500000 },
-      { label: '> 500K', min: 500000, max: null }
-    ]);
+      { label: '< 5M', min: null, max: 5000000 },
+      { label: '5M - 10M', min: 5000000, max: 10000000 },
+      { label: '10M - 20M', min: 10000000, max: 20000000 },
+      { label: '20M - 50M', min: 20000000, max: 50000000 },
+      { label: '> 50M', min: 50000000, max: null }
+    ])
 
-    // Options de note
-    const ratingOptions = ref([
-      { value: '', label: 'Toutes notes' },
-      { value: 4, label: '4+ étoiles' },
-      { value: 3, label: '3+ étoiles' },
-      { value: 2, label: '2+ étoiles' }
-    ]);
-    
-    // États des filtres
-    const filters = reactive({
-      subcategories: [],
-      markets: [], // Remplace locations
-      minPrice: '',
-      maxPrice: '',
-      wholesaleAvailable: false,
-      freeShipping: false,
-      inStock: false,
-      newProducts: false,
-      verifiedSupplier: false,
-      experiencedSupplier: false,
-      topSupplier: false,
-      minRating: '',
-      minQuantity: '',
-      sortBy: 'created_at',
-      sortOrder: 'DESC'
-    });
+    // Filtres - Marque de véhicule
+    const vehicleMakes = ref([
+      'Shacman',
+      'Sinotruk',
+      'FAW',
+      'Dongfeng',
+      'Foton',
+      'JAC',
+      'Howo',
+      'Beiben',
+      'Isuzu',
+      'Mercedes-Benz',
+      'Volvo',
+      'Scania',
+      'MAN',
+      'DAF',
+      'Iveco'
+    ])
+    const selectedVehicleMakes = ref([])
+    const vehicleMakeSearch = ref('')
 
-    // Debounce timer
-    let debounceTimer = null;
-    
-    // Extraire les filtres à partir des produits
-    const extractFiltersFromProducts = (products) => {
-      if (!products || products.length === 0) {
-        console.log('📊 Aucun produit pour extraire les filtres');
-        return;
+    // Filtres - État du véhicule
+    const vehicleConditions = ref([
+      { value: 'new', label: 'Neuf' },
+      { value: 'used', label: 'Occasion' },
+      { value: 'refurbished', label: 'Reconditionné' }
+    ])
+    const selectedVehicleConditions = ref([])
+
+    // Filtres - Type de carburant
+    const fuelTypes = ref([
+      'Diesel',
+      'Essence',
+      'Électrique',
+      'Hybride',
+      'GNV (Gaz Naturel)',
+      'GPL'
+    ])
+    const selectedFuelTypes = ref([])
+
+    // Filtres - Type de transmission
+    const transmissionTypes = ref([
+      'Manuelle',
+      'Automatique',
+      'Semi-automatique'
+    ])
+    const selectedTransmissionTypes = ref([])
+
+    // Filtres - Type de traction
+    const driveTypes = ref([
+      '4x2',
+      '4x4',
+      '6x2',
+      '6x4',
+      '6x6',
+      '8x4',
+      '8x8'
+    ])
+    const selectedDriveTypes = ref([])
+
+    // Filtres - Marque du moteur
+    const engineBrands = ref([
+      'Weichai',
+      'Cummins',
+      'Deutz',
+      'Yuchai',
+      'Sinotruk',
+      'Mercedes-Benz',
+      'Volvo',
+      'Scania',
+      'MAN',
+      'DAF'
+    ])
+    const selectedEngineBrands = ref([])
+
+    // Filtres - Année
+    const yearMin = ref(null)
+    const yearMax = ref(null)
+
+    // Filtres - Capacité de charge
+    const payloadMin = ref(null)
+    const payloadMax = ref(null)
+
+    // Filtres - GVW
+    const gvwMin = ref(null)
+    const gvwMax = ref(null)
+
+    // Filtres - Note minimum
+    const minRating = ref(null)
+
+    // Filtres - Options
+    const freeShipping = ref(false)
+    const inStock = ref(false)
+    const verifiedSupplier = ref(false)
+
+    // Computed - Marques filtrées par recherche
+    const filteredVehicleMakes = computed(() => {
+      if (!vehicleMakeSearch.value) {
+        return vehicleMakes.value
       }
-      
-      console.log('📊 Extraction des filtres depuis', products.length, 'produits');
-      console.log('📊 Premier produit exemple:', products[0]);
-      
-      // Extraire les sous-catégories avec les nouvelles variables
-      const subcatsMap = new Map();
-      products.forEach(product => {
-        // Utiliser les nouvelles variables demandées
-        let subcatId = product.sub_subcategory_id || product.subcategory_id || product.subcategoryId;
-        let subcatName = product.sub_subcategory_name || product.subcategory_name || product.subcategoryName;
-        
-        // Fallback sur d'autres propriétés si nécessaire
-        if (!subcatName && product.category) {
-          subcatName = product.category.sub_subcategory_name || product.category.subcategory_name || product.category.name;
-          subcatId = product.category.sub_subcategory_id || product.category.subcategory_id || product.category.id;
-        }
-        
-        if (subcatId && subcatName) {
-          const key = `${subcatId}`;
-          if (!subcatsMap.has(key)) {
-            subcatsMap.set(key, {
-              id: subcatId,
-              name: subcatName,
-              count: 1
-            });
-          } else {
-            subcatsMap.get(key).count++;
-          }
-        }
-      });
-      
-      subcategories.value = Array.from(subcatsMap.values());
-      console.log('📂 Sous-catégories extraites:', subcategories.value);
+      const search = vehicleMakeSearch.value.toLowerCase()
+      return vehicleMakes.value.filter(make => 
+        make.toLowerCase().includes(search)
+      )
+    })
 
-      // Extraire les marchés avec la variable boutique_market
-      const marketsMap = new Map();
-      products.forEach(product => {
-        // Utiliser la variable boutique_market demandée
-        const marketName = product.boutique_market || 
-                          product.market || 
-                          product.boutique?.market ||
-                          product.supplier?.market;
-        
-        if (marketName) {
-          const key = marketName.toLowerCase().trim();
-          if (!marketsMap.has(key)) {
-            marketsMap.set(key, {
-              id: key,
-              name: marketName,
-              count: 1
-            });
-          } else {
-            marketsMap.get(key).count++;
-          }
-        }
-      });
+    // Computed - Vérifier si des filtres sont actifs
+    const hasActiveFilters = computed(() => {
+      return selectedSubcategories.value.length > 0 ||
+             selectedMarkets.value.length > 0 ||
+             priceMin.value !== null ||
+             priceMax.value !== null ||
+             selectedVehicleMakes.value.length > 0 ||
+             selectedVehicleConditions.value.length > 0 ||
+             selectedFuelTypes.value.length > 0 ||
+             selectedTransmissionTypes.value.length > 0 ||
+             selectedDriveTypes.value.length > 0 ||
+             selectedEngineBrands.value.length > 0 ||
+             yearMin.value !== null ||
+             yearMax.value !== null ||
+             payloadMin.value !== null ||
+             payloadMax.value !== null ||
+             gvwMin.value !== null ||
+             gvwMax.value !== null ||
+             minRating.value !== null ||
+             freeShipping.value ||
+             inStock.value ||
+             verifiedSupplier.value
+    })
 
-      markets.value = Array.from(marketsMap.values());
-      console.log('🏪 Marchés extraits:', markets.value);
-    };
-    
-    // Initialiser les filtres à partir de l'URL
-    const initFiltersFromQuery = () => {
-      const query = route.query;
-      console.log('🔗 Initialisation depuis URL:', query);
-      
-      if (query.subcategories) {
-        filters.subcategories = query.subcategories.split(',').map(id => {
-          const parsed = parseInt(id);
-          return isNaN(parsed) ? id : parsed;
-        });
-      }
-      if (query.markets) {
-        filters.markets = query.markets.split(',');
-      }
-      if (query.minPrice) filters.minPrice = query.minPrice;
-      if (query.maxPrice) filters.maxPrice = query.maxPrice;
-      if (query.wholesaleAvailable) filters.wholesaleAvailable = query.wholesaleAvailable === 'true';
-      if (query.freeShipping) filters.freeShipping = query.freeShipping === 'true';
-      if (query.inStock) filters.inStock = query.inStock === 'true';
-      if (query.newProducts) filters.newProducts = query.newProducts === 'true';
-      if (query.verifiedSupplier) filters.verifiedSupplier = query.verifiedSupplier === 'true';
-      if (query.experiencedSupplier) filters.experiencedSupplier = query.experiencedSupplier === 'true';
-      if (query.topSupplier) filters.topSupplier = query.topSupplier === 'true';
-      if (query.minRating) filters.minRating = query.minRating;
-      if (query.minQuantity) filters.minQuantity = query.minQuantity;
-      if (query.sortBy) filters.sortBy = query.sortBy;
-      if (query.sortOrder) filters.sortOrder = query.sortOrder;
-      
-      console.log('🔗 Filtres initialisés:', filters);
-    };
+    // Méthodes
+    const toggleSection = (section) => {
+      expandedSections.value[section] = !expandedSections.value[section]
+    }
 
-    // Définir le tri par prix
-    const setSortPrice = (order) => {
-      console.log('💰 Définition tri prix:', order);
-      filters.sortBy = 'unit_price';
-      filters.sortOrder = order;
-      applyFilters();
-    };
+    const applyPricePreset = (preset) => {
+      priceMin.value = preset.min
+      priceMax.value = preset.max
+      emitFilters()
+    }
 
-    // Définir une plage de prix prédéfinie
-    const setPricePreset = (preset) => {
-      console.log('💰 Plage de prix prédéfinie:', preset);
-      filters.minPrice = preset.min || '';
-      filters.maxPrice = preset.max || '';
-      applyFilters();
-    };
-
-    // Vérifier si une plage de prix est active
     const isPricePresetActive = (preset) => {
-      const minMatch = (preset.min === null || preset.min === '') ? 
-        (filters.minPrice === '' || filters.minPrice === null) : 
-        Number(filters.minPrice) === Number(preset.min);
-        
-      const maxMatch = (preset.max === null || preset.max === '') ? 
-        (filters.maxPrice === '' || filters.maxPrice === null) : 
-        Number(filters.maxPrice) === Number(preset.max);
-        
-      return minMatch && maxMatch;
-    };
+      return priceMin.value === preset.min && priceMax.value === preset.max
+    }
 
-    // Appliquer les filtres avec debounce
-    const debounceApplyFilters = () => {
-      if (debounceTimer) {
-        clearTimeout(debounceTimer);
+    const emitFilters = () => {
+      const filters = {}
+
+      // Sous-catégories (comma-separated pour le backend)
+      if (selectedSubcategories.value.length > 0) {
+        filters.subcategories = selectedSubcategories.value.join(',')
       }
-      debounceTimer = setTimeout(() => {
-        applyFilters();
-      }, 500);
-    };
-    
-    // Appliquer les filtres
-    const applyFilters = () => {
-      console.log('🔄 Application des filtres...');
-      console.log('🔄 État actuel des filtres:', filters);
-      
-      const filterParams = {};
-      
-      // Sous-catégories
-      if (filters.subcategories.length > 0) {
-        filterParams.subcategories = filters.subcategories.join(',');
+
+      // Marchés (comma-separated pour le backend)
+      if (selectedMarkets.value.length > 0) {
+        filters.boutiqueMarket = selectedMarkets.value.join(',')
       }
-      
-      // Marchés (remplace locations)
-      if (filters.markets.length > 0) {
-        filterParams.markets = filters.markets.join(',');
+
+      // Prix
+      if (priceMin.value !== null && priceMin.value !== '') {
+        filters.minPrice = priceMin.value
       }
-      
-      // Prix - Convertir en nombres et valider
-      if (filters.minPrice && !isNaN(filters.minPrice)) {
-        filterParams.minPrice = Number(filters.minPrice);
+      if (priceMax.value !== null && priceMax.value !== '') {
+        filters.maxPrice = priceMax.value
       }
-      if (filters.maxPrice && !isNaN(filters.maxPrice)) {
-        filterParams.maxPrice = Number(filters.maxPrice);
+
+      // Marque de véhicule (comma-separated pour le backend)
+      if (selectedVehicleMakes.value.length > 0) {
+        filters.vehicleMake = selectedVehicleMakes.value.join(',')
       }
-      
-      // Options d'achat
-      if (filters.wholesaleAvailable) filterParams.wholesaleAvailable = true;
-      if (filters.freeShipping) filterParams.freeShipping = true;
-      if (filters.inStock) filterParams.inStock = true;
-      if (filters.newProducts) filterParams.newProducts = true;
-      
-      // Fournisseur
-      if (filters.verifiedSupplier) filterParams.verifiedSupplier = true;
-      if (filters.experiencedSupplier) filterParams.experiencedSupplier = true;
-      if (filters.topSupplier) filterParams.topSupplier = true;
-      
+
+      // État du véhicule (single value pour le backend)
+      if (selectedVehicleConditions.value.length > 0) {
+        filters.vehicleCondition = selectedVehicleConditions.value[0]
+      }
+
+      // Type de carburant (comma-separated pour le backend)
+      if (selectedFuelTypes.value.length > 0) {
+        filters.fuelType = selectedFuelTypes.value.join(',')
+      }
+
+      // Type de transmission (comma-separated pour le backend)
+      if (selectedTransmissionTypes.value.length > 0) {
+        filters.transmissionType = selectedTransmissionTypes.value.join(',')
+      }
+
+      // Type de traction (comma-separated pour le backend)
+      if (selectedDriveTypes.value.length > 0) {
+        filters.driveType = selectedDriveTypes.value.join(',')
+      }
+
+      // Marque du moteur (comma-separated pour le backend)
+      if (selectedEngineBrands.value.length > 0) {
+        filters.engineBrand = selectedEngineBrands.value.join(',')
+      }
+
+      // Année
+      if (yearMin.value !== null && yearMin.value !== '') {
+        filters.vehicleYearMin = yearMin.value
+      }
+      if (yearMax.value !== null && yearMax.value !== '') {
+        filters.vehicleYearMax = yearMax.value
+      }
+
+      // Capacité de charge
+      if (payloadMin.value !== null && payloadMin.value !== '') {
+        filters.payloadCapacityMin = payloadMin.value
+      }
+      if (payloadMax.value !== null && payloadMax.value !== '') {
+        filters.payloadCapacityMax = payloadMax.value
+      }
+
+      // GVW
+      if (gvwMin.value !== null && gvwMin.value !== '') {
+        filters.gvwMin = gvwMin.value
+      }
+      if (gvwMax.value !== null && gvwMax.value !== '') {
+        filters.gvwMax = gvwMax.value
+      }
+
       // Note minimum
-      if (filters.minRating && filters.minRating !== '') {
-        filterParams.minRating = Number(filters.minRating);
+      if (minRating.value !== null) {
+        filters.minRating = minRating.value
       }
-      
-      // Quantité minimum
-      if (filters.minQuantity && filters.minQuantity !== '') {
-        filterParams.minQuantity = Number(filters.minQuantity);
+
+      // Options
+      if (freeShipping.value) {
+        filters.freeShipping = true
       }
-      
-      // Tri
-      filterParams.sortBy = filters.sortBy;
-      filterParams.sortOrder = filters.sortOrder;
-      
-      console.log('🔄 Paramètres de filtres émis:', filterParams);
-      
-      emit('filter-change', filterParams);
-      updateURL(filterParams);
-    };
-    
-    // Mettre à jour l'URL avec les filtres
-    const updateURL = (filterParams) => {
-      const existingQuery = { ...route.query };
-      
-      // Supprimer les anciens paramètres de filtre
-      const filterKeys = ['subcategories', 'markets', 'minPrice', 'maxPrice', 'wholesaleAvailable', 
-                         'freeShipping', 'inStock', 'newProducts', 'verifiedSupplier', 
-                         'experiencedSupplier', 'topSupplier', 'minRating', 'minQuantity', 
-                         'sortBy', 'sortOrder'];
-      
-      filterKeys.forEach(key => {
-        delete existingQuery[key];
-      });
-      
-      // Ajouter les nouveaux paramètres (seulement ceux qui ont des valeurs)
-      Object.keys(filterParams).forEach(key => {
-        if (filterParams[key] !== undefined && filterParams[key] !== '' && filterParams[key] !== false) {
-          existingQuery[key] = filterParams[key];
-        }
-      });
-      
-      console.log('🔗 Mise à jour URL:', existingQuery);
-      
-      router.push({
-        path: route.path,
-        query: existingQuery
-      }).catch(err => {
-        // Ignorer les erreurs de navigation redondante
-        if (err.name !== 'NavigationDuplicated') {
-          console.error('Erreur navigation:', err);
-        }
-      });
-    };
-    
-    // Réinitialiser les filtres
-    const resetFilters = () => {
-      console.log('🔄 Réinitialisation des filtres');
-      
-      Object.keys(filters).forEach(key => {
-        if (Array.isArray(filters[key])) {
-          filters[key] = [];
-        } else if (typeof filters[key] === 'boolean') {
-          filters[key] = false;
-        } else {
-          filters[key] = '';
-        }
-      });
-      
-      filters.sortBy = 'created_at';
-      filters.sortOrder = 'DESC';
-      
-      applyFilters();
-    };
-    
-    // Surveiller les produits initiaux
-    watch(() => props.initialProducts, (newProducts) => {
-      console.log('👀 Nouveaux produits reçus:', newProducts?.length || 0);
-      if (newProducts && newProducts.length > 0) {
-        extractFiltersFromProducts(newProducts);
+      if (inStock.value) {
+        filters.stock = true
       }
-    }, { deep: true });
-    
-    // Lifecycle hooks
-    onMounted(() => {
-      console.log('🚀 Montage du composant FilterSide');
-      initFiltersFromQuery();
-      if (props.initialProducts && props.initialProducts.length > 0) {
-        extractFiltersFromProducts(props.initialProducts);
+      if (verifiedSupplier.value) {
+        filters.boutiqueVerified = true
       }
-    });
-    
+
+      console.log('🔄 Émission des filtres:', filters)
+      emit('filter-change', filters)
+    }
+
+    const resetAllFilters = () => {
+      // Réinitialiser tous les filtres
+      selectedSubcategories.value = []
+      selectedMarkets.value = []
+      priceMin.value = null
+      priceMax.value = null
+      selectedVehicleMakes.value = []
+      selectedVehicleConditions.value = []
+      selectedFuelTypes.value = []
+      selectedTransmissionTypes.value = []
+      selectedDriveTypes.value = []
+      selectedEngineBrands.value = []
+      yearMin.value = null
+      yearMax.value = null
+      payloadMin.value = null
+      payloadMax.value = null
+      gvwMin.value = null
+      gvwMax.value = null
+      minRating.value = null
+      freeShipping.value = false
+      inStock.value = false
+      verifiedSupplier.value = false
+      vehicleMakeSearch.value = ''
+
+      emitFilters()
+    }
+
     return {
-      isLoading,
+      // États
+      currentYear,
+      expandedSections,
+      
+      // Données des filtres
       subcategories,
-      markets, // Remplace locations
+      selectedSubcategories,
+      markets,
+      selectedMarkets,
+      priceMin,
+      priceMax,
       pricePresets,
-      ratingOptions,
-      filters,
-      setSortPrice,
-      setPricePreset,
+      vehicleMakes,
+      selectedVehicleMakes,
+      vehicleMakeSearch,
+      vehicleConditions,
+      selectedVehicleConditions,
+      fuelTypes,
+      selectedFuelTypes,
+      transmissionTypes,
+      selectedTransmissionTypes,
+      driveTypes,
+      selectedDriveTypes,
+      engineBrands,
+      selectedEngineBrands,
+      yearMin,
+      yearMax,
+      payloadMin,
+      payloadMax,
+      gvwMin,
+      gvwMax,
+      minRating,
+      freeShipping,
+      inStock,
+      verifiedSupplier,
+
+      // Computed
+      filteredVehicleMakes,
+      hasActiveFilters,
+
+      // Méthodes
+      toggleSection,
+      applyPricePreset,
       isPricePresetActive,
-      applyFilters,
-      debounceApplyFilters,
-      resetFilters
-    };
+      emitFilters,
+      resetAllFilters
+    }
   }
 }
 </script>
 
 <style scoped>
 .filter-sidebar {
-  width: 240px;
   background: #fff;
-  padding: 0;
   border-radius: 8px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+  padding: 16px;
+  width: 280px;
+  overflow-y: auto;
+  position: sticky;
+  top: 20px;
+}
+
+.filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #f0f0f0;
+}
+
+.filter-title {
+  font-size: 18px;
+  font-weight: 700;
+  color: #333;
+  margin: 0;
+}
+
+.reset-btn {
+  background: none;
+  border: none;
+  color: #ff6b35;
+  font-size: 13px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.reset-btn:hover {
+  color: #ff8c61;
 }
 
 .filter-section {
+  margin-bottom: 16px;
   border-bottom: 1px solid #f0f0f0;
-  padding: 16px 0;
+  padding-bottom: 12px;
 }
 
 .filter-section:last-child {
   border-bottom: none;
 }
 
-.filter-title {
+.filter-section-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  padding: 8px 0;
+  user-select: none;
+}
+
+.filter-section-header:hover {
+  background: #f9f9f9;
+}
+
+.filter-section-title {
   font-size: 14px;
   font-weight: 600;
   color: #333;
-  margin: 0 0 12px 16px;
+  margin: 0;
 }
 
-.filter-content {
-  padding: 0 16px;
-}
-
-/* Debug section */
-.debug-section {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 4px;
-  margin: 8px;
-}
-
-.debug-info {
-  font-size: 10px;
+.chevron-icon {
+  transition: transform 0.3s ease;
   color: #666;
-  background: #fff;
-  padding: 8px;
-  border-radius: 4px;
-  overflow-x: auto;
-  max-height: 200px;
 }
 
-/* Checkboxes et radios */
-.checkbox-item, .radio-item {
+.chevron-icon.rotated {
+  transform: rotate(180deg);
+}
+
+.filter-section-content {
+  padding: 12px 0 0 0;
+  animation: slideDown 0.3s ease;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.filter-checkbox-label {
   display: flex;
   align-items: center;
   padding: 6px 0;
   cursor: pointer;
   font-size: 13px;
-  transition: background-color 0.2s ease;
+  color: #555;
 }
 
-.checkbox-item:hover, .radio-item:hover {
-  background-color: #f8f9fa;
-  margin: 0 -8px;
-  padding-left: 8px;
-  padding-right: 8px;
-  border-radius: 4px;
+.filter-checkbox-label:hover {
+  color: #ff6b35;
 }
 
-.checkbox-item input[type="checkbox"],
-.radio-item input[type="radio"] {
-  display: none;
-}
-
-.checkmark, .radio-mark {
-  width: 14px;
-  height: 14px;
-  border: 1px solid #d9d9d9;
+.filter-checkbox-label input[type="checkbox"],
+.filter-checkbox-label input[type="radio"] {
   margin-right: 8px;
-  position: relative;
-  background: #fff;
-  transition: all 0.2s ease;
+  cursor: pointer;
+  width: 16px;
+  height: 16px;
 }
 
-.checkmark {
-  border-radius: 2px;
+.search-box {
+  margin-bottom: 12px;
 }
 
-.radio-mark {
-  border-radius: 50%;
+.search-input {
+  width: 100%;
+  padding: 8px 12px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
+  font-size: 13px;
 }
 
-.checkbox-item input[type="checkbox"]:checked + .checkmark {
-  background: #fe9700;
-  border-color: #fe9700;
+.search-input:focus {
+  outline: none;
+  border-color: #ff6b35;
 }
 
-.checkbox-item input[type="checkbox"]:checked + .checkmark::after {
-  content: '';
-  position: absolute;
-  left: 4px;
-  top: 1px;
-  width: 4px;
-  height: 8px;
-  border: solid white;
-  border-width: 0 2px 2px 0;
-  transform: rotate(45deg);
+.scrollable-list {
+  max-height: 200px;
+  overflow-y: auto;
 }
 
-.radio-item input[type="radio"]:checked + .radio-mark::after {
-  content: '';
-  position: absolute;
-  left: 3px;
-  top: 3px;
+.scrollable-list::-webkit-scrollbar {
   width: 6px;
-  height: 6px;
-  border-radius: 50%;
-  background: #fe9700;
 }
 
-.checkbox-label, .radio-label {
-  flex: 1;
-  color: #333;
+.scrollable-list::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
 }
 
-.checkbox-count {
-  font-size: 12px;
-  color: #999;
-  margin-left: 4px;
+.scrollable-list::-webkit-scrollbar-thumb {
+  background: #ccc;
+  border-radius: 3px;
+}
+
+.scrollable-list::-webkit-scrollbar-thumb:hover {
+  background: #999;
 }
 
 /* Prix */
-.price-sort-buttons {
-  display: flex;
-  gap: 4px;
-  margin-bottom: 12px;
-}
-
-.sort-btn {
-  flex: 1;
-  background: #f5f5f5;
-  border: 1px solid #e0e0e0;
-  border-radius: 4px;
-  padding: 6px 8px;
-  font-size: 11px;
-  cursor: pointer;
-  color: #666;
-  transition: all 0.2s ease;
-}
-
-.sort-btn:hover {
-  border-color: #fe9700;
-  color: #fe9700;
-}
-
-.sort-btn.active {
-  background: #fe9700;
-  border-color: #fe9700;
-  color: white;
-}
-
-.price-range {
-  margin-bottom: 12px;
-}
-
-.price-inputs {
-  display: inline-block;
-  align-items: center;
-  gap: 8px;
-}
-
-.price-input {
-  flex: 1;
-  color: black;
-  padding: 6px 8px;
-  margin-bottom: 0.75rem;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  font-size: 12px;
-  transition: border-color 0.2s ease;
-}
-
-.price-input:focus {
-  outline: none;
-  border-color: #fe9700;
-}
-
-.price-separator {
-  color: #999;
-  font-size: 12px;
-}
-
 .price-presets {
   display: flex;
   flex-wrap: wrap;
-  gap: 4px;
+  gap: 8px;
+  margin-bottom: 12px;
 }
 
-.preset-btn {
-  background: #f8f9fa;
-  border: 1px solid #e9ecef;
-  border-radius: 12px;
-  padding: 4px 8px;
-  font-size: 11px;
-  cursor: pointer;
-  color: #666;
-  transition: all 0.2s ease;
-}
-
-.preset-btn:hover {
-  border-color: #fe9700;
-  color: #fe9700;
-}
-
-.preset-btn.active {
-  background: #fe9700;
-  border-color: #fe9700;
-  color: white;
-}
-
-/* Rating */
-.rating-display {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex: 1;
-}
-
-.stars {
-  display: flex;
-  gap: 1px;
-}
-
-.star {
-  color: #e0e0e0;
+.price-preset-btn {
+  padding: 6px 12px;
+  border: 1px solid #d9d9d9;
+  background: #fff;
+  border-radius: 16px;
   font-size: 12px;
-}
-
-.star.filled {
-  color: #ffc107;
-}
-
-.rating-text {
-  font-size: 12px;
-  color: #666;
-}
-
-/* Actions */
-.reset-btn {
-  background: #f5f5f5;
-  color: #666;
-  border: 1px solid #e0e0e0;
-  padding: 8px 16px;
-  border-radius: 4px;
-  font-size: 13px;
   cursor: pointer;
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 6px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
 }
 
-.reset-btn:hover {
-  border-color: #ff4d4f;
-  color: #ff4d4f;
+.price-preset-btn:hover {
+  border-color: #ff6b35;
+  color: #ff6b35;
 }
 
-/* Loading et états vides */
-.loading-indicator {
+.price-preset-btn.active {
+  background: #ff6b35;
+  color: #fff;
+  border-color: #ff6b35;
+}
+
+.price-range,
+.year-range,
+.payload-range,
+.gvw-range {
   display: flex;
   align-items: center;
   gap: 8px;
+}
+
+.price-input-group,
+.year-input-group,
+.payload-input-group,
+.gvw-input-group {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.price-label,
+.year-label,
+.payload-label,
+.gvw-label {
+  font-size: 11px;
+  color: #666;
+  font-weight: 600;
+}
+
+.price-input,
+.year-input,
+.payload-input,
+.gvw-input {
+  width: 100%;
+  padding: 6px 8px;
+  border: 1px solid #d9d9d9;
+  border-radius: 4px;
   font-size: 13px;
+}
+
+.price-input:focus,
+.year-input:focus,
+.payload-input:focus,
+.gvw-input:focus {
+  outline: none;
+  border-color: #ff6b35;
+}
+
+.price-separator,
+.year-separator,
+.payload-separator,
+.gvw-separator {
   color: #999;
-  padding: 10px 0;
+  font-weight: 600;
+  margin-top: 16px;
 }
 
-.spinner {
-  width: 14px;
-  height: 14px;
-  border: 2px solid #f3f3f3;
-  border-top: 2px solid #fe9700;
-  border-radius: 50%;
-  animation: spin 0.8s linear infinite;
+/* Note */
+.rating-options {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
+.rating-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  padding: 6px 0;
 }
 
-.empty-state {
-  color: #999;
+.rating-option input[type="radio"] {
+  margin-right: 8px;
+  cursor: pointer;
+}
+
+.rating-stars {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.star {
+  color: #ddd;
+  font-size: 16px;
+}
+
+.star.filled {
+  color: #ffb800;
+}
+
+.rating-text {
   font-size: 13px;
-  padding: 10px 0;
-  text-align: center;
-  font-style: italic;
+  color: #555;
+  margin-left: 4px;
 }
 
-/* Mobile */
+/* Responsive */
 @media (max-width: 768px) {
   .filter-sidebar {
     width: 100%;
-    box-shadow: none;
-  }
-
-  .filter-section {
-    padding: 12px 0;
-  }
-
-  .filter-title {
-    margin: 0 0 10px 12px;
-    font-size: 15px;
-  }
-
-  .filter-content {
-    padding: 0 12px;
-  }
-
-  .checkbox-item, .radio-item {
-    padding: 8px 0;
-  }
-
-  .price-sort-buttons {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  .sort-btn {
-    padding: 8px;
-    font-size: 12px;
-  }
-
-  .reset-btn {
-    padding: 10px;
-    border-radius: 20px;
+    max-height: none;
+    position: static;
+    border-radius: 0;
+    padding: 12px;
   }
 }
 </style>
