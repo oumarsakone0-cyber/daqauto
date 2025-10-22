@@ -1368,11 +1368,11 @@ const cloudinaryConfig = {
 
 const steps = [
   { title: 'Informations' },
-  { title: 'Technical specification' },
-  { title: 'Techniques' },
-  { title: 'Prix & Stock' },
-  { title: 'Couleurs' },
-  { title: 'Images' }
+  { title: 'Overviews' },
+  { title: 'Technical Spécification' },
+  { title: 'Price & Stock' },
+  { title: 'Color' },
+  { title: 'Pictures' }
 ]
 
 //  Added new fields to productData

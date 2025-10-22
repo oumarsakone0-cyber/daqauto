@@ -23,6 +23,7 @@
 
     <!-- Container principal -->
     <div class="w-full max-w-[1650px] mx-auto px-2 sm:px-6 py-2 sm:py-2 relative z-10">
+        <Navbar/>
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 sm:mb-2">
         <Home class="w-4 h-4 sm:w-5 sm:h-5" />
@@ -536,6 +537,7 @@ import {
 import jsPDF from 'jspdf'
 import { productsApi } from '../../services/api'
 import logo from "../../assets/favicon.jpg"
+import Navbar from '../boutiques/Navbar.vue'
 
 const products = ref([])
 const selected_product_colors = ref([])

@@ -21,6 +21,7 @@ import BoutiqueAdminRegister from "../components/boutiques/Register.vue"
 import BoutiqueAdminDashboard from "../components/boutiques/DashboardContent.vue"
 import Boutiquee from "../components/boutiques/Boutique.vue"
 import Facture_management from "../components/views/facture_management.vue"
+import ParametreManagement from "../components/views/Parametre-management.vue"
 
 
 const routes = [
@@ -82,6 +83,15 @@ const routes = [
     path: "/dashboard-admin/factures",
     name: "dashboard-factures",
     component: Facture_management,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/dashboard-admin/parametres",
+    name: "dashboard-parametres",
+    component: ParametreManagement,
     meta: {
       requiresAuth: false,
       hideNavigation: false,

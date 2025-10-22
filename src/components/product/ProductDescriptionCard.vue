@@ -381,8 +381,8 @@
   const activeTab = ref(0)
   
   const productTabs = [
-    { label: "Spécifications" },
-    { label: "Autres Détails" },
+    { label: "Overviews" },
+    { label: "Technical Spécifications" },
     
     { label: "Avis" }
   ]

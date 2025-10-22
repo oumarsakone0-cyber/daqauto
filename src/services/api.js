@@ -192,11 +192,27 @@ export const productsApi = {
         brand,
         condition,
         location,
-        markets, // Nouveau: filtrage par marchés
-        wholesaleAvailable, // Nouveau: filtrage par disponibilité en gros
-        viewsSort, // Nouveau: tri par vues
-        inStock, // Nouveau: filtrage par stock disponible
-      } = options
+        markets,
+        wholesaleAvailable,
+        viewsSort,
+        inStock,
+        // <CHANGE> Ajouter les nouveaux paramètres de filtrage de camions
+        boutique_market,
+        vehicle_make,
+        vehicle_condition,
+        fuel_type,
+        transmission_type,
+        drive_type,
+        engine_brand,
+        vehicle_year_min,
+        vehicle_year_max,
+        payload_capacity_min,
+        payload_capacity_max,
+        gvw_min,
+        gvw_max,
+        stock,
+        boutique_verified,
+      } = options;
 
       // Construire les paramètres pour l'API
       const params = {
@@ -285,6 +301,66 @@ export const productsApi = {
       // Filtre par stock disponible
       if (inStock) {
         params.in_stock = "true"
+      }
+
+      if (boutique_market) {
+        params.boutique_market = boutique_market;
+      }
+
+      if (vehicle_make) {
+        params.vehicle_make = vehicle_make;
+      }
+
+      if (vehicle_condition) {
+        params.vehicle_condition = vehicle_condition;
+      }
+
+      if (fuel_type) {
+        params.fuel_type = fuel_type;
+      }
+
+      if (transmission_type) {
+        params.transmission_type = transmission_type;
+      }
+
+      if (drive_type) {
+        params.drive_type = drive_type;
+      }
+
+      if (engine_brand) {
+        params.engine_brand = engine_brand;
+      }
+
+      if (vehicle_year_min) {
+        params.vehicle_year_min = vehicle_year_min;
+      }
+
+      if (vehicle_year_max) {
+        params.vehicle_year_max = vehicle_year_max;
+      }
+
+      if (payload_capacity_min) {
+        params.payload_capacity_min = payload_capacity_min;
+      }
+
+      if (payload_capacity_max) {
+        params.payload_capacity_max = payload_capacity_max;
+      }
+
+      if (gvw_min) {
+        params.gvw_min = gvw_min;
+      }
+
+      if (gvw_max) {
+        params.gvw_max = gvw_max;
+      }
+
+      if (stock) {
+        params.stock = "true";
+      }
+
+      if (boutique_verified) {
+        params.boutique_verified = "true";
       }
 
       console.log("🔄 Récupération des produits pour résultats avec paramètres:", params)
