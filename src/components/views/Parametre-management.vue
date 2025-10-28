@@ -32,6 +32,7 @@
     <!-- Container responsive avec largeur adaptative -->
     <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
       <Navbar/>
+      
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
         <router-link to="/" class="hover:text-gray-700">
@@ -97,6 +98,7 @@
           <!-- Informations de la Boutique -->
           <div v-if="activeTab === 'shop'" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+              {{ currentUser }}
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Nom de la boutique *</label>
                 <input 
@@ -622,7 +624,7 @@
 </template>
 
 <script setup>
-import { ref, computed, watch } from 'vue'
+import { ref, computed, onMounted, watch } from 'vue'
 import Navbar from '../boutiques/Navbar.vue'
 
 // Icons components (vous pouvez utiliser lucide-vue-next ou heroicons)
@@ -638,6 +640,7 @@ const hasUnsavedChanges = ref(false)
 const showAddUserModal = ref(false)
 const showNotification = ref(false)
 const notificationMessage = ref('')
+const currentUser = ref(null)
 const twoFactorEnabled = ref(false)
 
 // Tabs configuration
@@ -740,6 +743,89 @@ const markAsChanged = () => {
   hasUnsavedChanges.value = true
 }
 
+const initializeUserData = () => {
+  try {
+    // ✅ Récupérer le token d'authentification
+    const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+    
+    if (!authToken) {
+      error.value = 'Token d\'authentification manquant. Veuillez vous reconnecter.'
+      // Rediriger vers la page de login
+      window.location.href = '/boutique-admin/login'
+      return
+    }
+
+    // ✅ Récupérer les données utilisateur
+    const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+    
+    if (!userData) {
+      error.value = 'Données utilisateur manquantes. Veuillez vous reconnecter.'
+      window.location.href = '/boutique-admin/login'
+      return
+    }
+
+    // ✅ Parser les données utilisateur
+    const user = JSON.parse(userData)
+    console.log('Données utilisateur récupérées:', user)
+    
+    // ✅ Valider la structure des données
+    if (!user.id || !user.email) {
+      error.value = 'Données utilisateur invalides. Veuillez vous reconnecter.'
+      window.location.href = '/boutique-admin/login'
+      return
+    }
+
+    // ✅ Assigner les données utilisateur
+    currentUser.value = {
+      id: user.id,
+      full_name: user.full_name,
+      email: user.email,
+      boutiques: user.boutiques || []
+    }
+
+    // ✅ Sélectionner la boutique active
+    if (user.boutiques && user.boutiques.length > 0) {
+      // Prendre la première boutique par défaut
+      currentBoutique.value = user.boutiques[0]
+      
+      // Ou récupérer la boutique sélectionnée précédemment
+      const savedBoutiqueId = localStorage.getItem('selectedBoutiqueId')
+      if (savedBoutiqueId) {
+        const savedBoutique = user.boutiques.find(b => b.id == savedBoutiqueId)
+        if (savedBoutique) {
+          currentBoutique.value = savedBoutique
+        }
+      }
+    } else {
+      error.value = 'Aucune boutique associée à ce compte.'
+      return
+    }
+
+    // ✅ Vérifier si "Se souvenir de moi" est activé
+    const rememberMe = localStorage.getItem('rememberMe') === 'true'
+    
+    console.log('✅ Données utilisateur chargées:', {
+      user: currentUser.value,
+      boutique: currentBoutique.value,
+      rememberMe,
+      token: authToken ? 'Présent' : 'Absent'
+    })
+
+  } catch (err) {
+    console.error('Erreur lors de la récupération des données utilisateur:', err)
+    error.value = 'Erreur lors du chargement des données utilisateur.'
+    
+    // Nettoyer le stockage en cas d'erreur
+    localStorage.removeItem('authToken')
+    localStorage.removeItem('user')
+    sessionStorage.removeItem('authToken')
+    sessionStorage.removeItem('user')
+    
+    // Rediriger vers la page de login
+    window.location.href = '/boutique-admin/login'
+  }
+}
+
 const saveAllSettings = () => {
   // Logique de sauvegarde
   console.log('Sauvegarde des paramètres...')
@@ -822,6 +908,22 @@ const formatDate = (dateString) => {
     day: 'numeric'
   })
 }
+
+onMounted(async () => {
+  
+    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+    console.log(token)
+    if (!token) {
+      router.replace('/boutique-admin/login')
+      return
+    }
+
+  document.addEventListener('click', handleClickOutside)
+
+  // Initialiser avec les données mock pour la démo
+  // products.value = mockProducts
+  initializeUserData()
+})
 </script>
 
 <style scoped>
