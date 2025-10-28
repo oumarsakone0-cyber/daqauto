@@ -98,7 +98,7 @@
           <!-- Informations de la Boutique -->
           <div v-if="activeTab === 'shop'" class="space-y-6">
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {{ currentUser }}
+              
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-2">Nom de la boutique *</label>
                 <input 
@@ -199,6 +199,7 @@
 
             <!-- Liste des utilisateurs -->
             <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
+              {{currentUser}}
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                   <tr>
@@ -210,6 +211,7 @@
                   </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
+
                   <tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
@@ -624,6 +626,7 @@
 </template>
 
 <script setup>
+import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import Navbar from '../boutiques/Navbar.vue'
 
@@ -639,9 +642,11 @@ const activeTab = ref('shop')
 const hasUnsavedChanges = ref(false)
 const showAddUserModal = ref(false)
 const showNotification = ref(false)
-const notificationMessage = ref('')
+const notificationMessage = ref('') 
 const currentUser = ref(null)
 const twoFactorEnabled = ref(false)
+const error = ref(null)
+const currentBoutique = ref(null)
 
 // Tabs configuration
 const tabs = [
@@ -662,6 +667,8 @@ const shopInfo = ref({
   description: 'Nous vendons des produits de qualité...',
   logo: null
 })
+
+const router = useRouter()
 
 // Utilisateurs
 const users = ref([
@@ -747,7 +754,7 @@ const initializeUserData = () => {
   try {
     // ✅ Récupérer le token d'authentification
     const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-    
+    console.log('Token d\'authentification récupéré:',)
     if (!authToken) {
       error.value = 'Token d\'authentification manquant. Veuillez vous reconnecter.'
       // Rediriger vers la page de login
@@ -766,7 +773,6 @@ const initializeUserData = () => {
 
     // ✅ Parser les données utilisateur
     const user = JSON.parse(userData)
-    console.log('Données utilisateur récupérées:', user)
     
     // ✅ Valider la structure des données
     if (!user.id || !user.email) {
@@ -917,8 +923,6 @@ onMounted(async () => {
       router.replace('/boutique-admin/login')
       return
     }
-
-  document.addEventListener('click', handleClickOutside)
 
   // Initialiser avec les données mock pour la démo
   // products.value = mockProducts
