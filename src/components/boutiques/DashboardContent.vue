@@ -398,7 +398,7 @@
                     </div>
                     <div class="min-w-0 flex-1">
                       <div class="text-xs sm:text-sm font-medium text-gray-900 truncate" :title="product.name">{{ product.name }}</div>
-                      <div class="text-xs text-gray-500 truncate">{{ product.sku }}</div>
+                      <div class="text-xs text-gray-500 truncate">{{ product.stock_number }}</div>
                       <!-- Informations supplémentaires visibles sur mobile -->
                       <div class="md:hidden mt-1">
                         <div class="text-xs text-gray-500">{{ product.category_name || 'Non catégorisé' }}</div>
