@@ -59,7 +59,7 @@
             :disabled="!hasUnsavedChanges"
             :class="[
               'w-full sm:w-auto inline-flex items-center justify-center px-4 py-2 rounded-lg shadow-sm text-sm font-medium',
-              hasUnsavedChanges ? 'btn-degrade-orange' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+              hasUnsavedChanges ? 'btn-degrade-orange' : 'btn-gray cursor-not-allowed'
             ]"
           >
             <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -82,7 +82,7 @@
                 'px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium flex items-center gap-2',
                 activeTab === tab.id 
                   ? 'shadow-lg btn-degrade-orange' 
-                  : 'btn-degrade-purple'
+                  : 'btn-gray'
               ]"
             >
               <component :is="tab.icon" class="w-4 h-4" />
@@ -100,7 +100,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nom de la boutique *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom de la boutique <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.name"
                   type="text" 
@@ -111,7 +111,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Email de contact *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Email de contact <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.email"
                   type="email" 
@@ -122,7 +122,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.phone"
                   type="tel" 
@@ -144,7 +144,7 @@
               </div>
 
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Adresse complète *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Adresse complète <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.address"
                   type="text" 
@@ -174,7 +174,7 @@
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
                     </svg>
                   </div>
-                  <button class="btn-degrade-purple px-4 py-2 rounded-lg text-sm">
+                  <button class="btn-degrade-orange px-4 py-2 rounded-lg text-sm">
                     Changer le logo
                   </button>
                 </div>
@@ -188,7 +188,7 @@
               <h3 class="text-lg font-semibold text-gray-900">Utilisateurs de la boutique</h3>
               <button 
                 @click="showAddUserModal = true"
-                class="btn-degrade-orange px-4 py-2 rounded-lg text-sm flex items-center gap-2"
+                class="btn-degrade-orange"
               >
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
@@ -215,7 +215,7 @@
                   <tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
-                        <div class="w-10 h-10 bg-gradient-to-br from-orange-200 to-orange-300 rounded-full flex items-center justify-center text-white font-semibold">
+                        <div class="w-10 h-10 bg-orange rounded-full flex items-center justify-center font-semibold">
                           {{ user.name.charAt(0).toUpperCase() }}
                         </div>
                         <div class="ml-4">
@@ -230,7 +230,7 @@
                       </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
-                      <span :class="user.active ? 'bg-green-100 text-green-800' : 'bg-gray-100 text-gray-800'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                      <span :class="user.active ? 'bg-green-100 green-color' : 'bg-gray-100 text-gray-800'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
                         {{ user.active ? 'Actif' : 'Inactif' }}
                       </span>
                     </td>
@@ -241,7 +241,7 @@
                       <button 
                         v-if="!user.isOwner"
                         @click="removeUser(user.id)" 
-                        class="text-red-600 hover:text-red-900"
+                        class="btn-deconnexion"
                       >
                         Supprimer
                       </button>
@@ -255,21 +255,21 @@
 
           <!-- Informations Bancaires -->
           <div v-if="activeTab === 'banking'" class="space-y-6">
-            <div class="bg-blue-50 border border-blue-200 rounded-lg p-4 mb-6">
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
               <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-blue-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 primary-color mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <h4 class="text-sm font-medium text-blue-900">Informations sécurisées</h4>
-                  <p class="text-sm text-blue-700 mt-1">Vos informations bancaires sont cryptées et sécurisées.</p>
+                  <h4 class="text-sm font-medium primary-color">Informations sécurisées</h4>
+                  <p class="text-xs primary-color mt-1">Vos informations bancaires sont cryptées et sécurisées.</p>
                 </div>
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nom du titulaire *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nom du titulaire <span class="error-color">*</span></label>
                 <input 
                   v-model="bankingInfo.accountHolder"
                   type="text" 
@@ -280,7 +280,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Banque *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Banque <span class="error-color">*</span></label>
                 <select v-model="bankingInfo.bankName" class="input-style" @change="markAsChanged">
                   <option value="">Sélectionnez une banque</option>
                   <option value="SGCI">Société Générale CI</option>
@@ -293,7 +293,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de compte *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de compte <span class="error-color">*</span></label>
                 <input 
                   v-model="bankingInfo.accountNumber"
                   type="text" 
@@ -342,62 +342,62 @@
 
           <!-- Sécurité -->
           <div v-if="activeTab === 'security'" class="space-y-6">
-            <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 mb-6">
+            <div class="bg-orange-50 border border-orange-200 rounded-lg p-4 mb-6">
               <div class="flex items-start gap-3">
-                <svg class="w-5 h-5 text-yellow-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <svg class="w-5 h-5 primary-color mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
                 <div>
-                  <h4 class="text-sm font-medium text-yellow-900">Sécurité du compte</h4>
-                  <p class="text-sm text-yellow-700 mt-1">Utilisez un mot de passe fort avec au moins 8 caractères.</p>
+                  <h4 class="text-sm font-medium primary-color">Sécurité du compte</h4>
+                  <p class="text-xs primary-color mt-1">Utilisez un mot de passe fort avec au moins 8 caractères.</p>
                 </div>
               </div>
             </div>
 
             <div class="max-w-2xl space-y-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe actuel *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe actuel <span class="error-color">*</span></label>
                 <input 
                   v-model="securityInfo.currentPassword"
                   type="password" 
                   class="input-style"
-                  placeholder="••••••••"
+                  placeholder="********"
                 >
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe <span class="error-color">*</span></label>
                 <input 
                   v-model="securityInfo.newPassword"
                   type="password" 
                   class="input-style"
-                  placeholder="••••••••"
+                  placeholder="********"
                 >
                 <div class="mt-2 space-y-1">
                   <div class="flex items-center gap-2 text-xs">
-                    <div :class="passwordStrength.length ? 'bg-green-500' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
-                    <span :class="passwordStrength.length ? 'text-green-600' : 'text-gray-500'">Au moins 8 caractères</span>
+                    <div :class="passwordStrength.length ? 'bg-step-color' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
+                    <span :class="passwordStrength.length ? 'green-color' : 'text-gray-500'">Au moins 8 caractères</span>
                   </div>
                   <div class="flex items-center gap-2 text-xs">
-                    <div :class="passwordStrength.uppercase ? 'bg-green-500' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
-                    <span :class="passwordStrength.uppercase ? 'text-green-600' : 'text-gray-500'">Une majuscule</span>
+                    <div :class="passwordStrength.uppercase ? 'bg-step-color' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
+                    <span :class="passwordStrength.uppercase ? 'green-color' : 'text-gray-500'">Une majuscule</span>
                   </div>
                   <div class="flex items-center gap-2 text-xs">
-                    <div :class="passwordStrength.number ? 'bg-green-500' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
-                    <span :class="passwordStrength.number ? 'text-green-600' : 'text-gray-500'">Un chiffre</span>
+                    <div :class="passwordStrength.number ? 'bg-step-color' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
+                    <span :class="passwordStrength.number ? 'green-color' : 'text-gray-500'">Un chiffre</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Confirmer le nouveau mot de passe *</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Confirmer le nouveau mot de passe <span class="error-color">*</span></label>
                 <input 
                   v-model="securityInfo.confirmPassword"
                   type="password" 
                   class="input-style"
-                  placeholder="••••••••"
+                  placeholder="********"
                 >
-                <p v-if="securityInfo.newPassword && securityInfo.confirmPassword && securityInfo.newPassword !== securityInfo.confirmPassword" class="mt-1 text-xs text-red-600">
+                <p v-if="securityInfo.newPassword && securityInfo.confirmPassword && securityInfo.newPassword !== securityInfo.confirmPassword" class="mt-1 text-xs error-color">
                   Les mots de passe ne correspondent pas
                 </p>
               </div>
@@ -407,7 +407,7 @@
                 :disabled="!canChangePassword"
                 :class="[
                   'px-6 py-2 rounded-lg text-sm font-medium',
-                  canChangePassword ? 'btn-degrade-orange' : 'bg-gray-300 text-gray-500 cursor-not-allowed'
+                  canChangePassword ? 'btn-degrade-orange' : 'btn-gray cursor-not-allowed'
                 ]"
               >
                 Changer le mot de passe
@@ -426,7 +426,7 @@
                   @click="toggle2FA"
                   :class="[
                     'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                    twoFactorEnabled ? 'bg-orange-500' : 'bg-gray-300'
+                    twoFactorEnabled ? 'bg-orange' : 'bg-gray-300'
                   ]"
                 >
                   <span 
@@ -455,7 +455,7 @@
                     @click="preferences.emailNotifications = !preferences.emailNotifications"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      preferences.emailNotifications ? 'bg-orange-500' : 'bg-gray-300'
+                      preferences.emailNotifications ? 'bg-orange' : 'bg-gray-300'
                     ]"
                   >
                     <span 
@@ -476,7 +476,7 @@
                     @click="preferences.smsNotifications = !preferences.smsNotifications"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      preferences.smsNotifications ? 'bg-orange-500' : 'bg-gray-300'
+                      preferences.smsNotifications ? 'bg-orange' : 'bg-gray-300'
                     ]"
                   >
                     <span 
@@ -497,7 +497,7 @@
                     @click="preferences.marketingNotifications = !preferences.marketingNotifications"
                     :class="[
                       'relative inline-flex h-6 w-11 items-center rounded-full transition-colors',
-                      preferences.marketingNotifications ? 'bg-orange-500' : 'bg-gray-300'
+                      preferences.marketingNotifications ? 'bg-orange' : 'bg-gray-300'
                     ]"
                   >
                     <span 
@@ -550,20 +550,16 @@
     </div>
 
     <!-- Modal Ajouter Utilisateur -->
-    <div v-if="showAddUserModal" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div v-if="showAddUserModal" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
         <div class="flex justify-between items-center mb-4">
           <h3 class="text-lg font-semibold text-gray-900">Ajouter un utilisateur</h3>
-          <button @click="showAddUserModal = false" class="text-gray-400 hover:text-gray-600">
-            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
-            </svg>
-          </button>
+          <XIcon @click="showAddUserModal = false" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
 
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet <span class="error-color">*</span></label>
             <input 
               v-model="newUser.name"
               type="text" 
@@ -573,7 +569,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Email *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="error-color">*</span></label>
             <input 
               v-model="newUser.email"
               type="email" 
@@ -583,7 +579,7 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Rôle *</label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Rôle <span class="error-color">*</span></label>
             <select v-model="newUser.role" class="input-style">
               <option value="admin">Administrateur</option>
               <option value="manager">Gestionnaire</option>
@@ -594,13 +590,13 @@
           <div class="flex gap-3 mt-6">
             <button 
               @click="showAddUserModal = false"
-              class="flex-1 px-4 py-2 border border-gray-300 rounded-lg text-sm font-medium text-gray-700 hover:bg-gray-50"
+              class="flex-1 btn-gray"
             >
               Annuler
             </button>
             <button 
               @click="addUser"
-              class="flex-1 btn-degrade-orange px-4 py-2 rounded-lg text-sm font-medium"
+              class="flex-1 btn-degrade-orange"
             >
               Ajouter
             </button>
@@ -615,7 +611,7 @@
       class="fixed bottom-4 right-4 bg-white shadow-lg rounded-lg p-4 border-l-4 border-green-500 z-50 animate-slide-in"
     >
       <div class="flex items-center gap-3">
-        <svg class="w-5 h-5 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+        <svg class="w-5 h-5 green-color" fill="none" stroke="currentColor" viewBox="0 0 24 24">
           <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
         </svg>
         <p class="text-sm font-medium text-gray-900">{{ notificationMessage }}</p>
@@ -629,6 +625,7 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, watch } from 'vue'
 import Navbar from '../boutiques/Navbar.vue'
+import { XIcon } from 'lucide-vue-next'
 
 // Icons components (vous pouvez utiliser lucide-vue-next ou heroicons)
 const StoreIcon = { template: '<svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4" /></svg>' }
@@ -931,7 +928,6 @@ onMounted(async () => {
 </script>
 
 <style scoped>
-/* Animations */
 @keyframes float-slow {
   0%, 100% { transform: translate(0, 0) scale(1); }
   50% { transform: translate(30px, -30px) scale(1.1); }
@@ -1058,57 +1054,6 @@ onMounted(async () => {
   animation: slide-in 0.3s ease-out;
 }
 
-/* Styles personnalisés */
-.input-style {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  transition: all 0.2s;
-}
-
-.input-style:focus {
-  outline: none;
-  border-color: #ff6b35;
-  box-shadow: 0 0 0 3px rgba(255, 107, 53, 0.1);
-}
-
-.btn-degrade-orange {
-  background: linear-gradient(135deg, #ff6b35 0%, #ff8c61 100%);
-  color: white;
-  transition: all 0.3s;
-}
-
-.btn-degrade-orange:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(255, 107, 53, 0.3);
-}
-
-.btn-degrade-purple {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  color: white;
-  transition: all 0.3s;
-}
-
-.btn-degrade-purple:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
-}
-
-.btn-degrade-ring {
-  background: white;
-  color: #ff6b35;
-  border: 2px solid #ff6b35;
-  transition: all 0.3s;
-}
-
-.btn-degrade-ring:hover {
-  background: #ff6b35;
-  color: white;
-}
-
-/* Responsive */
 @media (max-width: 640px) {
   .text-2xl {
     font-size: 1.5rem;

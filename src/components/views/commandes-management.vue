@@ -421,8 +421,7 @@
               <select 
                 v-model="itemsPerPage"
                 @change="handleItemsPerPageChange"
-                class="input-style p-0 m-0"
-                style="padding-left: 10px;"
+                class="bg-white border border-gray-300 text-gray-900 text-xs sm:text-sm rounded-lg focus:ring-orange-500 focus:border-orange-500 p-4 py-2 sm:p-3 w-15"
               >
                 <option value="10">10</option>
                 <option value="25">25</option>

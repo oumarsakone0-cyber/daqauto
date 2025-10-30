@@ -147,7 +147,7 @@
       <!-- Loading State -->
       <div v-if="loading" class="mb-6 sm:mb-8">
         <div class="bg-white rounded-lg p-6 sm:p-8 text-center shadow-lg">
-          <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-orange-500 border-t-transparent"></div>
+          <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 primary-color border-t-transparent"></div>
           <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Chargement des produits...</p>
         </div>
       </div>
@@ -312,7 +312,7 @@
                 'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium',
                 activeFilter === tab.value 
                   ? 'shadow-lg btn-degrade-orange' 
-                  : ' btn-degrade-purple'
+                  : ' btn-gray'
               ]"
             >
               <span class="hidden sm:inline">{{ tab.label }} ({{ filterCounts[tab.value] }})</span>
@@ -336,11 +336,11 @@
               >
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-              <button type="button" class="flex items-center gap-1 sm:gap-2 p-2  rounded-lg h btn-degrade-purple">
+              <button type="button" class="btn-gray">
                 <ArrowUpDownIcon class="w-4 h-4" />
                 <span class="hidden sm:inline text-sm">Trier</span>
               </button>
-              <button type="button" class="flex items-center gap-1 sm:gap-2 px-2 sm:px-4 py-2  rounded-lg  btn-degrade-purple">
+              <button type="button" class="btn-gray">
                 <FilterIcon class="w-4 h-4" />
                 <span class="hidden sm:inline text-sm">Filtrer</span>
               </button>
@@ -359,7 +359,7 @@
                     <input 
                       id="checkbox-all-search" 
                       type="checkbox" 
-                      class="w-4 h-4 text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                      class="checkbox-style"
                       :checked="selectedProducts.length === paginatedProducts.length && paginatedProducts.length > 0"
                       @change="handleSelectAll($event.target.checked)"
                     >
@@ -372,7 +372,6 @@
                 <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
                 <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
                 <th scope="col" class="hidden xl:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Couleur(s)</th>
-                <th scope="col" class="hidden xl:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Taille(s)</th>
                 <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performance</th>
                 <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -384,7 +383,7 @@
                     <input 
                       :id="`checkbox-table-search-${product.id}`" 
                       type="checkbox" 
-                      class="w-4 h-4 text-orange-500 bg-gray-100 border-gray-300 rounded focus:ring-orange-500 focus:ring-2"
+                      class="checkbox-style"
                       :checked="selectedProducts.includes(product.id)"
                       @change="handleSelectProduct(product.id, $event.target.checked)"
                     >
@@ -448,17 +447,6 @@
                     ></div>
                   </div>
                 </td>
-                <td class="hidden xl:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap" style="width: 80px;">
-                  <div class="flex flex-wrap gap-1" style="width: 80px;">
-                    <div 
-                      v-for="(size, index) in product.sizes" 
-                      :key="index" 
-                      class="w-auto min-w-[24px] sm:min-w-[28px] h-6 sm:h-7 px-1 sm:px-1.5 rounded-lg border border-gray-300 bg-gray-50 flex items-center justify-center text-xs font-medium text-gray-700 cursor-pointer hover:bg-gray-100 transition-colors"
-                    >
-                      {{ size }}
-                    </div>
-                  </div>
-                </td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
                     <div class="text-xs text-gray-500">Ventes: {{ product.sales_count || 0 }}</div>
@@ -469,9 +457,9 @@
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
                   <div class="flex items-center space-x-2 sm:space-x-3">
                     <!-- Bouton Booster -->
-                    <div v-if="hasActiveBoost(product.id)" class="text-xs text-green-600 font-medium mb-1">
-                      <div class="text-xs text-green-600" v-if="getBoostStatus(product.id) == 'active'">🚀 Activé</div>
-                      <div class="text-xs text-orange-500" v-if="getBoostStatus(product.id) == 'pending'">⏳ En attente</div>
+                    <div v-if="hasActiveBoost(product.id)" class="text-xs green-color font-medium mb-1">
+                      <div class="text-xs green-color" v-if="getBoostStatus(product.id) == 'active'">🚀 Activé</div>
+                      <div class="text-xs primary-color" v-if="getBoostStatus(product.id) == 'pending'">⏳ En attente</div>
                       <div class="text-xs text-gray-500" v-if="getBoostStatus(product.id) == 'active'" style="padding-top: 5px;">{{ getBoostExpiration(product.id) }}</div>
                     </div>
                     <button
@@ -484,30 +472,30 @@
                       <span class="sm:hidden">🚀</span>
                     </button>
                     
-                    <button @click="viewProduct(product)" class="text-xs sm:text-sm btn-degrade-ring">
+                    <button @click="viewProduct(product)" class="text-xs sm:text-sm submit-btn">
                       <span class="hidden sm:inline">Détails</span>
                       <EyeIcon class="w-4 h-4 sm:hidden" />
                     </button>
 
                     <div class="relative">
-                      <button @click="toggleActionMenu(product.id)" class="btn-degrade-purple">
+                      <button @click="toggleActionMenu(product.id)" class="btn-gray">
                         <MoreHorizontalIcon class="h-4 w-4 sm:h-5 sm:w-5" />
                       </button>
                       <div v-if="activeActionMenu === product.id" class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-20 p-2">
                         <div class="py-1" role="menu">
-                          <button @click="viewProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-degrade-purple">
+                          <button @click="viewProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-gray">
                             <EyeIcon class="w-4 h-4 mr-3" />
                             Voir détails
                           </button>
-                          <button @click="editProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-degrade-purple">
+                          <button @click="editProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-gray">
                             <EditIcon class="w-4 h-4 mr-3" />
                             Modifier
                           </button>
-                          <button @click="duplicateProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-degrade-purple">
+                          <button @click="duplicateProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-gray">
                             <CopyIcon class="w-4 h-4 mr-3" />
                             Dupliquer
                           </button>
-                          <button @click="deleteProductAction(product.id)" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 mb-2 btn-degrade-purple">
+                          <button @click="deleteProductAction(product.id)" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 mb-2 btn-gray">
                             <Trash2Icon class="w-4 h-4 mr-3" />
                             Supprimer
                           </button>
@@ -725,19 +713,19 @@
                 
                 <ul class="space-y-3 mb-6 text-sm text-gray-600">
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                     Jusqu'à 120 produits
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                     Toutes les fonctionnalités
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                     Rapport journalier
                   </li>
                   <li class="flex items-center">
-                    <CheckCircleIcon class="w-4 h-4 text-orange-500 mr-2" />
+                    <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
                     Support 24/7
                   </li>
                 </ul>
@@ -2406,102 +2394,6 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-/* Couleurs personnalisées */
-.btn-confirm-custom {
-  background: var(--primary-color, #fe7900);
-  color: #fff;
-  border: none;
-}
-.btn-confirm-custom:hover {
-  background: #ff5a01;
-}
-
-.btn-cancel-custom {
-  background: #e8e8e8;
-  color: #333;
-  border: none;
-}
-.btn-cancel-custom:hover {
-  background: #d1d5db;
-}
-.bg-degrade-orange {
- background: linear-gradient(160deg, black , #fc4618 , black);
-}
-
-.btn-degrade-ring{
-background: #18bd85;
-color: white ;
-transition: background 0.3s;
-}
-.btn-degrade-ring:hover{
-background:#10976a;
-border-color:#10976a;
-}
-
-.btn-deconnexion{
-  background: #ec0202;
-  color: white ;
-  transition: background 0.3s;
-  }
-  .btn-deconnexion:hover{
-  background:#ff0000;
-  border-color:#ff0000;
-  }
-
-.btn-degrade-purple {
-  background: #8f8f8f;
-  color: #fff;
-  transition: background 0.3s;
-}
-.btn-degrade-purple:hover {
-  background: #b7b6b6;
-  border-color: #b7b6b6;
-}
-
-.btn-premium-style{
-  background: white;
-  color: #fe7900;
-  transition: background 0.3s;
-}
-.btn-premium-style:hover{
-  background: #f8f7f7;
-  color: #fe7900;
-  border-color: white;
-}
-
-
-.bg-orange-500 {
-  background-color: #F65A11;
-}
-
-.hover\:bg-orange-600:hover {
-  background-color: #e54a0a;
-}
-
-.focus\:ring-orange-500:focus {
-  --tw-ring-color: rgba(246, 90, 17, 0.5);
-}
-
-.focus\:border-orange-500:focus {
-  border-color: #F65A11;
-}
-
-.text-orange-500 {
-  color: #F65A11;
-}
-
-.border-orange-500 {
-  border-color: #F65A11;
-}
-
-.hover\:bg-orange-50:hover {
-  background-color: rgba(246, 90, 17, 0.05);
-}
-
-.bg-orange-100 {
-  background-color: rgba(246, 90, 17, 0.1);
-}
-
 /* Transitions fluides */
 .transition-all {
   transition-property: all;
