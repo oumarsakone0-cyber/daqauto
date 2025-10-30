@@ -1957,7 +1957,8 @@ window.navbarDebug = {
 
 .search-image-btn {
   position: absolute;
-  right: 50px;
+  right: 15%;
+  top: 25%;
   background: none;
   border: none;
   cursor: pointer;
