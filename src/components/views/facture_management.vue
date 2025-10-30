@@ -1367,13 +1367,13 @@ const downloadPDF3 = async () => {
       page++
   }
 
-    pdf.save('facture.pdf')
+    // pdf.save('facture.pdf')
 
 
 
 
   // // 💾 Sauvegarde
-  // doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
+  doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
 }
 
 

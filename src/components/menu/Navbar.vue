@@ -2002,7 +2002,7 @@ window.navbarDebug = {
   gap: 6px;
   cursor: pointer;
   padding: 8px 22px;
-  border-radius: 8px;
+  border-radius: 25px;
   transition: all 0.2s ease;
   color: #333;
 }
@@ -3195,7 +3195,7 @@ window.navbarDebug = {
   padding: 6px 10px;
   background: #f8f8f8;
   border: 1px solid #ddd;
-  border-radius: 6px;
+  border-radius: 25px;
   cursor: pointer;
   user-select: none;
   transition: opacity 0.3s ease;

@@ -53,14 +53,14 @@
       </div>
   
       <div class="supplier-actions">
-        <button class="supplier-action-btn btn-outline" @click="$emit('contactSupplier')">
+        <button class="btn-outline" @click="$emit('contactSupplier')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
           </svg>
           Contacter
         </button>
-        <button class="supplier-action-btn btn-outline-with-background" @click="$emit('visitStore')">
+        <button class="btn-outline-with-background" @click="$emit('visitStore')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             <polyline points="9,22 9,12 15,12 15,22"/>
@@ -205,21 +205,8 @@ import { defineProps, defineEmits } from 'vue'
   .supplier-actions {
     display: flex;
     gap: 8px;
+    justify-content: space-evenly;
     margin-bottom: 16px;
-  }
-  
-  .supplier-action-btn {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 10px 16px;
-    border-radius: 6px;
-    font-size: 14px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: all 0.3s ease;
   }
   
   .supplier-guarantee {
@@ -228,7 +215,7 @@ import { defineProps, defineEmits } from 'vue'
     gap: 12px;
     padding: 12px;
     background: #f6ffed;
-    border-radius: 6px;
+    border-radius: 8px;
     border: 1px solid #b7eb8f;
   }
   

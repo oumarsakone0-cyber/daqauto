@@ -140,15 +140,21 @@ button:focus-visible {
 
 /* Les styles de bouton avec dégradé */
 
-.btn-degrade-orange {
+.btn-degrade-orange, .btn-gray,.btn-deconnexion,.btn-outline ,
+.btn-outline-with-background, .submit-btn,.btn-whatsapp{
   display: flex;
-  background: linear-gradient(90deg, #fe7900, #ff5a01);
-  color: white;
-  transition: background 0.3s;
   align-items: center;
   justify-content: center;
   gap: 8px;
-  padding: 0.7rem 0.75rem; 
+  padding: 0.5rem 0.75rem; 
+  border-radius: 25px;
+  transition: background 0.3s;
+}
+
+.btn-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+ 
 }
 .btn-degrade-orange:hover {
   background: linear-gradient(90deg, #ff5a01, #fe7900);
@@ -158,14 +164,8 @@ button:focus-visible {
 }
 
 .btn-gray {
-  display: flex;
   background: #8f8f8f;
   color: #fff;
-  transition: background 0.3s;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0.7rem 0.75rem; 
 }
 .btn-gray:hover {
   background: #b7b6b6;
@@ -175,32 +175,20 @@ button:focus-visible {
 .btn-deconnexion{
   background: #ec0202;
   color: white ;
-   transition: background 0.3s;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0.7rem 0.75rem; 
   }
   .btn-deconnexion:hover{
   background:#ff0000;
   border-color:#ff0000;
   }
 
-  .btn-outline ,
-  .btn-outline-with-background{
-    display: flex;
-    color: #fe7900;
+  /* .btn-outline ,
+  .btn-outline-with-background {
     background-color: none;
     text-decoration: none;
     font-weight: 500;
     font-size: 12px;
-    align-items: center;
-    justify-content: center;
-    transition: background 0.3s;
-    padding: 0.7rem 0.75rem; 
-    border-radius: 4px;
-    border: 1px solid #fe7900;
-  }
+    
+  } */
 
   .btn-outline:hover{
     color: white;
@@ -208,12 +196,17 @@ button:focus-visible {
   
   }
 .btn-outline{
-    color: oklch(72.013% 0.1894 50.337);
+    color: #fe7900;
     background-color: white;
+    border: 1px solid #fe7900;
+    font-weight: 500;
+    font-size: 12px;
   }
   .btn-outline-with-background{
     color: white;
     background-color: #fe7900;
+    font-weight: 500;
+    font-size: 12px;
   }
   .btn-outline-with-background:hover{
     color: #fe7900;
@@ -221,14 +214,8 @@ button:focus-visible {
     border: 1px solid #fe7900;
   }
   .submit-btn{
-    display: flex;
   background:#10B981 ;
   color: white;
-  transition: background 0.3s;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 0.7rem 0.75rem;
   }
   .submit-btn:hover{
     background-color: #039e6a;
@@ -236,16 +223,10 @@ button:focus-visible {
   }
 
   .btn-whatsapp{
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    padding: 0.7rem 0.75rem; 
-    border-radius: 8px;
     font-size: 14px;
     font-weight: 600;
     cursor: pointer;
-    transition: background 0.3s;
+    
     border: none;
     background: #25D366;
     color: white;
@@ -278,7 +259,7 @@ button:focus-visible {
   width: 100%;
   color: black ; 
   border: 1px solid #d1d5db; 
-  border-radius: 0.5rem; 
+  border-radius: 25px;
   padding: 0.7rem 0.75rem; 
   padding-left: 2.5rem;
   transition: border-color 0.2s, box-shadow 0.2s; 

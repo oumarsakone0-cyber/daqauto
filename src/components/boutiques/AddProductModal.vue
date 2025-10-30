@@ -68,15 +68,15 @@
               <div class="flex items-center">
                 <div 
                   :class="[
-                    'w-8 h-8 sm:w-10 sm:h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-all duration-200',
+                    'w-10 h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-all duration-200',
                     currentStep > index 
-                      ? 'bg-gradient-to-r from-green-400 to-green-500 text-white' 
+                      ? 'bg-step-color text-white shadow-lg' 
                       : currentStep === index 
-                        ? 'btn-degrade-orange shadow-lg' 
+                        ? 'bg-orange shadow-lg' 
                         : 'bg-gray-200 text-gray-500'
                   ]"
                 >
-                  <CheckIcon v-if="currentStep > index" class="w-4 h-4 sm:w-5 sm:h-5" />
+                  <CheckIcon v-if="currentStep > index" class="w-4 h-4 sm:w-4 sm:h-4" />
                   <span v-else>{{ index + 1 }}</span>
                 </div>
                 <span 
@@ -88,13 +88,7 @@
                   {{ step.title }}
                 </span>
               </div>
-              <div 
-                v-if="index < steps.length - 1"
-                :class="[
-                  'flex-1 h-0.5 mx-2 sm:mx-4 transition-colors',
-                  currentStep > index ? 'bg-green-400' : 'bg-gray-200'
-                ]"
-              ></div>
+             
             </div>
           </div>
         </div>
@@ -1255,26 +1249,26 @@
       </div>
 
       <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 sm:px-6 py-4 sm:rounded-b-2xl z-50">
-        <div class="flex flex-col sm:flex-row gap-3 sm:gap-0 sm:justify-between sm:items-center">
-          <div class="flex gap-2 sm:gap-3 order-2 sm:order-1">
+        <div class="flex flex-row gap-3 justify-between">
+          <div class="flex gap-2">
             <button
               v-if="currentStep > 0"
               type="button"
               @click.prevent="handlePreviousStep"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-gray"
+              class=" btn-gray"
             >
               <ChevronLeftIcon class="w-4 h-4 mr-2 inline" />
               Précédent
             </button>
           </div>
 
-          <div class="flex gap-2 sm:gap-3 order-1 sm:order-2">
+          <div class="flex gap-2  ">
             <button
               type="button"
               @click.prevent="handleCloseModal"
               :disabled="isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 text-sm font-medium  touch-manipulation btn-gray"
+              class="btn-gray"
             >
               Annuler
             </button>
@@ -1284,7 +1278,7 @@
               type="button"
               @click.prevent="handleNextStep"
               :disabled="!canProceedToNextStep || isLoading"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-transparent rounded-lg text-sm font-medium  focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-orange-400  disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation btn-degrade-orange"
+              class="btn-degrade-orange"
             >
               Suivant ({{ currentStep + 1 }}/{{ steps.length }})
               <ChevronRightIcon class="w-4 h-4 ml-2 inline" />
@@ -1295,7 +1289,7 @@
               type="button"
               @click.prevent="handleSubmit"
               :disabled="isLoading || !canSubmit"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-transparent rounded-lg text-sm font-medium text-white bg-gradient-to-r from-green-500 to-green-600 hover:from-green-600 hover:to-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 transition-all disabled:opacity-50 disabled:cursor-not-allowed active:scale-95 touch-manipulation"
+              class="submit-btn"
             >
               <div v-if="isLoading" class="flex items-center justify-center">
                 <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
