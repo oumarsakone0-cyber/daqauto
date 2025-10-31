@@ -15,12 +15,12 @@
               <svg class="w-4 h-4 mr-1" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v13m0-13V6a2 2 0 112 2h-2zm0 0V5.5A2.5 2.5 0 109.5 8H12zm-7 4h14M5 12a2 2 0 110-4h14a2 2 0 110 4M5 12v7a2 2 0 002 2h10a2 2 0 002-2v-7"></path>
               </svg>
-              Vente Flash
+              Flash Sale
             </div>
             <h1 class="text-4xl lg:text-5xl font-bold leading-tight">
-              Jusqu'à <span class="text-yellow-400">70%</span> de réduction
+              Until <span class="text-yellow-400">70%</span> off
             </h1>
-            <p class="text-lg text-blue-100">Offres limitées sur une sélection de produits premium</p>
+            <p class="text-lg text-blue-100">Limited offers on a selection of premium products</p>
           </div>
 
           <!-- Timer -->
@@ -30,14 +30,14 @@
                 <circle cx="12" cy="12" r="10"></circle>
                 <polyline points="12,6 12,12 16,14"></polyline>
               </svg>
-              <span class="text-sm font-medium">Offre expire dans :</span>
+              <span class="text-sm font-medium">Offer Expires In :</span>
             </div>
             <div class="flex gap-3">
               <div class="text-center">
                 <div class="bg-white text-orange-400 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
                   {{ timeLeft.hours.toString().padStart(2, '0') }}
                 </div>
-                <div class="text-xs mt-1 text-blue-200">Heures</div>
+                <div class="text-xs mt-1 text-blue-200">Hours</div>
               </div>
               <div class="text-center">
                 <div class="bg-white text-orange-400 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
@@ -49,13 +49,13 @@
                 <div class="bg-white text-orange-400 rounded-lg px-3 py-2 font-bold text-xl min-w-[50px]">
                   {{ timeLeft.seconds.toString().padStart(2, '0') }}
                 </div>
-                <div class="text-xs mt-1 text-blue-200">Secondes</div>
+                <div class="text-xs mt-1 text-blue-200">Seconds</div>
               </div>
             </div>
           </div>
          
             <button class="offer-button font-semibold px-8 py-3 rounded-full transition-colors flex items-center">
-              Voir toutes les offres
+              See all offers
               <svg class="w-4 h-4 ml-2 " fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <line x1="5" y1="12" x2="19" y2="12"></line>
                 <polyline points="12,5 19,12 12,19"></polyline>
@@ -66,7 +66,7 @@
 
         <!-- Section Centre - Produits Populaires -->
         <div class="space-y-4">
-          <h3 class="text-white text-xl font-semibold text-center mb-6">Produits Populaires</h3>
+          <h3 class="text-white text-xl font-semibold text-center mb-6">Featured Products</h3>
 
           <!-- État de chargement -->
           <div v-if="isLoading" class="space-y-4">
@@ -123,14 +123,14 @@
           <div v-else-if="error" class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-white/20 text-center">
             <p class="text-red-600 text-sm">{{ error }}</p>
             <button @click="fetchMostViewedProducts" class="mt-2 text-sm " style="background-color: lightgray; color: black;">
-              Réessayer
+              Try again
             </button>
           </div>
         </div>
 
         <!-- Section Droite - Produits en Vedette -->
         <div class="space-y-4">
-          <h3 class="text-white text-xl font-semibold text-center mb-6">Produits en Vedette</h3>
+          <h3 class="text-white text-xl font-semibold text-center mb-6">Featured Products</h3>
 
           <!-- État de chargement -->
           <div v-if="isLoading" class="space-y-4">
@@ -187,7 +187,7 @@
           <div v-else-if="error" class="bg-white/95 backdrop-blur-sm rounded-2xl p-4 border border-white/20 text-center">
             <p class="text-red-600 text-sm">{{ error }}</p>
             <button @click="fetchMostViewedProducts" class="mt-2" style="background-color: lightgray; color: black;">
-              Réessayer
+              Try again
             </button>
           </div>
         </div>
@@ -262,7 +262,7 @@ const fetchMostViewedProducts = async () => {
     }
   } catch (err) {
     console.error('Erreur lors du chargement des produits:', err)
-    error.value = 'Impossible de charger les produits'
+    error.value = 'Unable to load products'
     
     // Fallback vers des données par défaut en cas d'erreur
     popularProducts.value = [

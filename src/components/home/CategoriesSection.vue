@@ -2,8 +2,8 @@
     <!-- Version Mobile -->
     <section class="mobile-categories mobile-only">
       <div class="section-header-mobile">
-        <h2>Catégories</h2>
-        <a v-if="!categoriesError" href="#" class="btn-outline">Voir tout</a>
+        <h2>Categories</h2>
+        <a v-if="!categoriesError" href="#" class="btn-outline">See all</a>
       </div>
       
       <div class="categories-grid-mobile">
@@ -26,10 +26,10 @@
       <div class="section-content">
         <div class="amazon-title-block">
           <h2 class="amazon-title-left">
-            <span class="amazon-title-text">Catégories populaires</span>
+            <span class="amazon-title-text">Popular categories</span>
           </h2>
           <span class="amazon-title-right">
-            <a v-if="!categoriesError" href="#" class="btn-outline">Voir tout →</a>
+            <a v-if="!categoriesError" href="#" class="btn-outline">See all →</a>
           </span>
         </div>
         
@@ -46,7 +46,7 @@
           <!-- État d'erreur -->
           <div v-else-if="categoriesError" class="error-categories">
             <p class="error-message error-color">{{ categoriesError }}</p>
-            <button @click="loadCategories" class="btn-gray">Réessayer</button>
+            <button @click="loadCategories" class="btn-gray">Try again</button>
           </div>
   
           <!-- Catégories chargées -->
@@ -63,7 +63,7 @@
                     <img :src="category.image" :alt="`${category.name} image`" class="amazon-product-image primary-color" />
                     <div class="category-info">
                       <h3 class="category-name">{{ category.name }}</h3>
-                      <p class="category-count">{{ category.count }}+ produits</p>
+                      <p class="category-count">{{ category.count }}+ products</p>
                     </div>
                   </div>
                 </a>
@@ -156,7 +156,7 @@
         
         console.log('✅ Catégories chargées:', categories.value);
       } else {
-        throw new Error(response.message || 'Erreur lors du chargement des catégories');
+        throw new Error(response.message || 'Error to load categories');
       }
     } catch (error) {
       console.error('❌ Erreur lors du chargement des catégories:', error);

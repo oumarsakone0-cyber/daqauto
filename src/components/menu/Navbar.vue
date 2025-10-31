@@ -1136,7 +1136,7 @@ const loadCategories = async () => {
       
       console.log('✅ Catégories chargées:', categories.value);
     } else {
-      throw new Error(response.message || 'Erreur lors du chargement des catégories');
+      throw new Error(response.message || 'Error to load categories');
     }
   } catch (error) {
     console.error('❌ Erreur lors du chargement des catégories:', error);
@@ -1499,11 +1499,11 @@ const selectSuggestion = (suggestion) => {
 const handleLogout = async () => {
   try {
     await ElMessageBox.confirm(
-      'Voulez-vous vraiment vous déconnecter ?',
+      'Are you sure to logout ?',
       'Confirmation',
       {
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Annuler',
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
         type: 'warning',
       },
     )
@@ -1516,7 +1516,7 @@ const handleLogout = async () => {
 
     ElMessage({
       type: 'success',
-      message: 'Déconnexion réussie'
+      message: 'Succesfully disconnect'
     })
 
     window.location.href = '/'

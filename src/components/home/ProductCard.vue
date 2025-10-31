@@ -27,7 +27,7 @@
             <circle cx="5.5" cy="18.5" r="2.5"></circle>
             <circle cx="18.5" cy="18.5" r="2.5"></circle>
           </svg>
-          <span>Livraison gratuite</span>
+          <span>Free delivery</span>
         </div>
     
         <div class="alibaba-supplier-info">
@@ -137,7 +137,7 @@
               <circle cx="5.5" cy="18.5" r="2.5"></circle>
               <circle cx="18.5" cy="18.5" r="2.5"></circle>
             </svg>
-            <span>Livraison gratuite</span>
+            <span>Free delivery</span>
           </div>
     
           <div class="alibaba-company">

@@ -2,8 +2,8 @@
     <!-- Version Mobile -->
     <section class="mobile-recommended mobile-only">
       <div class="section-header-mobile">
-        <h2>🔥 Recommandés pour vous</h2>
-        <a v-if="!recommendedProductsError" href="#" class="btn-outline">Voir tout</a>
+        <h2>🔥 Recommanded for you</h2>
+        <a v-if="!recommendedProductsError" href="#" class="btn-outline">See all</a>
       </div>
       
       <div class="mobile-products-grid">
@@ -24,8 +24,8 @@
     <section class="more-products-section desktop-only">
       <div class="section-content">
         <div class="section-header">
-          <h2 class="section-title">🔥 Produits Recommandés</h2>
-          <a v-if="!recommendedProductsError" href="#" class="btn-outline">Voir tout →</a>
+          <h2 class="section-title">🔥 Recommended products</h2>
+          <a v-if="!recommendedProductsError" href="#" class="btn-outline">See all →</a>
         </div>
         
         <!-- État de chargement des produits recommandés -->
@@ -42,7 +42,7 @@
         <!-- État d'erreur des produits recommandés -->
         <div v-else-if="recommendedProductsError" class="error-products">
           <p class="error-message error-color">{{ recommendedProductsError }}</p>
-          <button @click="loadRecommendedProducts" class="btn-gray">Réessayer</button>
+          <button @click="loadRecommendedProducts" class="btn-gray">Try again</button>
         </div>
   
         <!-- Produits recommandés chargés -->
@@ -184,7 +184,7 @@
         
         console.log('✅ Produits recommandés chargés:', recommendedProducts.value);
       } else {
-        throw new Error(response.message || 'Erreur lors du chargement des produits recommandés');
+        throw new Error(response.message || 'Error to load Recommended products');
       }
     } catch (error) {
       console.error('❌ Erreur lors du chargement des produits recommandés:', error);

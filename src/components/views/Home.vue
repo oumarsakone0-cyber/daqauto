@@ -242,11 +242,11 @@ const activeTab = ref(0)
 
   // Liste des onglets de navigation
 const navTabs = [
-  { label: 'Accueil', route: '/', icon: HomeIcon },
-  { label: 'Recherche', route: '/search', icon: SearchIcon },
-  { label: 'Panier', route: '/cart', icon: ShoppingCartIcon },
+  { label: 'Home', route: '/', icon: HomeIcon },
+  { label: 'Search', route: '/search', icon: SearchIcon },
+  { label: 'Cart', route: '/cart', icon: ShoppingCartIcon },
   { label: 'Messages', route: chat, icon: MessageSquareText },
-  { label: 'Profil', route: '/profile', icon: User }
+  { label: 'Profile', route: '/profile', icon: User }
 ]
 
 
@@ -255,23 +255,23 @@ const navTabs = [
   // Avantages
   const benefits = ref([
   {
-    title: 'Livraison Rapide',
-    description: 'Livraison en 24/48h',
+    title: 'Quick Delivery',
+    description: '48 hour delivery.',
     icon: '<path d="M16 3h5v5M21 3l-7 7M4 20h5v-5M9 20l-7-7"></path>'
   },
   {
-    title: 'Assistance garantie',
-    description: 'Commandez en toute confiance',
+    title: 'ASSISTANCE AND WARRANTY',
+    description: 'Order with confidence!',
     icon: '<path d="M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path><path d="M3 3v5h5"></path>'
   },
   {
-    title: 'Paiement Sécurisé',
-    description: 'Transactions 100% sécurisées',
+    title: 'Secure payment',
+    description: '100% secure transactions',
     icon: '<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>'
   },
   {
-    title: 'Support 24/7',
-    description: 'Service client disponible',
+    title: '24/7 support',
+    description: 'Customer service available',
     icon: '<path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>'
   }
   ])
@@ -407,23 +407,23 @@ const navTabs = [
   const mobileServices = ref([
     {
       icon: '🚚',
-      title: 'Livraison Rapide',
-      description: 'Livraison en 24h dans Abidjan'
+      title: 'Quick Delivery',
+      description: '24h delivery in Abidjan'
     },
     {
       icon: '🔒',
-      title: 'Paiement Sécurisé',
-      description: 'Transactions 100% sécurisées'
+      title: 'Secure payment',
+      description: '100% secure transactions'
     },
     {
       icon: '💬',
-      title: 'Support 24/7',
-      description: 'Assistance client disponible'
+      title: '24/7 support',
+      description: 'Customer support available'
     },
     {
       icon: '↩️',
-      title: 'Retours Gratuits',
-      description: '30 jours pour changer d\'avis'
+      title: 'Free returns',
+      description: '14 days to change your mind'
     }
   ])
 
@@ -617,7 +617,7 @@ function handleNavClick(index) {
       
       console.log('✅ Catégories chargées:', categories.value);
     } else {
-      throw new Error(response.message || 'Erreur lors du chargement des catégories');
+      throw new Error(response.message || 'Error to load categories');
     }
   } catch (error) {
     console.error('❌ Erreur lors du chargement des catégories:', error);
@@ -627,7 +627,7 @@ function handleNavClick(index) {
     categories.value = [
       {
         id: 1,
-        name: 'Électronique',
+        name: 'Électronics',
         icon: '📱',
         image: 'https://images.unsplash.com/photo-1550009158-9ebf69173e03?w=200&h=200&fit=crop&auto=format',
         count: 15420,
@@ -676,7 +676,7 @@ function handleNavClick(index) {
       featuredSupplier.value = {
         id: response.data.boutique.id,
         name: response.data.boutique.name,
-        category: response.data.boutique.category || 'Boutique générale',
+        category: response.data.boutique.category || 'General Shop',
         experience: response.data.boutique.experience || Math.floor(Math.random() * 10) + 1,
         products_count: response.data.boutique.products_count || 0,
         logo: response.data.boutique.logo,
@@ -690,7 +690,7 @@ function handleNavClick(index) {
       
       console.log('✅ Fournisseur vedette chargé:', featuredSupplier.value);
     } else {
-      throw new Error(response.message || 'Erreur lors du chargement du fournisseur vedette');
+      throw new Error(response.message || 'Error to load supplier');
     }
   } catch (error) {
     console.error('❌ Erreur lors du chargement du fournisseur vedette:', error);
@@ -740,7 +740,7 @@ function handleNavClick(index) {
       
       console.log('✅ Produits recommandés chargés:', recommendedProducts.value);
     } else {
-      throw new Error(response.message || 'Erreur lors du chargement des produits recommandés');
+      throw new Error(response.message || 'Error to load products');
     }
   } catch (error) {
     console.error('❌ Erreur lors du chargement des produits recommandés:', error);
