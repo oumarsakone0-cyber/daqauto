@@ -6,8 +6,8 @@
           <div class="mx-auto h-16 w-45  rounded-full flex items-center justify-center mb-4 ">
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
           </div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Connexion</h2>
-          <p class="text-gray-600">Connectez-vous à votre compte DaqAuto</p>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Login</h2>
+          <p class="text-gray-600">Login to your DaqAuto account</p>
         </div>
   
         <!-- Form -->
@@ -36,7 +36,7 @@
             <!-- Login Field (Email or Phone) -->
             <div>
               <label for="login" class="block text-sm font-medium text-gray-700 mb-2">
-                Email ou numéro de téléphone
+                Email or phone number
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -66,14 +66,14 @@
                 {{ validationErrors.identifier }}
               </div>
               <div v-if="loginData.identifier" class="mt-1 text-xs text-gray-500">
-                Détecté comme : {{ loginType === 'email' ? 'Adresse email' : 'Numéro de téléphone' }}
+                Detect as : {{ loginType === 'email' ? 'Email address' : 'Phone number' }}
               </div>
             </div>
   
             <!-- Password Field -->
             <div>
               <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                Mot de passe
+                Password
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -91,12 +91,12 @@
                     'input-style',
                     validationErrors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   ]"
-                  placeholder="Votre mot de passe"
+                  placeholder="Your password"
                 >
                 <button
                   type="button"
                   @click="showPassword = !showPassword"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange"
+                  class="absolute inset-y-0 right-0 px-3 flex items-center bg-orange"
                 >
                   <svg v-if="showPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
@@ -122,7 +122,7 @@
                   class="checkbox-style"
                 >
                 <label for="remember-me" class="ml-2 block text-sm text-gray-700">
-                  Se souvenir de moi
+                  Remember me
                 </label>
               </div>
   
@@ -130,9 +130,9 @@
                 type="button"
                 @click="showForgotPassword = true"
 
-                class="text-sm font-medium bg-lightgray"
+                class="text-sm font-medium bg-lightgray px-2"
               >
-                Mot de passe oublié ?
+                Forgot password ?
               </button>
             </div>
   
@@ -146,7 +146,7 @@
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+              {{ isLoading ? 'Loging...' : 'Login' }}
             </button>
           </form>
   
@@ -195,13 +195,13 @@
           <!-- Sign Up Link -->
           <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
-              Vous n'avez pas de compte ?
+              Don't you have an account ?
               <button
                 type="button"
                 @click="handleSignup"
-                class="bg-lightgray"
+                class="bg-lightgray px-2"
               >
-                Créer un compte
+                Register
               </button>
             </p>
           </div>
@@ -209,11 +209,11 @@
       </div>
   
       <!-- Forgot Password Modal -->
-      <div v-if="showForgotPassword" class="fixed inset-0  bg-opacity-20 flex bg-gray-300 items-center justify-center z-50" @click="showForgotPassword = false">
+      <div v-if="showForgotPassword" class="fixed inset-0  bg-opacity-20 flex bg-black/80 items-center justify-center z-50" @click="showForgotPassword = false">
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4" @click.stop>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Réinitialiser le mot de passe</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Reset password</h3>
           <p class="text-sm text-gray-600 mb-4">
-            Entrez votre email ou numéro de téléphone pour recevoir un lien de réinitialisation.
+            Enter your email to receive a reset link.
           </p>
           <form @submit.prevent="handleForgotPassword">
            <div class="relative justify-center items-center">
@@ -229,7 +229,7 @@
               required
               style="padding-left: 2.5rem ;"
               class="mb-4 input-style"
-              placeholder="Email ou numéro de téléphone"
+              placeholder="Email or phone number"
             >
            </div> 
            
@@ -239,14 +239,14 @@
                 @click="showForgotPassword = false"
                 class="flex-1 bg-lightgray"
               >
-                Annuler
+                Cancel
               </button>
               <button
                 type="submit"
                 :disabled="isLoadingForgot"
                 class="flex-1 disabled:opacity-50 btn-degrade-orange"
               >
-                {{ isLoadingForgot ? 'Envoi...' : 'Envoyer' }}
+                {{ isLoadingForgot ? 'Sending...' : 'Send' }}
               </button>
             </div>
           </form>
@@ -309,21 +309,21 @@
     validationErrors.password = ''
   
     if (!loginData.identifier) {
-      validationErrors.identifier = 'Ce champ est requis'
+      validationErrors.identifier = 'Required'
       isValid = false
     } else {
       const cleanIdentifier = loginData.identifier.replace(/\s/g, '')
       if (!isValidEmail(loginData.identifier) && !isValidPhone(cleanIdentifier)) {
-        validationErrors.identifier = 'Veuillez entrer un email ou un numéro de téléphone valide'
+        validationErrors.identifier = 'Please enter a valid email or phone number'
         isValid = false
       }
     }
   
     if (!loginData.password) {
-      validationErrors.password = 'Le mot de passe est requis'
+      validationErrors.password = 'Password is required'
       isValid = false
-    } else if (loginData.password.length < 6) {
-      validationErrors.password = 'Le mot de passe doit contenir au moins 6 caractères'
+    } else if (loginData.password.length < 8) {
+      validationErrors.password = 'Password must contain at least 8 caracters'
       isValid = false
     }
   
@@ -365,11 +365,11 @@
           localStorage.removeItem('rememberMe')
         }
   
-        successMessage.value = 'Connexion réussie ! Redirection en cours...'
+        successMessage.value = 'Connected successful ! Redirecting...'
   
         ElNotification({
-          title: 'Succès',
-          message: 'Connexion réussie !',
+          title: 'Success',
+          message: 'Connected successful !',
           type: 'success'
         })
   
@@ -378,7 +378,7 @@
         }, 1500)
   
       } else {
-        error.value = response.error || 'Erreur de connexion. Veuillez réessayer.'
+        error.value = response.error || 'Error to login. Try again.'
         localStorage.removeItem('authToken')
         localStorage.removeItem('user')
   
@@ -391,7 +391,7 @@
   
     } catch (err) {
       console.error('Erreur de connexion:', err)
-      error.value = err.response?.data?.error || 'Erreur de connexion. Vérifiez vos identifiants.'
+      error.value = err.response?.data?.error || 'Error to login. Check your credentials.'
       localStorage.removeItem('authToken')
       localStorage.removeItem('user')
   
@@ -409,7 +409,7 @@ const handleForgotPassword = async () => {
   const email = forgotPasswordData.identifier?.trim()
 
   if (!email) {
-    error.value = 'Veuillez entrer votre email ou numéro de téléphone'
+    error.value = 'Please enter your email or phone number'
     return
   }
 
@@ -423,7 +423,7 @@ const handleForgotPassword = async () => {
     const response = await usersApi.forgotPassword(email)
 
     successMessage.value =
-      response.data?.message || 'Instructions de réinitialisation envoyées !'
+      response.data?.message || 'Reset instruction sent !'
 
     // Reset UI
     showForgotPassword.value = false
@@ -431,7 +431,7 @@ const handleForgotPassword = async () => {
 
     // Notification de succès
     ElNotification({
-      title: 'Succès',
+      title: 'Success',
       message: successMessage.value,
       type: 'success',
     })
@@ -441,7 +441,7 @@ const handleForgotPassword = async () => {
     error.value =
       err.response?.data?.error ||
       err.message ||
-      "Erreur lors de l'envoi. Veuillez réessayer."
+      "Error. Try again."
 
     ElNotification({
       title: 'Erreur',

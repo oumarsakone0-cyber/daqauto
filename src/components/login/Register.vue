@@ -6,8 +6,8 @@
           <div class="mx-auto h-16 w-38  rounded-full flex items-center justify-center mb-4 ">
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
           </div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Créer un compte</h2>
-          <p class="text-gray-600">Rejoignez Daq Auto dès aujourd'hui</p>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Create an account</h2>
+          <p class="text-gray-600">Join DaqAuto</p>
         </div>
   
         <!-- Form -->
@@ -31,30 +31,30 @@
               </svg>
               <div class="flex-1">
                 <h3 class="text-sm font-medium text-yellow-800 mb-2">
-                  Compte existant détecté
+                  Existing account detected
                 </h3>
                 <p class="text-sm text-yellow-700 mb-4">
-                  Un compte avec l'adresse email <strong>{{ registerData.email }}</strong> existe déjà. 
-                  Vous pouvez vous connecter ou réinitialiser votre mot de passe.
+                  An account with the <strong>{{ registerData.email }}</strong> email address already exists. 
+                  You can login or reset your password.
                 </p>
                 <div class="flex gap-x-2 text-xs">
                   <button
                     @click="goToLogin"
                     class="btn-degrade-orange flex-1"
                   >
-                    Se connecter
+                    Login
                   </button>
                   <button
                     @click="showForgotPassword = true"
                     class="bg-lightgray flex-1"
                   >
-                    Mot de passe oublié
+                    Forgot password ?
                   </button>
                   <button
                     @click="emailExists = false"
                     class="bg-lightgray flex-1"
                   >
-                    Modifier l'email
+                    Edit email
                   </button>
                 </div>
               </div>
@@ -104,7 +104,7 @@
           <form @submit.prevent="handleSubmit" class="space-y-6">
             <!-- Étape 1: Informations personnelles -->
             <div v-if="currentStep === 0" class="space-y-4">
-              <label class="flex text-sm font-medium text-gray-700 mb-2">Photo de profil</label>
+              <label class="flex text-sm font-medium text-gray-700 mb-2">Profile picture</label>
                <div v-if="registerData.profileImage.length > 0" class="mb-4" >
                   <div class="w-16 h-16 sm:w-18 sm:h-18  rounded-full flex items-center justify-center mx-auto mb-4 relative">
 
@@ -140,12 +140,12 @@
                   @click="$refs.fileInput.click()"
                   class="flex items-center justify-center text-sm font-medium mx-auto mb-4 btn-degrade-orange h-10"
                 >
-                  Parcourir les fichiers
+                  Import photo
                 </button>
               <!-- Nom complet -->
               <div>
                 <label for="fullName" class="block text-sm font-medium text-gray-700 mb-2 mt-3">
-                  Nom complet <span class="error-color">*</span>
+                  Full name <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -162,7 +162,7 @@
                       'input-style',
                       validationErrors.fullName ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="Votre nom complet"
+                    placeholder="Full name"
                   >
                 </div>
                 <div v-if="validationErrors.fullName" class="mt-1 text-sm error-color">
@@ -173,7 +173,7 @@
               <!-- Email -->
               <div>
                 <label for="email" class="block text-sm font-medium text-gray-700 mb-2">
-                  Adresse email <span class="error-color">*</span>
+                  Email address <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -202,7 +202,7 @@
               <!-- Numéro de téléphone -->
               <div>
                 <label for="phone" class="block text-sm font-medium text-gray-700 mb-2">
-                  Numéro de téléphone <span class="error-color">*</span>
+                  Phone number <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -310,7 +310,7 @@
               <!-- Mot de passe -->
               <div>
                 <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                  Mot de passe 
+                  Password 
                   <span class="error-color">*</span>
                 </label>
                 <div class="relative">
@@ -328,12 +328,12 @@
                       'input-style',
                       validationErrors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="Votre mot de passe"
+                    placeholder="Password"
                   >
                   <button
                     type="button"
                     @click="showPassword = !showPassword"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange"
+                    class="absolute inset-y-0 right-0 px-3 flex items-center bg-orange"
                   >
                     <svg v-if="showPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
@@ -369,7 +369,7 @@
               <!-- Confirmation du mot de passe -->
               <div>
                 <label for="confirmPassword" class="block text-sm font-medium text-gray-700 mb-2">
-                  Confirmer le mot de passe <span class="error-color">*</span>
+                  Confirm password <span class="error-color">*</span>
                 </label>
                 <div class="relative">
                   <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -391,7 +391,7 @@
                   <button
                     type="button"
                     @click="showConfirmPassword = !showConfirmPassword"
-                    class="absolute inset-y-0 right-0 pr-3 flex items-center bg-orange"
+                    class="absolute inset-y-0 right-0 px-3 flex items-center bg-orange"
                   >
                     <svg v-if="showConfirmPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                       <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
@@ -418,13 +418,13 @@
                     required
                   >
                   <label for="acceptTerms" class="ml-2 block text-sm text-gray-700">
-                    J'accepte les 
-                    <button type="button" @click="showTerms = true" class="font-medium bg-lightgray" >
-                      conditions d'utilisation
+                    I agree to the  
+                    <button type="button" @click="showTerms = true" class="font-medium bg-lightgray px-2" >
+                      Terms of Use
                     </button>
-                    et la 
-                    <button type="button" @click="showPrivacy = true" class="font-medium bg-lightgray" >
-                      politique de confidentialité
+                    and 
+                    <button type="button" @click="showPrivacy = true" class="font-medium bg-lightgray  px-2" >
+                      Privacy Policy
                     </button>
                   </label>
                 </div>
@@ -437,7 +437,7 @@
                     class="checkbox-style"
                   >
                   <label for="acceptMarketing" class="ml-2 block text-sm text-gray-700">
-                    J'accepte de recevoir des emails marketing et des notifications (optionnel)
+                    I agree to receive marketing email and notifications (optional)
                   </label>
                 </div>
               </div>
@@ -453,7 +453,7 @@
                 type="button"
                 class="btn-gray"
               >
-                Précédent
+                Previous
               </button>
               <div v-else></div>
   
@@ -468,7 +468,7 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isCheckingEmail ? 'Vérification...' : 'Suivant' }}
+                {{ isCheckingEmail ? 'Checking...' : 'Next' }}
               </button>
               <button 
                 v-else
@@ -481,7 +481,7 @@
                   <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                   <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
                 </svg>
-                {{ isLoading ? 'Création en cours...' : 'Créer mon compte' }}
+                {{ isLoading ? 'Creating' : 'Create' }}
               </button>
             </div>
           </form>
@@ -489,13 +489,13 @@
           <!-- Login Link -->
           <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
-              Vous avez déjà un compte ?
+              Do you already have an account ?
               <button
                 type="button"
                 @click="handleLogin"
-                class="bg-lightgray"
+                class="bg-lightgray px-2"
               >
-                Se connecter
+                Login
               </button>
             </p>
           </div>
@@ -505,9 +505,9 @@
       <!-- Forgot Password Modal -->
       <div v-if="showForgotPassword" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @click="showForgotPassword = false">
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4" @click.stop>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Réinitialiser le mot de passe</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Reset password</h3>
           <p class="text-sm text-gray-600 mb-4">
-            Entrez votre email pour recevoir un lien de réinitialisation.
+            Enter your email to receive a reset link..
           </p>
           <form @submit.prevent="handleForgotPassword">
             <input
@@ -523,14 +523,14 @@
                 @click="showForgotPassword = false"
                 class="flex-1 py-2 px-4 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50"
               >
-                Annuler
+                Cancel
               </button>
               <button
                 type="submit"
                 :disabled="isLoadingForgot"
                 class="flex-1 py-2 px-4 bg-orange text-white rounded-lg hover:bg-orange-600 disabled:opacity-50"
               >
-                {{ isLoadingForgot ? 'Envoi...' : 'Envoyer' }}
+                {{ isLoadingForgot ? 'Sending...' : 'Send' }}
               </button>
             </div>
           </form>
@@ -538,11 +538,11 @@
       </div>
   
       <!-- Terms Modal -->
-      <div v-if="showTerms" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @click="showTerms = false">
+      <div v-if="showTerms" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50 p-4" @click="showTerms = false">
         <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Conditions d'utilisation</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Terms of Use</h3>
           <div class="text-sm text-gray-600 space-y-4">
-            <p>En utilisant Daq Auto, vous acceptez les conditions suivantes...</p>
+            <p>By using Daq Auto, you agree to the following conditions...</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <!-- Ajoutez ici le contenu complet des conditions -->
           </div>
@@ -551,18 +551,18 @@
               @click="showTerms = false"
               class="px-4 py-2 bg-orange text-white rounded-lg hover:bg-orange-600"
             >
-              Fermer
+              Close
             </button>
           </div>
         </div>
       </div>
   
       <!-- Privacy Modal -->
-      <div v-if="showPrivacy" class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4" @click="showPrivacy = false">
+      <div v-if="showPrivacy" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50 p-4" @click="showPrivacy = false">
         <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Politique de confidentialité</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Privacy Policy</h3>
           <div class="text-sm text-gray-600 space-y-4">
-            <p>Votre confidentialité est importante pour nous...</p>
+            <p>Your privacy is important to us...</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <!-- Ajoutez ici le contenu complet de la politique -->
           </div>
@@ -571,7 +571,7 @@
               @click="showPrivacy = false"
               class="px-4 py-2 bg-orange text-white rounded-lg hover:bg-orange-600"
             >
-              Fermer
+              Close
             </button>
           </div>
         </div>
@@ -606,8 +606,8 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
   
   const steps = [
-    { title: 'Informations personnelles' },
-    { title: 'Sécurité et finalisation' }
+    { title: 'Personal informations ' },
+    { title: 'Security and finalization' }
   ]
   
   const registerData = reactive({
@@ -715,7 +715,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
       
     } catch (err) {
       console.error('Erreur lors de la vérification de l\'email:', err)
-      error.value = err.message || 'Erreur lors de la vérification de l\'email'
+      error.value = err.message || 'Error to check email'
       return false
     } finally {
       isCheckingEmail.value = false
@@ -761,7 +761,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
     }
     
     if (!forgotPasswordEmail.value) {
-      error.value = 'Veuillez entrer votre email'
+      error.value = 'Enter your email'
       return
     }
     
@@ -771,12 +771,12 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
       // Appel à l'API pour réinitialiser le mot de passe
       const response = await usersApi.forgotPassword(forgotPasswordEmail.value);
       
-      successMessage.value = response.data?.message || 'Instructions de réinitialisation envoyées !'
+      successMessage.value = response.data?.message || 'Reset instruction sent !'
       showForgotPassword.value = false
       forgotPasswordEmail.value = ''
       
     } catch (err) {
-      error.value = err.message || 'Erreur lors de l\'envoi. Veuillez réessayer.'
+      error.value = err.message || 'Error to send. Try again.'
     } finally {
       isLoadingForgot.value = false
     }
@@ -804,7 +804,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
       // Appel à l'API pour créer le compte
       const response = await usersApi.register_client(userData);
       
-      successMessage.value = response.message || 'Compte créé avec succès ! Redirection vers la connexion...'
+      successMessage.value = response.message || 'Create account success ! Redirecting to login...'
       
       // Rediriger vers la page de connexion après 2 secondes
       setTimeout(() => {
@@ -812,7 +812,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
       }, 2000)
       
     } catch (err) {
-      error.value = err.message || 'Erreur lors de la création du compte'
+      error.value = err.message || 'Error to create account'
     } finally {
       isLoading.value = false
     }
@@ -829,45 +829,45 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
     if (currentStep.value === 0) {
       // Validation étape 1
       if (!registerData.fullName.trim()) {
-        validationErrors.fullName = 'Le nom complet est requis'
+        validationErrors.fullName = 'Full name is required'
         isValid = false
       }
       
       if (!registerData.email.trim()) {
-        validationErrors.email = 'L\'email est requis'
+        validationErrors.email = 'Email is required'
         isValid = false
       } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(registerData.email)) {
-        validationErrors.email = 'Format d\'email invalide'
+        validationErrors.email = 'Invalid Format email '
         isValid = false
       }
       
       if (!registerData.phone.trim()) {
-        validationErrors.phone = 'Le numéro de téléphone est requis'
+        validationErrors.phone = 'Phone number is required'
         isValid = false
       } else if (!/^(\+?[1-9]\d{1,14}|0[1-9]\d{8,9})$/.test(registerData.phone.replace(/\s/g, ''))) {
-        validationErrors.phone = 'Format de téléphone invalide'
+        validationErrors.phone = 'invalid phone number'
         isValid = false
       }
     } else if (currentStep.value === 1) {
       // Validation étape 3
       if (!registerData.password) {
-        validationErrors.password = 'Le mot de passe est requis'
+        validationErrors.password = 'Password is required'
         isValid = false
       } else if (registerData.password.length < 8) {
-        validationErrors.password = 'Le mot de passe doit contenir au moins 8 caractères'
+        validationErrors.password = 'Password must contain at least 8 caracters'
         isValid = false
       }
       
       if (!registerData.confirmPassword) {
-        validationErrors.confirmPassword = 'La confirmation du mot de passe est requise'
+        validationErrors.confirmPassword = 'Confirm password is required'
         isValid = false
       } else if (registerData.password !== registerData.confirmPassword) {
-        validationErrors.confirmPassword = 'Les mots de passe ne correspondent pas'
+        validationErrors.confirmPassword = "Passwords don't match"
         isValid = false
       }
       
       if (!registerData.acceptTerms) {
-        error.value = 'Vous devez accepter les conditions d\'utilisation'
+        error.value = 'You must accept the Terms of Use'
         isValid = false
       }
     }
