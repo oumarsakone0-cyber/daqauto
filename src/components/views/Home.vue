@@ -96,11 +96,11 @@
         <div class="section-content">
           <div class="newsletter-container">
             <div class="newsletter-content">
-              <h2>📧 Restez informé de nos offres</h2>
-              <p>Inscrivez-vous à notre newsletter et recevez en exclusivité nos meilleures promotions</p>
+              <h2>📧 Stay informed about our offers</h2>
+              <p>Subscribe to our newsletter and receive exclusive access to our best promotions</p>
               <div class="newsletter-form ">
-                <input type="email" placeholder="Votre adresse email" v-model="newsletterEmail" class="input-style" />
-                <button @click="subscribeNewsletter" class="btn-degrade-orange">S'inscrire</button>
+                <input type="email" placeholder="Your email address" v-model="newsletterEmail" class="input-style" />
+                <button @click="subscribeNewsletter" class="btn-degrade-orange">Register</button>
               </div>
             </div>
           </div>

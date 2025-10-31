@@ -55,22 +55,13 @@
 
           <!-- Contact & Language -->
           <div class="col-span-2 md:col-span-1">
+            <div>
             <h4 class="text-base md:text-lg font-semibold mb-3 md:mb-4 ">Contact us</h4>
-            <div class="space-y-3 md:space-y-4 text-xs md:text-sm">
-              <div>
-                <p class="mb-2">Language:</p>
-                <select class="bg-gray-200 border border-gray-300 rounded px-2 py-1 md:px-3 text-gray-600 text-xs md:text-sm w-full active:border-amber-500 focus:border-black">
-                  <option>English</option>
-                  <option>Français</option>
-                </select>
-              </div>
-              <div>
-                <p class="mb-2">Country:</p>
-                <select class="bg-gray-200 border border-gray-300 rounded px-2 py-1 md:px-3 text-gray-600 text-xs md:text-sm w-full">
-                  <option>Côte d'Ivoire (USD $)</option>
-                </select>
-              </div>
-            </div>
+            <ul class="space-y-1 md:space-y-2 text-xs md:text-sm">
+              <li><a href="#" class="item-style">daqauto@gmail.com</a></li>
+              <li><a href="#" class="item-style">+86 132 2252 4588</a></li>
+            </ul>
+          </div>
           </div>
         </div>
       </div>

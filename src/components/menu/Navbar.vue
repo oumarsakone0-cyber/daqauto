@@ -26,7 +26,7 @@
           <div class="search-container">
             <input 
               type="text" 
-              placeholder="Trouvez tout ce que vous cherchez..." 
+              placeholder="Research..." 
               class="search-input"
               v-model="searchQuery"
               @input="handleSearchInput"
@@ -41,13 +41,13 @@
               <!-- Indicateur de chargement -->
               <div v-if="isSearching" class="search-loading">
                 <div class="loading-spinner-small"></div>
-                <span>Recherche en cours...</span>
+                <span>Researching</span>
               </div>
               
               <!-- Résultats de recherche -->
               <div v-else-if="searchResults.length > 0">
                 <div class="search-results-header">
-                  <span>{{ searchResults.length }} résultat(s) trouvé(s)</span>
+                  <span>{{ searchResults.length }} results Found</span>
                   <button @click="clearSearch" class="clear-search-btn">
                     <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <line x1="18" y1="6" x2="6" y2="18"/>
@@ -82,7 +82,7 @@
                 
                 <div class="search-results-footer">
                   <button @click="viewAllResults" class="view-all-btn">
-                    Voir tous les résultats pour "{{ searchQuery }}"
+                   See all results for "{{ searchQuery }}"
                   </button>
                 </div>
               </div>
@@ -93,14 +93,14 @@
                   <circle cx="11" cy="11" r="8"/>
                   <path d="m21 21-4.35-4.35"/>
                 </svg>
-                <span>Aucun résultat pour "{{ searchQuery }}"</span>
-                <small>Essayez avec d'autres mots-clés</small>
+                <span>No results for"{{ searchQuery }}"</span>
+                <small>Try again with other keywords</small>
               </div>
             </div>
             
             <!-- Search Suggestions (suggestions statiques quand pas de recherche active) -->
             <div v-else-if="showSuggestions && filteredSuggestions.length > 0" class="search-suggestions">
-              <div class="suggestions-header">Suggestions populaires</div>
+              <div class="suggestions-header">Popular suggestions</div>
               <div 
                 v-for="(suggestion, index) in filteredSuggestions" 
                 :key="index"
@@ -135,7 +135,7 @@
                 <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
                 <line x1="12" y1="18" x2="12" y2="18"/>
               </svg>
-              <span>Téléchargez l'application</span>
+              <span>Download the app</span>
             </div>
 
             <!-- Updated language selector with MyMemory translation logic -->
@@ -147,7 +147,7 @@
                 :class="{ 'opacity-50': isTranslating }"
               >
                 <img :src="currentLanguageDisplay.flag" :alt="currentLanguageDisplay.code" class="w-6 h-4" />
-                <span v-if="isTranslating">⏳ Traduction...</span>
+                <span v-if="isTranslating">⏳ Translating...</span>
                 <span v-else>{{ currentLanguageDisplay.label }}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="6,9 12,15 18,9"/>
@@ -156,10 +156,10 @@
 
               <!-- Translation Stats Tooltip -->
               <div v-if="showStats" class="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-3 text-xs text-gray-600 min-w-[200px] z-50">
-                <div class="font-semibold mb-1">📊 Statistiques Cache</div>
-                <div>✅ Traductions en cache: {{ cacheStats.cached }}</div>
-                <div>🔄 Nouvelles traductions: {{ cacheStats.new }}</div>
-                <div>💾 Économie d'API: {{ cacheStats.saved }}%</div>
+                <div class="font-semibold mb-1">📊 static Cache</div>
+                <div>✅ Cache translation: {{ cacheStats.cached }}</div>
+                <div>🔄 New translation: {{ cacheStats.new }}</div>
+                <div>💾 API saving: {{ cacheStats.saved }}%</div>
               </div>
 
               <!-- Original Dropdown (hidden when translating) -->
@@ -198,7 +198,7 @@
               <span v-if="currentUser && currentUser.email">
                  {{ currentUser.full_name }}
               </span>
-              <span @click="goToAuthentication" v-else>Se connecter / S'inscrire</span>
+              <span @click="goToAuthentication" v-else>Login / Register</span>
             </div>
             
             <div class="cart">
@@ -207,7 +207,7 @@
                 <circle cx="20" cy="21" r="1"/>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
-              <span>Panier</span>
+              <span>Cart</span>
               
               <div class="cart-badge"><div v-if="cartCount > 99" class="cart-count">99+</div>
                   <div v-else >
@@ -262,7 +262,7 @@
                 <circle cx="11" cy="11" r="8"/>
                 <path d="m21 21-4.35-4.35"/>
               </svg>
-              <span class="mobile-search-placeholder">Trouvez tout ce que vous cherchez...</span>
+              <span class="mobile-search-placeholder">Research...</span>
               <button class="mobile-camera-btn">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
@@ -288,7 +288,7 @@
             <line x1="3" y1="12" x2="21" y2="12"/>
             <line x1="3" y1="18" x2="21" y2="18"/>
           </svg>
-          <span>Toutes les catégories</span>
+          <span>All categories</span>
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="6,9 12,15 18,9"/>
           </svg>
@@ -299,7 +299,7 @@
               <!-- Indicateur de chargement -->
               <div v-if="isLoadingCategories" class="loading-categories">
                 <div class="loading-spinner"></div>
-                <span>Chargement des catégories...</span>
+                <span>Loading categories...</span>
               </div>
               
               <!-- Message d'erreur -->
@@ -310,7 +310,7 @@
                   <line x1="12" y1="16" x2="12.01" y2="16"></line>
                 </svg>
                 <span>{{ categoriesError }}</span>
-                <button @click="reloadCategories" class="retry-btn">Réessayer</button>
+                <button @click="reloadCategories" class="retry-btn">Try again</button>
               </div>
               
               <!-- Liste des catégories -->
@@ -365,7 +365,7 @@
                     <circle cx="8.5" cy="8.5" r="1.5"/>
                     <polyline points="21,15 16,10 5,21"/>
                   </svg>
-                  <p>{{ isLoadingCategories ? 'Chargement...' : 'Survolez une catégorie pour voir les sous-catégories' }}</p>
+                  <p>{{ isLoadingCategories ? 'Loading...' : 'Hover over a category to see the subcategories' }}</p>
                 </div>
               </div>
             </div>
@@ -373,12 +373,12 @@
         </div>
         
         <nav class="main-nav">
-          <a href="#" class="nav-item featured">Acheter sur Daq Auto (via notre service)</a>
-          <a href="#" class="nav-item hot">Meilleurs Deals</a>
-          <a href="#" class="nav-item">Suivre une commande</a>
-          <a href="#" class="nav-item">Faire une réclamation</a>
-          <a href="#" class="nav-item">Vendre sur Daq Auto</a>
-          <a href="/boutique-admin/dashboard" class="nav-item">Espace Fournisseur</a>
+          <a href="#" class="nav-item featured">Buy on Daq Auto (via our service)</a>
+          <a href="#" class="nav-item hot">Top Deals</a>
+          <a href="#" class="nav-item">Track an order</a>
+          <a href="#" class="nav-item">complain</a>
+          <a href="#" class="nav-item">Sell on Daq Auto</a>
+          <a href="/boutique-admin/dashboard" class="nav-item">Supplier area</a>
         </nav>
       </div>
     </div>
@@ -387,7 +387,7 @@
     <div v-if="showImageSearch" class="image-search-modal" @click.self="toggleImageSearch">
       <div class="modal-content">
         <div class="modal-header">
-          <h3>Recherche par image</h3>
+          <h3>Image Search</h3>
           <button @click="toggleImageSearch" class="close-btn">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"/>
@@ -396,7 +396,7 @@
           </button>
         </div>
         <div class="modal-body">
-          <p>Trouvez ce que vous aimez à prix avantageux sur AliExpress en utilisant la recherche par image</p>
+          <p>Find what you like at a great price on Daq Auto in using image seach</p>
           <div class="upload-area" @dragover.prevent @drop.prevent="handleDrop">
             <div class="upload-placeholder">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
@@ -404,19 +404,19 @@
                 <circle cx="8.5" cy="8.5" r="1.5"/>
                 <polyline points="21,15 16,10 5,21"/>
               </svg>
-              <p class="upload-text">Faites glisser une image ici</p>
-              <p class="upload-or">ou</p>
+              <p class="upload-text">Drag an image here</p>
+              <p class="upload-or">or</p>
               <button class="upload-btn">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
                   <polyline points="7,10 12,15 17,10"/>
                   <line x1="12" y1="15" x2="12" y2="3"/>
                 </svg>
-                Importez une photo
+                Import photo
               </button>
             </div>
           </div>
-          <p class="search-tip">*Pour une recherche rapide, appuyez sur CTRL + V pour coller une image dans la boîte de recherche</p>
+          <p class="search-tip"> For a quick search, press Ctrl + V to paste an image into the Research box</p>
         </div>
       </div>
     </div>
@@ -434,7 +434,7 @@
         <div class="mobile-search-input-container">
           <input 
             type="text" 
-            placeholder="Trouvez tout ce que vous cherchez..." 
+            placeholder="Research..." 
             
             class="input-style"
             v-model="searchQuery"
@@ -465,12 +465,12 @@
         <!-- Indicateur de chargement -->
         <div v-if="isSearching" class="mobile-search-loading">
           <div class="loading-spinner"></div>
-          <span>Recherche en cours...</span>
+          <span>Researching...</span>
         </div>
         
         <!-- Résultats de recherche -->
         <div v-else-if="searchResults.length > 0" class="mobile-search-results">
-          <div class="mobile-results-count">{{ searchResults.length }} résultat(s) trouvé(s)</div>
+          <div class="mobile-results-count">{{ searchResults.length }} resultats found</div>
           
           <div 
             v-for="result in searchResults" 
@@ -496,13 +496,13 @@
           </div>
           
           <button @click="viewAllResults" class="mobile-view-all-btn">
-            Voir tous les résultats pour "{{ searchQuery }}"
+            See all results for "{{ searchQuery }}"
           </button>
         </div>
         
         <!-- Suggestions de recherche -->
         <div v-else-if="filteredSuggestions.length > 0" class="mobile-suggestions">
-          <div class="mobile-suggestions-header">Suggestions populaires</div>
+          <div class="mobile-suggestions-header">Popular Suggestions</div>
           
           <div 
             v-for="(suggestion, index) in filteredSuggestions" 
@@ -524,13 +524,13 @@
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
           </svg>
-          <span>Aucun résultat pour "{{ searchQuery }}"</span>
-          <small>Essayez avec d'autres mots-clés</small>
+          <span>No results for "{{ searchQuery }}"</span>
+          <small>Try again with other keywords</small>
         </div>
         
         <!-- Recherches récentes et populaires -->
         <div v-else class="mobile-search-suggestions">
-          <div class="mobile-section-title">Recherches récentes</div>
+          <div class="mobile-section-title">Recent Research</div>
           <div class="mobile-recent-searches">
             <div v-for="(search, index) in recentSearches" :key="index" class="mobile-recent-item" @click="selectSuggestion(search)">
               <svg width="20" height="20"  viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
@@ -540,11 +540,11 @@
               <span>{{ search }}</span>
             </div>
             <div v-if="recentSearches.length === 0" class="mobile-no-recent">
-              <small>Aucune recherche récente</small>
+              <small>No recent Research</small>
             </div>
           </div>
           
-          <div class="mobile-section-title">Recherches populaires</div>
+          <div class="mobile-section-title">Popular searches</div>
           <div class="mobile-popular-searches">
             <div v-for="(search, index) in popularSearches" :key="index" class="mobile-popular-item" @click="selectSuggestion(search)">
               <span class="mobile-popular-rank">{{ index + 1 }}</span>
@@ -575,17 +575,17 @@
           </svg>
         </div>
         <div class="mobile-user-info">
-          <div class="mobile-user-welcome">Bienvenue</div>
+          <div class="mobile-user-welcome">Welcome</div>
           <div class="mobile-user-actions">
-            <a href="#" class="mobile-login-btn">Se connecter</a>
+            <a href="#" class="mobile-login-btn">Login</a>
             <span class="mobile-separator">/</span>
-            <a href="#" class="mobile-register-btn">S'inscrire</a>
+            <a href="#" class="mobile-register-btn">Register</a>
           </div>
         </div>
       </div>
       
       <div class="mobile-menu-categories">
-        <div class="mobile-menu-title">Catégories</div>
+        <div class="mobile-menu-title">Categories</div>
         
         <!-- Navigation par niveaux -->
         <div class="mobile-categories-navigation">
@@ -614,7 +614,7 @@
                 <line x1="19" y1="12" x2="5" y2="12"/>
                 <polyline points="12,19 5,12 12,5"/>
               </svg>
-              <span>Retour</span>
+              <span>Back</span>
             </div>
             
             <div class="mobile-subcategory-title">{{ selectedMobileCategory.name }}</div>
@@ -641,7 +641,7 @@
                 <line x1="19" y1="12" x2="5" y2="12"/>
                 <polyline points="12,19 5,12 12,5"/>
               </svg>
-              <span>Retour</span>
+              <span>Back</span>
             </div>
             
             <div class="mobile-subcategory-title">{{ selectedMobileSubcategory.name }}</div>
@@ -666,20 +666,20 @@
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             <polyline points="9,22 9,12 15,12 15,22"/>
           </svg>
-          <span>Accueil</span>
+          <span>Welcome</span>
         </router-link>
         <a href="#" class="mobile-menu-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
           </svg>
-          <span>Offres du jour</span>
+          <span>Offers of the day</span>
         </a>
         <a href="#" class="mobile-menu-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
-          <span>Mon compte</span>
+          <span>My Account</span>
         </a>
         <a href="#" class="mobile-menu-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -687,7 +687,7 @@
             <circle cx="20" cy="21" r="1"/>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
           </svg>
-          <span>Panier</span>
+          <span>Cart</span>
         </a>
         <a href="#" class="mobile-menu-link">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -703,7 +703,7 @@
             <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
             <line x1="12" y1="17" x2="12.01" y2="17"/>
           </svg>
-          <span>Aide</span>
+          <span>Help</span>
         </a>
       </div>
       
@@ -717,7 +717,7 @@
             <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
             <line x1="12" y1="18" x2="12" y2="18"/>
           </svg>
-          <span>Télécharger l'application</span>
+          <span>Download the app</span>
         </div>
       </div>
     </div>
