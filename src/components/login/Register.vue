@@ -328,7 +328,7 @@
                       'input-style',
                       validationErrors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="Password"
+                    placeholder="Your password"
                   >
                   <button
                     type="button"
@@ -386,7 +386,7 @@
                       'input-style',
                       validationErrors.confirmPassword ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="Confirmez votre mot de passe"
+                    placeholder="Confirm your pasword"
                   >
                   <button
                     type="button"
@@ -507,7 +507,7 @@
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4" @click.stop>
           <h3 class="text-lg font-medium text-gray-900 mb-4">Reset password</h3>
           <p class="text-sm text-gray-600 mb-4">
-            Enter your email to receive a reset link..
+            Enter your email to receive a reset link.
           </p>
           <form @submit.prevent="handleForgotPassword">
             <input
@@ -606,7 +606,7 @@ import { UploadIcon, User, XIcon } from 'lucide-vue-next'
   
   
   const steps = [
-    { title: 'Personal informations ' },
+    { title: 'Personal informations' },
     { title: 'Security and finalization' }
   ]
   

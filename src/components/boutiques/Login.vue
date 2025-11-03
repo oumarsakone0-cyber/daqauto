@@ -6,8 +6,8 @@
           <div class="mx-auto h-16 w-45  rounded-full flex items-center justify-center mb-4 ">
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
           </div>
-          <h2 class="text-3xl font-bold text-gray-900 mb-2">Connexion</h2>
-          <p class="text-gray-600">Connectez-vous à votre compte DaqAuto</p>
+          <h2 class="text-3xl font-bold text-gray-900 mb-2">Login</h2>
+          <p class="text-gray-600">Login to your DaqAuto account</p>
         </div>
   
         <!-- Form -->
@@ -36,7 +36,7 @@
             <!-- Login Field (Email or Phone) -->
             <div>
               <label for="login" class="block text-sm font-medium text-gray-700 mb-2">
-                Email ou numéro de téléphone
+                Email or phone number
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -64,14 +64,14 @@
                 {{ validationErrors.identifier }}
               </div>
               <div v-if="loginData.identifier" class="mt-1 text-xs text-gray-500">
-                Détecté comme : {{ loginType === 'email' ? 'Adresse email' : 'Numéro de téléphone' }}
+                Detect as  : {{ loginType === 'email' ? 'Adresse email' : 'Numéro de téléphone' }}
               </div>
             </div>
   
             <!-- Password Field -->
             <div>
               <label for="password" class="block text-sm font-medium text-gray-700 mb-2">
-                Mot de passe
+                Password
               </label>
               <div class="relative">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
@@ -88,12 +88,12 @@
                     'input-style',
                     validationErrors.password ? 'border-red-300 bg-red-50' : 'border-gray-300'
                   ]"
-                  placeholder="Votre mot de passe"
+                  placeholder="Your password"
                 >
                 <button
                   type="button"
                   @click="showPassword = !showPassword"
-                  class="absolute inset-y-0 right-0 pr-3 flex items-center bg-degrade-orange"
+                  class="absolute inset-y-0 right-0 px-3 flex items-center bg-orange"
                 >
                   <svg v-if="showPassword" class="h-5 w-5 text-white hover:text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13.875 18.825A10.05 10.05 0 0112 19c-4.478 0-8.268-2.943-9.543-7a9.97 9.97 0 011.563-3.029m5.858.908a3 3 0 114.243 4.243M9.878 9.878l4.242 4.242M9.878 9.878L3 3m6.878 6.878L21 21"/>
@@ -119,7 +119,7 @@
                   class="checkbox-style"
                 >
                 <label for="remember-me" class="ml-2 block text-sm text-gray-700">
-                  Se souvenir de moi
+                  Remember me
                 </label>
               </div>
   
@@ -127,9 +127,9 @@
                 type="button"
                 @click="showForgotPassword = true"
 
-                class="text-sm font-medium bg-lightgray"
+                class="text-sm font-medium bg-lightgray px-2"
               >
-                Mot de passe oublié ?
+                Forgot password ?
               </button>
             </div>
   
@@ -137,13 +137,13 @@
             <button
               type="submit"
               :disabled="isLoading"
-              class="shadow-sm text-sm   disabled:opacity-50 disabled:cursor-not-allowed btn-degrade-orange"
+              class="shadow-sm text-sm   disabled:opacity-50 disabled:cursor-not-allowed btn-degrade-orange px-4 py-4"
             >
               <svg v-if="isLoading" class="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
                 <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
                 <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
               </svg>
-              {{ isLoading ? 'Connexion en cours...' : 'Se connecter' }}
+              {{ isLoading ? 'Loging...' : 'Login' }}
             </button>
           </form>
   
@@ -192,13 +192,13 @@
           <!-- Sign Up Link -->
           <div class="mt-6 text-center">
             <p class="text-sm text-gray-600">
-              Vous n'avez pas de compte ?
+              Don't you have an account ?
               <button
                 type="button"
                 @click="handleSignup"
                 class="bg-lightgray"
               >
-                Créer un compte
+                Register
               </button>
             </p>
           </div>
@@ -208,9 +208,9 @@
       <!-- Forgot Password Modal -->
       <div v-if="showForgotPassword" class="fixed inset-0 bg-gray-300 bg-opacity-50 flex items-center justify-center z-50" @click="showForgotPassword = false">
         <div class="bg-white rounded-lg p-6 max-w-md w-full mx-4" @click.stop>
-          <h3 class="text-lg font-medium text-gray-900 mb-4">Réinitialiser le mot de passe</h3>
+          <h3 class="text-lg font-medium text-gray-900 mb-4">Reset password</h3>
           <p class="text-sm text-gray-600 mb-4">
-            Entrez votre email ou numéro de téléphone pour recevoir un lien de réinitialisation.
+            Enter your email to receive a reset link.
           </p>
           <form @submit.prevent="handleForgotPassword">
            <div class="relative justify-center items-center">
@@ -225,7 +225,7 @@
               type="text"
               required
               class="mb-4 input-style"
-              placeholder="Email ou numéro de téléphone"
+              placeholder="Email or phone number"
             >
            </div> 
            
@@ -235,14 +235,14 @@
                 @click="showForgotPassword = false"
                 class="flex-1 bg-lightgray"
               >
-                Annuler
+                Cancel
               </button>
               <button
                 type="submit"
                 :disabled="isLoadingForgot"
                 class="flex-1 disabled:opacity-50 btn-degrade-orange"
               >
-                {{ isLoadingForgot ? 'Envoi...' : 'Envoyer' }}
+                {{ isLoadingForgot ? 'Sending...' : 'Send' }}
               </button>
             </div>
           </form>
@@ -481,100 +481,4 @@ const handleForgotPassword = async () => {
   
   <style scoped>
 
-/* Couleurs personnalisées */
-.primary-color {
-  color: #fe7900;
-}
-.primary-background {
-  background-color: #fe7900;
-}
-.bg-degrade-orange {
-  background: linear-gradient(90deg, #fe7900, #ff5a01);
-
- 
-}
-.btn-degrade-orange {
-  display: flex;
-  width: 100%;
-  background: linear-gradient(90deg, #fe7900, #ff5a01);
-  color: white;
-  transition: background 0.3s;
-  font-weight: 500;
-  padding: 0.8rem 0.75rem; 
-  justify-content: center;
-}
-.btn-degrade-orange:hover {
-  background: linear-gradient(90deg, #ff5a01, #fe7900);
-  color: white;
-}
-
-.input-style {
-  width: 100%;
-  color: black ; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.5rem; 
-  padding: 0.80rem 0.75rem; 
-  padding-left: 2.5rem;
-  transition: border-color 0.2s, box-shadow 0.2s; 
-}
-.input-style:focus {
-  border-color: #fe7900; 
-  box-shadow: 0 0 0 0.5px #fe7900; 
-}
-.checkbox-style {
-  width: 1.25rem; 
-  height: 1.25rem; 
-  border: 1px solid #d1d5db; 
-  border-radius: 0.25rem; 
-  color: #fe7900 ;
-  transition: background-color 0.2s, border-color 0.2s; 
-}
-.checkbox-style:focus {
-  box-shadow: 0 0 0 1px #fe7900;
-  border-color: #fe7900; 
-}
-.checkbox-style:checked {
-  background-color: #fe7900; 
-  border-color: #fe7900; 
-}
-
-.bg-lightgray {
-  background-color: #F9FAFB;
-  color: #fe7900;
-  font-weight: 500;
-}
-.bg-lightgray:hover {
-  background-color: #F3F4F6;
-  border: 1px solid #D1D5DB;
-}
-
-
-
-  .bg-orange {
-    background-color: #F65A11;
-  }
-  
-  .text-orange {
-    color: #F65A11;
-  }
-  
-  .border-orange {
-    border-color: #F65A11;
-  }
-  
-  .hover\:bg-orange-600:hover {
-    background-color: #e54a0a;
-  }
-  
-  .hover\:text-orange-600:hover {
-    color: #e54a0a;
-  }
-  
-  .focus\:ring-orange:focus {
-    --tw-ring-color: rgba(246, 90, 17, 0.5);
-  }
-  
-  .focus\:border-orange:focus {
-    border-color: #F65A11;
-  }
   </style>

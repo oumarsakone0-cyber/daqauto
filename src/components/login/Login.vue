@@ -227,7 +227,6 @@
               v-model="forgotPasswordData.identifier"
               type="text"
               required
-              style="padding-left: 2.5rem ;"
               class="mb-4 input-style"
               placeholder="Email or phone number"
             >
@@ -485,6 +484,5 @@ const handleForgotPassword = async () => {
   
   <style scoped>
 
-/* Couleurs personnalisées */
   
   </style>
