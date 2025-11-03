@@ -279,14 +279,14 @@
             </div>
             <!-- Onglet Description du produit -->
             <div v-if="activeTab === 1" class="product-description">
-              <h2 class="section-title">Description du produit</h2>
+              <h2 class="section-title">Product Detail</h2>
               
               <div class="description-content">
                 <p>{{ product.description || 'Aucune description disponible.'}}</p>
               </div>
               <div v-if="product.description_plus" >
 
-                <h2 class="section-title">Plus de Description</h2>
+                <h2 class="section-title">Other Description</h2>
                 
                 <div class="description-content" v-html="product.description_plus">
                 </div>
@@ -295,7 +295,7 @@
             </div>
             <!-- Onglet Avis -->
             <div v-if="activeTab === 2" class="product-reviews">
-              <h2 class="section-title">Avis clients</h2>
+              <h2 class="section-title">Customer reviews</h2>
               
               <div class="reviews-summary">
                 <div class="rating-summary">
@@ -303,12 +303,12 @@
                   <div class="rating-stars">
                     <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= Math.floor(productRating) }">★</span>
                   </div>
-                  <div class="total-reviews">{{ product.views_count || 0 }} Vues</div>
+                  <div class="total-reviews">{{ product.views_count || 0 }} Views</div>
                 </div>
               </div>
               
               <div class="no-reviews">
-                <p>Aucun avis client pour le moment. Soyez le premier à laisser un avis !</p>
+                <p>No customer reviews yet. Be the first to leave a review.</p>
               </div>
               
               <div class="write-review">
@@ -317,7 +317,7 @@
                     <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                     <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                   </svg>
-                  Écrire un avis
+                  Write a review
                 </button>
               </div>
             </div>
@@ -384,7 +384,7 @@
     { label: "Overviews" },
     { label: "Technical Spécifications" },
     
-    { label: "Avis" }
+    { label: "Notice" }
   ]
   
   </script>

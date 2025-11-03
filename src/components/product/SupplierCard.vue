@@ -10,7 +10,7 @@
             
             <!-- <div v-if="supplier.verify"> -->
               <BadgeCheckIcon  class="h-4 w-4 blue-color inline-block " />
-              <span  class="badge blue-color">Vérifié</span>
+              <span  class="badge blue-color">Verified</span>
             <!-- </div> -->
             <!-- <div v-if="supplier.premium"> -->
               <img src="../../assets/premium.png" alt="Premium" class="inline-block h-4 w-4" />
@@ -31,7 +31,7 @@
       <div class="supplier-stats">
         <div class="stat-item">
           <div class="stat-value">{{ supplier.experience }}+</div>
-          <div class="stat-label">Années</div>
+          <div class="stat-label">Year</div>
         </div>
         <div class="stat-item">
           <div class="stat-value">{{ supplier.business_type }}</div>
@@ -58,14 +58,14 @@
             <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
             <polyline points="22,6 12,13 2,6"/>
           </svg>
-          Contacter
+          Contact
         </button>
         <button class="btn-outline-with-background" @click="$emit('visitStore')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             <polyline points="9,22 9,12 15,12 15,22"/>
           </svg>
-          Visiter la boutique
+          Visit Shop
         </button>
       </div>
   
@@ -76,8 +76,8 @@
           </svg>
         </div>
         <div class="guarantee-text">
-          <div class="guarantee-title">Fournisseur de confiance</div>
-          <div class="guarantee-desc">Protection acheteur garantie</div>
+          <div class="guarantee-title">Trusted Provider</div>
+          <div class="guarantee-desc">Buyer protection guaranteed</div>
         </div>
       </div>
     </div>

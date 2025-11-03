@@ -9,9 +9,9 @@
     <!-- Error state -->
     <div v-else-if="error" class="error-container">
       <div class="error-icon">⚠️</div>
-      <h2>Erreur de chargement</h2>
+      <h2>Error to load</h2>
       <p>{{ error }}</p>
-      <button @click="loadProduct" class="retry-btn">Réessayer</button>
+      <button @click="loadProduct" class="retry-btn">Try again</button>
     </div>
   
     <!-- Product content -->
@@ -193,19 +193,13 @@
           </svg>
           WhatsApp
         </button>
-        <button class="mobile-action-btn secondary" @click="openChat">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-          </svg>
-          Chat
-        </button>
         <button class="mobile-action-btn primary" @click="startOrder">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          Commander
+          Order now
           <span class="mobile-action-price">{{ formatFCFA(calculateTotalWithShipping()) }}</span>
         </button>
       </div>
@@ -402,7 +396,7 @@ import CartBadge from '../product/CartBadge.vue'
   const productColors = computed(() => {
     if (!product.value || !product.value.colors) return []
     return product.value.colors.map(color => ({
-      name: color.name || 'Couleur inconnue',
+      name: color.name || 'Unknown Color',
       hex_value: color.hex_value || '#000000'
     }))
   })
@@ -473,7 +467,7 @@ import CartBadge from '../product/CartBadge.vue'
       }
     } catch (err) {
       console.error('❌ Erreur lors du chargement du produit:', err)
-      error.value = err.message || 'Erreur lors du chargement du produit'
+      error.value = err.message || 'Error to load product'
     } finally {
       loading.value = false
     }
@@ -807,12 +801,12 @@ import CartBadge from '../product/CartBadge.vue'
     }
   
     closeShareModal()
-    displayNotification('success', 'Partagé avec succès', `Produit partagé sur ${platform}.`)
+    displayNotification('success', 'share successfully', `Produit shared on ${platform}.`)
   }
   
   const copyShareLink = () => {
     navigator.clipboard.writeText(shareLink.value).then(() => {
-      displayNotification('success', 'Lien copié', 'Lien du produit copié dans le presse-papiers.')
+      displayNotification('success', 'Link copied', 'Product link copied to clipboard.')
     })
   }
   
@@ -821,13 +815,13 @@ import CartBadge from '../product/CartBadge.vue'
     isFavorite.value = !isFavorite.value
     displayNotification(
       isFavorite.value ? 'success' : 'info',
-      isFavorite.value ? 'Ajouté aux favoris' : 'Retiré des favoris',
-      isFavorite.value ? 'Produit ajouté à vos favoris.' : 'Produit retiré de vos favoris.'
+      isFavorite.value ? 'Added to favorites' : 'Removed to favorites',
+      isFavorite.value ? 'Product addedà to your favorites.' : 'Produit remove to your favorites.'
     )
   }
   
   const addToCompare = () => {
-    displayNotification('success', 'Ajouté à la comparaison', 'Produit ajouté à la liste de comparaison.')
+    displayNotification('success', 'Added to benchmark', 'Produit addedon benchmark list.')
   }
   
   const contactWhatsApp = () => {
@@ -1039,12 +1033,12 @@ import CartBadge from '../product/CartBadge.vue'
     if (product.value && product.value.boutique_id) {
       router.push(`/boutique_resultat/${product.value.boutique_id}`)
     } else {
-      displayNotification('info', 'Visite de la boutique', `Redirection vers la boutique ${supplier.value.name}.`)
+      displayNotification('info', 'Visit store', `Redirect to the store ${supplier.value.name}.`)
     }
   }
   
   const contactSupplier = () => {
-    displayNotification('info', 'Formulaire de contact', 'Le formulaire de contact du fournisseur va s\'ouvrir.')
+    displayNotification('info', 'contact form', 'The contact form of supplier will open.')
   }
   
   const viewStoreProduct = (storeProduct) => {
@@ -1053,11 +1047,11 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   const viewCart = () => {
-    displayNotification('info', 'Voir le panier', 'Redirection vers le panier.')
+    displayNotification('info', 'See the cart', 'Redirect tothe cart.')
   }
   
   const openReviewForm = () => {
-    displayNotification('info', 'Écrire un avis', 'Le formulaire d\'avis va s\'ouvrir.')
+    displayNotification('info', 'Write a review', 'The review form will open.')
   }
   
   // Méthodes utilitaires

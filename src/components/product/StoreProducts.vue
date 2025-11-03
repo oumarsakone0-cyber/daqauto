@@ -1,6 +1,6 @@
 <template>
     <div class="store-products-section" v-if="storeProducts.length > 0">
-      <h2 class="section-title">Plus de cette boutique</h2>
+      <h2 class="section-title">More from this store</h2>
       
       <div class="store-products">
         <div class="store-product" v-for="(storeProduct, index) in storeProducts" :key="index" @click="$emit('viewStoreProduct', storeProduct)">

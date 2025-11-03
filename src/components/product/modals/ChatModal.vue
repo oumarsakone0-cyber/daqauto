@@ -10,7 +10,7 @@
               <h3 class="supplier-name">{{ supplier.name }}</h3>
               <div class="supplier-status">
                 <div class="status-indicator online"></div>
-                <span>En ligne</span>
+                <span>Online</span>
               </div>
             </div>
           </div>
@@ -43,7 +43,7 @@
               :value="newMessage"
               @input="$emit('updateMessage', $event.target.value)"
               @keypress.enter="handleSendMessage"
-              placeholder="Tapez votre message..."
+              placeholder="Your message..."
               class="message-input"
             />
             <button 
@@ -59,13 +59,13 @@
           </div>
           
           <div class="quick-actions">
-            <button class="quick-action" @click="sendQuickMessage('Bonjour, je suis intéressé par ce produit.')">
-              👋 Saluer
+            <button class="quick-action" @click="sendQuickMessage('Hello, I\'m interested in this product.')">
+              👋 Hello
             </button>
-            <button class="quick-action" @click="sendQuickMessage('Quel est le prix de gros ?')">
-              💰 Prix de gros
+            <button class="quick-action" @click="sendQuickMessage('What is the wholesale price ?')">
+              💰 wholesale price
             </button>
-            <button class="quick-action" @click="sendQuickMessage('Avez-vous ce produit en stock ?')">
+            <button class="quick-action" @click="sendQuickMessage('Do you have this product in stock ?')">
               📦 Stock
             </button>
           </div>

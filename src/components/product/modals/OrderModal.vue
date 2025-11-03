@@ -2,7 +2,7 @@
     <div class="order-modal-overlay" @click.self="$emit('close')">
       <div class="order-modal">
         <div class="modal-header">
-          <h3 class="modal-title">Confirmer votre commande</h3>
+          <h3 class="modal-title">Confirm your order</h3>
           
           <XIcon @click="$emit('close')" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
@@ -41,11 +41,11 @@
                   <div v-for="(variant, index) in selectedVariants" :key="index" class="variant-item">
                     <span v-if="variant.colorIndex !== null">{{ getColorName(variant.colorIndex) }}</span>
                     <span v-if="variant.sizeIndex !== null">{{ getSizeName(variant.sizeIndex) }}</span>
-                    <span>Qté: {{ variant.quantity }}</span>
+                    <span>Qty: {{ variant.quantity }}</span>
                   </div>
                 </div>
                 <div v-else class="single-quantity">
-                  Quantité: {{ quantity }}
+                  Quantity: {{ quantity }}
                 </div>
               </div>
               <div class="product-price primary-color">
@@ -57,22 +57,22 @@
           <!-- Order Form -->
           <form @submit.prevent="handleSubmitOrder" class="order-form">
             <div class="form-section">
-              <h4 class="section-title">Informations de contact</h4>
+              <h4 class="section-title">Contact informations</h4>
               
               <div class="form-group">
-                <label for="customerName" class="form-label">Nom complet (optionnel)</label>
+                <label for="customerName" class="form-label">Full Name (optional)</label>
                 <input 
                   type="text" 
                   id="customerName"
                   :value="orderForm.customerName"
                   @input="$emit('updateForm', 'customerName', $event.target.value)"
                   class="input-style"
-                  placeholder="Votre nom complet"
+                  placeholder="Your full name"
                 />
               </div>
               
               <div class="form-group">
-                <label for="customerContact" class="form-label">Numéro de téléphone <span class="error-color">*</span></label>
+                <label for="customerContact" class="form-label">Phone Number <span class="error-color">*</span></label>
                 <input 
                   type="tel" 
                   id="customerContact"
@@ -84,14 +84,14 @@
                   required
                 />
                 <div v-if="formSubmitted && !orderForm.customerContact" class="error-color">
-                  Le numéro de téléphone est requis
+                  Phone number is required
                 </div>
               </div>
             </div>
             
             
             <div class="form-section">
-              <h4 class="section-title">Adresse de livraison</h4>
+              <h4 class="section-title">Delivery address</h4>
               <!--
               <div class="shipping-info">
                 <div class="shipping-method">
@@ -110,19 +110,19 @@
               </div>
               -->
               <div class="form-group">
-                <label for="adresseComplete" class="form-label">Adresse complète <span class="error-color">*</span></label>
+                <label for="adresseComplete" class="form-label">Full adresse <span class="error-color">*</span></label>
                 <textarea 
                   id="adresseComplete"
                   :value="orderForm.adresse_complete"
                   @input="$emit('updateForm', 'adresse_complete', $event.target.value)"
                   class="input-style"
                   :class="{ 'error': formSubmitted && !orderForm.adresse_complete }"
-                  placeholder="Indiquez votre adresse complète avec des points de repère"
+                  placeholder="Provide your full address with landmarks"
                   rows="3"
                   required
                 ></textarea>
                 <div v-if="formSubmitted && !orderForm.adresse_complete" class="error-color">
-                  L'adresse complète est requise
+                  Address is required
                 </div>
               </div>
                <!--
@@ -145,7 +145,7 @@
             <!-- Order Total -->
             <div class="order-total">
               <div class="total-row text-gray-500">
-                <span>Sous-total:</span>
+                <span>Subtotal:</span>
                 <span>{{ formatPrice(calculateSubtotal()) }}</span>
               </div>
 <!--               
@@ -163,7 +163,7 @@
             <!-- Submit Button -->
             <div class="form-actions">
               <button type="button" class="btn-gray flex-1" @click="$emit('close')">
-                Annuler
+                Cancel
               </button>
               <button 
                 type="submit" 
@@ -172,7 +172,7 @@
                 @click="handleButtonClick"
               >
                 <span v-if="orderLoading" class="loading-spinner"></span>
-                <span v-else>Confirmer la commande</span>
+                <span v-else>Confirm order</span>
               </button>
             </div>
           </form>

@@ -2,7 +2,7 @@
     <div class="share-modal-overlay" @click.self="$emit('close')">
       <div class="share-modal">
         <div class="modal-header">
-          <h3 class="modal-title">Partager ce produit</h3>
+          <h3 class="modal-title">Share this product</h3>
           <button class="close-btn" @click="$emit('close')">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -74,7 +74,7 @@
                   <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
                   <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
                 </svg>
-                Copier
+                Copy
               </button>
             </div>
           </div>

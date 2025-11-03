@@ -3,9 +3,9 @@
       <!-- Product Basic Info -->
       <div class="product-basic-info">
         <div class="product-badges">
-          <span class="badge primary-color" style="background: #fff2e8;" v-if="product.status === 'Actif'">En Stock</span>
-          <span class="badge success-color" style="background:   #f6ffed;" v-if="product.stock > 0">Disponible</span>
-          <span class="badge blue-color" style="background: #e6f7ff;" v-if="isNewProduct">Nouveau</span>
+          <span class="badge primary-color" style="background: #fff2e8;" v-if="product.status === 'Actif'">In Stock</span>
+          <span class="badge success-color" style="background:   #f6ffed;" v-if="product.stock > 0">Available </span>
+          <span class="badge blue-color" style="background: #e6f7ff;" v-if="isNewProduct">New</span>
         </div>
         
         <h1 class="product-title">{{ product.name }}</h1>
@@ -15,7 +15,7 @@
             <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= Math.floor(productRating) }">★</span>
           </div>
           <span class="rating-value">{{ productRating }}</span>
-          <span class="reviews-count">{{ product.views_count || 0 }} Vues</span>
+          <span class="reviews-count">{{ product.views_count || 0 }} Views</span>
         </div>
   
         <div class="product-price-section">
@@ -67,22 +67,10 @@
         </div>
       </div>
   
-      <!-- Variants Section -->
-      <div class="mobile-variants-section" v-if="hasVariants">
-        <ProductVariants 
-          :product-colors="productColors"
-          :product-sizes="productSizes"
-          :selected-variants="selectedVariants"
-          @add-variant="$emit('addVariant')"
-          @remove-variant="$emit('removeVariant', $event)"
-          @update-variant-size="$emit('updateVariantSize', $event.variantIndex, $event.sizeIndex)"
-          @update-variant-color="$emit('updateVariantColor', $event.variantIndex, $event.colorIndex)"
-          @update-variant-quantity="$emit('updateVariantQuantity', $event.variantIndex, $event.quantity)"
-        />
-      </div>
+     
   
       <!-- Quantity Section -->
-      <div class="mobile-quantity-section" v-if="!hasVariants">
+      <div class="mobile-quantity-section" >
         <div class="quantity-header">
           <span class="quantity-label">Quantité:</span>
           <span class="stock-info">{{ product.stock }} disponibles</span>

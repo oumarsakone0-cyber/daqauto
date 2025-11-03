@@ -1,7 +1,7 @@
 <template>
     <div class="shipping-section">
       <div class="shipping-header">
-        <div class="shipping-title">Expédition:</div>
+        <div class="shipping-title">Expedition:</div>
         <div class="shipping-location">
           <span>Vers</span>
           <strong>{{ getDestinationLabel() }}</strong>

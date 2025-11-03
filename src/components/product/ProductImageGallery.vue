@@ -30,7 +30,7 @@
               <line x1="11" y1="8" x2="11" y2="14"></line>
               <line x1="8" y1="11" x2="14" y2="11"></line>
             </svg>
-            <span>Cliquez pour agrandir</span>
+            <span>Click to enlarge</span>
           </div>
         </div>
       </div>
@@ -84,7 +84,7 @@
             <polyline points="16 6 12 2 8 6"></polyline>
             <line x1="12" y1="2" x2="12" y2="15"></line>
           </svg>
-          <span>Partager</span>
+          <span>Share</span>
         </button>
         <button class="gallery-action-btn" @click="$emit('addToCompare')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -93,7 +93,7 @@
             <line x1="21" y1="3" x2="14" y2="10"></line>
             <line x1="3" y1="21" x2="10" y2="14"></line>
           </svg>
-          <span>Comparer</span>
+          <span>Benchmark</span>
         </button>
       </div>
     </div>
@@ -135,8 +135,8 @@
         </svg>
       </div>
       <div class="trade-assurance-text">
-        <div class="trade-assurance-title">Produit approuvé</div>
-        <div class="trade-assurance-desc">Protection de vos commandes</div>
+        <div class="trade-assurance-title">Approved Product</div>
+        <div class="trade-assurance-desc">Protecting your orders</div>
       </div>
     </div>
   </div>
