@@ -39,14 +39,14 @@
         </router-link>
         
         <span class="mx-2">/</span>
-        <span class="font-medium text-gray-700 truncate">Dashboard Produits</span>
+        <span class="font-medium text-gray-700 truncate">Products Dashboard</span>
       </div>
 
       <!-- Header responsive -->
       <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Produits</h1>
-          <p class="text-sm sm:text-base text-gray-600">Gérez votre inventaire et vos produits</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Product Management</h1>
+          <p class="text-sm sm:text-base text-gray-600">Manage your inventory and products</p>
         </div>
         
         <!-- Actions mobiles optimisées -->
@@ -58,18 +58,18 @@
               class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
             >
               <DownloadIcon class="w-4 h-4 mr-2" />
-              <span >Exporter</span>
+              <span >Export</span>
               <ChevronDownIcon class="w-4 h-4 ml-2" />
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 ">
               <div role="menu">
                 <button @click="exportToPDF" class="flex items-center text-sm mb-2 btn-gray" role="menuitem" >
                   <FileTextIcon class="w-4 h-4 mr-2 error-color" />
-                  Exporter en PDF
+                  Export to PDF
                 </button>
                 <button @click="exportToExcel" class="flex items-center text-sm btn-gray" role="menuitem">
                   <FileTextIcon class="w-4 h-4 mr-1 green-color" />
-                  Exporter en Excel
+                  Export to Excel
                 </button>
               </div>
             </div>
@@ -86,8 +86,8 @@
             ]"
           >
             <PlusIcon class="w-4 h-4 mr-2" />
-            <span class="hidden sm:inline">{{ canAddMoreProducts() ? 'Ajouter un produit' : 'Limite atteinte' }}</span>
-            <span class="sm:hidden">{{ canAddMoreProducts() ? 'Ajouter' : 'Limite' }}</span>
+            <span class="hidden sm:inline">{{ canAddMoreProducts() ? 'Add produit' : 'Limit reached' }}</span>
+            <span class="sm:hidden">{{ canAddMoreProducts() ? 'Add' : 'Limit' }}</span>
           </button>
 
           <!-- Premium button -->
@@ -97,7 +97,7 @@
               class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-deconnexion"
             >
             <LogoutIcon class="w-4 h-4 mr-2 text-white-500 cursor-pointer" />
-              <span >Déconnexion</span>
+              <span >Logout</span>
             </button>
         </div>
       </div>
@@ -107,29 +107,29 @@
         <div class="flex items-center justify-between">
           <div>
             <h3 class="text-lg font-semibold mb-2">
-              {{ hasActiveSubscription() ? 'Plan Premium Actif' : 'Plan Gratuit' }}
-              <span class="text-sm opacity-75 ml-2">({{ currentBoutique?.name || 'Boutique' }})</span>
+              {{ hasActiveSubscription() ? 'Active Premium Plan' : 'Free Plan' }}
+              <span class="text-sm opacity-75 ml-2">({{ currentBoutique?.name || 'Store' }})</span>
             </h3>
             <div v-if="hasActiveSubscription() && getCurrentPlan()">
               <p class="text-sm opacity-90">
                 Plan: {{ getCurrentPlan().plan_name }}
               </p>
               <p class="text-sm opacity-90">
-                Produits: {{ productCount }} / {{ getCurrentPlan().max_products }}
+                Products: {{ productCount }} / {{ getCurrentPlan().max_products }}
               </p>
               <p class="text-sm opacity-90" v-if="getCurrentPlan().expires_at">
-                Expire le: {{ new Date(getCurrentPlan().expires_at).toLocaleDateString('fr-FR') }}
+                Expire on : {{ new Date(getCurrentPlan().expires_at).toLocaleDateString('fr-FR') }}
               </p>
               <div v-if="isExpiringSoon()" class="mt-2 px-3 py-1 bg-yellow-500 text-yellow-900 rounded-full text-xs font-medium inline-block">
-                ⚠️ Expire dans {{ getDaysRemaining() }} jour(s)
+                ⚠️ Expire in {{ getDaysRemaining() }} Day(s)
               </div>
             </div>
             <div v-else>
               <p class="text-sm opacity-90">
-                Produits: {{ productCount }} / 5 (limite gratuite)
+                Products: {{ productCount }} / 5 (free limit)
               </p>
               <p class="text-sm opacity-90">
-                Passez au Premium pour plus de fonctionnalités !
+                Go Premium for More Features
               </p>
             </div>
           </div>
@@ -138,7 +138,7 @@
               @click="openPremiumModal"
               class="  px-4 py-2 rounded-lg font-medium hover:bg-gray-100 transition-colors text-sm btn-premium-style "
             >
-              {{ hasActiveSubscription() ? 'Gérer l\'abonnement' : 'Passer au Premium' }}
+              {{ hasActiveSubscription() ? 'Manage Subscription' : 'Upgrade to Premium' }}
             </button>
           </div>
         </div>
@@ -148,7 +148,7 @@
       <div v-if="loading" class="mb-6 sm:mb-8">
         <div class="bg-white rounded-lg p-6 sm:p-8 text-center shadow-lg">
           <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 primary-color border-t-transparent"></div>
-          <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Chargement des produits...</p>
+          <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Loading produits...</p>
         </div>
       </div>
 
@@ -163,7 +163,7 @@
               <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
             </div>
             <button @click="refresh" class="w-full sm:w-auto px-4 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
-              Réessayer
+              Try again
             </button>
           </div>
         </div>
@@ -179,16 +179,16 @@
                 <CalendarIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
             </div>
-            <p class="text-xs sm:text-sm text-gray-600 text-center mb-2 sm:mb-3">Période</p>
+            <p class="text-xs sm:text-sm text-gray-600 text-center mb-2 sm:mb-3">Payment Deadline</p>
             <select 
               v-model="selectedPeriod" 
               @change="updateStats"
               class="input-style"
             >
-              <option value="all">Toutes</option>
-              <option value="today">Aujourd'hui</option>
-              <option value="week">Cette semaine</option>
-              <option value="month">Ce mois</option>
+              <option value="all">All</option>
+              <option value="today">Today</option>
+              <option value="week">This Week</option>
+              <option value="month">This Month</option>
             </select>
           </div>
         </div>
@@ -201,14 +201,14 @@
                 <PackageIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Total Produits</p>
+                <p class="text-xs sm:text-sm text-gray-600">Product Total</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ currentStats.total_products }} / <span style="font-size: 30px; color: blue">{{ hasActiveSubscription() ? getCurrentPlan()?.max_products || '∞' : '5' }}</span></p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Brouillons: {{ detailedStats.draft }}</span>
-                <span class="flex-shrink-0">{{ Math.round((currentStats.active_products / Math.max(currentStats.total_products, 1)) * 100) }}% actifs</span>
+                <span class="truncate">Drafts: {{ detailedStats.draft }}</span>
+                <span class="flex-shrink-0">{{ Math.round((currentStats.active_products / Math.max(currentStats.total_products, 1)) * 100) }}% assets</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-blue-500 to-blue-600 h-2 rounded-full transition-all duration-300" :style="`width: ${Math.round((currentStats.active_products / Math.max(currentStats.total_products, 1)) * 100)}%`"></div>
@@ -225,14 +225,14 @@
                 <CheckCircleIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Produits Actifs</p>
+                <p class="text-xs sm:text-sm text-gray-600">Active Products</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ currentStats.active_products }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Prix moyen: {{ formatPrice(detailedStats.averagePrice) }}</span>
-                <span class="text-green-600 flex-shrink-0">En ligne</span>
+                <span class="truncate">Average price: {{ formatPrice(detailedStats.averagePrice) }}</span>
+                <span class="text-green-600 flex-shrink-0">Online</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 85%"></div>
@@ -249,15 +249,15 @@
                 <WarehouseIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Stock Total</p>
+                <p class="text-xs sm:text-sm text-gray-600">Total Stock</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ formatNumber(currentStats.total_stock) }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
                 <span class="truncate">
-                  <span class="error-color">Rupture: {{ detailedStats.outOfStock }}</span> | 
-                  <span class="text-yellow-600">Faible: {{ detailedStats.lowStock }}</span>
+                  <span class="error-color">Breakage: {{ detailedStats.outOfStock }}</span> | 
+                  <span class="text-yellow-600">Low: {{ detailedStats.lowStock }}</span>
                 </span>
                 <span :class="detailedStats.outOfStock > 0 ? 'error-color' : detailedStats.lowStock > 0 ? 'text-yellow-600' : 'text-green-600'" class="flex-shrink-0">
                   {{ detailedStats.outOfStock > 0 ? 'Attention' : detailedStats.lowStock > 0 ? 'Surveiller' : 'Bon' }}
@@ -282,13 +282,13 @@
                 <EyeIcon class="w-5 h-5 sm:w-6 sm:h-6 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Vues Totales</p>
+                <p class="text-xs sm:text-sm text-gray-600">Views Total</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ formatNumber(currentStats.total_views) }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Ventes: {{ formatNumber(detailedStats.totalSales) }}</span>
+                <span class="truncate">Sales : {{ formatNumber(detailedStats.totalSales) }}</span>
                 <span class="text-purple-600 flex-shrink-0">Performance</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
@@ -332,17 +332,17 @@
                 v-model="searchQuery"
                 type="text" 
                 class="input-style" 
-                placeholder="Rechercher un produit..."
+                placeholder="Research product..."
               >
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
               <button type="button" class="btn-gray">
                 <ArrowUpDownIcon class="w-4 h-4" />
-                <span class="hidden sm:inline text-sm">Trier</span>
+                <span class="hidden sm:inline text-sm">Sort</span>
               </button>
               <button type="button" class="btn-gray">
                 <FilterIcon class="w-4 h-4" />
-                <span class="hidden sm:inline text-sm">Filtrer</span>
+                <span class="hidden sm:inline text-sm">Filter</span>
               </button>
             </div>
           </div>
@@ -366,12 +366,12 @@
                     <label for="checkbox-all-search" class="sr-only">checkbox</label>
                   </div>
                 </th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px; max-width: 200px; min-width: 200px;">Produit</th>
-                <th scope="col" class="hidden md:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Catégorie</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Prix</th>
+                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 200px; max-width: 200px; min-width: 200px;">Product</th>
+                <th scope="col" class="hidden md:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Categorie</th>
+                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Price</th>
                 <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Stock</th>
-                <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
-                <th scope="col" class="hidden xl:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Couleur(s)</th>
+                <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                <th scope="col" class="hidden xl:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Color(s)</th>
                 <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Performance</th>
                 <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
@@ -449,8 +449,8 @@
                 </td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
-                    <div class="text-xs text-gray-500">Ventes: {{ product.sales_count || 0 }}</div>
-                    <div class="text-xs text-gray-500">Vues: {{ product.views_count || 0 }}</div>
+                    <div class="text-xs text-gray-500">Sales: {{ product.sales_count || 0 }}</div>
+                    <div class="text-xs text-gray-500">Views: {{ product.views_count || 0 }}</div>
                     <div class="text-xs text-gray-500">WhatsApp: {{ product.views_count || 0 }}</div>
                   </div>
                 </td>
@@ -458,8 +458,8 @@
                   <div class="flex items-center space-x-2 sm:space-x-3">
                     <!-- Bouton Booster -->
                     <div v-if="hasActiveBoost(product.id)" class="text-xs green-color font-medium mb-1">
-                      <div class="text-xs green-color" v-if="getBoostStatus(product.id) == 'active'">🚀 Activé</div>
-                      <div class="text-xs primary-color" v-if="getBoostStatus(product.id) == 'pending'">⏳ En attente</div>
+                      <div class="text-xs green-color" v-if="getBoostStatus(product.id) == 'active'">🚀 Activated</div>
+                      <div class="text-xs primary-color" v-if="getBoostStatus(product.id) == 'pending'">⏳ Waiting</div>
                       <div class="text-xs text-gray-500" v-if="getBoostStatus(product.id) == 'active'" style="padding-top: 5px;">{{ getBoostExpiration(product.id) }}</div>
                     </div>
                     <button
@@ -468,12 +468,12 @@
                       class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-lg shadow-sm btn-degrade-orange"
                     >
                       <ZapIcon class="w-3 h-3 mr-1" />
-                      <span class="hidden sm:inline">Booster</span>
+                      <span class="hidden sm:inline">Boost</span>
                       <span class="sm:hidden">🚀</span>
                     </button>
                     
                     <button @click="viewProduct(product)" class="text-xs sm:text-sm submit-btn">
-                      <span class="hidden sm:inline">Détails</span>
+                      <span class="hidden sm:inline">Details</span>
                       <EyeIcon class="w-4 h-4 sm:hidden" />
                     </button>
 
@@ -485,19 +485,19 @@
                         <div class="py-1" role="menu">
                           <button @click="viewProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-gray">
                             <EyeIcon class="w-4 h-4 mr-3" />
-                            Voir détails
+                            See details
                           </button>
                           <button @click="editProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-gray">
                             <EditIcon class="w-4 h-4 mr-3" />
-                            Modifier
+                            Edit
                           </button>
                           <button @click="duplicateProduct(product)" class="flex items-center w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 mb-2 btn-gray">
                             <CopyIcon class="w-4 h-4 mr-3" />
-                            Dupliquer
+                            Duplicate
                           </button>
                           <button @click="deleteProductAction(product.id)" class="flex items-center w-full text-left px-4 py-2 text-sm text-red-600 hover:bg-red-50 mb-2 btn-gray">
                             <Trash2Icon class="w-4 h-4 mr-3" />
-                            Supprimer
+                            Delete
                           </button>
                         </div>
                       </div>
@@ -512,8 +512,8 @@
         <!-- Pagination responsive -->
         <div class="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 gap-3 sm:gap-0">
           <div class="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
-            <span class="text-gray-700 hidden sm:inline">Éléments par page</span>
-            <span class="text-gray-700 sm:hidden">Par page</span>
+            <span class="text-gray-700 hidden sm:inline">Items per page</span>
+            <span class="text-gray-700 sm:hidden">Per page</span>
             <select 
               v-model="itemsPerPage"
               @change="handleItemsPerPageChange"
@@ -526,9 +526,9 @@
             </select>
             <span class="text-gray-700 text-xs sm:text-sm">
               <span class="hidden sm:inline">
-                Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à 
+                Showing {{ ((currentPage - 1) * itemsPerPage) + 1 }} à 
                 {{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} 
-                sur {{ filteredProducts.length }} résultats
+                of {{ filteredProducts.length }} results
               </span>
               <span class="sm:hidden">
                 {{ ((currentPage - 1) * itemsPerPage) + 1 }}-{{ Math.min(currentPage * itemsPerPage, filteredProducts.length) }} 
@@ -543,8 +543,8 @@
               class="relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
               <ChevronLeftIcon class="w-3 h-3 sm:w-4 sm:h-4 mr-1" />
-              <span class="hidden sm:inline">Précédent</span>
-              <span class="sm:hidden">Préc</span>
+              <span class="hidden sm:inline">Previous</span>
+              <span class="sm:hidden">Prev</span>
             </button>
             <div class="flex items-center space-x-1">
               <button 
@@ -566,8 +566,7 @@
               :disabled="isLastPage"
               class="relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <span class="hidden sm:inline">Suivant</span>
-              <span class="sm:hidden">Suiv</span>
+              <span class="hidden sm:inline">Next</span>
               <ChevronRightIcon class="w-3 h-3 sm:w-4 sm:h-4 ml-1" />
             </button>
           </div>
@@ -585,8 +584,8 @@
                 <CrownIcon class="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 class="text-2xl font-bold text-gray-900">Plans Premium</h2>
-                <p class="text-gray-600">Choisissez le plan qui correspond à vos besoins pour <span class="font-bold text-gray-800">{{ currentBoutique?.name || 'votre boutique' }}</span> </p>
+                <h2 class="text-2xl font-bold text-gray-900">Premium plans</h2>
+                <p class="text-gray-600">Choose the plan that fits your needs to <span class="font-bold text-gray-800">{{ currentBoutique?.name || 'Your Store' }}</span> </p>
               </div>
             </div>
               <XIcon @click="showPremiumModal = false" class="w-7 h-7 text-gray-700 cursor-pointer" />
@@ -596,23 +595,23 @@
         <div class="p-6">
           <!-- Abonnement actuel -->
           <div v-if="hasActiveSubscription() && getCurrentPlan()" class="bg-green-50 border border-green-200 rounded-lg p-4 mb-6">
-            <h3 class="font-semibold text-green-800 mb-2">Votre abonnement actuel pour {{ currentBoutique?.name }}</h3>
+            <h3 class="font-semibold text-green-800 mb-2">Your current subscription for {{ currentBoutique?.name }}</h3>
             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 text-sm">
               <div>
                 <span class="text-gray-600">Plan:</span>
                 <span class="font-medium ml-2">{{ getCurrentPlan().plan_name }}</span>
               </div>
               <div>
-                <span class="text-gray-600">Prix:</span>
-                <span class="font-medium ml-2">{{ formatPrice(getCurrentPlan().price) }}/an</span>
+                <span class="text-gray-600">Price:</span>
+                <span class="font-medium ml-2">{{ formatPrice(getCurrentPlan().price) }}/Year</span>
               </div>
               <div>
-                <span class="text-gray-600">Expire le:</span>
-                <span class="font-medium ml-2">{{ new Date(getCurrentPlan().expires_at).toLocaleDateString('fr-FR') }}</span>
+                <span class="text-gray-600">Expire on:</span>
+                <span class="font-medium ml-2">{{ new Date(getCurrentPlan().expires_at).toLocaleDateString('us-US') }}</span>
               </div>
               <div>
-                <span class="text-gray-600">Jours restants:</span>
-                <span class="font-medium ml-2">{{ getDaysRemaining() }} jour(s)</span>
+                <span class="text-gray-600">Remaining Days:</span>
+                <span class="font-medium ml-2">{{ getDaysRemaining() }} day(s)</span>
               </div>
             </div>
           </div>
@@ -625,23 +624,23 @@
                 <div class="w-16 h-16 bg-gradient-to-br from-blue-500 to-blue-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <PackageIcon class="w-8 h-8 text-white" />
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Petite Boutique</h3>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Small Store</h3>
                 <div class="text-3xl font-bold text-blue-600 mb-1">3 000 FCFA</div>
-                <div class="text-sm text-gray-600 mb-4">Abonnement Année</div>
-                <div class="text-lg font-semibold text-gray-900 mb-6">15 produits</div>
+                <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
+                <div class="text-lg font-semibold text-gray-900 mb-6">15 products</div>
                 
                 <ul class="space-y-3 mb-6 text-sm text-gray-600">
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-blue-500 mr-2" />
-                    Jusqu'à 15 produits
+                    Up to 15 products
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-blue-500 mr-2" />
-                    Gestion des produits
+                    Products management
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-blue-500 mr-2" />
-                    Support par email
+                    Email Support
                   </li>
                 </ul>
                 
@@ -650,7 +649,7 @@
                   :disabled="premiumLoading"
                   class="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-3 rounded-lg font-medium hover:from-blue-600 hover:to-blue-700 transition-all disabled:opacity-50"
                 >
-                  {{ premiumLoading ? 'Traitement...' : 'Choisir ce plan' }}
+                  {{ premiumLoading ? 'treatment...' : 'Choose this plan' }}
                 </button>
               </div>
             </div>
@@ -659,34 +658,34 @@
             <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-300 hover:border-green-400 transition-all relative">
               <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span class="bg-gradient-to-r from-green-500 to-green-600 text-white px-4 py-1 rounded-full text-xs font-medium">
-                  Populaire
+                  Popular
                 </span>
               </div>
               <div class="text-center">
                 <div class="w-16 h-16 bg-gradient-to-br from-green-500 to-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                   <WarehouseIcon class="w-8 h-8 text-white" />
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Boutique Moyenne</h3>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Average Store</h3>
                 <div class="text-3xl font-bold text-green-500 mb-1">5 000 FCFA</div>
-                <div class="text-sm text-gray-600 mb-4">Abonnement Année</div>
-                <div class="text-lg font-semibold text-gray-900 mb-6">50 produits</div>
+                <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
+                <div class="text-lg font-semibold text-gray-900 mb-6">50 products</div>
                 
                 <ul class="space-y-3 mb-6 text-sm text-gray-600">
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                    Jusqu'à 50 produits
+                    Up to 50 products
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                    Gestion des produits
+                    Products managament
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                    Rapports détaillés
-                  </li>
+                    Detailed Reports
+                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                    Support prioritaire
+                    Owner Support
                   </li>
                 </ul>
                 
@@ -695,7 +694,7 @@
                   :disabled="premiumLoading"
                   class="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 submit-btn h-11"
                 >
-                  {{ premiumLoading ? 'Traitement...' : 'Choisir ce plan' }}
+                  {{ premiumLoading ? 'Treatment...' : 'Choose this plan' }}
                 </button>
               </div>
             </div>
@@ -706,27 +705,27 @@
                 <div class="w-16 h-16 bg-orange rounded-full flex items-center justify-center mx-auto mb-4">
                   <CrownIcon class="w-8 h-8 text-white" />
                 </div>
-                <h3 class="text-xl font-bold text-gray-900 mb-2">Grande Boutique</h3>
+                <h3 class="text-xl font-bold text-gray-900 mb-2">Big Store</h3>
                 <div class="text-3xl font-bold primary-color mb-1">10 000 FCFA</div>
-                <div class="text-sm text-gray-600 mb-4">Abonnement Année</div>
-                <div class="text-lg font-semibold text-gray-900 mb-6">120 produits</div>
+                <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
+                <div class="text-lg font-semibold text-gray-900 mb-6">120 products</div>
                 
                 <ul class="space-y-3 mb-6 text-sm text-gray-600">
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                    Jusqu'à 120 produits
+                    Up to 120 products
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                    Toutes les fonctionnalités
+                    All Features
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                    Rapport journalier
+                    Daily Reports
                   </li>
                   <li class="flex items-center">
                     <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                    Support 24/7
+                   24/7 Support 
                   </li>
                 </ul>
                 
@@ -735,7 +734,7 @@
                   :disabled="premiumLoading"
                   class="w-full py-3 rounded-lg font-medium  transition-all disabled:opacity-50 btn-degrade-orange h-11"
                 >
-                  {{ premiumLoading ? 'Traitement...' : 'Choisir ce plan' }}
+                  {{ premiumLoading ? 'Treatment...' : 'Choose this plan' }}
                 </button>
               </div>
             </div>
@@ -750,7 +749,7 @@
                 style="background-color: yellowgreen;"
                 :disabled="premiumLoading"
               >
-                {{ premiumLoading ? 'Traitement...' : 'Renouveler l\'abonnement' }}
+                {{ premiumLoading ? 'Treatment...' : 'Renew the subscription' }}
               </button>
               <button
                 @click="cancelSubscription"
@@ -758,7 +757,7 @@
                 style="background-color: #e8e8e8;"
                 :disabled="premiumLoading"
               >
-                {{ premiumLoading ? 'Traitement...' : 'Annuler l\'abonnement' }}
+                {{ premiumLoading ? 'Treatment...' : 'Cancel the subscription' }}
               </button>
             </div>
           </div>
@@ -781,7 +780,7 @@
                 <ZapIcon class="w-6 h-6 text-white" />
               </div>
               <div>
-                <h2 class="text-2xl font-bold text-gray-900">Booster le produit</h2>
+                <h2 class="text-2xl font-bold text-gray-900">Boost product</h2>
                 <p class="text-gray-600">{{ selectedProductForBoost?.name }}</p>
               </div>
             </div>
@@ -792,7 +791,7 @@
         <div class="p-6">
           <!-- Étape 1: Sélection du type de boost -->
           <div v-if="!selectedBoostOption" class="space-y-4">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Choisissez votre formule de boost</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Choose your boost form</h3>
             
             <!-- Option Boost Standard -->
             <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-6 border-2 border-green-200 hover:border-green-300 transition-all cursor-pointer" @click="selectBoostOption('basic')">
@@ -803,28 +802,28 @@
                       <TrendingUpIcon class="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 class="text-lg font-bold text-gray-900">Boost Basic</h3>
-                      <p class="text-sm text-gray-600">Visibilité améliorée pour votre produit</p>
+                      <h3 class="text-lg font-bold text-gray-900">Basic Boost </h3>
+                      <p class="text-sm text-gray-600">Improved visibility for your product</p>
                     </div>
                   </div>
                   <ul class="space-y-2 text-sm text-gray-600 mb-4">
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                      Produit mis en avant
+                      Product highlighted
                     </li>
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                      Badge "Produit Boosté"
+                      Badge "Boosted Product"
                     </li>
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 text-green-500 mr-2" />
-                      Priorité dans les recherches
+                      Property in searches
                     </li>
                   </ul>
                 </div>
                 <div class="text-right">
                   <div class="text-2xl font-bold text-green-600">1 000 FCFA</div>
-                  <div class="text-sm text-gray-500">par semaine</div>
+                  <div class="text-sm text-gray-500">By week</div>
                 </div>
               </div>
             </div>
@@ -833,7 +832,7 @@
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-6 border-2 border-orange-200 hover:border-orange-300 transition-all cursor-pointer relative" @click="selectBoostOption('premium')">
               <div class="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <span class="bg-orange text-white px-4 py-1 rounded-full text-xs font-medium">
-                  Recommandé
+                  Recommended
                 </span>
               </div>
               <div class="flex items-center justify-between">
@@ -843,32 +842,32 @@
                       <RocketIcon class="w-5 h-5 text-white" />
                     </div>
                     <div>
-                      <h3 class="text-lg font-bold text-gray-900">Boost Premium</h3>
-                      <p class="text-sm text-gray-600">Visibilité maximale + publicités</p>
+                      <h3 class="text-lg font-bold text-gray-900">Premium boost</h3>
+                      <p class="text-sm text-gray-600">Maximum Visibility + Advertisements</p>
                     </div>
                   </div>
                   <ul class="space-y-2 text-sm text-gray-600 mb-4">
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                      Produit en première position
+                      Product in foreground
                     </li>
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                      Affichage page d'accueil
+                      Home page display
                     </li>
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                      Publicité réseaux sociaux
+                      Advertising Social Media
                     </li>
                     <li class="flex items-center">
                       <CheckCircleIcon class="w-4 h-4 primary-color mr-2" />
-                      Badge "Produit Vedette"
+                      Badge "Featured product"
                     </li>
                   </ul>
                 </div>
                 <div class="text-right">
                   <div class="text-2xl font-bold primary-color">2 500 FCFA</div>
-                  <div class="text-sm text-gray-500">par semaine</div>
+                  <div class="text-sm text-gray-500">By week</div>
                 </div>
               </div>
             </div>
@@ -885,26 +884,26 @@
                   </div>
                   <div>
                     <h4 class="font-semibold text-gray-900">
-                      {{ selectedBoostOption === 'basic' ? 'Boost Basic' : 'Boost Premium' }}
+                      {{ selectedBoostOption === 'basic' ? 'Basic Boost ' : 'Premium Boost ' }}
                     </h4>
                     <p class="text-sm text-gray-600">
-                      {{ selectedBoostOption === 'basic' ? '1 000 FCFA par semaine' : '2 500 FCFA par semaine' }}
+                      {{ selectedBoostOption === 'basic' ? '1 000 FCFA By week' : '2 500 FCFA By week' }}
                     </p>
                   </div>
                 </div>
                 <button @click="resetBoostSelection" class="btn-outline h-11" style="border-radius: 8px;  ">
-                  Changer
+                  Change
                 </button>
               </div>
             </div>
 
             <!-- Configuration des dates -->
             <div class="space-y-4">
-              <h4 class="font-semibold text-gray-900">Configuration de la période</h4>
+              <h4 class="font-semibold text-gray-900">Period Configuration</h4>
               
               <!-- Durée du boost -->
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Durée du boost</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Boost duration</label>
                 <div class="grid grid-cols-3 gap-3">
                   <button 
                     v-for="duration in durationOptions" 
@@ -917,7 +916,7 @@
                         : 'btn-gray'
                     ]"
                   >
-                    <div class="font-semibold">{{ duration.weeks }} semaine{{ duration.weeks > 1 ? 's' : '' }}</div>
+                    <div class="font-semibold">{{ duration.weeks }} Week{{ duration.weeks > 1 ? 's' : '' }}</div>
                     <div class="text-sm text-gray-800">{{ formatPrice(duration.price) }}</div>
                   </button>
                 </div>
@@ -925,7 +924,7 @@
 
               <!-- Date de début -->
               <div>
-                <label for="start-date" class="block text-sm font-medium text-gray-700 mb-2">Date de début</label>
+                <label for="start-date" class="block text-sm font-medium text-gray-700 mb-2">Start Date</label>
                 <input 
                   id="start-date"
                   v-model="boostStartDate"
@@ -938,7 +937,7 @@
 
               <!-- Date de fin (calculée automatiquement) -->
               <div>
-                <label for="end-date" class="block text-sm font-medium text-gray-700 mb-2">Date de fin (calculée automatiquement)</label>
+                <label for="end-date" class="block text-sm font-medium text-gray-700 mb-2">End Date (automatically calculated)</label>
                 <input 
                   id="end-date"
                   v-model="boostEndDate"
@@ -946,21 +945,21 @@
                   readonly
                   class="w-full px-3 py-2 border border-gray-300 rounded-lg bg-gray-50 text-gray-600 cursor-not-allowed"
                 >
-                <p class="text-xs text-gray-500 mt-1">La date de fin est calculée automatiquement selon la durée choisie</p>
+                <p class="text-xs text-gray-500 mt-1">The end date is calculated automatically according to the chosen duration</p>
               </div>
 
               <!-- Récapitulatif du coût -->
               <div class="bg-gradient-to-r from-blue-50 to-indigo-50 rounded-lg p-4 border border-blue-200">
                 <div class="flex items-center justify-between">
                   <div>
-                    <h5 class="font-semibold text-gray-900">Coût total</h5>
+                    <h5 class="font-semibold text-gray-900">Total cost</h5>
                     <p class="text-sm text-gray-600">
-                      {{ selectedDuration }} semaine{{ selectedDuration > 1 ? 's' : '' }} de boost {{ selectedBoostOption === 'basic' ? 'Basic' : 'Premium' }}
+                      {{ selectedDuration }} week{{ selectedDuration > 1 ? 's' : '' }} of {{ selectedBoostOption === 'basic' ? 'Basic' : 'Premium' }} boost
                     </p>
                   </div>
                   <div class="text-right">
                     <div class="text-2xl font-bold primary-color">{{ formatPrice(totalCost) }}</div>
-                    <div class="text-sm text-gray-500">{{ formatPrice(weeklyPrice) }} / semaine</div>
+                    <div class="text-sm text-gray-500">{{ formatPrice(weeklyPrice) }} / week</div>
                   </div>
                 </div>
               </div>
@@ -969,10 +968,10 @@
             <!-- Boutons d'action -->
             <div class="flex space-x-3 pt-4">
               <button @click="resetBoostSelection" class="flex-1 btn-gray">
-                Retour
+                Back
               </button>
               <button @click="proceedToPayment" :disabled="!isConfigurationValid || boostLoading" class="flex-1 submit-btn">
-                {{ boostLoading ? 'Traitement...' : 'Valider la demande' }}
+                {{ boostLoading ? 'Treatment...' : 'Validdate the request' }}
               </button>
             </div>
           </div>
@@ -991,7 +990,7 @@
             </div>
             
             <!-- Titre -->
-            <h2 class="text-xl font-bold text-gray-900 mb-3">Demande reçue !</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-3">Request received</h2>
             
             <!-- Message principal -->
             <p class="text-gray-600 mb-6 leading-relaxed">
@@ -1000,8 +999,8 @@
             
             <!-- Section contact -->
             <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4 mb-6">
-              <h3 class="font-semibold text-gray-900 mb-2">Besoin d'accélérer le processus ?</h3>
-              <p class="text-sm text-gray-600 mb-3">Appelez directement notre équipe :</p>
+              <h3 class="font-semibold text-gray-900 mb-2">Need to speed up the process ?</h3>
+              <p class="text-sm text-gray-600 mb-3">Call our team directly :</p>
               <div class="flex items-center justify-center space-x-2">
                 <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                   <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -1019,7 +1018,7 @@
               @click="closePremiumNotificationModal"
               class="btn-degrade-orange w-full h-11"
             >
-              Compris, merci !
+              Thank you
             </button>
           </div>
         </div>
@@ -1037,36 +1036,36 @@
             </div>
             
             <!-- Titre -->
-            <h2 class="text-xl font-bold text-gray-900 mb-3">Demande de boost reçue !</h2>
+            <h2 class="text-xl font-bold text-gray-900 mb-3">Boost request received </h2>
             
             <!-- Message principal -->
             <p class="text-gray-600 mb-4 leading-relaxed">
-              Votre demande de boost pour <strong>{{ boostConfirmationData?.product_name }}</strong> a été reçue.
+              Your boost for <strong>{{ boostConfirmationData?.product_name }}</strong> request has been received.
             </p>
             <p class="text-gray-600 mb-6 leading-relaxed">
-              Un agent Daq Auto vous contactera sous 24h pour finaliser l'activation.
+              A Daq Auto agent will contact you within 24 hours to finalize the activation.
             </p>
             
             <!-- Détails du boost -->
             <div class="bg-gray-50 rounded-lg p-3 mb-4 text-xs">
               <div class="flex justify-between mb-1">
-                <span>Type de boost:</span>
+                <span>Boost type : </span>
                 <span class="font-medium">{{ boostConfirmationData?.boost_type }}</span>
               </div>
               <div class="flex justify-between mb-1">
-                <span>Durée:</span>
-                <span class="font-medium">{{ boostConfirmationData?.duration_days }} jours</span>
+                <span>Duration :</span>
+                <span class="font-medium">{{ boostConfirmationData?.duration_days }} day</span>
               </div>
               <div class="flex justify-between">
-                <span>Montant:</span>
+                <span>Amount :</span>
                 <span class="font-medium">{{ formatPrice(boostConfirmationData?.amount) }}</span>
               </div>
             </div>
             
             <!-- Section contact -->
             <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-lg p-4 mb-6">
-              <h3 class="font-semibold text-gray-900 mb-2">Besoin d'accélérer le processus ?</h3>
-              <p class="text-sm text-gray-600 mb-3">Appelez directement notre équipe :</p>
+              <h3 class="font-semibold text-gray-900 mb-2">Need to speed up the process ?</h3>
+              <p class="text-sm text-gray-600 mb-3">Call our team directly :</p>
               <div class="flex items-center justify-center space-x-2">
                 <div class="w-8 h-8 bg-green-500 rounded-full flex items-center justify-center">
                   <svg class="w-4 h-4 text-white" fill="currentColor" viewBox="0 0 20 20">
@@ -1084,8 +1083,8 @@
               @click="closeBoostNotificationModal"
               class="w-full bg-orange text-white py-3 rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all"
             >
-              Compris, merci !
-            </button>
+              Thank you
+          </button>
           </div>
         </div>
       </div>
@@ -1310,11 +1309,11 @@ const mockProducts = [
 ]
 
 const filterTabs = [
-  { value: 'all', label: 'Tous' },
-  { value: 'active', label: 'Actifs' },
-  { value: 'low-stock', label: 'Stock faible' },
-  { value: 'out-of-stock', label: 'Rupture' },
-  { value: 'draft', label: 'Brouillons' }
+  { value: 'all', label: 'All' },
+  { value: 'active', label: 'Active' },
+  { value: 'low-stock', label: 'Low Stock' },
+  { value: 'out-of-stock', label: 'Out of Stock' },
+  { value: 'draft', label: 'Draft' }
 ]
 
 // Options de durée pour le boost
@@ -1335,10 +1334,10 @@ const filteredProducts = computed(() => {
 
   if (activeFilter.value !== 'all') {
     const statusMap = {
-      'active': 'Actif',
-      'low-stock': 'Stock faible', 
-      'out-of-stock': 'Rupture',
-      'draft': 'Brouillon'
+      'active': 'Active',
+      'low-stock': 'Low Stock', 
+      'out-of-stock': 'Out Of Stock',
+      'draft': 'Draft'
     }
     const targetStatus = statusMap[activeFilter.value]
     if (targetStatus) {
@@ -1363,10 +1362,10 @@ const filterCounts = computed(() => {
 
   return {
     'all': products.value.length,
-    'active': products.value.filter(product => product.status === 'Actif').length,
-    'low-stock': products.value.filter(product => product.status === 'Stock faible').length,
-    'out-of-stock': products.value.filter(product => product.status === 'Rupture').length,
-    'draft': products.value.filter(product => product.status === 'Brouillon').length
+    'active': products.value.filter(product => product.status === 'Active').length,
+    'low-stock': products.value.filter(product => product.status === 'Low Stock ').length,
+    'out-of-stock': products.value.filter(product => product.status === 'Out Of Stock').length,
+    'draft': products.value.filter(product => product.status === 'Draft').length
   }
 })
 
@@ -1376,7 +1375,7 @@ const currentStats = computed(() => {
   }
 
   const totalProducts = products.value.length
-  const activeProducts = products.value.filter(product => product.status === 'Actif').length
+  const activeProducts = products.value.filter(product => product.status === 'Active').length
   const totalStock = products.value.reduce((sum, product) => sum + (product.stock || 0), 0)
   const totalViews = products.value.reduce((sum, product) => sum + (product.views_count || 0), 0)
 
@@ -1401,7 +1400,7 @@ const detailedStats = computed(() => {
 
   const lowStock = products.value.filter(product => product.stock > 0 && product.stock <= 5).length
   const outOfStock = products.value.filter(product => product.stock === 0).length
-  const draft = products.value.filter(product => product.status === 'Brouillon').length
+  const draft = products.value.filter(product => product.status === 'Draft').length
   const totalSales = products.value.reduce((sum, product) => sum + (product.sales_count || 0), 0)
   
   const totalPrice = products.value.reduce((sum, product) => sum + (product.unit_price || 0), 0)
@@ -1483,14 +1482,14 @@ const loadBoutiqueBoosts = async () => {
 
 // Annuler une demande de boost
 const cancelBoost = async (boostId) => {
-  if (!confirm('Êtes-vous sûr de vouloir annuler cette demande de boost ?')) return
+  if (!confirm('Are you sure you want cancel this boost request ?')) return
   
   try {
     const response = await boostApi.cancelBoostRequest(boostId, {
       boutique_id: currentBoutique.value.id
     })
     if (response.success) {
-      showNotification('Demande de boost annulée')
+      showNotification('Boost request canceled')
       await loadProductBoosts()
     }
   } catch (error) {
@@ -1515,9 +1514,9 @@ const getStatusBadgeClass = (status) => {
 }
 
 const getStockStatus = (stock) => {
-  if (stock === 0) return 'Rupture'
-  if (stock <= 5) return 'Stock faible'
-  return 'En stock'
+  if (stock === 0) return 'Out Of Stock'
+  if (stock <= 5) return 'Low Stock'
+  return 'In stock'
 }
 
 const getStockStatusClass = (stock) => {
@@ -1537,7 +1536,7 @@ const getColorName = (color) => {
 }
 
 const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-FR', {
+  return new Intl.NumberFormat('us-US', {
       style: 'currency',
       currency: 'usd',
       minimumFractionDigits: 0,
@@ -1548,12 +1547,12 @@ const formatPrice = (price) => {
 }
 
 const formatNumber = (number) => {
-  return new Intl.NumberFormat('fr-FR').format(number || 0)
+  return new Intl.NumberFormat('us-US').format(number || 0)
 }
 
 const formatDate = (dateString) => {
   if (!dateString) return ''
-  return new Date(dateString).toLocaleDateString('fr-FR')
+  return new Date(dateString).toLocaleDateString('us-US')
 }
 
 // Fonctions principales
@@ -1563,7 +1562,7 @@ const initializeUserData = () => {
     const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
     
     if (!authToken) {
-      error.value = 'Token d\'authentification manquant. Veuillez vous reconnecter.'
+      error.value = 'Authentication token Missing. Please reconnect.'
       // Rediriger vers la page de login
       window.location.href = '/boutique-admin/login'
       return
@@ -1573,7 +1572,7 @@ const initializeUserData = () => {
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
     
     if (!userData) {
-      error.value = 'Données utilisateur manquantes. Veuillez vous reconnecter.'
+      error.value = 'Data user missing. Please reconnect.'
       window.location.href = '/boutique-admin/login'
       return
     }
@@ -1583,7 +1582,7 @@ const initializeUserData = () => {
     
     // ✅ Valider la structure des données
     if (!user.id || !user.email) {
-      error.value = 'Données utilisateur invalides. Veuillez vous reconnecter.'
+      error.value = 'Invalid data user. Please reconnect'
       window.location.href = '/boutique-admin/login'
       return
     }
@@ -1610,7 +1609,7 @@ const initializeUserData = () => {
         }
       }
     } else {
-      error.value = 'Aucune boutique associée à ce compte.'
+      error.value = 'No store associated with this account.'
       return
     }
 
@@ -1626,7 +1625,7 @@ const initializeUserData = () => {
 
   } catch (err) {
     console.error('Erreur lors de la récupération des données utilisateur:', err)
-    error.value = 'Erreur lors du chargement des données utilisateur.'
+    error.value = 'Error to load data user.'
     
     // Nettoyer le stockage en cas d'erreur
     localStorage.removeItem('authToken')
@@ -1647,7 +1646,7 @@ const initializeDates = () => {
 
 const fetchProducts = async () => {
   if (!currentBoutique.value?.id || !currentUser.value?.id) {
-    error.value = 'Informations utilisateur manquantes'
+    error.value = 'User informations missing'
     return
   }
 
@@ -1667,11 +1666,11 @@ const fetchProducts = async () => {
       products.value = response.data || []
       console.log("Produits chargés:", products.value)
     } else {
-      error.value = response.error || 'Erreur lors du chargement des produits'
+      error.value = response.error || 'Error to load products'
     }
   } catch (err) {
     console.error('Erreur fetchProducts:', err)
-    error.value = 'Erreur de connexion au serveur'
+    error.value = 'Error server connexion'
   } finally {
     loading.value = false
   }
@@ -1701,7 +1700,7 @@ const updateStats = async () => {
 // ✅ NOUVEAU: Fonction pour charger les données Premium de la boutique
 const loadPremiumData = async () => {
   if (!currentBoutique.value?.id) {
-    console.warn('Aucune boutique sélectionnée pour charger les données Premium')
+    console.warn(' no store selected to load the premium data')
     return
   }
 
@@ -1787,7 +1786,7 @@ const closePremiumModal = () => {
 // ✅ NOUVEAU: Souscrire la boutique à un plan Premium
 const subscribeToPlan = async (planType) => {
   if (!currentBoutique.value?.id) {
-    showNotification('Erreur: Aucune boutique sélectionnée')
+    showNotification('Error : No Store selected ')
     return
   }
 
@@ -1819,12 +1818,12 @@ const subscribeToPlan = async (planType) => {
       showPremiumModal.value = false
       
       // Afficher le modal de notification
-      premiumNotificationMessage.value = 'Votre demande d\'abonnement a été reçue. Un agent Daq Auto vous contactera sous 24h pour finaliser la souscription.'
+      premiumNotificationMessage.value = 'Your boost request has been received. A Daq Auto agent will contact you within 24 hours to finalize the activation.'
       showPremiumNotificationModal.value = true
       
       await loadPremiumData()
     } else {
-      throw new Error(response.error || 'Erreur lors de la souscription')
+      throw new Error(response.error || 'Error to subscribe')
     }
   } catch (error) {
     premiumError.value = error.message
@@ -1848,7 +1847,7 @@ const closeBoostNotificationModal = () => {
 // ✅ NOUVEAU: Renouveler l'abonnement de la boutique
 const renewSubscription = async () => {
   if (!currentBoutique.value?.id) {
-    showNotification('Erreur: Aucune boutique sélectionnée')
+    showNotification('Error: No store selected')
     return
   }
 
@@ -1863,10 +1862,10 @@ const renewSubscription = async () => {
     })
 
     if (response.success) {
-      showNotification('Abonnement renouvelé avec succès!')
+      showNotification('the subscription renew with success!')
       await loadPremiumData()
     } else {
-      throw new Error(response.error || 'Erreur lors du renouvellement')
+      throw new Error(response.error || 'Error to renew')
     }
   } catch (error) {
     premiumError.value = error.message
@@ -1878,12 +1877,12 @@ const renewSubscription = async () => {
 
 // ✅ NOUVEAU: Annuler l'abonnement de la boutique
 const cancelSubscription = async () => {
-  if (!confirm('Êtes-vous sûr de vouloir annuler l\'abonnement Premium de cette boutique ?')) {
+  if (!confirm('Are you sure you want cancel the premium subscription for this store?')) {
     return
   }
 
   if (!currentBoutique.value?.id) {
-    showNotification('Erreur: Aucune boutique sélectionnée')
+    showNotification('Error : No store selected')
     return
   }
 
@@ -1898,11 +1897,11 @@ const cancelSubscription = async () => {
     })
 
     if (response.success) {
-      showNotification('Abonnement Premium annulé pour cette boutique')
+      showNotification('The premium subscription canceled for this store')
       await loadPremiumData()
       closePremiumModal()
     } else {
-      throw new Error(response.error || 'Erreur lors de l\'annulation')
+      throw new Error(response.error || 'Error to cancel')
     }
   } catch (error) {
     premiumError.value = error.message
@@ -1979,7 +1978,7 @@ const updateEndDate = () => {
 // ✅ NOUVEAU: Fonction mise à jour pour appeler l'API boost
 const proceedToPayment = async () => {
   if (!currentBoutique.value?.id || !currentUser.value?.id) {
-    showNotification('Erreur: Informations utilisateur manquantes')
+    showNotification('Error: Data user missing')
     return
   }
 
@@ -2043,18 +2042,18 @@ const duplicateProduct = async (product) => {
     
     if (response.success) {
       await fetchProducts()
-      showNotification('Produit dupliqué avec succès!')
+      showNotification('Product duplicated with success!')
     } else {
-      showNotification('Erreur lors de la duplication: ' + response.error)
+      showNotification('Error to duplicate: ' + response.error)
     }
   } catch (err) {
-    showNotification('Erreur lors de la duplication: ' + err.message)
+    showNotification('Error to duplicate : ' + err.message)
   }
   activeActionMenu.value = null
 }
 
 const deleteProductAction = async (productId) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer ce produit ?')) {
+  if (confirm('Are you sure you want delete this product ?')) {
     try {
       const response = await productsApi.deleteProduct(productId, {
         boutique_id: currentBoutique.value.id,
@@ -2064,12 +2063,12 @@ const deleteProductAction = async (productId) => {
       if (response.success) {
         await fetchProducts()
         await loadStats(selectedPeriod.value)
-        showNotification('Produit supprimé avec succès!')
+        showNotification('Product dleleted with success!')
       } else {
-        showNotification('Erreur lors de la suppression: ' + response.error)
+        showNotification('Error to delete: ' + response.error)
       }
     } catch (err) {
-      showNotification('Erreur lors de la suppression: ' + err.message)
+      showNotification('Error to delete: ' + err.message)
     }
   }
   activeActionMenu.value = null
@@ -2106,7 +2105,7 @@ const getBoostExpiration = (productId) => {
   const date = new Date(product.boost_expires_at)
 
   // Formater la date : ex. "mardi 25"
-  let formatted = date.toLocaleDateString('fr-FR', {
+  let formatted = date.toLocaleDateString('us-US', {
     weekday: 'long',
     day: 'numeric'
   })
@@ -2153,7 +2152,7 @@ const handleSelectProduct = (productId, checked) => {
 async function exportToPDF() {
   try {
     showExportDropdown.value = false
-    showNotification('Export PDF en cours...')
+    showNotification('Exporting to PDF...')
     
     const { jsPDF } = await import('jspdf')
     const { default: autoTable } = await import('jspdf-autotable')
@@ -2204,17 +2203,17 @@ async function exportToPDF() {
     
     const fileName = `produits-${currentBoutique.value?.name || 'boutique'}-${new Date().toISOString().split('T')[0]}.pdf`
     doc.save(fileName)
-    showNotification('Export PDF terminé avec succès!')
+    showNotification('Export to PDF success!')
   } catch (error) {
     console.error('Erreur lors de l\'export PDF:', error)
-    showNotification('Erreur lors de l\'export PDF. Veuillez réessayer.')
+    showNotification('Error to export to PDF. Veuillez réessayer.')
   }
 }
 
 async function exportToExcel() {
   try {
     showExportDropdown.value = false
-    showNotification('Export Excel en cours...')
+    showNotification('Exporting to Excel')
     
     const XLSX = await import('xlsx')
     
@@ -2240,21 +2239,21 @@ async function exportToExcel() {
     XLSX.utils.book_append_sheet(workbook, worksheet, 'Produits')
     
     XLSX.writeFile(workbook, `produits-${new Date().toISOString().split('T')[0]}.xlsx`)
-    showNotification('Export Excel terminé avec succès!')
+    showNotification('Export to Excel success!')
   } catch (error) {
     console.error('Erreur lors de l\'export Excel:', error)
-    showNotification('Erreur lors de l\'export Excel. Veuillez réessayer.')
+    showNotification('Error to export to Excel. Veuillez réessayer.')
   }
 }
 
 const handleLogout = async () => {
   try {
     await ElMessageBox.confirm(
-      'Voulez-vous vraiment vous déconnecter ?',
+      'Are you sure you logout ?',
       'Confirmation',
       {
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Annuler',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
         type: 'warning',
         confirmButtonColor: "#fe9700",
 
@@ -2269,7 +2268,7 @@ const handleLogout = async () => {
 
     ElMessage({
       type: 'success',
-      message: 'Déconnexion réussie'
+      message: 'Logout success'
     })
 
     window.location.href = '/boutique-admin/login'
@@ -2292,12 +2291,12 @@ const handleAddProduct = async (productData) => {
       showAddProductModal.value = false
       await fetchProducts()
       await loadStats(selectedPeriod.value)
-      showNotification('Produit ajouté avec succès!')
+      showNotification('Product added with success!')
     } else {
-      showNotification('Erreur lors de l\'ajout: ' + response.error)
+      showNotification('Error to add: ' + response.error)
     }
   } catch (err) {
-    showNotification('Erreur lors de l\'ajout: ' + err.message)
+    showNotification('Error to add: ' + err.message)
   }
 }
 
@@ -2312,12 +2311,12 @@ const handleEditProduct = async (productData) => {
       showEditModal.value = false
       await fetchProducts()
       await loadStats(selectedPeriod.value)
-      showNotification('Produit modifié avec succès!')
+      showNotification('Product edited with success!')
     } else {
-      showNotification('Erreur lors de la modification: ' + response.error)
+      showNotification('Error to edit: ' + response.error)
     }
   } catch (err) {
-    showNotification('Erreur lors de la modification: ' + err.message)
+    showNotification('Error to edit : ' + err.message)
   }
 }
 
