@@ -45,27 +45,6 @@
         </div>
       </div>
   
-      <!-- Variantes du produit -->
-      <!-- <ProductVariants 
-        v-if="hasVariants"
-        :product-colors="productColors"
-        :product-sizes="productSizes"
-        :selected-variants="selectedVariants"
-        :product="product"
-        :selected-shipping="selectedShipping"
-        :selected-commune="selectedCommune"
-        :selected-ville="selectedVille"
-        :tarifs-abidjan="tarifsAbidjan"
-        :tarifs-interieur="tarifsInterieur"
-        @add-variant="$emit('addVariant')"
-        @remove-variant="$emit('removeVariant', $event)"
-        @update-variant-size="$emit('updateVariantSize', $event.variantIndex, $event.sizeIndex)"
-        @update-variant-color="$emit('updateVariantColor', $event.variantIndex, $event.colorIndex)"
-        @update-variant-quantity="$emit('updateVariantQuantity', $event.variantIndex, $event.quantity)"
-      /> -->
-  
-      
-  
       <div class="order-section">
         <div class="quantity-selector" >
           <div class="quantity-label">Quantity :</div>

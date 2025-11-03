@@ -15,13 +15,13 @@ export function formatPrice(priceInUSD, options = { showFOB: false }) {
 
   let formatted = ''
   if (['USD', 'EUR'].includes(cur)) {
-    formatted = new Intl.NumberFormat('fr-FR', {
+    formatted = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: cur,
       minimumFractionDigits: 0
     }).format(converted)
   } else {
-    formatted = `${Math.round(converted).toLocaleString('fr-FR')} ${currencySymbols[cur]}`
+    formatted = `${Math.round(converted).toLocaleString('en-US')} ${currencySymbols[cur]}`
   }
 
   if (options.showFOB) formatted += ' FOB'
