@@ -169,6 +169,7 @@
       if (response.success && response.data) {
         recommendedProducts.value = response.data.map(product => ({
           id: product.id,
+          boutique_id: product.boutique_id,
           name: product.name,
           slug: product.slug || generateSlug(product.name),
           unit_price: product.unit_price,

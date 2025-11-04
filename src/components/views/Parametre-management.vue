@@ -199,7 +199,6 @@
 
             <!-- Liste des utilisateurs -->
             <div class="bg-white border border-gray-200 rounded-lg overflow-hidden">
-              {{currentUser}}
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                   <tr>
@@ -212,21 +211,21 @@
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-200">
 
-                  <tr v-for="user in users" :key="user.id" class="hover:bg-gray-50">
+                  <tr v-for="user in users" :key="user.user_id" class="hover:bg-gray-50">
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
                         <div class="w-10 h-10 bg-orange rounded-full flex items-center justify-center font-semibold">
                           {{ user.name.charAt(0).toUpperCase() }}
                         </div>
                         <div class="ml-4">
-                          <div class="text-sm font-medium text-gray-900">{{ user.name }}</div>
+                          <div class="text-sm font-medium text-gray-900">{{ user.full_name }}</div>
                           <div class="text-sm text-gray-500">{{ user.email }}</div>
                         </div>
                       </div>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span :class="getRoleBadgeClass(user.role)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
-                        {{ user.role }}
+                        {{ user.permissions }}
                       </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
@@ -637,13 +636,18 @@ const SettingsIcon = { template: '<svg class="w-4 h-4" fill="none" stroke="curre
 // États
 const activeTab = ref('shop')
 const hasUnsavedChanges = ref(false)
+const successMessage = ref('')
 const showAddUserModal = ref(false)
 const showNotification = ref(false)
 const notificationMessage = ref('') 
 const currentUser = ref(null)
 const twoFactorEnabled = ref(false)
-const error = ref(null)
 const currentBoutique = ref(null)
+
+const isLoading = ref(false)
+const error = ref('')
+const users = ref([])
+const boutique = ref(null)
 
 // Tabs configuration
 const tabs = [
@@ -668,26 +672,6 @@ const shopInfo = ref({
 const router = useRouter()
 
 // Utilisateurs
-const users = ref([
-  {
-    id: 1,
-    name: 'Jean Dupont',
-    email: 'jean@boutique.com',
-    role: 'Propriétaire',
-    active: true,
-    isOwner: true,
-    created_at: '2024-01-01'
-  },
-  {
-    id: 2,
-    name: 'Marie Martin',
-    email: 'marie@boutique.com',
-    role: 'Gestionnaire',
-    active: true,
-    isOwner: false,
-    created_at: '2024-01-15'
-  }
-])
 
 const newUser = ref({
   name: '',
@@ -732,6 +716,60 @@ const passwordStrength = computed(() => {
   }
 })
 
+const handleGetUsersByBoutique = async (boutiqueId) => {
+  if (!boutiqueId) {
+    ElNotification({
+      title: 'Erreur',
+      message: 'ID de boutique requis',
+      type: 'error'
+    })
+    return
+  }
+
+  try {
+    isLoading.value = true
+    error.value = ''
+
+    const response = await usersApi.getUsersByBoutique(boutiqueId)
+    console.log('Réponse API getUsersByBoutique:', response)
+
+    if (response.success) {
+      users.value = response.data.users
+      boutique.value = response.data.boutique
+
+      ElNotification({
+        title: 'Succès',
+        message: `Liste des utilisateurs pour ${boutique.value.name} récupérée`,
+        type: 'success'
+      })
+    } else {
+      error.value = response.error || 'Erreur lors de la récupération des utilisateurs'
+      users.value = []
+      boutique.value = null
+
+      ElNotification({
+        title: 'Erreur',
+        message: error.value,
+        type: 'error'
+      })
+    }
+
+  } catch (err) {
+    console.error('Erreur API getUsersByBoutique:', err)
+    error.value = err.response?.data?.error || 'Erreur réseau. Veuillez réessayer.'
+    users.value = []
+    boutique.value = null
+
+    ElNotification({
+      title: 'Erreur',
+      message: error.value,
+      type: 'error'
+    })
+  } finally {
+    isLoading.value = false
+  }
+}
+
 const canChangePassword = computed(() => {
   return securityInfo.value.currentPassword &&
          securityInfo.value.newPassword &&
@@ -746,6 +784,66 @@ const canChangePassword = computed(() => {
 const markAsChanged = () => {
   hasUnsavedChanges.value = true
 }
+
+const handleAddUserToBoutique = async () => {
+  console.log('Ajout de l\'utilisateur:', newUser.value)
+  if (!newUser.value.name || !newUser.value.email) {
+    ElNotification({
+      title: 'Erreur',
+      message: 'Veuillez remplir tous les champs requis.',
+      type: 'error'
+    })
+    return
+  }
+
+  try {
+    //isLoading.value = true
+    error.value = ''
+
+    const payload = {
+      full_name: newUser.value.name,
+      email: newUser.value.email,
+      boutique_id: currentUser.value.boutiques[0].id  // Assurez-vous que la boutique est sélectionnée correctement
+    }
+
+    const response = await usersApi.addUserToBoutique(payload)
+    console.log('Réponse API ajout utilisateur:', response)
+
+    if (response.success) {
+      ElNotification({
+        title: 'Succès',
+        message: 'Utilisateur ajouté et invitation envoyée avec succès.',
+        type: 'success'
+      })
+
+      successMessage.value = 'Utilisateur ajouté avec succès.'
+      // Si tu veux, tu peux vider le formulaire
+      newUser.value.name = ''
+      newUser.value.email = ''
+
+      showAddUserModal.value = false
+    } else {
+      error.value = response.error || 'Erreur lors de l’ajout de l’utilisateur.'
+      ElNotification({
+        title: 'Erreur',
+        message: error.value,
+        type: 'error'
+      })
+    }
+  } catch (err) {
+    console.error('Erreur lors de l’ajout d’un utilisateur:', err)
+    error.value = err.response?.data?.error || 'Erreur réseau. Veuillez réessayer.'
+
+    ElNotification({
+      title: 'Erreur',
+      message: error.value,
+      type: 'error'
+    })
+  } finally {
+    //isLoading.value = false
+  }
+}
+
 
 const initializeUserData = () => {
   try {
@@ -913,6 +1011,10 @@ const formatDate = (dateString) => {
 }
 
 onMounted(async () => {
+
+  initializeUserData()
+
+  handleGetUsersByBoutique(currentUser.value.boutiques[0].id)
   
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
     console.log(token)
@@ -923,7 +1025,7 @@ onMounted(async () => {
 
   // Initialiser avec les données mock pour la démo
   // products.value = mockProducts
-  initializeUserData()
+  
 })
 </script>
 

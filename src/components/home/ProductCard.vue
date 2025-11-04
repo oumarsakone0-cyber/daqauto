@@ -1,25 +1,130 @@
 <template>
-    <!-- Version Mobile -->
-    <div 
-      v-if="isMobile"
-      class="mobile-grid-product"
-      @click="handleProductClick"
-    >
-      <div class="mobile-grid-image">
-        <img :src="product.primary_image || product.images?.[0] || '/placeholder.svg?height=200&width=200'" :alt="product.name" />
-        <button class="favorite-btn-mobile" @click.stop="handleFavoriteClick">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-          </svg>
-        </button>
+  <!-- Version Mobile -->
+  <div 
+    v-if="isMobile"
+    class="mobile-grid-product"
+    @click="handleProductClick"
+  >
+    <div class="mobile-grid-image">
+      <img :src="product.primary_image || product.images?.[0] || '/placeholder.svg?height=200&width=200'" :alt="product.name" />
+      <button class="favorite-btn-mobile" @click.stop="handleFavoriteClick">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
+        </svg>
+      </button>
+    </div>
+    <div class="mobile-grid-info">
+      <h3 class="mobile-grid-title">{{ product.name }}</h3>
+      <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }} </div>
+      <div class="wholesale-price" style="margin-bottom: 8px;" v-if="product.wholesale_price || product.wholesalePrice">
+          <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs :</span>
+          <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
       </div>
-      <div class="mobile-grid-info">
-        <h3 class="mobile-grid-title">{{ product.name }}</h3>
-        <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }} </div>
-        <div class="wholesale-price" style="margin-bottom: 8px;" v-if="product.wholesale_price || product.wholesalePrice">
-            <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs :</span>
-            <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
+      <div v-if="product.freeShipping" class="shipping-info">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <rect x="1" y="3" width="15" height="13"></rect>
+          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+          <circle cx="5.5" cy="18.5" r="2.5"></circle>
+          <circle cx="18.5" cy="18.5" r="2.5"></circle>
+        </svg>
+        <span>Livraison gratuite</span>
+      </div>
+  
+      <div class="alibaba-supplier-info">
+        <div class="alibaba-supplier-years">
+          <span>{{ product.market || 'CI' }}</span>
         </div>
+        <div class="alibaba-review">
+          <span v-if="product.reviews">({{ product.reviews }} reviews)</span>
+        </div>
+      </div>
+      <div class="mobile-grid-shop">{{ product.boutique_name || product.shopName }}</div>
+      <div class="mobile-grid-rating">
+        <span class="stars">⭐⭐⭐⭐⭐</span>
+        <span class="rating-count">({{ product.views || product.reviews || 0 }})</span>
+      </div>
+      <div class="alibaba-action-buttons">
+        <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
+        <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
+      </div>
+    </div>
+  </div>
+  
+  <!-- Version Desktop -->
+  <div 
+    v-else
+    class="alibaba-product-card"
+  >
+    <div @click="handleProductClick" class="alibaba-image-area" :style="{ height: cardImageHeight }">
+      <div class="alibaba-slider">
+        <div class="alibaba-slider-wrapper">
+          <div class="alibaba-slider-link">
+            <img 
+              :src="currentImage" 
+              :alt="product.name" 
+              class="alibaba-slider-img" 
+              loading="lazy"
+            >
+          </div>
+          
+          <div 
+            v-if="productImages.length > 1"
+            class="alibaba-arrow-left primary-color" 
+            @click.stop="previousImage"
+          >
+            <svg width="10" height="17" viewBox="0 0 10 17" fill="none">
+              <path d="M9 1L1 8.5L9 16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          <div 
+            v-if="productImages.length > 1"
+            class="alibaba-arrow-right primary-color" 
+            @click.stop="nextImage"
+          >
+            <svg width="10" height="17" viewBox="0 0 10 17" fill="none"  >
+              <path d="M1 1L9 8.5L1 16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            </svg>
+          </div>
+          
+          <div v-if="productImages.length > 1" class="alibaba-slider-indicators">
+            <div 
+              v-for="(img, imgIndex) in productImages" 
+              :key="imgIndex"
+              class="alibaba-indicator" 
+              :class="{ 'active': imgIndex === currentImageIndex }"
+              @click.stop="setImage(imgIndex)"
+            ></div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="alibaba-favorite-btn bg-orange" @click.stop="handleFavoriteClick">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+        </svg>
+      </div>
+      
+      <div v-if="product.discount" class="discount-badge">-{{ product.discount }}%</div>
+    </div>
+
+    <div class="alibaba-card-content" :style="{ height: cardContentHeight }">
+      <div class="product-info-section">
+        <h2 class="alibaba-title">
+          <span>{{ product.name }}</span>
+        </h2>
+
+        <div class="product-pricing">
+          <div class="unit-price">
+            <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }} <span style="font-size: 12px;"></span></span>
+            <span v-if="product.originalPrice" class="original-price">{{ formatPrice(product.originalPrice) }}</span>
+          </div>
+          <div class="wholesale-price" v-if="product.wholesale_price || product.wholesalePrice">
+            <span class="price-label">En gros:</span>
+            <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
+            <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs</span>
+          </div>
+        </div>
+
         <div v-if="product.freeShipping" class="shipping-info">
           <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="1" y="3" width="15" height="13"></rect>
@@ -29,7 +134,11 @@
           </svg>
           <span>Free delivery</span>
         </div>
-    
+
+        <div class="alibaba-company">
+          <span>{{ product.boutique_name || product.shopName || 'Boutique' }}</span>
+        </div>
+
         <div class="alibaba-supplier-info">
           <div class="alibaba-supplier-years">
             <span>{{ product.market || 'CI' }}</span>
@@ -38,291 +147,100 @@
             <span v-if="product.reviews">({{ product.reviews }} reviews)</span>
           </div>
         </div>
-        <div class="mobile-grid-shop">{{ product.boutique_name || product.shopName }}</div>
-        <div class="mobile-grid-rating">
-          <span class="stars">⭐⭐⭐⭐⭐</span>
-          <span class="rating-count">({{ product.views || product.reviews || 0 }})</span>
-        </div>
-        <div class="alibaba-action-buttons">
-          <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
-          <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
-        </div>
-      </div>
-    </div>
-    
-    <!-- Version Desktop -->
-    <div 
-      v-else
-      class="alibaba-product-card"
-      
-    >
-      <div @click="handleProductClick" class="alibaba-image-area" :style="{ height: cardImageHeight }">
-        <div class="alibaba-slider">
-          <div class="alibaba-slider-wrapper">
-            <div class="alibaba-slider-link">
-              <img 
-                :src="currentImage" 
-                :alt="product.name" 
-                class="alibaba-slider-img" 
-                loading="lazy"
-              >
-            </div>
-            
-            <!-- Flèches de navigation (seulement si plusieurs images) -->
-            <div 
-              v-if="productImages.length > 1"
-              class="alibaba-arrow-left primary-color" 
-              @click.stop="previousImage"
-            >
-              <svg width="10" height="17" viewBox="0 0 10 17" fill="none">
-                <path d="M9 1L1 8.5L9 16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            <div 
-              v-if="productImages.length > 1"
-              class="alibaba-arrow-right primary-color" 
-              @click.stop="nextImage"
-            >
-              <svg width="10" height="17" viewBox="0 0 10 17" fill="none"  >
-                <path d="M1 1L9 8.5L1 16" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-              </svg>
-            </div>
-            
-            <!-- Indicateurs (seulement si plusieurs images) -->
-            <div v-if="productImages.length > 1" class="alibaba-slider-indicators">
-              <div 
-                v-for="(img, imgIndex) in productImages" 
-                :key="imgIndex"
-                class="alibaba-indicator" 
-                :class="{ 'active': imgIndex === currentImageIndex }"
-                @click.stop="setImage(imgIndex)"
-              ></div>
-            </div>
+
+        <div v-if="productImages.length > 1" class="alibaba-similar-products">
+          <div 
+            v-for="(img, imgIndex) in productImages.slice(0, 3)" 
+            :key="imgIndex"
+            class="alibaba-mini-product"
+          >
+            <img :src="img" alt="Similar product" loading="lazy">
           </div>
         </div>
-        
-        <div class="alibaba-favorite-btn bg-orange" @click.stop="handleFavoriteClick">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-          </svg>
-        </div>
-        
-        <!-- Badge de réduction (si applicable) -->
-        <div v-if="product.discount" class="discount-badge">-{{ product.discount }}%</div>
-      </div>
-    
-      <div class="alibaba-card-content" :style="{ height: cardContentHeight }">
-        <div class="product-info-section">
-          <h2 class="alibaba-title">
-            <span>{{ product.name }}</span>
-          </h2>
-    
-          <div class="product-pricing">
-            <div class="unit-price">
-              <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }} <span style="font-size: 12px;"></span></span>
-              <span v-if="product.originalPrice" class="original-price">{{ formatPrice(product.originalPrice) }}</span>
-            </div>
-            <div class="wholesale-price" v-if="product.wholesale_price || product.wholesalePrice">
-              <span class="price-label">En gros:</span>
-              <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
-              <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs</span>
-            </div>
-          </div>
-    
-          <!-- Info livraison gratuite -->
-          <div v-if="product.freeShipping" class="shipping-info">
-            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <rect x="1" y="3" width="15" height="13"></rect>
-              <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-              <circle cx="5.5" cy="18.5" r="2.5"></circle>
-              <circle cx="18.5" cy="18.5" r="2.5"></circle>
-            </svg>
-            <span>Free delivery</span>
-          </div>
-    
-          <div class="alibaba-company">
-            <span>{{ product.boutique_name || product.shopName || 'Boutique' }}</span>
-          </div>
-    
-          <div class="alibaba-supplier-info">
-            <div class="alibaba-supplier-years">
-              <span>{{ product.market || 'CI' }}</span>
-            </div>
-            <div class="alibaba-review">
-              <span v-if="product.reviews">({{ product.reviews }} reviews)</span>
-            </div>
-          </div>
-    
-          <!-- Images similaires (si disponibles) -->
-          <div v-if="productImages.length > 1" class="alibaba-similar-products">
-            <div 
-              v-for="(img, imgIndex) in productImages.slice(0, 3)" 
-              :key="imgIndex"
-              class="alibaba-mini-product"
-            >
-              <img :src="img" alt="Similar product" loading="lazy">
-            </div>
-          </div>
-        </div>
-    
-       <div class="alibaba-action-buttons">
-          <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
-          <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
-        </div>
-    
-        <!-- Badge publicitaire (si applicable) -->
       </div>
 
-      <ChatModal
-  v-if="chatStore.isChatOpen && isMobile"
-  :supplier="chatStore.supplier"
-  :chatMessages="chatStore.chatMessages"
-  @close="chatStore.closeChat"
-  @sendMessage="chatStore.sendMessage"
-/>
-
-<ChatDesktop
-  v-if="chatStore.isChatOpen && !isMobile"
-  :supplier="chatStore.supplier"
-  :chat-messages="chatStore.chatMessages"
-  @close="chatStore.closeChat"
-  @send-message="chatStore.sendMessage"
-/>
+      <div class="alibaba-action-buttons">
+        <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
+        <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
+      </div>
     </div>
-    </template>
-    
+
+    <!-- Chat Modals -->
+    <ChatModal
+      v-if="chatStore.isChatOpen && isMobile"
+      :supplier="chatStore.supplier"
+      :chatMessages="chatStore.chatMessages"
+      @close="chatStore.closeChat"
+      @sendMessage="chatStore.sendMessage"
+    />
+
+    <ChatDesktop
+      v-if="chatStore.isChatOpen && !isMobile"
+      :supplier="chatStore.supplier"
+      :chat-messages="chatStore.chatMessages"
+      @close="chatStore.closeChat"
+      @send-message="chatStore.sendMessage"
+    />
+  </div>
+</template>
+
 <script setup>
-    import { ref, computed, defineProps, defineEmits } from 'vue'
-    import ChatModal from '../product/modals/ChatModal2.vue'
-    import { formatPrice } from '../../services/formatPrice'
+import { ref, computed, defineProps, defineEmits } from 'vue'
+import ChatModal from '../product/modals/ChatModal2.vue'
 import ChatDesktop from '../product/modals/ChatWindow.vue'
-import ChatApiClient from '../../services/chat-api-client'
-    
-    // Props
-    const props = defineProps({
-      product: {
-        type: Object,
-        required: true
-      },
-      isMobile: {
-        type: Boolean,
-        default: false
-      },
-      showAdBadge: {
-        type: Boolean,
-        default: false
-      },
-      cardHeight: {
-        type: [String, Number],
-        default: 230,
-        validator: (value) => {
-          // Accepter les nombres ou les chaînes avec unités CSS
-          return typeof value === 'number' || /^\d+(px|rem|em|vh|%)$/.test(value)
-        }
-      },
-      imageHeight: {
-        type: [String, Number],
-        default: 200,
-        validator: (value) => {
-          // Accepter les nombres ou les chaînes avec unités CSS
-          return typeof value === 'number' || /^\d+(px|rem|em|vh|%)$/.test(value)
-        }
-      }
-    })
+import { formatPrice } from '../../services/formatPrice'
+import { useChatStore } from '../../stores/chat'
 
-    import { useChatStore } from '../../stores/chat'
+const props = defineProps({
+  product: { type: Object, required: true },
+  isMobile: { type: Boolean, default: false },
+  showAdBadge: { type: Boolean, default: false },
+  cardHeight: { type: [String, Number], default: 230 },
+  imageHeight: { type: [String, Number], default: 200 }
+})
 
-    const chatStore = useChatStore()
-    
-    // Emits
-    const emit = defineEmits([
-      'product-click',
-      'favorite-click', 
-      'contact-click',
-      'chat-click'
-    ])
-    
-    // État local pour la navigation des images
-    const currentImageIndex = ref(0)
-    
-    // Computed pour la hauteur dynamique
-    const cardContentHeight = computed(() => {
-      if (typeof props.cardHeight === 'number') {
-        return `${props.cardHeight}px`
-      }
-      return props.cardHeight
-    })
-    
-    const cardImageHeight = computed(() => {
-      if (typeof props.imageHeight === 'number') {
-        return `${props.imageHeight}px`
-      }
-      return props.imageHeight
-    })
-    
-    // Computed
-    const productImages = computed(() => {
-      if (props.product.images && Array.isArray(props.product.images)) {
-        return props.product.images
-      }
-      if (props.product.primary_image) {
-        return [props.product.primary_image]
-      }
-      return ['/placeholder.svg?height=300&width=300']
-    })
-    
-    const currentImage = computed(() => {
-      return productImages.value[currentImageIndex.value] || '/placeholder.svg?height=300&width=300'
-    })
-    
-    const countryFlag = computed(() => {
-      const market = props.product.market?.toLowerCase() || 'ci'
-      return `https://flagcdn.com/w20/${market}.png`
-    })
-    
-    // Méthodes pour la navigation des images
-    const nextImage = () => {
-      if (currentImageIndex.value < productImages.value.length - 1) {
-        currentImageIndex.value++
-      } else {
-        currentImageIndex.value = 0
-      }
-    }
-    
-    const previousImage = () => {
-      if (currentImageIndex.value > 0) {
-        currentImageIndex.value--
-      } else {
-        currentImageIndex.value = productImages.value.length - 1
-      }
-    }
+const emit = defineEmits(['product-click', 'favorite-click', 'contact-click', 'chat-click'])
+const chatStore = useChatStore()
 
-    
-    const setImage = (imageIndex) => {
-      currentImageIndex.value = imageIndex
+const currentImageIndex = ref(0)
+
+const cardContentHeight = computed(() => typeof props.cardHeight === 'number' ? `${props.cardHeight}px` : props.cardHeight)
+const cardImageHeight = computed(() => typeof props.imageHeight === 'number' ? `${props.imageHeight}px` : props.imageHeight)
+
+const productImages = computed(() => {
+  if (props.product.images && Array.isArray(props.product.images)) return props.product.images
+  if (props.product.primary_image) return [props.product.primary_image]
+  return ['/placeholder.svg?height=300&width=300']
+})
+
+const currentImage = computed(() => productImages.value[currentImageIndex.value] || '/placeholder.svg?height=300&width=300')
+
+const nextImage = () => {
+  currentImageIndex.value = (currentImageIndex.value + 1) % productImages.value.length
+}
+const previousImage = () => {
+  currentImageIndex.value = (currentImageIndex.value - 1 + productImages.value.length) % productImages.value.length
+}
+const setImage = (imageIndex) => { currentImageIndex.value = imageIndex }
+
+const handleProductClick = () => emit('product-click', props.product)
+const handleFavoriteClick = () => emit('favorite-click', props.product)
+const handleContactClick = () => emit('contact-click', props.product)
+
+const handleChatClick = async () => {
+  console.log("🎯 Chat click détecté", props.product)
+  try {
+    await chatStore.setSupplier(props.product)
+    if (chatStore.isMobile) {
+      chatStore.openChat()
+    } else {
+      chatStore.openDesktopChat()
     }
-    
-    // Fonction pour formater les prix en FCFA
-    
-    // Gestionnaires d'événements
-    const handleProductClick = () => {
-      emit('product-click', props.product)
-    }
-    
-    const handleFavoriteClick = () => {
-      emit('favorite-click', props.product)
-    }
-    
-    const handleContactClick = () => {
-      emit('contact-click', props.product)
-    }
-    
-    const handleChatClick = () => {
-      console.log("✅ handleChatClick triggered", props.product)
-      chatStore.setSupplier?.(props.product) // safe call
-      chatStore.openChat?.() // safe call
-      emit('chat-click', props.product)
-    }
+    emit('chat-click', props.product)
+  } catch (error) {
+    console.error("❌ Erreur ouverture chat:", error)
+  }
+}
 </script>
     
 <style scoped>

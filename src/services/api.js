@@ -196,7 +196,7 @@ export const productsApi = {
         wholesaleAvailable,
         viewsSort,
         inStock,
-        // <CHANGE> Ajouter les nouveaux paramètres de filtrage de camions
+        // Ajouter les nouveaux paramètres de filtrage de camions
         boutique_market,
         vehicle_make,
         vehicle_condition,
@@ -212,7 +212,7 @@ export const productsApi = {
         gvw_max,
         stock,
         boutique_verified,
-      } = options;
+      } = options
 
       // Construire les paramètres pour l'API
       const params = {
@@ -304,63 +304,63 @@ export const productsApi = {
       }
 
       if (boutique_market) {
-        params.boutique_market = boutique_market;
+        params.boutique_market = boutique_market
       }
 
       if (vehicle_make) {
-        params.vehicle_make = vehicle_make;
+        params.vehicle_make = vehicle_make
       }
 
       if (vehicle_condition) {
-        params.vehicle_condition = vehicle_condition;
+        params.vehicle_condition = vehicle_condition
       }
 
       if (fuel_type) {
-        params.fuel_type = fuel_type;
+        params.fuel_type = fuel_type
       }
 
       if (transmission_type) {
-        params.transmission_type = transmission_type;
+        params.transmission_type = transmission_type
       }
 
       if (drive_type) {
-        params.drive_type = drive_type;
+        params.drive_type = drive_type
       }
 
       if (engine_brand) {
-        params.engine_brand = engine_brand;
+        params.engine_brand = engine_brand
       }
 
       if (vehicle_year_min) {
-        params.vehicle_year_min = vehicle_year_min;
+        params.vehicle_year_min = vehicle_year_min
       }
 
       if (vehicle_year_max) {
-        params.vehicle_year_max = vehicle_year_max;
+        params.vehicle_year_max = vehicle_year_max
       }
 
       if (payload_capacity_min) {
-        params.payload_capacity_min = payload_capacity_min;
+        params.payload_capacity_min = payload_capacity_min
       }
 
       if (payload_capacity_max) {
-        params.payload_capacity_max = payload_capacity_max;
+        params.payload_capacity_max = payload_capacity_max
       }
 
       if (gvw_min) {
-        params.gvw_min = gvw_min;
+        params.gvw_min = gvw_min
       }
 
       if (gvw_max) {
-        params.gvw_max = gvw_max;
+        params.gvw_max = gvw_max
       }
 
       if (stock) {
-        params.stock = "true";
+        params.stock = "true"
       }
 
       if (boutique_verified) {
-        params.boutique_verified = "true";
+        params.boutique_verified = "true"
       }
 
       console.log("🔄 Récupération des produits pour résultats avec paramètres:", params)
@@ -684,7 +684,6 @@ export const productsApi = {
       throw this.handleError(error, "Erreur lors du boost du produit")
     }
   },
-  
 
   /**
    * Créer un nouveau produit
@@ -710,20 +709,20 @@ export const productsApi = {
   },
 
   /**
- * Créer une nouvelle commande
- * @param {Object} orderData - Données de la commande
- * @returns {Promise} Commande créée
- */
-async createOrder(orderData) {
-  try {
-    const response = await apiClient.post("/products.php", orderData, {
-      params: { action: "create_order" },
-    })
-    return response.data
-  } catch (error) {
-    throw this.handleError(error, "Erreur lors de la création de la commande")
-  }
-},
+   * Créer une nouvelle commande
+   * @param {Object} orderData - Données de la commande
+   * @returns {Promise} Commande créée
+   */
+  async createOrder(orderData) {
+    try {
+      const response = await apiClient.post("/products.php", orderData, {
+        params: { action: "create_order" },
+      })
+      return response.data
+    } catch (error) {
+      throw this.handleError(error, "Erreur lors de la création de la commande")
+    }
+  },
 
   /**
    * Mettre à jour un produit existant
@@ -958,19 +957,101 @@ async createOrder(orderData) {
   },
 }
 
-export const premiumApi = {
-  // ✅ NOUVEAU: Récupérer l'abonnement d'une boutique
-  async getBoutiqueSubscription(params = {}) {
+// Service API pour les commandes utilisateur (NOUVELLES MÉTHODES AJOUTÉES)
+export const ordersApi = {
+  /**
+   * Récupérer les commandes de l'utilisateur connecté
+   * @returns {Promise} Liste des commandes
+   */
+  async getMyOrders(userId) {
     try {
-      const response = await apiClient.get('/products.php', {
+      const response = await apiClient.get("/products.php", {
         params: {
-          action: 'premium_subscription',
-          ...params
+          action: "get_my_orders",
+          user_id: userId // ✅ on envoie bien l'ID utilisateur
         }
       })
       return response.data
     } catch (error) {
-      console.error('Erreur getBoutiqueSubscription:', error)
+      throw productsApi.handleError(error, "Erreur lors de la récupération des commandes")
+    }
+  },
+
+  /**
+   * Récupérer les détails d'une commande spécifique
+   * @param {number} orderId - ID de la commande
+   * @returns {Promise} Détails de la commande
+   */
+  async getOrderDetails(orderId) {
+    try {
+      const response = await apiClient.get("/products.php", {
+        params: {
+          action: "get_order_details",
+          order_id: orderId,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de la récupération des détails de la commande") // Utilisation de productsApi.handleError pour la cohérence
+    }
+  },
+
+  /**
+   * Ajouter une preuve de paiement à une commande
+   * @param {number} orderId - ID de la commande
+   * @param {FormData} formData - Données du formulaire avec le fichier
+   * @returns {Promise} Résultat de l'upload
+   */
+  async uploadPaymentProof(orderId, formData) {
+    try {
+      const response = await apiClient.post("/products.php", formData, {
+        params: {
+          action: "upload_payment_proof",
+          commande_id: orderId,
+        },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de l'envoi de la preuve de paiement") // Utilisation de productsApi.handleError pour la cohérence
+    }
+  },
+
+  /**
+   * Annuler une commande
+   * @param {number} orderId - ID de la commande
+   * @param {string} reason - Raison de l'annulation
+   * @returns {Promise} Résultat de l'annulation
+   */
+  async cancelOrder(orderId, reason) {
+    try {
+      const response = await apiClient.post(
+        "/products.php",
+        { commande_id: orderId, reason },
+        { params: { action: "cancel_order" } },
+      )
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de l'annulation de la commande") // Utilisation de productsApi.handleError pour la cohérence
+    }
+  },
+}
+
+export const premiumApi = {
+  // ✅ NOUVEAU: Récupérer l'abonnement d'une boutique
+  async getBoutiqueSubscription(params = {}) {
+    try {
+      const response = await apiClient.get("/products.php", {
+        params: {
+          action: "premium_subscription",
+          ...params,
+        },
+      })
+      return response.data
+    } catch (error) {
+      console.error("Erreur getBoutiqueSubscription:", error)
       throw error
     }
   },
@@ -978,15 +1059,15 @@ export const premiumApi = {
   // ✅ NOUVEAU: Souscrire une boutique à un plan Premium
   async subscribeBoutiqueToPremium(data, params = {}) {
     try {
-      const response = await apiClient.post('/products.php', data, {
+      const response = await apiClient.post("/products.php", data, {
         params: {
-          action: 'premium_subscribe',
-          ...params
-        }
+          action: "premium_subscribe",
+          ...params,
+        },
       })
       return response.data
     } catch (error) {
-      console.error('Erreur subscribeBoutiqueToPremium:', error)
+      console.error("Erreur subscribeBoutiqueToPremium:", error)
       throw error
     }
   },
@@ -994,15 +1075,15 @@ export const premiumApi = {
   // ✅ NOUVEAU: Annuler l'abonnement d'une boutique
   async cancelBoutiqueSubscription(data, params = {}) {
     try {
-      const response = await apiClient.post('/products.php', data, {
+      const response = await apiClient.post("/products.php", data, {
         params: {
-          action: 'premium_cancel',
-          ...params
-        }
+          action: "premium_cancel",
+          ...params,
+        },
       })
       return response.data
     } catch (error) {
-      console.error('Erreur cancelBoutiqueSubscription:', error)
+      console.error("Erreur cancelBoutiqueSubscription:", error)
       throw error
     }
   },
@@ -1010,15 +1091,15 @@ export const premiumApi = {
   // ✅ NOUVEAU: Vérifier les limites Premium d'une boutique
   async checkBoutiquePremiumLimits(params = {}) {
     try {
-      const response = await apiClient.get('/products.php', {
+      const response = await apiClient.get("/products.php", {
         params: {
-          action: 'premium_check_limits',
-          ...params
-        }
+          action: "premium_check_limits",
+          ...params,
+        },
       })
       return response.data
     } catch (error) {
-      console.error('Erreur checkBoutiquePremiumLimits:', error)
+      console.error("Erreur checkBoutiquePremiumLimits:", error)
       throw error
     }
   },
@@ -1026,15 +1107,15 @@ export const premiumApi = {
   // Garder les méthodes existantes
   async getPlans() {
     try {
-      const response = await apiClient.get('/products.php', {
-        params: { action: 'premium_plans' }
+      const response = await apiClient.get("/products.php", {
+        params: { action: "premium_plans" },
       })
       return response.data
     } catch (error) {
-      console.error('Erreur getPlans:', error)
+      console.error("Erreur getPlans:", error)
       throw error
     }
-  }
+  },
 }
 
 // Utilitaires Premium
@@ -1045,7 +1126,7 @@ export const premiumUtils = {
    */
   hasActiveSubscription() {
     const user = boutiqueUtils.getCurrentUser()
-    return user?.premium?.status === 'active' && new Date(user.premium.expires_at) > new Date()
+    return user?.premium?.status === "active" && new Date(user.premium.expires_at) > new Date()
   },
 
   /**
@@ -1065,7 +1146,7 @@ export const premiumUtils = {
   canAddMoreProducts(currentProductCount) {
     const plan = this.getCurrentPlan()
     if (!plan) return currentProductCount < 5 // Plan gratuit: 5 produits max
-    
+
     return currentProductCount < plan.max_products
   },
 
@@ -1075,13 +1156,15 @@ export const premiumUtils = {
    * @returns {string} Prix formaté
    */
   formatPrice(price) {
-    return new Intl.NumberFormat('fr-FR', {
-      style: 'currency',
-      currency: 'XOF',
+    return new Intl.NumberFormat("fr-FR", {
+      style: "currency",
+      currency: "XOF",
       minimumFractionDigits: 0,
-      maximumFractionDigits: 0
-    }).format(price || 0).replace(/\s/g, ' ')
-  }
+      maximumFractionDigits: 0,
+    })
+      .format(price || 0)
+      .replace(/\s/g, " ")
+  },
 }
 
 // Service API pour les catégories (VERSION COMPLÈTE AVEC 4 NIVEAUX)
@@ -1100,7 +1183,6 @@ export const categoriesApi = {
       throw productsApi.handleError(error, "Erreur lors de la récupération des catégories")
     }
   },
-  
 
   /**
    * Récupérer les statistiques des catégories
@@ -1744,9 +1826,9 @@ export const boostApi = {
     try {
       const url = `https://sastock.com/api_adjame/products.php?action=boostproduct&product_id=${productId}&boutique_id=${params.boutique_id}`
       const response = await fetch(url, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(boostData)
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(boostData),
       })
       return await response.json()
     } catch (error) {
@@ -1780,12 +1862,12 @@ export const boostApi = {
   async cancelBoostRequest(boostId, params = {}) {
     try {
       const url = `/api/products.php?action=cancelboost&boost_id=${boostId}&boutique_id=${params.boutique_id}`
-      const response = await fetch(url, { method: 'DELETE' })
+      const response = await fetch(url, { method: "DELETE" })
       return await response.json()
     } catch (error) {
       return { success: false, error: error.message }
     }
-  }
+  },
 }
 
 // Service API pour les couleurs
@@ -1890,7 +1972,7 @@ export const usersApi = {
   },
 
   /**
-  * Vérifier si un email existe déjà
+   * Vérifier si un email existe déjà
    * @param {string} email - Email à vérifier
    * @returns {Promise} Résultat de la vérification
    */
@@ -1912,7 +1994,7 @@ export const usersApi = {
    * Enregistrer un nouvel utilisateur
    * @param {Object} userData - Données de l'utilisateur
    * @returns {Promise} Utilisateur créé
-   */ 
+   */
   async register(userData) {
     try {
       const response = await apiClient.post("/users.php?action=register", userData)
@@ -1922,6 +2004,19 @@ export const usersApi = {
     }
   },
 
+  /**
+   * Enregistrer un nouvel utilisateur
+   * @param {Object} userData - Données de l'utilisateur
+   * @returns {Promise} Utilisateur créé
+   */
+  async addUserToBoutique(userData) {
+    try {
+      const response = await apiClient.post("/users.php?action=add_user", userData)
+      return response.data
+    } catch (error) {
+      throw this.handleError(error, "Erreur lors de la création du compte")
+    }
+  },
 
   /**
    * Enregistrer un nouvel utilisateur
@@ -2039,6 +2134,20 @@ export const usersApi = {
         params: {
           action: "profile",
           user_id: userId,
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw this.handleError(error, "Erreur lors de la récupération du profil")
+    }
+  },
+
+  async getUsersByBoutique(boutique_id) {
+    try {
+      const response = await apiClient.get("/users.php", {
+        params: {
+          action: "boutiques-user",
+          boutique: boutique_id,
         },
       })
       return response.data
