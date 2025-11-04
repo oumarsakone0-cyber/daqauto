@@ -22,6 +22,8 @@ import BoutiqueAdminDashboard from "../components/boutiques/DashboardContent.vue
 import Boutiquee from "../components/boutiques/Boutique.vue"
 import Facture_management from "../components/views/facture_management.vue"
 import ParametreManagement from "../components/views/Parametre-management.vue"
+import OrderValidation from "../components/product/OrderValidation.vue"
+import MesCommandes from "../components/product/MesCommandes.vue"
 
 
 const routes = [
@@ -74,6 +76,24 @@ const routes = [
     path: "/dashboard-admin/commandes",
     name: "dashboard-commandes",
     component: CommandesManagement,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/order-validation",
+    name: "order-validation",
+    component: OrderValidation,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/mes-commandes",
+    name: "mes-commandes",
+    component: MesCommandes,
     meta: {
       requiresAuth: false,
       hideNavigation: false,
