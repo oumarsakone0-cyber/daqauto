@@ -47,7 +47,7 @@
             Réinitialiser
           </button>
           <button 
-            @click="downloadPDF3"
+            @click="downloadPDF"
             class="btn-degrade-orange"
           >
             <Download class="w-4 h-4 mr-2" />
@@ -820,42 +820,82 @@ const downloadPDF = () => {
   // Configuration
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
-  let yPos = 20
+  let yPos = 16
+  let xPos= 20
+  const margin = 20
   
   // En-tête
-  doc.setFillColor(254, 121, 0) // Orange
+  doc.setFillColor(255, 255, 255)
   doc.rect(0, 0, pageWidth, 40, 'F')
   
-  doc.setTextColor(255, 255, 255)
-  doc.setFontSize(24)
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(14)
+  doc.addImage(logo, 20, 12, 8, 8)
   doc.setFont('helvetica', 'bold')
-  doc.text('FACTURE', 20, 25)
+  doc.text('FACTURE', xPos+10, yPos)
   
-  doc.setFontSize(10)
+  doc.setFontSize(7)
   doc.setFont('helvetica', 'normal')
-  doc.text('DAQ AUTO Marketplace', 20, 32)
+  doc.text('DAQ AUTO Marketplace',xPos+10, yPos+4)
   
   // Numéro de facture
-  doc.setFontSize(12)
+   doc.setFillColor(254, 121, 0)
+  doc.rect(pageWidth -50, yPos-4, 33, 5, 'F')
+  
+  doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
-  doc.text(invoice.value.number || 'FAC-XXXX-XXX', pageWidth - 20, 25, { align: 'right' })
-  
-  yPos = 55
-  
-  // Informations entreprise
-  doc.addImage(logo, 'PNG', 20, yPos-4, 6, 6)
+  doc.setFontSize(12)
+  doc.text(invoice.value.number || 'FAC-XXXX-XXX', pageWidth - margin, yPos, { align: 'right' })
+
+  // Dates (sous le n°)
   doc.setTextColor(0, 0, 0)
-  doc.setFontSize(12)
-  doc.setFont('helvetica', 'bold')
-  doc.text('DAQ AUTO', 28, yPos)
   doc.setFontSize(8)
+  doc.setFont('helvetica', 'bold')
+  doc.text(`Date: ${formatDate(invoice.value.date)}`, pageWidth - margin-7, yPos+4, { align: 'right' })
+  doc.text(`Échéance: ${formatDate(invoice.value.dueDate)}`, pageWidth - margin, yPos+8, { align: 'right' })
+
+    // doc.setLineWidth(200)
+  
+  yPos = 40
+  doc.setFontSize(9) 
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0, 0, 0)
+  doc.text('Seller :', xPos, yPos)
+  
+  yPos=43
+  // Informations entreprise
+  doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'bold')
+  doc.text('DAQ AUTO', xPos+8, yPos+5)
+  doc.setFontSize(7)
   doc.setFont('helvetica', 'normal')
-  doc.text('Abidjan, Côte d\'Ivoire', 20, yPos + 6)
-  doc.text('+225 01 53 67 60 62', 20, yPos + 10)
-  doc.text('commandes@daqauto.com', 20, yPos + 14)
-  doc.text('(USCC): 91310000MA1K4T123X', 20, yPos + 18)
+  doc.text('Abidjan, Côte d\'Ivoire', xPos, yPos +10 )
+  doc.text('+225 01 53 67 60 62', xPos, yPos + 13)
+  doc.text('commandes@daqauto.com', xPos, yPos + 16)
+  doc.text('(USCC): 91310000MA1K4T123X', xPos, yPos + 19)
   
   // Dates
+   doc.setFontSize(9) 
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0, 0, 0)
+  doc.text('Buyer :', pageWidth - 50, yPos-3, { align: 'left' })
+
+
+  doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'bold')
+  doc.text('DAQ AUTO', pageWidth -xPos+8, yPos+5,{ align: 'right' })
+  doc.setFontSize(7)
+  doc.setFont('helvetica', 'normal')
+  doc.text('Abidjan, Côte d\'Ivoire', pageWidth -xPos, yPos +10,{ align: 'right' } )
+  doc.text('+225 01 53 67 60 62', pageWidth -xPos, yPos + 13,{ align: 'right' })
+  doc.text('commandes@daqauto.com', pageWidth -xPos, yPos + 16,{ align: 'right' })
+  doc.text('(USCC): 91310000MA1K4T123X', pageWidth -xPos, yPos + 19,{ align: 'right' })
+
+
   doc.setFontSize(10)
   doc.setFont('helvetica', 'bold')
   doc.text('Date:', pageWidth - 70, yPos, { align: 'left' })
@@ -967,6 +1007,10 @@ const downloadPDF = () => {
   // Téléchargement
   doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
 }
+
+
+// pdf 2
+
 const downloadPDF2 = () => {
   const doc = new jsPDF({ unit: 'mm', format: 'a4' })
   const pageWidth = doc.internal.pageSize.getWidth()
@@ -1367,13 +1411,13 @@ const downloadPDF3 = async () => {
       page++
   }
 
-    // pdf.save('facture.pdf')
+    pdf.save('facture.pdf')
 
 
 
 
   // // 💾 Sauvegarde
-  doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
+  // pdf.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
 }
 
 
