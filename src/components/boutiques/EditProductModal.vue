@@ -19,8 +19,8 @@
               <EditIcon class="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Modifier le produit</h2>
-              <p class="text-sm text-gray-600 hidden sm:block">Modifiez les informations de votre produit</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Edit the product</h2>
+              <p class="text-sm text-gray-600 hidden sm:block">Edit your product information</p>
             </div>
           </div>
          
@@ -41,7 +41,7 @@
                 @click="fetchMethodes" 
                 class="ml-2 px-2 py-1 error-background-color text-white rounded text-xs hover:bg-red-700 transition-colors"
               >
-                Réessayer
+                Try again
               </button>
             </div>
           </div>
@@ -53,7 +53,7 @@
   
           <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 primary-color rounded-lg flex items-center space-x-2">
             <div class="animate-spin w-4 h-4 border-2 border-orange-500 border-t-transparent rounded-full flex-shrink-0"></div>
-            <span class="text-sm">Chargement des catégories...</span>
+            <span class="text-sm">Loading...</span>
           </div>
         </div>
       </div>
@@ -66,14 +66,14 @@
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <InfoIcon class="w-4 h-4 text-white" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Informations de base</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Basic information</h3>
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
              
               <div class="sm:col-span-2">
                 <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                  Nom du produit <span class="error-color">*</span>
+                  Product name <span class="error-color">*</span>
                 </label>
                 <input
                   id="name"
@@ -81,12 +81,12 @@
                   type="text"
                   required
                   class="input-style"
-                  placeholder="Ex: T-shirt Premium Coton"
+                  placeholder="Ex: New 2025 DAYUN DAYUN N8E Camions 4x2"
                 >
               </div>
               <div>
                 <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                  Catégorie <span class="error-color">*</span>
+                  Category <span class="error-color">*</span>
                 </label>
                 <select
                   id="category"
@@ -96,7 +96,7 @@
                   :disabled="categoriesLoading"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
+                  <option value="">{{ categoriesLoading ? 'loading...' : 'Select a category' }}</option>
                   <option v-for="category in categories" :key="category.id" :value="category.id">
                     {{ category.name }}
                   </option>
@@ -105,7 +105,7 @@
    
               <div>
                 <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                  Sous-catégorie <span class="error-color">*</span>
+                  Subcategory <span class="error-color">*</span>
                 </label>
                 <select
                   id="subcategory"
@@ -115,7 +115,7 @@
                   :disabled="!editData.category_id || categoriesLoading"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Sélectionner une sous-catégorie</option>
+                  <option value="">Select a subcategory</option>
                   <option v-for="subcategory in availableSubcategories" :key="subcategory.id" :value="subcategory.id">
                     {{ subcategory.name }}
                   </option>
@@ -124,7 +124,7 @@
   
               <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                  Sous-sous-catégorie
+                  Subsubcategory
                 </label>
                 <select
                   id="subsubcategory"
@@ -133,7 +133,7 @@
                   :disabled="!editData.subcategory_id || categoriesLoading"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Sélectionner une sous-sous-catégorie (optionnel)</option>
+                  <option value="">Select a subsubcategory (optional)</option>
                   <option v-for="subsubcategory in availableSubSubcategories" :key="subsubcategory.id" :value="subsubcategory.id">
                     {{ subsubcategory.name }}
                   </option>
@@ -142,7 +142,7 @@
   
               <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
                 <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                  Sous-sous-sous-catégorie
+                  Subsubsubcategory
                 </label>
                 <select
                   id="subsubsubcategory"
@@ -150,7 +150,7 @@
                   :disabled="!editData.subsubcategory_id || categoriesLoading"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Sélectionner une sous-sous-sous-catégorie (optionnel)</option>
+                  <option value="">Select a subsubsubcategory (optional)</option>
                   <option v-for="subsubsubcategory in availableSubSubSubcategories" :key="subsubsubcategory.id" :value="subsubsubcategory.id">
                     {{ subsubsubcategory.name  }}
                   </option>
@@ -158,14 +158,14 @@
               </div>
               <div class="sm:col-span-2">
                 <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
-                  Tags (optionnel)
+                  Tags (optional)
                 </label>
                 <input
                   id="tags"
                   v-model="editData.tags"
                   type="text"
                   class="text-sm sm:text-base input-style"
-                  placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
+                  placeholder="Ex: New, trend, promotion (separated by commas)"
                 >
               </div>
             </div>
@@ -178,13 +178,13 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                 </svg>
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Spécifications Véhicule</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vehicle Specifications</h3>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                <div>
                 <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
-                  Marque du véhicule
+                  Vehicle brand <span class="error-color">*</span>
                 </label>
                 <select
                     id="vehicle_make"
@@ -194,7 +194,7 @@
                     v-model="editData.vehicle_make"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">{{ brandsLoading ? 'Chargement...' : 'Selectionner la marque du véhicule' }}</option>
+                    <option value="">{{ brandsLoading ? 'Loading...' : 'Select a vehicle brand' }}</option>
                     <option v-for="brand in brands" :key="brand.id" :value="brand.name">
                       {{ brand.name }}
                     </option>
@@ -202,22 +202,22 @@
               </div>
               <div>
                 <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
-                  État du véhicule 
+                  Vehicle Condition
                 </label>
                 <select
                   id="vehicle_condition"
                   v-model="editData.vehicle_condition"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Selectionner l'état du véhicule</option>
-                  <option value="new">Neuf</option>
-                  <option value="used">Occasion</option>
-                  <option value="refurbished">Reconditionné</option>
+                  <option value="">Select a vehicle condition</option>
+                  <option value="new">New</option>
+                  <option value="used">Used</option>
+                  <option value="refurbished">Refurbished</option>
                 </select>
               </div>
               <div>
                 <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
-                  Modèle du véhicule
+                  Vehicle Model
                 </label>
                 <select
                     id="vehicle_model"
@@ -227,7 +227,7 @@
                     :disabled="!editData.vehicle_make || brandsLoading"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Selectionner le modèle du véhicule</option>
+                    <option value="">Select a vehicle model</option>
                     <option v-for="model in availableModels" :key="model.name" :value="model.name">
                       {{ model.name  }}
                     </option>
@@ -235,7 +235,7 @@
               </div>
               <div>
                 <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
-                  Année
+                  Year
                 </label>
                 <input
                   id="vehicle_year"
@@ -249,7 +249,7 @@
               </div>
                <div>
                 <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de carburant
+                  Fuel Type
                 </label>
                 <input
                     type="text"
@@ -262,14 +262,14 @@
 
               <div>
                 <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de transmission
+                  Transmission Type
                 </label>
                 <select
                   id="drive_type"
                   v-model="editData.drive_type"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Tous les types</option>
+                  <option value="">All Types</option>
                   <option value="4X2">4x2</option>
                   <option value="6X2">6x2</option>
                   <option value="6X4">6x4</option>
@@ -281,7 +281,7 @@
               </div>
               <div>
                 <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
-                  Date de production
+                  Production Date
                 </label>
                 <input
                   id="production_date"
@@ -293,7 +293,7 @@
 
               <div>
                 <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
-                  Pays d'origine
+                  Country of Origin
                 </label>
                 <input
                   id="country_of_origin"
@@ -306,7 +306,7 @@
 
               <div>
                 <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                  Empattement (mm)
+                  Wheelbase (mm)
                 </label>
                 <input
                   id="wheelbase"
@@ -320,7 +320,7 @@
 
               <div>
                 <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
-                  GVW - Poids Total en Charge (kg)
+                  GVW - Gross Vehicle Weight (kg)
                 </label>
                 <input
                   id="gvw"
@@ -334,7 +334,7 @@
 
               <div>
                 <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                  Capacité de charge utile (kg)
+                  Payload Capacity (kg)
                 </label>
                 <input
                   id="payload_capacity"
@@ -348,7 +348,7 @@
 
               <div>
                 <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de cabine
+                  Cabin Type
                 </label>
                 <input
                   id="cabin_type"
@@ -359,20 +359,20 @@
                 >
               </div>
               <div>
-                <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Poids à vide (Tonnes)
+                <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
+                  Curb Weight (Tonnes)
                 </label>
                 <input
-                  id="suspension_type"
+                  id="curb_weight"
                   v-model="editData.curb_weight"
                   type="text"
                   class="text-sm sm:text-base input-style"
-                  placeholder="Ex: Pneumatique, Mécanique"
+                  placeholder="Ex: 2500"
                 >
               </div>
               <div>
                 <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                  Capacité du réservoir (L)
+                  Fuel Tank Capacity (L)
                 </label>
                 <input
                   id="fuel_tank_capacity"
@@ -386,7 +386,7 @@
 
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Dimensions (L x l x H) en mm
+                  Dimensions (L x l x H) in mm
                 </label>
                 <div class="grid grid-cols-3 gap-3">
                   <input
@@ -394,21 +394,21 @@
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Longueur"
+                    placeholder="Length"
                   >
                   <input
                     v-model="editData.dimension_width"
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Largeur"
+                    placeholder="Width"
                   >
                   <input
                     v-model="editData.dimension_height"
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Hauteur"
+                    placeholder="Height"
                   >
                 </div>
               </div>
@@ -417,7 +417,7 @@
                  
                   <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                     <EditIcon class="w-4 h-4 primary-color mr-1" />
-                    Autres Spécifications (WYSIWYG)
+                    Other Specifications (WYSIWYG)
                   </label>
                 </div>
                 
@@ -461,36 +461,36 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                 </svg>
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Caractéristiques Techniques</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Technical Specifications</h3>
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                   
               <div>
                 <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Boîte de Vitesse
+                  Gearbox
                 </label>
                 <select
                   id="transmission_type"
                   v-model="editData.transmission_type"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Toutes les transmissions</option>
-                  <option value="automatic">Automatique</option>
-                  <option value="manual">Manuelle</option>
+                  <option value="">All transmissions</option>
+                  <option value="automatic">Automatic</option>
+                  <option value="manual">Manual</option>
                 </select>
               </div>
 
               <div>
                 <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
-                  Marque du moteur
+                   Engine brand
                 </label>
                 <select
                   id="engine_brand"
                   v-model="editData.engine_brand"
                   class="text-sm sm:text-base input-style"
                 >
-                  <option value="">Sélectionnez une marque</option>
+                  <option value="">Select a brand</option>
                   <option value="weichai">Weichai</option>
                   <option value="yuchai">Yuchai</option>
                   <option value="sinotruck">Sinotruck</option>
@@ -499,7 +499,7 @@
               </div>
               <div>
                   <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Puissance du Moteur (ch/kW)
+                    Engine Power (ch/kW)
                   </label>
                   <input
                     id="power"
@@ -512,7 +512,7 @@
                 </div>
                 <div>
                   <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Émissions du moteur (g/km)
+                    Engine Emissions (g/km)
                   </label>
                   <input
                     id="fuel_tank_capacity"
@@ -520,13 +520,13 @@
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 40"
+                    placeholder="Ex: EURO II"
                   >
                 </div>
 
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Numéros VIN / Num Chassis
+                  Vin numbers / Num Chassis
                 </label>
                 <div class="space-y-2">
                   <div v-if="editData.vin_numbers && editData.vin_numbers.length" class="space-y-2">
@@ -554,7 +554,7 @@
                   </div>
 
                   <div v-else class="text-sm text-gray-500">
-                    Aucun VIN enregistré.
+                    No VIN registered.
                   </div>
 
                   <button
@@ -562,13 +562,13 @@
                     @click="addVin"
                     class="w-full submit-btn mt-2"
                   >
-                    + Ajouter un numéro
+                    + Add a number
                   </button>
                 </div>
               </div>
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Modèle du véhicule ( Trim )
+                  Vehicle model ( Trim )
                 </label>
                 <div class="space-y-2">
                   <div v-if="editData.trim_numbers && editData.trim_numbers.length" class="space-y-2">
@@ -596,7 +596,7 @@
                   </div>
 
                   <div v-else class="text-sm text-gray-500">
-                    Aucun Numéro Trim enregistré.
+                    No Trim Number Registered.
                   </div>
 
                   <button
@@ -604,13 +604,13 @@
                     @click="addVehicleTrim"
                     class="w-full submit-btn mt-2"
                   >
-                    + Ajouter un numéro
+                    + Add a number
                   </button>
                 </div>
               </div>
               <div >
                 <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
-                  numéro du moteur
+                  engine number
                 </label>
                 <input
                   id="vehicle_mileage"
@@ -622,7 +622,7 @@
               </div>
               <div >
                 <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
-                  Kilométrage (km)
+                  Mileage (km)
                 </label>
                 <input
                   id="vehicle_mileage"
@@ -633,24 +633,24 @@
                   class="text-sm sm:text-base input-style"
                   placeholder="Ex: 150000"
                 >
-                <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
+                <p class="text-xs text-gray-500 mt-1">Between 0 and 200,000 km</p>
               </div>
               <div>
                 <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Type de suspension
+                  Suspension type
                 </label>
                 <input
                   id="suspension_type"
                   v-model="editData.suspension_type"
                   type="text"
                   class="text-sm sm:text-base input-style"
-                  placeholder="Ex: Pneumatique, Mécanique"
+                  placeholder="Ex: Pneumatics, Mechanics"
                 >
               </div>
 
               <div>
                 <label for="brake_system" class="block text-sm font-medium text-gray-700 mb-2">
-                  Système de freinage
+                  Braking system
                 </label>
                 <input
                   id="brake_system"
@@ -663,7 +663,7 @@
 
               <div>
                 <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
-                  Taille des pneus
+                  Tire sizes
                 </label>
                 <input
                   id="tyre_size"
@@ -678,7 +678,7 @@
                  
                   <label for="wysiwygEditor2" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                     <EditIcon class="w-4 h-4 primary-color mr-1" />
-                    Autres descriptions (WYSIWYG)
+                    Other descriptions (WYSIWYG)
                   </label>
                 </div>
                 
@@ -719,14 +719,14 @@
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <DollarSignIcon class="w-4 h-4 text-white" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Price and Stock</h3>
             </div>
   
             <div class="grid grid-cols-1 sm:grid-cols-2  gap-4 sm:gap-6">
               
               <div>
                 <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                  Prix unitaire ($) <span class="error-color">*</span>
+                  Unit price ($) <span class="error-color">*</span>
                 </label>
                 <input
                   id="unit_price"
@@ -757,7 +757,7 @@
               </div>
               <div>
                   <label for="available" class="block text-sm font-medium text-gray-700 mb-2">
-                    Disponibilité du produit
+                    Product availability
                   </label>
                   <select
                     id="available"
@@ -772,7 +772,7 @@
   
               <div>
                 <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Unité
+                  Unit
                 </label>
                 <select
                   id="unit_type"
@@ -796,14 +796,14 @@
                 >
                 <label for="wholesale-price" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                   <ZapIcon class="w-4 h-4 primary-color mr-1" />
-                  Activer le prix de gros
+                  Activate wholesale pricing
                 </label>
               </div>
               
               <div v-if="hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div>
                   <label for="wholesale_price" class="block text-sm font-medium text-gray-700 mb-2">
-                    Prix de gros (FCFA)
+                    Wholesale price (FOB)
                   </label>
                   <input
                     id="wholesale_price"
@@ -816,7 +816,7 @@
                 </div>
                 <div>
                   <label for="wholesale_min_qty" class="block text-sm font-medium text-gray-700 mb-2">
-                    Quantité minimale
+                    Minimum quantity
                   </label>
                   <input
                     id="wholesale_min_qty"
@@ -836,7 +836,7 @@
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <PaletteIcon class="w-4 h-4 text-white" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Couleurs</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Colors</h3>
             </div>
   
             <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
@@ -862,12 +862,12 @@
             </div>
 
             <div class="border-t border-gray-200 pt-4">
-              <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une couleur personnalisée</label>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Add a custom color</label>
               <div class="flex gap-2">
                 <input 
                   v-model="customColor.name"
                   type="text" 
-                  placeholder="Nom de la couleur"
+                  placeholder="Color name"
                   class="flex-1 text-sm input-style"
                 >
                 <input 
@@ -880,15 +880,15 @@
                   type="button"
                   class="px-4 py-2  text-white rounded-lg   transition-all font-medium text-sm btn-degrade-orange"
                 >
-                  Ajouter
+                  Add
                 </button>
               </div>
             </div>
  
             <div v-if="colorsToAdd.length > 0 || colorsToRemove.length > 0" class="mt-6 space-y-4">
-                Couleurs à ajouter  
+                Colors to add  
               <div v-if="colorsToAdd.length > 0" class="bg-green-50 border border-green-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium text-green-800 mb-2">Couleurs à ajouter :</h4>
+                <h4 class="text-sm font-medium text-green-800 mb-2">Colors to add :</h4>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="color in colorsToAdd" 
@@ -905,7 +905,7 @@
               </div>
 
               <div v-if="colorsToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium error-color mb-2">Couleurs à supprimer :</h4>
+                <h4 class="text-sm font-medium error-color mb-2">Colors to delete :</h4>
                 <div class="flex flex-wrap gap-2">
                   <span 
                     v-for="color in colorsToRemove" 
@@ -927,7 +927,7 @@
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <ImageIcon class="w-4 h-4 text-white" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Images du produit</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Product images</h3>
               <span class="text-sm text-gray-500">({{ editData.images.length }}/8)</span>
             </div>
 
@@ -941,9 +941,9 @@
                   <div class="flex flex-col items-center justify-center pt-5 pb-6">
                     <ImageIcon class="w-8 h-8 mb-4 text-gray-500" />
                     <p class="mb-2 text-sm text-gray-500">
-                      <span class="font-semibold">Cliquez pour ajouter</span> des images
+                      <span class="font-semibold">Click to add</span> images
                     </p>
-                    <p class="text-xs text-gray-500">PNG, JPG jusqu'à 10MB par image</p>
+                    <p class="text-xs text-gray-500">PNG, JPG up to 10MB per image</p>
                   </div>
                   <input 
                     id="image-upload"
@@ -976,7 +976,7 @@
                   v-if="index === 0"
                   class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md"
                 >
-                  Principale
+                  Main
                 </div>
                 <div v-if="image.uploading" class="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
                   <div class="text-white text-sm font-medium">{{ image.uploadProgress }}%</div>
@@ -1023,7 +1023,7 @@
                   </div>
                 </div>
                 <div class="mt-2 text-xs text-green-700">
-                  <strong>Liens :</strong>
+                  <strong>Links :</strong>
                   <ul class="list-disc list-inside mt-1 space-y-1">
                     <li v-for="(image, index) in imagesToAdd" :key="index" class="break-all">
                       {{ image.url || 'En attente d\'upload...' }}
@@ -1033,7 +1033,7 @@
               </div>
 
               <div v-if="imagesToRemove.length > 0" class="bg-red-50 border border-red-200 rounded-lg p-4">
-                <h4 class="text-sm font-medium error-color mb-3">Images à supprimer ({{ imagesToRemove.length }}) :</h4>
+                <h4 class="text-sm font-medium error-color mb-3">Images to delete ({{ imagesToRemove.length }}) :</h4>
                 <div class="grid grid-cols-3 sm:grid-cols-4 gap-3">
                   <div 
                     v-for="(imageUrl, index) in imagesToRemove" 
@@ -1051,7 +1051,7 @@
                   </div>
                 </div>
                 <div class="mt-2 text-xs error-color">
-                  <strong>Liens :</strong>
+                  <strong>Links :</strong>
                   <ul class="list-disc list-inside mt-1 space-y-1">
                     <li v-for="(imageUrl, index) in imagesToRemove" :key="index" class="break-all">
                       {{ imageUrl }}
@@ -1063,8 +1063,8 @@
 
             <div v-if="editData.images.length === 0" class="text-center py-8 text-gray-500">
               <ImageIcon class="w-12 h-12 mx-auto mb-4 text-gray-300" />
-              <p>Aucune image ajoutée</p>
-              <p class="text-sm">Ajoutez jusqu'à 8 images pour votre produit</p>
+              <p>No image added</p>
+              <p class="text-sm">Add up to 8 images for your product</p>
             </div>
           </div>
 
@@ -1073,7 +1073,7 @@
               <div class="w-8 h-8 bg-orange rounded-lg flex items-center justify-center">
                 <VideoIcon class="w-4 h-4 text-white" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vidéo (optionnel)</h3>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Video (optional)</h3>
             </div>
 
             <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors">
@@ -1081,10 +1081,10 @@
               <div>
                 <label for="video-upload" class="cursor-pointer">
                   <span class="block text-sm text-gray-600 mb-2">
-                    Cliquez pour télécharger une vidéo
+                    Click to download a video
                   </span>
                   <span class="block text-xs text-gray-500">
-                    MP4, MOV, AVI jusqu'à 50MB
+                    MP4, MOV, AVI files up to 50 MB
                   </span>
                 </label>
                 <input 
@@ -1099,13 +1099,13 @@
             
             <div v-if="editData.video" class="mt-6">
               <video :src="editData.video.preview || editData.video.url" controls class="w-full max-w-md mx-auto rounded-lg shadow-lg">
-                Votre navigateur ne supporte pas la lecture de vidéos.
+                Your browser does not support video playback.
               </video>
               
               <div v-if="editData.video.uploading" class="mt-4">
                 <div class="flex items-center justify-center space-x-2">
                   <div class="animate-spin rounded-full h-5 w-5 border-2 border-orange-500 border-t-transparent"></div>
-                  <span class="text-sm text-gray-600">Upload en cours... {{ editData.video.uploadProgress }}%</span>
+                  <span class="text-sm text-gray-600">uploading... {{ editData.video.uploadProgress }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2 mt-2">
                   <div 
@@ -1117,7 +1117,7 @@
 
               <div v-if="editData.video.uploaded" class="mt-4 p-3 bg-green-50 border border-green-200 rounded-lg flex items-center space-x-2">
                 <CheckCircleIcon class="w-5 h-5 text-green-600" />
-                <span class="text-sm text-green-700">Vidéo téléchargée avec succès</span>
+                <span class="text-sm text-green-700">Video successfully downloaded</span>
               </div>
 
               <button 
@@ -1125,7 +1125,7 @@
                 type="button"
                 class="mt-4 px-4 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors font-medium"
               >
-                Supprimer la vidéo
+                delete video
               </button>
             </div>
           </div>
@@ -1140,7 +1140,7 @@
               >
               <label for="is-active" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                 <CheckCircleIcon class="w-4 h-4 text-green-600 mr-1" />
-                Produit actif
+                Active product
               </label>
             </div>
           </div>
@@ -1156,7 +1156,7 @@
             :disabled="isLoading"
             class="flex-1 px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium    transition-colors disabled:opacity-50 disabled:cursor-not-allowed btn-gray"
           >
-            Annuler
+            Cancel
           </button>
           
           <button
@@ -1167,11 +1167,11 @@
           >
             <div v-if="isLoading" class="flex items-center justify-center">
               <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-              Modification...
+              Editing...
             </div>
             <div v-else class="flex items-center justify-center">
               <CheckIcon class="w-4 h-4 mr-2" />
-              Modifier le produit
+              Edit product
             </div>
           </button>
         </div>
@@ -1291,44 +1291,6 @@ const editData = ref({
 
 const hasWholesalePrice = ref(false)
 
-// Types de tailles
-const sizeTypes = ref([
-  { 
-    value: 'clothing', 
-    label: 'Tailles de vêtements',
-    sizes: ['XS', 'S', 'M', 'L', 'XL', 'XXL', 'XXXL']
-  },
-  { 
-    value: 'shoes', 
-    label: 'Pointures de chaussures',
-    sizes: ['35', '36', '37', '38', '39', '40', '41', '42', '43', '44', '45', '46', '47']
-  },
-  { 
-    value: 'storage', 
-    label: 'Capacité de stockage',
-    sizes: ['16GB', '32GB', '64GB', '128GB', '256GB', '512GB', '1TB', '2TB']
-  },
-  { 
-    value: 'screen', 
-    label: 'Taille d\'écran',
-    sizes: ['5.5"', '6.1"', '6.7"', '13"', '15"', '17"', '21"', '24"', '27"', '32"']
-  },
-  { 
-    value: 'ring', 
-    label: 'Taille de bague',
-    sizes: ['48', '50', '52', '54', '56', '58', '60', '62', '64', '66', '68']
-  },
-  { 
-    value: 'watch', 
-    label: 'Taille de bracelet de montre',
-    sizes: ['38mm', '40mm', '42mm', '44mm', '45mm', '49mm']
-  },
-  { 
-    value: 'custom', 
-    label: 'Tailles personnalisées',
-    sizes: []
-  }
-])
 
 const availableColors = ref([
   { name: 'Noir', value: '#000000' },
@@ -1417,9 +1379,9 @@ const getColorName = (colorValue) => {
 }
 
 const availability = ref([
-  { value: 'available', label: 'Disponible' },
-  { value: 'unavailable', label: 'Indisponible' },
-  { value: 'on_order', label: 'Sur Commande' },
+  { value: 'available', label: 'Available' },
+  { value: 'unavailable', label: 'uUnavailable' },
+  { value: 'on_order', label: 'On order' },
 ])
 // Méthodes
 const fetchMethodes = async ()=>{
@@ -1436,8 +1398,7 @@ const fetchCategories = async () => {
     categories.value = response.data || []
     
   } catch (err) {
-    console.error('Erreur lors du chargement des catégories:', err)
-    categoriesError.value = 'Impossible de charger les catégories. Veuillez réessayer.'
+    categoriesError.value = 'Impossible to load categories. Try again please.'
   } finally {
     categoriesLoading.value = false
   }
@@ -1554,7 +1515,7 @@ const fetchBrands = async () => {
     const response = await brandsApi.getBrands()
     brands.value = response.data || []
   } catch (err) {
-    brandsError.value = 'Impossible de charger les Marques. Veuillez réessayer.'
+    brandsError.value = 'Impossible to load. Try again.'
   } finally {
     brandsLoading.value = false
   }
@@ -1618,7 +1579,7 @@ const handleSubmit = async () => {
   try {
     isLoading.value = true
     error.value = null
-    loadingMessage.value = 'Téléchargement des nouvelles images...'
+    loadingMessage.value = 'Loading new images...'
     
     // Upload des nouvelles images
     const uploadPromises = newImages.value.map((image, index) => 
@@ -1629,7 +1590,7 @@ const handleSubmit = async () => {
 
     // Upload de la vidéo si nécessaire
     if (editData.value.video && editData.value.video.file && !editData.value.video.uploaded) {
-      loadingMessage.value = 'Téléchargement de la vidéo...'
+      loadingMessage.value = 'Loading video...'
       await uploadVideoToCloudinary(editData.value.video)
     }
     
@@ -1643,7 +1604,7 @@ const handleSubmit = async () => {
       return null
     }).filter(Boolean)
     
-    loadingMessage.value = 'Modification en cours...'
+    loadingMessage.value = 'Editing...'
     const formData = {
       id: editData.value.id,
       name: editData.value.name,
@@ -1710,13 +1671,11 @@ const handleSubmit = async () => {
       formData.video_url = editData.value.video.url
     }
 
-    console.log("FormData: ",formData)
     
     emit('save', formData)
     
   } catch (err) {
-    console.error('Erreur lors de la modification:', err)
-    error.value = 'Erreur lors de la modification du produit'
+    error.value = 'Error to edit product. Please try again.'
   } finally {
     isLoading.value = false
   }
@@ -1733,7 +1692,7 @@ const handleImageUpload = (event) => {
   const remainingSlots = 8 - editData.value.images.length
   
   if (remainingSlots <= 0) {
-    error.value = 'Vous avez déjà atteint la limite de 8 images'
+    error.value = 'You have already reached the limit of 8 images'
     return
   }
   
@@ -1755,7 +1714,7 @@ const handleImageUpload = (event) => {
       }
       reader.readAsDataURL(file)
     } else {
-      error.value = 'Certaines images sont trop volumineuses (max 10MB)'
+      error.value = 'Some images are too large (max 10MB)'
     }
   })
   
@@ -1779,7 +1738,7 @@ const handleVideoUpload = (event) => {
     }
     reader.readAsDataURL(file)
   } else if (file) {
-    error.value = 'La vidéo est trop volumineuse (max 50MB)'
+    error.value = 'The video is too large (max 50MB)'
   }
 }
 
@@ -1851,7 +1810,6 @@ const uploadImageToCloudinary = async (image, index) => {
       throw new Error('Réponse Cloudinary invalide')
     }
   } catch (error) {
-    console.error(`Erreur lors du téléchargement de l'image ${index}:`, error)
     image.uploading = false
     return null
   }
@@ -1905,7 +1863,6 @@ const uploadVideoToCloudinary = async (video) => {
       xhr.send(formData)
     })
   } catch (error) {
-    console.error('Erreur lors du téléchargement de la vidéo:', error)
     video.uploading = false
     throw error
   }
@@ -1920,7 +1877,6 @@ watch(() => props.product, (newProduct) => {
       }
       return imageUrl.url || imageUrl
     })
-    console.log("new:", newProduct)
     editData.value = {
       id: newProduct.id,
       name: newProduct.name || '',
@@ -2006,7 +1962,6 @@ watch(() => props.product, (newProduct) => {
       }
     }
   })
-  console.log("editData après mise à jour:", editData.value.engine_number)
 }, { immediate: true })
 
 watch(() => editData.value.description_plus, (val) => {

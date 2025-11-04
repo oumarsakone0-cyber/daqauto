@@ -19,8 +19,8 @@
               <PlusIcon class="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Ajouter un produit</h2>
-              <p class="text-sm text-gray-600 hidden sm:block">Créez un nouveau produit pour votre boutique</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Add a product</h2>
+              <p class="text-sm text-gray-600 hidden sm:block">Create a new product for your store</p>
             </div>
           </div>
           
@@ -41,7 +41,7 @@
                 @click="fetchCategories" 
                 class="ml-2 px-2 py-1 text-xs error-background-color"
               >
-                Réessayer
+                Try again
               </button>
             </div>
           </div>
@@ -53,7 +53,7 @@
 
           <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-orange-400 rounded-lg flex items-center space-x-2">
             <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full flex-shrink-0"></div>
-            <span class="text-sm">Chargement des catégories...</span>
+            <span class="text-sm">Loading categories...</span>
           </div>
         </div>
 
@@ -103,13 +103,13 @@
                 <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <InfoIcon class="w-4 h-4 text-white" />
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Informations de base</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Basic Informations</h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div class="sm:col-span-2">
                   <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
-                    Nom du produit 
+                    Product name 
                   </label>
                   <input
                     id="name"
@@ -118,13 +118,13 @@
                     required
                     disabled="true"
                     class=" text-sm sm:text-base  input-style"
-                    placeholder="Le nom du produit sera généré automatiquement"
+                    placeholder="The product name will be generated automatically"
                   >
                 </div>
 
                 <div>
                   <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
-                    Catégorie <span class="error-color">*</span>
+                    Category <span class="error-color">*</span>
                   </label>
                   <select
                     id="category"
@@ -135,7 +135,7 @@
                     class="text-sm sm:text-base input-style"
                     placeholder=""
                   >
-                    <option value="">{{ categoriesLoading ? 'Chargement...' : 'Sélectionner une catégorie' }}</option>
+                    <option value="">{{ categoriesLoading ? 'Loading...' : 'Select a category' }}</option>
                     <option v-for="category in categories" :key="category.id" :value="category.id">
                       {{ category.name }}
                     </option>
@@ -144,7 +144,7 @@
 
                 <div>
                   <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                    Sous-catégorie <span class="error-color">*</span>
+                    Subcategory <span class="error-color">*</span>
                   </label>
                   <select
                     id="subcategory"
@@ -154,7 +154,7 @@
                     :disabled="!productData.category_id || categoriesLoading"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Sélectionner une sous-catégorie</option>
+                    <option value="">Select a subcategory</option>
                     <option v-for="subcategory in availableSubcategories" :key="subcategory.id" :value="subcategory.id">
                       {{ subcategory.name }}
                     </option>
@@ -163,7 +163,7 @@
 
                 <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
                   <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                    Sous-sous-catégorie
+                    Subsubcategory
                   </label>
                   <select
                     id="subsubcategory"
@@ -172,7 +172,7 @@
                     :disabled="!productData.subcategory_id || categoriesLoading"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Sélectionner une sous-sous-catégorie (optionnel)</option>
+                    <option value="">Select a subsubcategory (optional)</option>
                     <option v-for="subsubcategory in availableSubSubcategories" :key="subsubcategory.id" :value="subsubcategory.id">
                       {{ subsubcategory.name }}
                     </option>
@@ -181,7 +181,7 @@
 
                 <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
                   <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
-                    Sous-sous-sous-catégorie
+                    Subsubsubcategory
                   </label>
                   <select
                     id="subsubsubcategory"
@@ -190,7 +190,7 @@
                     class="text-sm sm:text-base input-style"
                     style="color: black"
                   >
-                    <option value="">Sélectionner une sous-sous-sous-catégorie (optionnel)</option>
+                    <option value="">Select a subsubsubcategory (optional)</option>
                     <option v-for="subsubsubcategory in availableSubSubSubcategories" :key="subsubsubcategory.id" :value="subsubsubcategory.id">
                       {{ subsubsubcategory.name }}
                     </option>
@@ -200,14 +200,14 @@
 
                 <div class="sm:col-span-2">
                   <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
-                    Tags (optionnel)
+                    Tags (optional)
                   </label>
                   <input
                     id="tags"
                     v-model="productData.tags"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: nouveau, tendance, promotion (séparés par des virgules)"
+                    placeholder="Ex: new, trending, promotion (separated by commas)"
                   >
                 </div>
               </div>
@@ -222,14 +222,14 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Spécifications Véhicule</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vehicle Specifications </h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
 
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
-                    Marque du véhicule <span class="error-color">*</span>
+                    vehicle brand <span class="error-color">*</span>
                   </label>
                   <select
                     id="vehicle_make"
@@ -239,7 +239,7 @@
                     v-model="productData.vehicle_brand_id"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">{{ brandsLoading ? 'Chargement...' : 'Selectionner la marque du véhicule' }}</option>
+                    <option value="">{{ brandsLoading ? 'Loading...' : 'Select a vehicle brand' }}</option>
                     <option v-for="brand in brands" :key="brand.id" :value="brand.id">
                       {{ brand.name }}
                     </option>
@@ -248,7 +248,7 @@
                 
                 <div>
                   <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
-                    État du véhicule <span class="error-color">*</span>
+                    Vehicle condition <span class="error-color">*</span>
                   </label>
                   <select
                     id="vehicle_condition"
@@ -256,15 +256,15 @@
                     class="text-sm sm:text-base input-style"
                     required
                   >
-                    <option value="">Selectionner l'état du véhicule</option>
-                    <option value="New">Neuf</option>
-                    <option value="Used">Occasion</option>
-                    <option value="Refurbished">Reconditionné</option>
+                    <option value="">Select vehicle condition</option>
+                    <option value="New">New</option>
+                    <option value="Used">Used</option>
+                    <option value="Refurbished">Refurbished</option>
                   </select>
                 </div>
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
-                    Modèle du véhicule <span class="error-color">*</span>
+                    Vehicle model <span class="error-color">*</span>
                   </label>
                   <select
                     id="vehicle_model"
@@ -274,7 +274,7 @@
                     :disabled="!productData.vehicle_brand_id || brandsLoading"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Selectionner le modèle du véhicule</option>
+                    <option value="">Select a vehicle model</option>
                     <option v-for="model in availableModels" :key="model.id" :value="model.id">
                       {{ model.name  }}
                     </option>
@@ -282,7 +282,7 @@
                 </div>
                 <div>
                   <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
-                    Année <span class="error-color">*</span>
+                    Year <span class="error-color">*</span>
                   </label>
                   <input
                     id="vehicle_year"
@@ -298,26 +298,26 @@
                 
                 <div>
                   <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de carburant
+                   Fuel type
                   </label>
                   <input
                     type="text"
                     :value="productData.fuel_type"
                     disabled
                     class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
-                    placeholder="Le type de carburant sera défini automatiquement"
+                    placeholder="The fuel type will be set automatically"
                   >
                 </div>
                 <div>
                   <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de transmission <span class="error-color">*</span>
+                    Transmission type<span class="error-color">*</span>
                   </label>
                   <select
                     id="drive_type"
                     v-model="productData.drive_type"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Selectionner le type de transmission</option>
+                    <option value="">Select a Transmission type</option>
                     <option value="4x2">4X2</option>
                     <option value="6x2">6X2</option>
                     <option value="6x4">6X4</option>
@@ -329,7 +329,7 @@
                 </div>
                 <div>
                   <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
-                    Date de production <span class="error-color">*</span>
+                    Production date <span class="error-color">*</span>
                   </label>
                   <input
                     id="production_date"
@@ -340,7 +340,7 @@
                 </div>
                 <div>
                   <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
-                    Pays d'origine <span class="error-color">*</span>
+                    Country of origin <span class="error-color">*</span>
                   </label>
                   <input
                     id="country_of_origin"
@@ -352,7 +352,7 @@
                 </div>
                 <div>
                   <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                    Empattement <span class="error-color">*</span>
+                    Wheelbase <span class="error-color">*</span>
                   </label>
                   <input
                     id="wheelbase"
@@ -365,7 +365,7 @@
                 </div>
                 <div>
                   <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
-                    GVW - Poids total en charge (kg) <span class="error-color">*</span>
+                    GVW - Gross Vehicle Weight (kg) <span class="error-color">*</span>
                   </label>
                   <input
                     id="gvw"
@@ -378,7 +378,7 @@
                 </div>
                 <div>
                   <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Capacité de charge utile (kg) <span class="error-color">*</span>
+                    Payload capacity (kg) <span class="error-color">*</span>
                   </label>
                   <input
                     id="payload_capacity"
@@ -391,19 +391,19 @@
                 </div>
                 <div>
                   <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de cabine <span class="error-color">*</span>
+                    Cabin type <span class="error-color">*</span>
                   </label>
                   <input
                     id="cabin_type"
                     v-model="productData.cabin_type"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Cabine courte, Cabine longue"
+                    placeholder="Ex: Short cabin, Long cabin"
                   >
                 </div>
                 <div>
                   <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
-                    Poids à vide (Tonnes) <span class="error-color">*</span>
+                    Curb weight (T) <span class="error-color">*</span>
                   </label>
                   <input
                     id="curb_weight"
@@ -417,7 +417,7 @@
 
                 <div>
                   <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Capacité du réservoir (L) <span class="error-color">*</span>
+                    Fuel tank capacity (L) <span class="error-color">*</span>
                   </label>
                   <input
                     id="fuel_tank_capacity"
@@ -439,32 +439,32 @@
                       type="number"
                       min="0"
                       class="text-sm sm:text-base input-style"
-                      placeholder="Longueur"
+                      placeholder="Length"
                     >
                     <input
                       v-model="productData.dimensions_width"
                       type="number"
                       min="0"
                       class="text-sm sm:text-base input-style"
-                      placeholder="Largeur"
+                      placeholder="Width"
                     >
                     <input
                       v-model="productData.dimensions_height"
                       type="number"
                       min="0"
                       class="text-sm sm:text-base input-style"
-                      placeholder="Hauteur"
+                      placeholder="Height"
                     >
                   </div>
                 </div>
 
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
-                   Autres spécifications (WYSIWYG)
+                   Other specifications (WYSIWYG)
                   </label>
                   <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                       Barre d'outils WYSIWYG 
+                       WYSIWYG Toolbar
                       <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
                         <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
                         <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
@@ -505,35 +505,35 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
                   </svg>
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Caractéristiques Techniques</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Technical Specifications</h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                 <div>
                   <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
-                   Boîte de Vitesse
+                   Gearbox
                   </label>
                   <select
                     id="transmission_type"
                     v-model="productData.transmission_type"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Selectionner le type de transmission</option>
-                    <option value="Automatic">Automatique</option>
-                    <option value="Manual">Manuelle</option>
+                    <option value="">Select a Transmission type</option>
+                    <option value="Automatic">Automatic</option>
+                    <option value="Manual">Manual</option>
                   </select>
                 </div>
 
                 <div>
                   <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
-                    Marque du moteur
+                    Engine brand
                   </label>
                   <select
                     id="engine_brand"
                     v-model="productData.engine_brand"
                     class="text-sm sm:text-base input-style"
                   >
-                    <option value="">Sélectionnez une marque</option>
+                    <option value="">Select a brand</option>
                     <option value="Weichai">Weichai</option>
                     <option value="Yuchai">Yuchai</option>
                     <option value="Sinotruck">Sinotruck</option>
@@ -542,7 +542,7 @@
                 </div>
                 <div>
                   <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
-                    Puissance du Moteur (ch/kW)
+                    Engine Power (ch/kW)
                   </label>
                   <input
                     id="power"
@@ -555,7 +555,7 @@
                 </div>
                 <div>
                   <label for="engine_emissions" class="block text-sm font-medium text-gray-700 mb-2">
-                    Normes d'émission
+                    Emission Standards
                   </label>
                   <input
                     id="engine_emissions"
@@ -567,7 +567,7 @@
                 </div>
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Numéros VIN / Num Chassis
+                    VIN Numbers / Chassis Numbers
                   </label>
                   <div class="space-y-2">
                     <div v-for="(vin, index) in productData.vin" :key="index" class="flex gap-2 items-center">
@@ -591,7 +591,7 @@
                       @click="addEngineVin"
                       class="submit-btn w-full"
                     >
-                      + Ajouter un numéro VIN
+                      + Add a VIN Number
                     </button>
                   </div>
                 </div>
@@ -599,7 +599,7 @@
 
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Modèle du véhicule ( Trim )
+                    Vehicle Model (Trim)
                   </label>
                   <div class="space-y-2">
                     <div v-for="(trim, index) in productData.trim_numbers" :key="index" class="flex gap-2 items-center">
@@ -623,13 +623,13 @@
                       @click="addEngineNumber"
                       class="submit-btn w-full"
                     >
-                      + Ajouter un numéro Trim
+                      + Add a Vehicle Model (Trim)
                     </button>
                   </div>
                 </div>
                 <div >
                   <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
-                    Numéro de moteur
+                    Engine Number
                   </label>
                   <input
                     id="vehicle_number"
@@ -642,7 +642,7 @@
 
                 <div >
                   <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
-                    Kilométrage (km)
+                    Mileage (km)
                   </label>
                   <input
                     id="vehicle_mileage"
@@ -653,25 +653,25 @@
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 150000"
                   >
-                  <p class="text-xs text-gray-500 mt-1">Entre 0 et 200,000 km</p>
+                  <p class="text-xs text-gray-500 mt-1">Between 0 and 200,000 km</p>
                 </div>
 
                 <div>
                   <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Type de suspension
+                    Suspension Type
                   </label>
                   <input
                     id="suspension_type"
                     v-model="productData.suspension_type"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Pneumatique, Mécanique"
+                    placeholder="Ex: Pneumatic, Mechanical"
                   >
                 </div>
 
                 <div>
                   <label for="brake_system" class="block text-sm font-medium text-gray-700 mb-2">
-                    Système de freinage
+                    Brake System
                   </label>
                   <input
                     id="brake_system"
@@ -684,7 +684,7 @@
 
                 <div>
                   <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
-                    Taille des pneus
+                    Tire Size
                   </label>
                   <input
                     id="tyre_size"
@@ -697,11 +697,11 @@
 
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor2" class="block text-sm font-medium text-gray-700 mb-2">
-                   Autres Description (WYSIWYG)
+                   Other Description (WYSIWYG)
                   </label>
                   <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                       Barre d'outils WYSIWYG 
+                       WYSIWYG Toolbar 
                       <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
                         <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
                         <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
@@ -739,14 +739,14 @@
                 <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <DollarSignIcon class="w-4 h-4 text-white" />
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Prix et Stock</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Price and Stock</h3>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-6">
                  <!-- Prix unitaire  -->
                 <div>
                   <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
-                    Prix unitaire ($) <span class="error-color">*</span>
+                    Unit Price (FOB) <span class="error-color">*</span>
                   </label>
                   <input
                     id="unit_price"
@@ -762,7 +762,7 @@
 
                 <div>
                   <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
-                    Stock initial <span class="error-color">*</span>
+                   Initial Stock  <span class="error-color">*</span>
                   </label>
                   <input
                     id="stock"
@@ -778,7 +778,7 @@
 
                 <div>
                   <label for="available" class="block text-sm font-medium text-gray-700 mb-2">
-                    Disponibilité du produit
+                    Product availability
                   </label>
                   <select
                     id="available"
@@ -792,7 +792,7 @@
                 </div>
                 <div>
                   <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Unité
+                    Unit
                   </label>
                   <select
                     id="unit_type"
@@ -816,14 +816,14 @@
                   >
                   <label for="wholesale-price" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                     <ZapIcon class="w-4 h-4  mr-1 primary-color" />
-                    Activer le prix de gros
+                    Activate wholesale pricing
                   </label>
                 </div>
                 
                 <div v-if="productData.hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <label for="wholesale_price" class="block text-sm font-medium text-gray-700 mb-2">
-                      Prix de gros
+                      Wholesale price
                     </label>
                     <input
                       id="wholesale_price"
@@ -836,7 +836,7 @@
                   </div>
                   <div>
                     <label for="wholesale_min_qty" class="block text-sm font-medium text-gray-700 mb-2">
-                      Quantité minimale
+                      Minimum quantity
                     </label>
                     <input
                       id="wholesale_min_qty"
@@ -853,13 +853,13 @@
           </div>
 
           <div v-show="currentStep === 4" class="space-y-6">
-             Couleurs 
+             Colors 
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <PaletteIcon class="w-4 h-4 text-white " />
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Couleurs</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Colors</h3>
               </div>
 
               <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
@@ -885,12 +885,12 @@
               </div>
 
               <div class="border-t border-gray-200 pt-4">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Ajouter une couleur personnalisée</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Add a custom color</label>
                 <div class="flex gap-2">
                   <input 
                     v-model="customColor.name"
                     type="text" 
-                    placeholder="Nom de la couleur"
+                    placeholder="Color name"
                     class="flex-1  text-sm input-style"
                   >
                   <input 
@@ -903,7 +903,7 @@
                     type="button"
                     class="px-4 py-2 font-medium text-sm btn-degrade-orange"
                   >
-                    Ajouter
+                    Add
                   </button>
                 </div>
               </div>
@@ -918,14 +918,14 @@
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-orange">
                   <ImageIcon class="w-4 h-4 text-white" />
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Images du produit</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Product images</h3>
               </div>
 
               <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 sm:p-8 text-center hover:border-orange-400 transition-colors">
                 <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
                   <UploadIcon class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
                 </div>
-                <p class="text-sm sm:text-base text-gray-600 mb-2">Glissez vos images ici ou</p>
+                <p class="text-sm sm:text-base text-gray-600 mb-2">Drag your images here or</p>
                 <input
                   ref="fileInput"
                   type="file"
@@ -937,15 +937,16 @@
                 <button
                   type="button"
                   @click="$refs.fileInput.click()"
-                  class="inline-flex items-center  text-sm font-medium    btn-degrade-orange"
+                  style="display: inline-block;"
+                  class="btn-degrade-orange "
                 >
-                  Parcourir les fichiers
+                  Browse the files
                 </button>
-                <p class="text-xs text-gray-500 mt-2">PNG, JPG jusqu'à 10MB par image (max 8)</p>
+                <p class="text-xs text-gray-500 mt-2">PNG, JPG up to 10MB per image (max 8)</p>
               </div>
 
               <div v-if="productData.images.length > 0" class="mt-6">
-                <h4 class="text-sm font-medium text-gray-700 mb-3">Images sélectionnées</h4>
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Selected images</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
                   <div 
                     v-for="(image, index) in productData.images" 
@@ -977,7 +978,7 @@
                       v-if="index === 0"
                       class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md "
                     >
-                      Principal
+                      Main
                     </div>
                   </div>
                 </div>
@@ -989,7 +990,7 @@
                 <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
                   <VideoIcon class="w-4 h-4 text-white" />
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vidéo (optionnel)</h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Video (optional)</h3>
               </div>
 
               <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors">
@@ -997,10 +998,10 @@
                 <div>
                   <label for="video-upload" class="cursor-pointer">
                     <span class="block text-sm text-gray-600 mb-2">
-                      Cliquez pour télécharger une vidéo
+                      Click to download a video
                     </span>
                     <span class="block text-xs text-gray-500">
-                      MP4, MOV, AVI jusqu'à 50MB
+                      MP4, MOV, AVI files up to 50MB
                     </span>
                   </label>
                   <input 
@@ -1015,19 +1016,19 @@
 
               <div v-if="productData.video" class="mt-6">
                 <video :src="productData.video.preview" controls class="w-full max-w-md mx-auto rounded-lg shadow-lg">
-                  Votre navigateur ne supporte pas la lecture de vidéos.
+                 Your browser does not support video playback.
                 </video>
                 
                 <div v-if="productData.video.uploading" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
                   <div class="flex items-center space-x-2">
                     <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full"></div>
-                    <span class="text-sm text-gray-700">Téléchargement de la vidéo: {{ productData.video.uploadProgress }}%</span>
+                    <span class="text-sm text-gray-700">Downloading the video: {{ productData.video.uploadProgress }}%</span>
                   </div>
                 </div>
                 
                 <div v-if="productData.video.uploaded" class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center space-x-2">
                   <CheckIcon class="w-4 h-4 text-green-600" />
-                  <span class="text-sm text-green-700">Vidéo téléchargée avec succès</span>
+                  <span class="text-sm text-green-700">Video successfully downloaded</span>
                 </div>
                 
                 <button 
@@ -1035,7 +1036,7 @@
                   type="button"
                   class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
                 >
-                  Supprimer la vidéo
+                  Delete video
                 </button>
               </div>
             </div>
@@ -1050,30 +1051,30 @@
                 >
                 <label for="is-active" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                   <CheckCircleIcon class="w-4 h-4 text-green-600 mr-1" />
-                  Publier immédiatement ce produit
+                  Publish this product immediately
                 </label>
               </div>
 
               <div class="bg-gray-50 rounded-lg p-4">
                 <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
                   <FileTextIcon class="w-5 h-5  mr-2 primary-color" />
-                  Résumé du produit
+                  Product summary
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
                   <div class="space-y-2">
-                    <p><span class="font-medium text-gray-700">Nom du produit:</span> <span class="text-gray-900">{{ productData.name || 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Catégorie:</span> <span class="text-gray-900">{{ getCategoryName(productData.category_id) || 'Non définie' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Prix unitaire ($):</span> <span class="text-gray-900">{{ productData.unit_price ? productData.unit_price  : 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Stock initial:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Prix de gros:</span> <span class="text-gray-900">{{ productData.wholesale_price || 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Quantité minimale:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Product name:</span> <span class="text-gray-900">{{ productData.name || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Category:</span> <span class="text-gray-900">{{ getCategoryName(productData.category_id) || 'Non définie' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Unit price (FOB):</span> <span class="text-gray-900">{{ productData.unit_price ? productData.unit_price  : 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Initial Stock:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Wholesale price:</span> <span class="text-gray-900">{{ productData.wholesale_price || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Minimum quantity:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
                   </div>
                   <div class="space-y-2">
-                    <p><span class="font-medium text-gray-700">Disponibilité du produit:</span> <span class="text-gray-900">{{ productData.disponibility }}</span></p>
+                    <p><span class="font-medium text-gray-700">Product availability:</span> <span class="text-gray-900">{{ productData.disponibility }}</span></p>
                     <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
-                    <p><span class="font-medium text-gray-700">Unité:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Unit:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
                     <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
-                    <p><span class="font-medium text-gray-700">Vidéo:</span> <span class="text-gray-900">{{ productData.video ? 'Oui' : 'Non' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Video:</span> <span class="text-gray-900">{{ productData.video ? 'Oui' : 'Non' }}</span></p>
                   </div>
                 </div>
               </div>
@@ -1081,67 +1082,67 @@
 
               <div class="specifications-table two-columns">
                   <div class="spec-group">
-                    <h3 class="spec-group-title">Informations générales</h3>
+                    <h3 class="spec-group-title">General Information</h3>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Condition du véhicule</div>
+                      <div class="spec-name">Vehicle Condition</div>
                       <div class="spec-value">{{ productData.vehicle_condition || 'N/A'}}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Marque du véhicule</div>
+                      <div class="spec-name">Vehicle Brand</div>
                       <div class="spec-value">{{getBrandName( productData.vehicle_brand_id) || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Modèle du véhicule</div>
+                      <div class="spec-name">Vehicle Model</div>
                       <div class="spec-value">{{getModelName( productData.vehicle_model_id) || 'N/A' }}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Type de transmission</div>
+                      <div class="spec-name">Transmission Type</div>
                       <div class="spec-value">  {{ productData.drive_type || 'N/A'}}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Année</div>
+                      <div class="spec-name">Year</div>
                       <div class="spec-value">{{ productData.vehicle_year || 'N/A'}}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Type de carburant</div>
+                      <div class="spec-name">Fuel type</div>
                       <div class="spec-value">{{ productData.fuel_type || 'N/A' }}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Type de Transmission</div>
+                      <div class="spec-name">Transmission type</div>
                       <div class="spec-value">{{ productData.transmission_type || 'N/A' }}</div>
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Marque du moteur</div>
+                      <div class="spec-name">Engine brand</div>
                       <div class="spec-value">{{ productData.engine_brand || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Puissance du Moteur (ch/kW)</div>
+                      <div class="spec-name">Engine Power (ch/kW)</div>
                       <div class="spec-value">{{ productData.power || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Émissions du moteur (g/km)</div>
+                      <div class="spec-name">Engine Emissions (g/km)</div>
                       <div class="spec-value">{{ productData.engine_emissions || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Kilométrage (km)</div>
+                      <div class="spec-name">Mileage (km)</div>
                       <div class="spec-value">{{ productData.vehicle_mileage || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Système de freinage</div>
+                      <div class="spec-name">Brake System</div>
                       <div class="spec-value">{{ productData.brake_system || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Taille des pneus</div>
+                      <div class="spec-name">Tire Size</div>
                       <div class="spec-value">{{ productData.type_size || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
@@ -1151,7 +1152,7 @@
                     </div>
                     <!-- verifié -->
                     <div class="spec-row overflow-x-auto items-center">
-                      <div class="spec-name">Couleurs</div>
+                      <div class="spec-name">Colors</div>
                       <div v-for="color in productData.colors" :key="color.hex_value" >
                         <div  class="spec-value ">
                           <div>
@@ -1166,14 +1167,14 @@
                     
                   </div>
                   <div class="spec-group">
-                    <h3 class="spec-group-title">Détails techniques</h3>
+                    <h3 class="spec-group-title">Technical details</h3>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Numéro du moteur</div>
+                      <div class="spec-name">Engine number</div>
                       <div class="spec-value">{{ productData.engine_number || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name"> Numéros VIN / Num Chassis</div>
+                      <div class="spec-name"> VIN number / chassis number</div>
                       <div class="spec-value">
                         <ul v-if="productData.vin && productData.vin.length">
                           <li v-for="vin in productData.vin" :key="vin.id">
@@ -1185,7 +1186,7 @@
                     </div>
                     <!-- TODO: parcourir la liste des numéros de moteur -->
                     <div class="spec-row">
-                      <div class="spec-name">Numéros Trim</div>
+                      <div class="spec-name">Trim number</div>
                       <div class="spec-value">
                         <ul v-if="productData.trim_numbers && productData.trim_numbers.length">
                           <li v-for="trim in productData.trim_numbers" :key="trim.id">
@@ -1197,47 +1198,47 @@
                     </div>
                     <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Date de production</div>
+                      <div class="spec-name">Production date</div>
                       <div class="spec-value">{{ productData.production_date || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Pays d'origine</div>
+                      <div class="spec-name">Country of origin</div>
                       <div class="spec-value">{{ productData.country_of_origin || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Empattement</div>
+                      <div class="spec-name">Wheelbase</div>
                       <div class="spec-value">{{ productData.wheelbase || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">GVW - Poids total en charge (kg)</div>
+                      <div class="spec-name">GVW - Gross Vehicle Weight (kg)</div>
                       <div class="spec-value">{{ productData.gvw || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Capacité de charge utile (kg)</div>
+                      <div class="spec-name">Payload Capacity (kg)</div>
                       <div class="spec-value">{{ productData.payload_capacity || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Type de cabine</div>
+                      <div class="spec-name">Cabin Type</div>
                       <div class="spec-value">{{ productData.cabin_type || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Type de suspension</div>
+                      <div class="spec-name">Suspension Type</div>
                       <div class="spec-value">{{ productData.suspension_type || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Poids à vide (Tonnes)</div>
+                      <div class="spec-name">Curb Weight (Tonnes)</div>
                       <div class="spec-value">{{ productData.curb_weight || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Capacité du réservoir (L)</div>
+                      <div class="spec-name">Fuel Tank Capacity (L)</div>
                       <div class="spec-value">{{ productData.fuel_tank_capacity || 'N/A' }}</div>
                     </div>
                   </div>
@@ -1258,8 +1259,8 @@
               :disabled="isLoading"
               class=" btn-gray"
             >
-              <ChevronLeftIcon class="w-4 h-4 mr-2 inline" />
-              Précédent
+              <ChevronLeftIcon class="w-4 h-4 inline" />
+              Previous
             </button>
           </div>
 
@@ -1270,7 +1271,7 @@
               :disabled="isLoading"
               class="btn-gray"
             >
-              Annuler
+              Cancel
             </button>
             
             <button
@@ -1278,10 +1279,10 @@
               type="button"
               @click.prevent="handleNextStep"
               :disabled="!canProceedToNextStep || isLoading"
-              class="btn-degrade-orange"
+              class="btn-degrade-orange block"
             >
-              Suivant ({{ currentStep + 1 }}/{{ steps.length }})
-              <ChevronRightIcon class="w-4 h-4 ml-2 inline" />
+              Next ({{ currentStep + 1 }}/{{ steps.length }})
+              <ChevronRightIcon class="w-4 h-4 inline" />
             </button>
 
             <button
@@ -1293,11 +1294,11 @@
             >
               <div v-if="isLoading" class="flex items-center justify-center">
                 <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
-                Création...
+                Creation...
               </div>
               <div v-else class="flex items-center justify-center">
-                <CheckIcon class="w-4 h-4 mr-2" />
-                Créer le produit
+                <CheckIcon class="w-4 h-4" />
+                Create produit
               </div>
             </button>
           </div>
@@ -1363,7 +1364,7 @@ const cloudinaryConfig = {
 const steps = [
   { title: 'Informations' },
   { title: 'Overviews' },
-  { title: 'Technical Spécification' },
+  { title: 'Technical Specification' },
   { title: 'Price & Stock' },
   { title: 'Color' },
   { title: 'Pictures' }
@@ -1478,12 +1479,12 @@ const canProceedToNextStep = computed(() => {
       return !!(productData.category_id && productData.subcategory_id)
     case 1:
       return !!(productData.vehicle_condition && productData.vehicle_brand_id 
-      // && productData.vehicle_model_id && productData.vehicle_year && productData.drive_type 
-      // && productData.fuel_type && productData.country_of_origin 
-      // && productData.dimensions_height && productData.dimensions_width 
-      // && productData.dimensions_length && productData.fuel_tank_capacity 
-      // && productData.curb_weight && productData.cabin_type && productData.payload_capacity
-      // && productData.gvw && productData.production_date && productData.wheelbase
+      && productData.vehicle_model_id && productData.vehicle_year && productData.drive_type 
+      && productData.fuel_type && productData.country_of_origin 
+      && productData.dimensions_height && productData.dimensions_width 
+      && productData.dimensions_length && productData.fuel_tank_capacity 
+      && productData.curb_weight && productData.cabin_type && productData.payload_capacity
+      && productData.gvw && productData.production_date && productData.wheelbase
     )
     case 2:
       getProductName();
@@ -1538,18 +1539,18 @@ const getModelName = (id) => {
 }
 
 const availableColors = ref([
-  { name: 'Noir', value: '#000000' },
-  { name: 'Blanc', value: '#FFFFFF' },
-  { name: 'Gris', value: '#808080' },
-  { name: 'Rouge', value: '#FF0000' },
-  { name: 'Bleu', value: '#0000FF' },
-  { name: 'Vert', value: '#008000' },
-  { name: 'Jaune', value: '#FFFF00' },
+  { name: 'Black', value: '#000000' },
+  { name: 'White', value: '#FFFFFF' },
+  { name: 'Gray', value: '#808080' },
+  { name: 'Red', value: '#FF0000' },
+  { name: 'Blue', value: '#0000FF' },
+  { name: 'Green', value: '#008000' },
+  { name: 'Yellow', value: '#FFFF00' },
   { name: 'Orange', value: '#FFA500' },
-  { name: 'Rose', value: '#FFC0CB' },
-  { name: 'Violet', value: '#800080' },
-  { name: 'Marron', value: '#8B4513' },
-  { name: 'Or', value: '#FFD700' }
+  { name: 'Pink', value: '#FFC0CB' },
+  { name: 'Purple', value: '#800080' },
+  { name: 'Brown', value: '#8B4513' },
+  { name: 'Gold', value: '#FFD700' }
 ])
 
 const availableUnitTypes = ref([
@@ -1565,9 +1566,9 @@ const availableUnitTypes = ref([
 ])
 
 const availability = ref([
-  { value: 'available', label: 'Disponible' },
-  { value: 'unavailable', label: 'Indisponible' },
-  { value: 'on_order', label: 'Sur Commande' },
+  { value: 'available', label: 'Available' },
+  { value: 'unavailable', label: 'Unavailable' },
+  { value: 'on_order', label: 'On Order' },
 ])
 
 
@@ -1599,8 +1600,7 @@ const fetchCategories = async () => {
     categories.value = response.data || []
     
   } catch (err) {
-    console.error('Erreur lors du chargement des catégories:', err)
-    categoriesError.value = 'Impossible de charger les catégories. Veuillez réessayer.'
+    categoriesError.value = 'Impossible to load categories. Try again please.'
   } finally {
     categoriesLoading.value = false
   }
@@ -1614,8 +1614,7 @@ const fetchMakes = async () => {
     const response = await brandsApi.getBrands()
     brands.value = response.data || []
   } catch (err) {
-    console.error('Erreur lors du chargement des catégories:', err)
-    brandsError.value = 'Impossible de charger les catégories. Veuillez réessayer.'
+    brandsError.value = 'Impossible to load categories. try again please.'
   } finally {
     brandsLoading.value = false
   }
@@ -1779,9 +1778,9 @@ const handleNextStep = async () => {
   
   if (!canProceedToNextStep.value) {
     if (currentStep.value === 3) {
-      error.value = 'Veuillez remplir correctement le prix unitaire et le stock avant de continuer'
+      error.value = 'Please correctly enter the unit price and stock before continuing.'
     } else {
-      error.value = 'Veuillez remplir tous les champs obligatoires'
+      error.value = 'Please fill in all required fields.'
     }
       
     
@@ -1851,7 +1850,6 @@ const uploadImageToCloudinary = async (image, index) => {
     
     return true
   } catch (error) {
-    console.error(`Erreur lors du téléchargement de l'image ${index}:`, error)
     productData.images[index].uploading = false
     return false
   }
@@ -1894,14 +1892,13 @@ const uploadVideoToCloudinary = async (video) => {
     
     return true
   } catch (error) {
-    console.error('Erreur lors du téléchargement de la vidéo:', error)
     productData.video.uploading = false
     return false
   }
 }
 
 const uploadAllMedia = async () => {
-  loadingMessage.value = 'Téléchargement des médias en cours...'
+  loadingMessage.value = 'Loading media...'
   
   const imagePromises = []
   for (let i = 0; i < productData.images.length; i++) {
@@ -1914,7 +1911,7 @@ const uploadAllMedia = async () => {
     await uploadVideoToCloudinary(productData.video)
   }
   
-  loadingMessage.value = 'Médias téléchargés avec succès!'
+  loadingMessage.value = 'Media successfully downloaded!'
 }
 
 //  Updated prepareDataForSubmission to include new fields
@@ -1979,7 +1976,6 @@ const prepareDataForSubmission = () => {
   if (productData.videoUrl) {
     formData.video = productData.videoUrl
   }
-  console.log('Données préparées pour la soumission:', formData)
   return formData
 }
 
@@ -1999,8 +1995,7 @@ const handleSubmit = async () => {
     emit('save', formData)
     
   } catch (err) {
-    console.error('Erreur lors de la préparation:', err)
-    error.value = 'Erreur lors du téléchargement des médias'
+    error.value = 'Error tpo load medias. Please try again.'
   } finally {
     isLoading.value = false
   }

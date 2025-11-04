@@ -971,7 +971,7 @@
                 Back
               </button>
               <button @click="proceedToPayment" :disabled="!isConfigurationValid || boostLoading" class="flex-1 submit-btn">
-                {{ boostLoading ? 'Treatment...' : 'Validdate the request' }}
+                {{ boostLoading ? 'Treatment...' : 'Validate the request' }}
               </button>
             </div>
           </div>

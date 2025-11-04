@@ -22,8 +22,8 @@
               <PackageIcon class="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Détails du produit</h2>
-              <p class="text-sm text-gray-600 hidden sm:block">Informations complètes et médias</p>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Product details</h2>
+              <p class="text-sm text-gray-600 hidden sm:block">Full information and media</p>
             </div>
           </div>
          
@@ -45,7 +45,7 @@
               ]"
             >
               <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5" />
-              <span class="hidden sm:inline">Spécifications</span>
+              <span class="hidden sm:inline">Specifications</span>
               <span class="sm:hidden">Specs</span>
             </button>
             <button
@@ -58,8 +58,8 @@
               ]"
             >
               <InfoIcon class="w-4 h-4 sm:w-5 sm:h-5" />
-              <span class="hidden sm:inline">Détails du produit</span>
-              <span class="sm:hidden">Détails</span>
+              <span class="hidden sm:inline">Product details</span>
+              <span class="sm:hidden">Details</span>
             </button>
             
             <button
@@ -72,8 +72,8 @@
               ]"
             >
               <ImageIcon class="w-4 h-4 sm:w-5 sm:h-5" />
-              <span class="hidden sm:inline">Galerie & Médias</span>
-              <span class="sm:hidden">Médias</span>
+              <span class="hidden sm:inline">Gallery & Media</span>
+              <span class="sm:hidden">Media</span>
               <span v-if="mediaCount > 0" class="bg-white text-black bg-opacity-20 text-xs px-1.5 sm:px-2 py-0.5 sm:py-1 rounded-full font-medium">
                 {{ mediaCount }}
               </span>
@@ -92,13 +92,13 @@
              <div class="grid grid-cols-2">
                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                  <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                 Informations Véhicule
+                 Vehicle Information
                </h4>
-               <apn class="text-gray-400">disponibilité du véhicule : 
+               <apn class="text-gray-400">vehicle availability : 
                 <div class="inline-flex">
-                  <span v-if="product.disponibility === 'available'" class="text-green-600">Disponible</span>
-                    <span v-else-if="product.disponibility === 'unavailable'" class="text-red-600">Indisponible</span>
-                    <span v-else-if="product.disponibility === 'on_order'" class="text-orange-600">Sur Commande</span>
+                  <span v-if="product.disponibility === 'available'" class="text-green-600">Available</span>
+                    <span v-else-if="product.disponibility === 'unavailable'" class="text-red-600">Unavailable</span>
+                    <span v-else-if="product.disponibility === 'on_order'" class="text-orange-600"> Made to Order</span>
                     <span v-else>{{ product.disponibility }}</span>
                </div>
               </apn>
@@ -107,51 +107,51 @@
                 <div v-if="product.vehicle_condition" class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">État</div>
                   <div class="font-semibold text-gray-900 capitalize">
-                    <span v-if="product.vehicle_condition === 'new'" class="text-green-600">Neuf</span>
-                    <span v-else-if="product.vehicle_condition === 'used'" class="text-red-600">Occasion</span>
-                    <span v-else-if="product.vehicle_condition === 'refurbished'" class="text-orange-600">Reconditionné</span>
+                    <span v-if="product.vehicle_condition === 'new'" class="text-green-600">New</span>
+                    <span v-else-if="product.vehicle_condition === 'used'" class="text-red-600">Used</span>
+                    <span v-else-if="product.vehicle_condition === 'refurbished'" class="text-orange-600">Refurbished</span>
                     <span v-else>{{ product.vehicle_condition }}</span>
                   </div>
                 </div>
                 <div v-if="product.vehicle_make" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Marque</div>
+                  <div class="text-sm text-gray-500 mb-1">Brand</div>
                   <div class="font-semibold text-gray-900">{{ product.vehicle_make }}</div>
                 </div>
                 <div v-if="product.vehicle_model" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Modèle</div>
+                  <div class="text-sm text-gray-500 mb-1">Model</div>
                   <div class="font-semibold text-gray-900">{{ product.vehicle_model }}</div>
                 </div>
                 <div v-if="product.vehicle_year" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Année</div>
+                  <div class="text-sm text-gray-500 mb-1">Year</div>
                   <div class="font-semibold text-gray-900">{{ product.vehicle_year }}</div>
                 </div>
                 <div v-if="product.vehicle_mileage !== null && product.vehicle_mileage !== undefined" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Kilométrage</div>
+                  <div class="text-sm text-gray-500 mb-1">Mileage</div>
                   <div class="font-semibold text-gray-900">
                     {{ formatMileage(product.vehicle_mileage) }}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Catégorie</div>
+                  <div class="text-sm text-gray-500 mb-1">Categorie</div>
                   <div class="font-semibold text-gray-900">
                     {{product.category_name }}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Date de production</div>
+                  <div class="text-sm text-gray-500 mb-1">Production date</div>
                   <div class="font-semibold text-gray-900">
                     {{product.production_date || "N/A"}}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Pays d'origine</div>
+                  <div class="text-sm text-gray-500 mb-1">Country of origin</div>
                   <div class="font-semibold text-gray-900">
                     {{product.country_of_origin || "N/A"}}
                   </div>
                 </div>
                 
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Couleurs disponibles</div>
+                  <div class="text-sm text-gray-500 mb-1">Available colors</div>
                   <div class=" flex font-semibold text-gray-900 gaps-2">
                     <div v-if="product.colors.length !== 0" v-for="color in product.colors" :key="color.id" >
                         <div  class="px-2">
@@ -174,45 +174,45 @@
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm ">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <SettingsIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                Caractéristiques Techniques
+                Technical Specifications
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                 <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Numéro de stockage</div>
+                  <div class="text-sm text-gray-500 mb-1">Stock number</div>
                   <div class="font-semibold text-gray-900">{{ product.stock_number }}</div>
                 </div>
                 <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Type de transmission</div>
+                  <div class="text-sm text-gray-500 mb-1">Transmission type</div>
                   <div class="font-semibold text-gray-900">{{ product.drive_type }}</div>
                 </div>
                 <div v-if="product.fuel_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Type de carburant</div>
+                  <div class="text-sm text-gray-500 mb-1">Fuel type</div>
                   <div class="font-semibold text-gray-900 capitalize flex items-center">
                     <div class="w-3 h-3 rounded-full mr-2" :class="getFuelTypeColor(product.fuel_type)"></div>
                     {{ getFuelTypeLabel(product.fuel_type) }}
                   </div>
                 </div>
                 <div v-if="product.transmission_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Boîte de vitesses</div>
+                  <div class="text-sm text-gray-500 mb-1">Gearbox</div>
                   <div class="font-semibold text-gray-900 capitalize">
                     {{ product.transmission_type === 'automatic' ? 'Automatique' : 'Manuelle' }}
                   </div>
                 </div>
                 <div v-if="product.engine_brand" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Marque du moteur</div>
+                  <div class="text-sm text-gray-500 mb-1">Engine brand</div>
                   <div class="font-semibold text-gray-900 uppercase">{{ product.engine_brand }}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Puissance du moteur</div>
+                  <div class="text-sm text-gray-500 mb-1">Engine power</div>
                   <div class="font-semibold text-gray-900 uppercase">{{ product.power || "N/A"}}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Numéro du moteur</div>
+                  <div class="text-sm text-gray-500 mb-1">Engine number</div>
                   <div class="font-semibold text-gray-900 uppercase">{{ product.engine_number || "N/A"}}</div>
                 </div>
                 
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Numéros VIN / Num Chassis</div>
+                  <div class="text-sm text-gray-500 mb-1">VIN numbers / Chassis</div>
                   <div class="font-semibold text-gray-900 uppercase">
                     <ul v-if="product.vin_numbers && product.vin_numbers.length">
                           <li v-for="vin in product.vin_numbers" :key="vin">
@@ -223,7 +223,7 @@
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Numéros Trim</div>
+                  <div class="text-sm text-gray-500 mb-1">Trim numbers</div>
                   <div class="font-semibold text-gray-900 uppercase">
                     <ul v-if="product.trim_numbers && product.trim_numbers.length">
                           <li v-for="trim_number in product.trim_numbers" :key="trim_number">                          
@@ -234,53 +234,53 @@
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Emmissions du moteur</div>
+                  <div class="text-sm text-gray-500 mb-1">Engine emissions</div>
                   <div class="font-semibold text-gray-900 uppercase">{{ product.engine_emissions || "N/A"}}</div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Empattement</div>
+                  <div class="text-sm text-gray-500 mb-1">Wheelbase</div>
                   <div class="font-semibold text-gray-900">
                     {{product.wheelbase || "N/A"}}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">GVW - Poids total en charge (kg)</div>
+                  <div class="text-sm text-gray-500 mb-1">GVW - Gross Vehicle Weight (kg)</div>
                   <div class="font-semibold text-gray-900">
                     {{product.gvw || "N/A"}}
                   </div>
               </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Capacité de charge utile (kg)</div>
+                  <div class="text-sm text-gray-500 mb-1">Payload capacity (kg)</div>
                   <div class="font-semibold text-gray-900">
                     {{product.payload_capacity || "N/A"}}
                   </div>
               </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Type de cabin</div>
+                  <div class="text-sm text-gray-500 mb-1">Cabin type</div>
                   <div class="font-semibold text-gray-900">
                     {{product.cabin_type || "N/A"}}
                   </div>
               </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Type de suspension</div>
+                  <div class="text-sm text-gray-500 mb-1">Suspension type</div>
                   <div class="font-semibold text-gray-900">
                     {{product.suspension_type || "N/A"}}
                   </div>
               </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Poids à vide (Tonnes)</div>
+                  <div class="text-sm text-gray-500 mb-1">Curb weight (T)</div>
                   <div class="font-semibold text-gray-900">
                     {{product.curb_weight || "N/A"}}
                   </div>
               </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Capacité du réservoir (L)</div>
+                  <div class="text-sm text-gray-500 mb-1">Fuel tank capacity (L)</div>
                   <div class="font-semibold text-gray-900">
                     {{product.fuel_tank_capacity || "N/A"}}
                   </div>
               </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Système de freinage</div>
+                  <div class="text-sm text-gray-500 mb-1">Brake system</div>
                   <div class="font-semibold text-gray-900">
                     {{product.brake_system || "N/A"}}
                   </div>
@@ -292,13 +292,13 @@
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Taille des pneus</div>
+                  <div class="text-sm text-gray-500 mb-1">Tire sizes</div>
                   <div class="font-semibold text-gray-900">
                     {{product.tyre_size || "N/A"}}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Unité</div>
+                  <div class="text-sm text-gray-500 mb-1">Unit</div>
                   <div class="font-semibold text-gray-900">
                     {{product.unit_type || "N/A"}}
                   </div>
@@ -311,7 +311,7 @@
             <div v-if="hasAdvancedSpecs" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm mb-25">
               <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                 <CogIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                Spécifications Avancées
+                Advanced Specifications
               </h4>
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Graphique de performance (simulé) -->
@@ -319,7 +319,7 @@
                   <h5 class="font-semibold text-gray-900 mb-4">Performance</h5>
                   <div class="space-y-3">
                     <div class="flex justify-between items-center">
-                      <span class="text-sm text-gray-600">Efficacité énergétique</span>
+                      <span class="text-sm text-gray-600">Energy efficiency</span>
                       <div class="flex items-center space-x-2">
                         <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div class="h-full bg-green-500 rounded-full" :style="{ width: getEfficiencyPercentage() + '%' }"></div>
@@ -328,7 +328,7 @@
                       </div>
                     </div>
                     <div class="flex justify-between items-center">
-                      <span class="text-sm text-gray-600">Durabilité</span>
+                      <span class="text-sm text-gray-600">Durability</span>
                       <div class="flex items-center space-x-2">
                         <div class="w-20 h-2 bg-gray-200 rounded-full overflow-hidden">
                           <div class="h-full bg-blue-500 rounded-full" :style="{ width: getDurabilityPercentage() + '%' }"></div>
@@ -341,18 +341,18 @@
 
                 <!-- Résumé des caractéristiques -->
                 <div class="bg-gradient-to-br from-orange-50 to-red-50 rounded-xl p-6">
-                  <h5 class="font-semibold text-gray-900 mb-4">Résumé</h5>
+                  <h5 class="font-semibold text-gray-900 mb-4">Summary</h5>
                   <div class="space-y-2 text-sm">
                     <div class="flex justify-between">
-                      <span class="text-gray-600">Âge du véhicule</span>
+                      <span class="text-gray-600">Vehicle age</span>
                       <span class="font-medium">{{ getVehicleAge() }}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span class="text-gray-600">Catégorie</span>
+                      <span class="text-gray-600">Category</span>
                       <span class="font-medium">{{ getVehicleCategory() }}</span>
                     </div>
                     <div class="flex justify-between">
-                      <span class="text-gray-600">Usage recommandé</span>
+                      <span class="text-gray-600">Recommended usage</span>
                       <span class="font-medium">{{ getRecommendedUsage() }}</span>
                     </div>
                   </div>
@@ -365,8 +365,8 @@
               <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 <TruckIcon class="w-8 h-8 sm:w-12 sm:h-12 primary-color" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Aucune spécification véhicule</h3>
-              <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">Ce produit n'a pas de spécifications véhicule associées.</p>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No vehicle specifications</h3>
+              <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">This product has no associated vehicle specifications.</p>
             </div>
           </div>
           <!-- Onglet 1: Détails du produit -->
@@ -387,7 +387,7 @@
                       >
                       <div v-else class="w-full h-full flex flex-col items-center justify-center text-gray-400">
                         <ImageIcon class="w-12 h-12 sm:w-16 sm:h-16 mb-4 primary-color" />
-                        <span class="text-sm sm:text-lg font-medium">Aucune image</span>
+                        <span class="text-sm sm:text-lg font-medium">No image</span>
                       </div>
                     </div>
                     <!-- Badge image count -->
@@ -414,22 +414,22 @@
                   <div class="bg-white rounded-2xl p-4 sm:p-6 shadow-sm border border-gray-100">
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                       <div>
-                        <h4 class="text-sm font-medium text-gray-500 mb-2">Prix de vente</h4>
+                        <h4 class="text-sm font-medium text-gray-500 mb-2">Selling price</h4>
                         <div class="text-2xl sm:text-3xl font-bold primary-color">
-                          {{ formatPrice(product.unit_price) }} <span class="text-sm sm:text-lg text-gray-500">$US  </span>
+                          {{ formatPrice(product.unit_price) }} 
                         </div>
                         <div v-if="product.wholesale_price" class="mt-2 text-gray-600">
-                          <span class="text-sm">Prix de gros: </span>
-                          <span class="font-semibold">{{ formatPrice(product.wholesale_price) }} $US$</span>
-                          <span class="text-sm text-gray-500"> ({{ product.wholesale_min_qty }}+ unités)</span>
+                          <span class="text-sm">Wholesale price: </span>
+                          <span class="font-semibold">{{ formatPrice(product.wholesale_price) }} </span>
+                          <span class="text-sm text-gray-500"> ({{ product.wholesale_min_qty }}+ units)</span>
                         </div>
                       </div>
                       <div>
-                        <h4 class="text-sm font-medium text-gray-500 mb-2">Stock disponible</h4>
+                        <h4 class="text-sm font-medium text-gray-500 mb-2">Stock available</h4>
                         <div class="flex items-center space-x-3">
                           <span class="text-2xl sm:text-3xl font-bold text-gray-900">{{ product.stock }}</span>
                           <div>
-                            <div class="text-sm text-gray-500">unités</div>
+                            <div class="text-sm text-gray-500">units</div>
                             <div :class="getStockStatusClass(product.stock)" class="text-sm font-medium">
                               {{ getStockStatus(product.stock) }}
                             </div>
@@ -443,11 +443,11 @@
                   <div class="grid grid-cols-2 gap-3 sm:gap-4">
                     <div class="bg-blue-50 rounded-xl p-3 sm:p-4 text-center">
                       <div class="text-xl sm:text-2xl font-bold primary-color">{{ product.sales_count || 0 }}</div>
-                      <div class="text-xs sm:text-sm primary-color font-medium">Ventes</div>
+                      <div class="text-xs sm:text-sm primary-color font-medium">Sales</div>
                     </div>
                     <div class="bg-purple-50 rounded-xl p-3 sm:p-4 text-center">
                       <div class="text-xl sm:text-2xl font-bold primary-color">{{ product.views_count || 0 }}</div>
-                      <div class="text-xs sm:text-sm primary-color font-medium">Vues</div>
+                      <div class="text-xs sm:text-sm primary-color font-medium">Views</div>
                     </div>
                   </div>
                 </div>
@@ -463,7 +463,7 @@
               <p class="text-gray-700 leading-relaxed text-sm sm:text-lg">{{ product.description }}</p>
               <br/>
               <div v-if="product.description_plus">
-                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">Plus de Description</h4>
+                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">Other Description</h4>
                               
                     <div class="text-gray-700 leading-relaxed text-sm sm:text-lg">
                        <p>{{ product.description_plus }}</p>
@@ -479,15 +479,15 @@
               <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <TagIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                  Catégorie
+                  Category
                 </h4>
                 <div class="space-y-3">
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <span class="text-gray-600 text-sm sm:text-base">Catégorie principale</span>
+                    <span class="text-gray-600 text-sm sm:text-base">Main category</span>
                     <span class="font-semibold text-gray-900 text-sm sm:text-base">{{ product.category_name || 'Non définie' }}</span>
                   </div>
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <span class="text-gray-600 text-sm sm:text-base">Sous-catégorie</span>
+                    <span class="text-gray-600 text-sm sm:text-base">Subcategory</span>
                     <span class="font-semibold text-gray-900 text-sm sm:text-base">{{ product.subcategory_name || 'Non définie' }}</span>
                   </div>
                 </div>
@@ -501,16 +501,16 @@
                 </h4>
                 <div class="space-y-3">
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <span class="text-gray-600 text-sm sm:text-base">Créé le</span>
+                    <span class="text-gray-600 text-sm sm:text-base">Created on</span>
                     <span class="font-semibold text-gray-900 text-sm sm:text-base">{{ formatDate(product.created_at) }}</span>
                   </div>
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <span class="text-gray-600 text-sm sm:text-base">Modifié le</span>
+                    <span class="text-gray-600 text-sm sm:text-base">Edited on</span>
                     <span class="font-semibold text-gray-900 text-sm sm:text-base">{{ formatDate(product.updated_at) }}</span>
                   </div>
                   <div class="flex items-center justify-between p-3 bg-gray-50 rounded-xl">
-                    <span class="text-gray-600 text-sm sm:text-base">Créé par</span>
-                    <span class="font-semibold text-gray-900 text-sm sm:text-base">{{ product.created_by_name || 'Inconnu' }}</span>
+                    <span class="text-gray-600 text-sm sm:text-base">Created by</span>
+                    <span class="font-semibold text-gray-900 text-sm sm:text-base">{{ product.created_by_name || 'Unknown' }}</span>
                   </div>
                 </div>
               </div>
@@ -522,7 +522,7 @@
               <div v-if="product.colors && product.colors.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                   <PaletteIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                  Couleurs disponibles
+                  Available colors
                   <span class="ml-2 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{{ product.colors.length }}</span>
                 </h4>
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -536,24 +536,6 @@
                       :style="{ backgroundColor: color }"
                     ></div>
                     <span class="text-sm font-medium text-gray-700 truncate">{{ getColorName(color) }}</span>
-                  </div>
-                </div>
-              </div>
-
-              <!-- Tailles -->
-              <div v-if="product.sizes && product.sizes.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
-                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                  <RulerIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                  Tailles disponibles
-                  <span class="ml-2 text-sm bg-gray-100 text-gray-600 px-2 py-1 rounded-full">{{ product.sizes.length }}</span>
-                </h4>
-                <div class="flex flex-wrap gap-2">
-                  <div 
-                    v-for="(size, index) in product.sizes" 
-                    :key="index" 
-                    class="px-3 py-2 bg-gray-100 border border-gray-200 rounded-xl text-sm font-medium text-gray-700 hover:bg-gray-200 transition-colors cursor-default"
-                  >
-                    {{ size }}
                   </div>
                 </div>
               </div>
@@ -575,7 +557,7 @@
                   {{ tag }}
                 </span>
                 <span v-else class="px-3 py-2 bg-blue-100 primary-color text-sm rounded-xl font-medium transition-colors" >
-                  Aucun tag disponible</span>
+                  No tags available</span>
               </div>
             </div>
           </div>
@@ -587,7 +569,7 @@
               <div class="flex items-center justify-between mb-4 sm:mb-6">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
                   <ImageIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                  Galerie d'images
+                  Image gallery
                 </h4>
                 <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium">
                   {{ product.images.length }} image{{ product.images.length > 1 ? 's' : '' }}
@@ -624,7 +606,7 @@
                   </div>
                   <!-- Badge image principale -->
                   <div v-if="currentImageIndex === 0" class="absolute top-2 sm:top-4 left-2 sm:left-4 primary-color text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-lg">
-                    Image principale
+                    Main image
                   </div>
                 </div>
               </div>
@@ -661,13 +643,13 @@
             </div>
 
             <!-- Vidéo du produit -->
-            <div  class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div v-if="product.images?.length || product.video_url"  class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center justify-between mb-4 sm:mb-6">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
                   <VideoIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                  Vidéo du produit
+                  Product video
                 </h4>
-                <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium">{{ product.video_url }} vidéo</span>
+                <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium">{{ product.video_url }} video</span>
               </div>
               <div v-if="product.video_url" class="relative w-full h-64 sm:h-96 bg-gray-100 rounded-2xl overflow-hidden shadow-lg">
                 <video 
@@ -676,12 +658,12 @@
                   class="w-full h-full object-cover"
                   preload="metadata"
                 >
-                  Votre navigateur ne supporte pas la lecture de vidéos.
+                  Your browser does not support video playback.
                 </video>
               </div>   
               <div v-else class="w-full h-64 sm:h-96 flex flex-col items-center justify-center bg-gray-100 rounded-2xl shadow-lg text-gray-400">
                 <VideoIcon class="w-12 h-12 sm:w-16 sm:h-16 mb-4 primary-color" />
-                <span class="text-sm sm:text-lg font-medium text-gray-500">Aucune vidéo disponible</span>
+                <span class="text-sm sm:text-lg font-medium text-gray-500">No video available</span>
             </div>
             </div>
 
@@ -690,8 +672,8 @@
               <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 <ImageIcon class="w-8 h-8 sm:w-12 sm:h-12 primary-color" />
               </div>
-              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">Aucun média disponible</h3>
-              <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">Ce produit n'a pas d'images ou de vidéos associées. Vous pouvez en ajouter en modifiant le produit.</p>
+              <h3 class="text-lg sm:text-xl font-semibold text-gray-900 mb-2">No media available</h3>
+              <p class="text-gray-500 max-w-md mx-auto text-sm sm:text-base px-4">This product has no associated images or videos. You can add them by editing the product.</p>
             </div>
           </div>
 
@@ -705,25 +687,25 @@
           <div class="flex gap-2 sm:gap-3 order-2 sm:order-1">
             <button
               @click="editProduct(product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3  text-white rounded-lg text-sm font-medium  transition-all active:scale-95 flex items-center justify-center btn-degrade-orange"
+              class="flex-1 btn-degrade-orange"
             >
-              <EditIcon class="w-4 h-4 mr-2" />
-              Modifier
+              <EditIcon class="w-4 h-4 " />
+              Edit
             </button>
             <button
               @click="$emit('duplicate', product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium   transition-colors flex items-center justify-center"
+              class="flex-1 btn-gray"
             >
-              <CopyIcon class="w-4 h-4 mr-2" />
-              Dupliquer
+              <CopyIcon class="w-4 h-4" />
+              Duplicate
             </button>
             <router-link to="/dashboard-admin/factures">
               <button 
-                class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium transition-colors flex items-center justify-center"
+                class="flex-1 btn-gray"
               >
                 <!-- utilisation directe du composant importé -->
-                <FileTextIcon class="w-4 h-4 mr-2" />
-                Facture Proformat
+                <FileTextIcon class="w-4 h-4 " />
+                Proforma invoice
               </button>
             </router-link>
           </div>
@@ -731,16 +713,16 @@
           <div class="flex gap-2 sm:gap-3 order-1 sm:order-2">
             <button
               @click="$emit('delete', product)"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 rounded-lg text-sm font-medium  transition-colors  flex items-center justify-center btn-deconnexion"
+              class="flex-1  btn-deconnexion "
             >
-              <TrashIcon class="w-4 h-4 mr-2" />
-              Supprimer
+              <TrashIcon class="w-4 h-4" />
+              Delete
             </button>
             <button
               @click="$emit('close')"
-              class="flex-1 sm:flex-none px-4 py-3 sm:px-6 sm:py-3 border border-gray-300 rounded-lg text-sm font-medium  hover:bg-gray-50 transition-colors active:bg-gray-100"
+              class="flex-1 btn-gray"
             >
-              Fermer
+              Close
             </button>
           </div>
         </div>
@@ -850,32 +832,6 @@ const mediaCount = computed(() => {
   return count
 })
 
-// import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
-// // ...existing code...
-
-// // référence vers l'éditeur WYSIWYG
-// const wysiwygEditor2 = ref(null)
-
-// // initialise le contenu de l'éditeur au montage
-// onMounted(() => {
-//   if (wysiwygEditor2.value) {
-//     wysiwygEditor2.value.innerHTML = productData.description_plus || ''
-//   }
-// })
-
-// // synchronise l'éditeur quand productData.description_plus change (mise à jour depuis le code)
-// watch(() => productData.description_plus, (val) => {
-//   if (!wysiwygEditor2.value) return
-//   const html = val || ''
-//   if (wysiwygEditor2.value.innerHTML !== html) {
-//     wysiwygEditor2.value.innerHTML = html
-//   }
-// })
-
-// // mise à jour de la variable quand l'utilisateur édite le contenu
-// const updateOtherDescription = () => {
-//   productData.description_plus = wysiwygEditor2.value?.innerHTML || ''
-// }
 
 // Réinitialiser l'index quand le produit change
 watch(() => props.product, () => {
@@ -918,7 +874,7 @@ const closeImageModal = () => {
 
 const formatDate = (dateString) => {
   if (!dateString) return 'N/A'
-  return new Date(dateString).toLocaleDateString('fr-FR', {
+  return new Date(dateString).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
     day: 'numeric'
@@ -926,7 +882,7 @@ const formatDate = (dateString) => {
 }
 
 const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-FR').format(price || 0)
+  return new Intl.NumberFormat('en-US').format(price || 0)
 }
 
 const getStatusBadgeClass = (status) => {
@@ -960,9 +916,9 @@ const getStatusDotClass = (status) => {
 }
 
 const getStockStatus = (stock) => {
-  if (stock === 0) return 'Rupture de stock'
-  if (stock <= 5) return 'Stock faible'
-  return 'En stock'
+  if (stock === 0) return 'Out of stock'
+  if (stock <= 5) return 'Low stock'
+  return 'In stock'
 }
 
 const getStockStatusClass = (stock) => {
@@ -1029,7 +985,7 @@ const hasAdvancedSpecs = computed(() => {
 const formatMileage = (mileage) => {
   if (mileage === 0) return 'Neuf (0 km)'
   if (mileage >= 200000) return '200,000+ km'
-  return new Intl.NumberFormat('fr-FR').format(mileage) + ' km'
+  return new Intl.NumberFormat('en-US').format(mileage) + ' km'
 }
 
 const getFuelTypeLabel = (fuelType) => {
