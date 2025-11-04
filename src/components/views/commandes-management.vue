@@ -36,14 +36,14 @@
           <HomeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
         </router-link>
         <span class="mx-2">/</span>
-        <span class="font-medium text-gray-700 truncate">Gestion des Commandes</span>
+        <span class="font-medium text-gray-700 truncate">Order Management</span>
       </div>
 
       <!-- Header responsive -->
       <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Commandes</h1>
-          <p class="text-sm sm:text-base text-gray-600">Suivi et traitement des commandes en temps réel</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Order Management</h1>
+          <p class="text-sm sm:text-base text-gray-600">Real-time order tracking and processing</p>
         </div>
         
         <!-- Actions mobiles optimisées -->
@@ -55,18 +55,18 @@
               class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
             >
                <DownloadIcon class="w-4 h-4 mr-2" />
-              <span >Exporter</span>
+              <span >Export</span>
               <ChevronDownIcon class="w-4 h-4 ml-2" />
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
               <div  role="menu">
                 <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
                    <FileTextIcon class="w-4 h-4 mr-2 error-color" />
-                  Exporter en PDF
+                  Export to PDF
                 </button>
                 <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
                   <FileTextIcon class="w-4 h-4 mr-1 green-color" />
-                  Exporter en Excel
+                  Export to Excel
                 </button>
               </div>
             </div>
@@ -78,7 +78,7 @@
             class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all submit-btn"
           >
             <RefreshIcon class="w-4 h-4 mr-2" />
-            Actualiser
+            Refresh
           </button>
         </div>
       </div>
@@ -87,7 +87,7 @@
       <div v-if="dataLoading" class="mb-6 sm:mb-8">
         <div class="bg-white rounded-lg p-6 sm:p-8 text-center shadow-lg">
           <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-orange-500 border-t-transparent"></div>
-          <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Chargement des commandes...</p>
+          <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Loading orders...</p>
         </div>
       </div>
 
@@ -102,7 +102,7 @@
               <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
             </div>
             <button @click="loadAllData" class="w-full sm:w-auto px-4 py-2 error-background-color  rounded-lg  transition-colors font-medium text-sm">
-              Réessayer
+              Try Again
             </button>
           </div>
         </div>
@@ -118,14 +118,14 @@
                 <ShoppingCartIcon class="w-5 h-5 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Commandes Totales</p>
+                <p class="text-xs sm:text-sm text-gray-600">Total Orders</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.total_orders || 0 }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Croissance: +{{ stats.orders_growth || 0 }}%</span>
-                <span class="text-orange-600 flex-shrink-0">Ce mois</span>
+                <span class="truncate">Growth: +{{ stats.orders_growth || 0 }}%</span>
+                <span class="text-orange-600 flex-shrink-0">This month</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300" style="width: 75%"></div>
@@ -142,14 +142,14 @@
                 <Clock class="w-5 h-5 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">En Attente</p>
+                <p class="text-xs sm:text-sm text-gray-600">Pending</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.pending_orders || 0 }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Réduction: -{{ stats.pending_reduction || 0 }}%</span>
-                <span class="text-yellow-600 flex-shrink-0">Vs hier</span>
+                <span class="truncate">Reduction: -{{ stats.pending_reduction || 0 }}%</span>
+                <span class="text-yellow-600 flex-shrink-0">vs yesterday</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2 rounded-full transition-all duration-300" style="width: 60%"></div>
@@ -166,14 +166,14 @@
                 <CheckCircle2Icon class="w-5 h-45 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Confirmées</p>
+                <p class="text-xs sm:text-sm text-gray-600">Confirmed</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.confirmed_orders || 0 }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Croissance: +{{ stats.confirmed_growth || 0 }}%</span>
-                <span class="green-color flex-shrink-0">Aujourd'hui</span>
+                <span class="truncate">Growth: +{{ stats.confirmed_growth || 0 }}%</span>
+                <span class="green-color flex-shrink-0">Today</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 85%"></div>
@@ -190,14 +190,14 @@
                 <BadgeEuroIcon class="w-5 h-45 text-black" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Revenus du Jour</p>
+                <p class="text-xs sm:text-sm text-gray-600">Daily Income</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ formatCurrency(stats.daily_revenue || 0) }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Croissance: +{{ stats.revenue_growth || 0 }}%</span>
-                <span class="purple-color flex-shrink-0">Vs hier</span>
+                <span class="truncate">Growth: +{{ stats.revenue_growth || 0 }}%</span>
+                <span class="purple-color flex-shrink-0">vs yesterday</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
@@ -241,7 +241,7 @@
                 v-model="searchQuery"
                 type="text" 
                 class="input-style" 
-                placeholder="Rechercher par numéro, client, produit..."
+                placeholder="Search by number, customer, product..."
                 @input="handleSearch"
               >
             </div>
@@ -252,12 +252,12 @@
                   v-model="statusFilter" 
                   @change="loadOrders" 
                   class=" input-style">
-                  <option value="" class="px-4">Tous les statuts</option>
-                  <option value="en_attente">En attente</option>
-                  <option value="confirmee">Confirmée</option>
-                  <option value="en_livraison">En livraison</option>
-                  <option value="livree">Livrée</option>
-                  <option value="annulee">Annulée</option> 
+                  <option value="" class="px-4">All status</option>
+                  <option value="en_attente">Pending</option>
+                  <option value="confirmee">Confirmed</option>
+                  <option value="en_livraison">Available for delivery</option>
+                  <option value="livree">Deliveries</option>
+                  <option value="annulee">Cancelled</option> 
                 </select>
               </div>
               <div class="w-45">
@@ -266,16 +266,16 @@
                   v-model="dateFilter" 
                   @change="loadOrders" 
                   class="input-style">
-                  <option value="">Toutes les dates</option>
-                  <option value="today">Aujourd'hui</option>
-                  <option value="yesterday">Hier</option>
-                  <option value="week">Cette semaine</option>
-                  <option value="month">Ce mois</option>
+                  <option value="">All dates</option>
+                  <option value="today">Today</option>
+                  <option value="yesterday">Yesterday</option>
+                  <option value="week">This Week</option>
+                  <option value="month">This month</option>
                 </select>
               </div>
               <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion w-30">
                 <X class="w-4 h-4 sm:hidden" />
-                <span class="hidden sm:inline text-xs">Effacer Filtres</span>
+                <span class="hidden sm:inline text-xs">Clear Filters</span>
               </button>
             </div>
           </div>
@@ -286,12 +286,12 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Commande</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Client</th>
-                <th scope="col" class="hidden md:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 150px; max-width: 150px;">Produit</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Livraison</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Montant</th>
-                <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Statut</th>
+                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
+                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
+                <th scope="col" class="hidden md:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider" style="width: 150px; max-width: 150px;">Product</th>
+                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery</th>
+                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
                 <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -323,7 +323,7 @@
                   <div class="space-y-1">
                     <div class="text-xs sm:text-sm font-medium text-gray-900 truncate" style="max-width: 140px;" :title="order.produit_nom">{{ order.produit_nom }}</div>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
-                      <span>Qté: {{ order.quantite }}</span>
+                      <span>Qty: {{ order.quantite }}</span>
                       <span>{{ formatCurrency(order.produit_prix) }}</span>
                     </div>
                     <div class="flex items-center text-xs text-gray-600">
@@ -348,15 +348,15 @@
                   <div class="space-y-1">
                     <div class="text-sm sm:text-base font-bold text-gray-900">{{ formatCurrency(order.total) }}</div>
                     <div class="text-xs text-gray-500">
-                      <div>Sous-total: {{ formatCurrency(order.sous_total) }}</div>
-                      <div>Livraison: {{ formatCurrency(order.frais_livraison) }}</div>
+                      <div>Sub-total: {{ formatCurrency(order.sous_total) }}</div>
+                      <div>Delivery: {{ formatCurrency(order.frais_livraison) }}</div>
                     </div>
                   </div>
                 </td>
                 <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', getStatusClass(order.statut)]">
                     <component :is="getStatusIcon(order.statut)" class="h-3 w-3" />
-                    {{ getStatusLabel(order.statut), console.log(order.statut)  }}
+                    {{ getStatusLabel(order.statut), console.log(order.statut) }}
                   </span>
                 </td>
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
@@ -365,7 +365,7 @@
                       v-if="order.statut === 'en_attente'" 
                       @click.stop="showConfirmModal('confirm', order)"
                       class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Confirmer"
+                      title="Confirm"
                       style="background-color: rgba(74, 222, 128, 0.1); color: rgb(22, 163, 74);"
                     >
                     <Check class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
@@ -374,7 +374,7 @@
                       v-if="order.statut === 'confirmee'" 
                       @click.stop="showConfirmModal('ship', order)"
                       class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Expédier"
+                      title="Ship"
                       style="background-color: rgba(147, 197, 253, 0.1); color: rgb(37, 99, 235);"
                     >
                     <Truck class="h-3 w-3 sm:h-4 sm:w-4  text-black" />
@@ -383,7 +383,7 @@
                       v-if="order.statut === 'en_livraison'" 
                       @click.stop="showConfirmModal('deliver', order)"
                       class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Livrer"
+                      title="Deliver"
                       style="background-color: rgba(191, 144, 255, 0.1); color: rgb(99, 37, 235);"
                     >
                     <ArchiveIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
@@ -392,7 +392,7 @@
                       v-if="['en_attente', 'confirmee'].includes(order.statut)" 
                       @click.stop="showConfirmModal('cancel', order)"
                       class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Annuler"
+                      title="Cancel"
                       style="background-color: rgba(248, 113, 113, 0.1); color: rgb(220, 38, 38);"
                     >
                     <BookmarkXIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
@@ -400,7 +400,7 @@
                     <button 
                       @click.stop="openOrderDetails(order)" 
                       class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Voir détails"
+                      title="See details"
                       style="background-color: rgba(209, 213, 219, 0.1); color: rgb(71, 85, 105);"
                     >
                     <EyeIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
@@ -415,8 +415,8 @@
         <!-- Pagination responsive -->
         <div class="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 gap-3 sm:gap-0">
           <div class="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
-            <span class="text-gray-700 hidden sm:inline">Éléments par page</span>
-            <span class="text-gray-700 sm:hidden">Par page</span>
+            <span class="text-gray-700 hidden sm:inline">Items per page</span>
+            <span class="text-gray-700 sm:hidden">Per page</span>
             <div class="w-15">
               <select 
                 v-model="itemsPerPage"
@@ -430,9 +430,9 @@
             </div>
             <span class="text-gray-700 text-xs sm:text-sm">
               <span class="hidden sm:inline">
-                Affichage {{ ((currentPage - 1) * itemsPerPage) + 1 }} à 
+                Showing {{ ((currentPage - 1) * itemsPerPage) + 1 }} to 
                 {{ Math.min(currentPage * itemsPerPage, filteredOrders.length) }} 
-                sur {{ filteredOrders.length }} résultats
+                on {{ filteredOrders.length }} results
               </span>
               <span class="sm:hidden">
                 {{ ((currentPage - 1) * itemsPerPage) + 1 }}-{{ Math.min(currentPage * itemsPerPage, filteredOrders.length) }} 
@@ -447,8 +447,8 @@
               class="relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
             <ChevronLeft class="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-black" />
-              <span class="hidden sm:inline">Précédent</span>
-              <span class="sm:hidden">Préc</span>
+              <span class="hidden sm:inline">Previous</span>
+              <span class="sm:hidden">Prev</span>
             </button>
             <div class="flex items-center space-x-1">
               <button 
@@ -470,8 +470,7 @@
               :disabled="isLastPage"
               class="relative inline-flex items-center px-2 sm:px-3 py-1.5 sm:py-2 border border-gray-300 text-xs sm:text-sm font-medium rounded-lg text-gray-700 bg-white hover:bg-gray-50 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
             >
-              <span class="hidden sm:inline">Suivant</span>
-              <span class="sm:hidden">Suiv</span>
+              <span>Next</span>
               <ChevronRight class="h-3 w-3 sm:h-4 sm:w-4 mr-1 text-black" />
             </button>
           </div>
@@ -492,7 +491,7 @@
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">{{ getConfirmationTitle() }}</h3>
-              <p class="text-sm text-gray-500">Commande #{{ selectedOrder?.numero_commande }}</p>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
           <p class="text-gray-600 mb-6">{{ getConfirmationMessage() }}</p>
@@ -501,7 +500,7 @@
               @click="closeConfirmModal"
               class="btn-gray"
             >
-              Annuler
+              Cancel
             </button>
             <button 
               @click="executeAction"
@@ -523,7 +522,7 @@
               <div class="p-3 bg-orange rounded-xl">
                 <FileTextIcon class="h-6 w-6 text-white" />
               </div>
-              <h3 class="text-2xl font-bold text-gray-900">Détails de la Commande</h3>
+              <h3 class="text-2xl font-bold text-gray-900">Order Details</h3>
             </div>
             <XIcon @click="closeOrderModal" class="h-7 w-7 cursor-pointer text-gray-700" />
           </div>
@@ -560,14 +559,14 @@
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
                 <BoxIcon class="h-6 w-6 primary-color" />
                 <div>
-                  <div class="text-sm text-gray-600">Quantité</div>
+                  <div class="text-sm text-gray-600">Quantity</div>
                   <div class="text-xl font-bold text-gray-900">{{ selectedOrder.quantite }}</div>
                 </div>
               </div>
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
                 <Truck class="h-6 w-6 primary-color" />
                 <div>
-                  <div class="text-sm text-gray-600">Livraison</div>
+                  <div class="text-sm text-gray-600">Delivery</div>
                   <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</div>
                 </div>
               </div>
@@ -580,20 +579,20 @@
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
                 <User class="h-6 w-6 primary-color" />
-                <h4 class="text-lg font-semibold text-gray-900">Informations Client</h4>
+                <h4 class="text-lg font-semibold text-gray-900">Customer Informations</h4>
               </div>
               <div class="space-y-3">
                 <div class="flex items-center gap-3">
                   <User2 class="h-4 w-4 text-gray-500" />
                   <div>
-                    <span class="text-sm text-gray-500">Nom complet</span>
+                    <span class="text-sm text-gray-500">Full name</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.client_nom }}</div>
                   </div>
                 </div>
                 <div class="flex items-center gap-3">
                   <PhoneCall class="h-4 w-4 text-gray-400" />
                   <div>
-                    <span class="text-sm text-gray-500">Téléphone</span>
+                    <span class="text-sm text-gray-500">Phone number</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.client_telephone }}</div>
                   </div>
                 </div>
@@ -604,27 +603,27 @@
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
                 <Truck class="h-6 w-6 primary-color" />
-                <h4 class="text-lg font-semibold text-gray-900">Informations de Livraison</h4>
+                <h4 class="text-lg font-semibold text-gray-900">Delivery Informations</h4>
               </div>
               <div class="space-y-3">
                 <div class="flex items-center gap-3">
                   <Truck class="h-4 w-4 text-gray-400" />
                   <div>
-                    <span class="text-sm text-gray-500">Type de livraison</span>
+                    <span class="text-sm text-gray-500">Delivery type</span>
                     <div class="font-medium text-gray-900">{{ getDeliveryTypeLabel(selectedOrder.type_livraison) }}</div>
                   </div>
                 </div>
                 <div v-if="selectedOrder.commune" class="flex items-center gap-3">
                   <MapPin class="h-4 w-4 text-gray-400" />
                   <div>
-                    <span class="text-sm text-gray-500">Commune</span>
+                    <span class="text-sm text-gray-500">Municipality</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.commune }}</div>
                   </div>
                 </div>
                 <div class="flex items-start gap-3">
                   <Home class="h-4 w-4 text-gray-400 mt-1" />
                   <div>
-                    <span class="text-sm text-gray-500">Adresse complète</span>
+                    <span class="text-sm text-gray-500">Full Address</span>
                     <div class="font-medium text-gray-900">{{ selectedOrder.adresse_complete }}</div>
                   </div>
                 </div>
@@ -636,7 +635,7 @@
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
               <BoxIcon class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Produit Commandé</h4>
+              <h4 class="text-lg font-semibold text-gray-900">Product Ordered</h4>
             </div>
             <div class="flex items-start gap-6">
               <div class="w-20 h-20 bg-gray-100 rounded-xl flex items-center justify-center">
@@ -647,15 +646,15 @@
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
                   <div class="flex items-center gap-2 text-gray-400">
                     <BoxIcon class="h-4 w-4 text-gray-400" />
-                    <span>Quantité: {{ selectedOrder.quantite }}</span>
+                    <span>Quantity: {{ selectedOrder.quantite }}</span>
                   </div>
                   <div class="flex items-center gap-2 text-gray-400">
                     <Banknote class="h-4 w-4 text-gray-400" />
-                    <span>Prix unitaire: {{ formatCurrency(selectedOrder.produit_prix) }}</span>
+                    <span>Unit Price: {{ formatCurrency(selectedOrder.produit_prix) }}</span>
                   </div>
                   <div class="flex items-center gap-2 text-gray-400">
                     <Building class="h-4 w-4 text-gray-400" />
-                    <span>Boutique: {{ selectedOrder.boutique_nom }}</span>
+                    <span>Store: {{ selectedOrder.boutique_nom }}</span>
                   </div>
                 </div>
               </div>
@@ -666,7 +665,7 @@
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
                 <Building class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Informations de la Boutique</h4>
+              <h4 class="text-lg font-semibold text-gray-900">Store Informations</h4>
             </div>
             <div class="space-y-4">
               <div class="flex items-center gap-4">
@@ -699,7 +698,7 @@
                 </div>
                 
                 <div v-if="selectedOrder.boutique_address || selectedOrder.boutique_commune">
-                  <h6 class="text-sm font-semibold text-gray-700 mb-3">Localisation</h6>
+                  <h6 class="text-sm font-semibold text-gray-700 mb-3">Location</h6>
                   <div class="space-y-2">
                     <div v-if="selectedOrder.boutique_address" class="flex items-center gap-2 text-sm">
                       <MapPin class="h-4 w-4 text-gray-400" />
@@ -717,7 +716,7 @@
               <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-100">
                 <button v-if="selectedOrder.boutique_telephone" @click="callBoutique(selectedOrder.boutique_telephone)" class="flex items-center gap-2 px-4 py-2  rounded-lg  transition-colors duration-200">
                   <PhoneCall class="h-4 w-4" />
-                  <span>Appeler</span>
+                  <span>Call</span>
                 </button>
                 <button v-if="selectedOrder.boutique_email" @click="emailBoutique(selectedOrder.boutique_email)" class="flex items-center gap-2 px-4 py-2 rounded-lg  transition-colors duration-200">
                   <Mail class="h-4 w-4" />
@@ -725,15 +724,15 @@
                 </button>
                 <button @click="notifyBoutiqueNewOrder(selectedOrder)" class="flex items-center gap-2 px-4 py-2  rounded-lg  transition-colors duration-200">
                  <Bell class="h-4 w-4" />
-                  <span>Notifier Commande</span>
+                  <span>Order Notification</span>
                 </button>
                 <button @click="notifyClientOrderStatus(selectedOrder)" class="flex items-center gap-2 px-4 py-2  rounded-lg  transition-colors duration-200">
                  <MessageSquare class="h-4 w-4" />
-                  <span>Notifier Client</span>
+                  <span>Notify Customer</span>
                 </button>
                 <button @click="generateReceiptPDF(selectedOrder)" class="flex items-center gap-2 px-4 py-2 rounded-lg  transition-colors duration-200">
                   <FileDownIcon class="h-4 w-4" />
-                  <span>Reçu PDF</span>
+                  <span>PDF receipt</span>
                 </button>
               </div>
             </div>
@@ -743,20 +742,20 @@
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
               <Banknote class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Récapitulatif Financier</h4>
+              <h4 class="text-lg font-semibold text-gray-900">Financial Summary</h4>
             </div>
             <div class="space-y-4">
               <div class="flex justify-between items-center py-2">
                 <div class="flex items-center gap-2">
                   <CalculatorIcon class="h-4 w-4 text-gray-400" />
-                  <span class="text-gray-600">Sous-total</span>
+                  <span class="text-gray-600">Subtotal</span>
                 </div>
                 <span class="font-medium text-gray-900">{{ formatCurrency(selectedOrder.sous_total) }}</span>
               </div>
               <div class="flex justify-between items-center py-2">
                 <div class="flex items-center gap-2">
                   <Truck class="h-4 w-4 text-gray-400" />
-                  <span class="text-gray-600">Frais de livraison</span>
+                  <span class="text-gray-600">Delivery costs</span>
                 </div>
                 <span class="font-medium text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</span>
               </div>
@@ -777,28 +776,28 @@
               @click="showConfirmModal('confirm', selectedOrder)"
               class="submit-btn"
             >
-              <span>Confirmer la commande</span>
+              <span>Confirm the order</span>
             </button>
             <button 
               v-if="selectedOrder.statut === 'confirmee'" 
               @click="showConfirmModal('ship', selectedOrder)"
               class="submit-btn"
             >
-              <span>Marquer comme expédiée</span>
+              <span>Mark as shipped</span>
             </button>
             <button 
               v-if="selectedOrder.statut === 'en_livraison'" 
               @click="showConfirmModal('deliver', selectedOrder)"
               class="submit-btn"
             >
-              <span>Marquer comme livrée</span>
+              <span>Mark as livery</span>
             </button>
             <button 
               v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)" 
               @click="showConfirmModal('cancel', selectedOrder)"
               class="btn-deconnexion"
             >
-              <span>Annuler la commande</span>
+              <span>Cancel the order</span>
             </button>
           </div>
         </div>
@@ -911,12 +910,12 @@ const stats = ref({
 
 // Computed properties pour les filtres
 const filterTabs = [
-  { value: 'all', label: 'Toutes' },
-  { value: 'en_attente', label: 'En attente' },
-  { value: 'confirmee', label: 'Confirmées' },
-  { value: 'en_livraison', label: 'En livraison' },
-  { value: 'livree', label: 'Livrées' },
-  { value: 'annulee', label: 'Annulées' }
+  { value: 'all', label: 'All' },
+  { value: 'en_attente', label: 'Pending' },
+  { value: 'confirmee', label: 'Confirmed' },
+  { value: 'en_livraison', label: 'Available for delivery' },
+  { value: 'livree', label: 'Deliveries' },
+  { value: 'annulee', label: 'Cancelled' }
 ]
 
 const activeFilter = ref('all')
@@ -1045,25 +1044,19 @@ const hasActiveFilters = computed(() => {
 // API Methods
 const loadStats = async () => {
   try {
-    console.log('🔄 Chargement des statistiques des commandes...')
     const response = await axios.get(`${API_BASE_URL}/commandes.php?action=stats&_=${Date.now()}`)
     
     if (response.data.success) {
       stats.value = response.data.data
-      console.log('✅ Statistiques chargées:', stats.value)
-    } else {
-      console.error('❌ Erreur lors du chargement des statistiques:', response.data.error)
     }
   } catch (error) {
-    console.error('❌ Erreur lors du chargement des statistiques:', error)
     hasError.value = true
-    error.value = 'Erreur lors du chargement des statistiques. Veuillez réessayer.'
+    error.value = 'Error loading statistics. Please try again.'
   }
 }
 
 const loadOrders = async () => {
   try {
-    console.log('🔄 Chargement des commandes...')
     const params = new URLSearchParams({
       action: 'list',
       limit: 100,
@@ -1078,15 +1071,12 @@ const loadOrders = async () => {
     
     if (response.data.success) {
       orders.value = response.data.data || []
-      console.log('✅ Commandes chargées:', orders.value.length)
     } else {
-      console.error('❌ Erreur lors du chargement des commandes:', response.data.error)
       orders.value = []
     }
   } catch (error) {
-    console.error('❌ Erreur lors du chargement des commandes:', error)
     hasError.value = true
-    error.value = 'Erreur lors du chargement des commandes. Veuillez réessayer.'
+    error.value = 'Error loading commands. Please try again.'
     orders.value = []
   }
 }
@@ -1099,7 +1089,7 @@ const loadAllData = async () => {
     await Promise.all([loadStats(), loadOrders()])
   } catch (e) {
     hasError.value = true
-    error.value = 'Erreur lors du chargement des données. Veuillez réessayer.'
+    error.value = 'Error loading data. Please try again..'
   } finally {
     dataLoading.value = false
   }
@@ -1120,20 +1110,20 @@ const closeConfirmModal = () => {
 
 const getConfirmationTitle = () => {
   switch (confirmationAction.value) {
-    case 'confirm': return 'Confirmer la commande'
-    case 'ship': return 'Expédier la commande'
-    case 'deliver': return 'Livrer la commande'
-    case 'cancel': return 'Annuler la commande'
+    case 'confirm': return 'Confirm the order'
+    case 'ship': return 'Ship the order'
+    case 'deliver': return 'Deliver the order'
+    case 'cancel': return 'Cancel the order'
     default: return ''
   }
 }
 
 const getConfirmationMessage = () => {
   switch (confirmationAction.value) {
-    case 'confirm': return 'Êtes-vous sûr de vouloir confirmer cette commande ?'
-    case 'ship': return 'Êtes-vous sûr de vouloir marquer cette commande comme expédiée ?'
-    case 'deliver': return 'Êtes-vous sûr de vouloir marquer cette commande comme livrée ?'
-    case 'cancel': return 'Êtes-vous sûr de vouloir annuler cette commande ? Cette action est irréversible.'
+    case 'confirm': return 'Are you sure you want to confirm this order? ?'
+    case 'ship': return 'Are you sure you want to mark this order as shipped? ?'
+    case 'deliver': return 'Are you sure you want to mark this order as delivered? ?'
+    case 'cancel': return 'Are you sure you want to cancel this order? This action is irreversible..'
     default: return ''
   }
 }
@@ -1166,11 +1156,11 @@ const getConfirmationButtonClass = () => {
 
 const getConfirmationButtonText = () => {
   switch (confirmationAction.value) {
-    case 'confirm': return 'Confirmer'
-    case 'ship': return 'Expédier'
-    case 'deliver': return 'Livrer'
-    case 'cancel': return 'Annuler Commande'
-    default: return 'Confirmer'
+    case 'confirm': return 'Confirm'
+    case 'ship': return 'Ship'
+    case 'deliver': return 'Deliver'
+    case 'cancel': return 'Cancel order'
+    default: return 'Confirm'
   }
 }
 
@@ -1184,22 +1174,22 @@ const executeAction = async () => {
     switch (confirmationAction.value) {
       case 'confirm':
         newStatus = 'confirmee'
-        successMessage = 'Commande confirmée avec succès'
+        successMessage = 'Order successfully confirmed'
         await confirmOrder(selectedOrder.value.id)
         break
       case 'ship':
         newStatus = 'en_livraison'
-        successMessage = 'Commande expédiée avec succès'
+        successMessage = 'Order successfully shipped'
         await markAsShipped(selectedOrder.value.id)
         break
       case 'deliver':
         newStatus = 'livree'
-        successMessage = 'Commande livrée avec succès'
+        successMessage = 'Order successfully delivered'
         await markAsDelivered(selectedOrder.value.id)
         break
       case 'cancel':
         newStatus = 'annulee'
-        successMessage = 'Commande annulée avec succès'
+        successMessage = 'Order successfully cancelled'
         await cancelOrder(selectedOrder.value.id)
         break
     }
@@ -1207,8 +1197,7 @@ const executeAction = async () => {
     closeConfirmModal()
     
   } catch (error) {
-    console.error('Erreur lors de la mise à jour:', error)
-    showNotificationMessage('error', 'Erreur', 'Erreur lors de la mise à jour de la commande')
+    showNotificationMessage('error', 'Error', 'Error updating the command')
   }
 }
 
@@ -1218,17 +1207,16 @@ const confirmOrder = async (orderId) => {
     const response = await axios.put(`${API_BASE_URL}/commandes.php?action=confirm&id=${orderId}&_=${Date.now()}`)
     
     if (response.data.success) {
-      showNotificationMessage('success', 'Commande confirmée', 'La commande a été confirmée avec succès')
+      showNotificationMessage('success', 'Order confirmed', 'The order has been successfully confirmed.')
       await loadAllData()
       if (selectedOrder.value && selectedOrder.value.id === orderId) {
         selectedOrder.value.statut = 'confirmee'
       }
     } else {
-      showNotificationMessage('error', 'Erreur', response.data.error || 'Erreur lors de la confirmation')
+      showNotificationMessage('error', 'Error', response.data.error || 'Error during confirmation')
     }
   } catch (error) {
-    console.error('Erreur lors de la confirmation:', error)
-    showNotificationMessage('error', 'Erreur', 'Erreur lors de la confirmation de la commande')
+    showNotificationMessage('error', 'Error', 'Error during order confirmation')
   }
 }
 
@@ -1237,17 +1225,16 @@ const markAsShipped = async (orderId) => {
     const response = await axios.put(`${API_BASE_URL}/commandes.php?action=ship&id=${orderId}&_=${Date.now()}`)
     
     if (response.data.success) {
-      showNotificationMessage('success', 'Commande expédiée', 'La commande a été marquée comme expédiée')
+      showNotificationMessage('success', 'Order shipped', 'The order has been marked as shipped.')
       await loadAllData()
       if (selectedOrder.value && selectedOrder.value.id === orderId) {
         selectedOrder.value.statut = 'en_livraison'
       }
     } else {
-      showNotificationMessage('error', 'Erreur', response.data.error || 'Erreur lors de l\'expédition')
+      showNotificationMessage('error', 'Error', response.data.error || 'Erreur lors de l\'expédition')
     }
   } catch (error) {
-    console.error('Erreur lors de l\'expédition:', error)
-    showNotificationMessage('error', 'Erreur', 'Erreur lors de l\'expédition de la commande')
+    showNotificationMessage('error', 'Error', 'Error during order shipment')
   }
 }
 
@@ -1256,17 +1243,16 @@ const markAsDelivered = async (orderId) => {
     const response = await axios.put(`${API_BASE_URL}/commandes.php?action=deliver&id=${orderId}&_=${Date.now()}`)
     
     if (response.data.success) {
-      showNotificationMessage('success', 'Commande livrée', 'La commande a été marquée comme livrée')
+      showNotificationMessage('success', 'Order delivered', 'The order has been marked as delivered.')
       await loadAllData()
       if (selectedOrder.value && selectedOrder.value.id === orderId) {
         selectedOrder.value.statut = 'livree'
       }
     } else {
-      showNotificationMessage('error', 'Erreur', response.data.error || 'Erreur lors de la livraison')
+      showNotificationMessage('error', 'Error', response.data.error || 'Erreur lors de la livraison')
     }
   } catch (error) {
-    console.error('Erreur lors de la livraison:', error)
-    showNotificationMessage('error', 'Erreur', 'Erreur lors de la livraison de la commande')
+    showNotificationMessage('error', 'Error', 'Error during order delivery')
   }
 }
 
@@ -1275,17 +1261,17 @@ const cancelOrder = async (orderId) => {
     const response = await axios.put(`${API_BASE_URL}/commandes.php?action=cancel&id=${orderId}&_=${Date.now()}`)
     
     if (response.data.success) {
-      showNotificationMessage('success', 'Commande annulée', 'La commande a été annulée avec succès')
+      console.log(response.data)
+      showNotificationMessage('success', 'Order cancelled', 'The order has been successfully cancelled.')
       await loadAllData()
       if (selectedOrder.value && selectedOrder.value.id === orderId) {
         selectedOrder.value.statut = 'annulee'
       }
     } else {
-      showNotificationMessage('error', 'Erreur', response.data.error || 'Erreur lors de l\'annulation')
+      showNotificationMessage('error', 'Error', response.data.error || 'Error canceling ordern')
     }
   } catch (error) {
-    console.error('Erreur lors de l\'annulation:', error)
-    showNotificationMessage('error', 'Erreur', 'Erreur lors de l\'annulation de la commande')
+    showNotificationMessage('error', 'Error', 'Error canceling order')
   }
 }
 
@@ -1321,7 +1307,7 @@ const changePage = (page) => {
 // Export Excel (XLSX)
 const exportToExcel = () => {
   try {
-    showNotificationMessage('info', 'Export Excel', 'Génération du fichier Excel en cours...')
+    showNotificationMessage('info', 'Export Excel', 'Generating Excel file...')
     showExportDropdown.value = false
     
     // Préparer les données pour Excel
@@ -1380,18 +1366,17 @@ const exportToExcel = () => {
     // Sauvegarder le fichier
     XLSX.writeFile(wb, filename)
     
-    showNotificationMessage('success', 'Export Excel réussi', `${excelData.length} commandes exportées en Excel`)
+    showNotificationMessage('success', 'Excel export successful', `${excelData.length} orders exported to Excel`)
     
   } catch (error) {
-    console.error('Erreur lors de l\'export Excel:', error)
-    showNotificationMessage('error', 'Erreur Export', 'Erreur lors de l\'export Excel')
+    showNotificationMessage('error', 'Error Export', 'Error during Excel export')
   }
 }
 
 // Export PDF
 const exportToPDF = () => {
   try {
-    showNotificationMessage('info', 'Export PDF', 'Génération du fichier PDF en cours...')
+    showNotificationMessage('info', 'Export PDF', 'Generating PDF file...')
     showExportDropdown.value = false
     
     const doc = new jsPDF('l', 'mm', 'a4') // Format paysage
@@ -1441,7 +1426,7 @@ const exportToPDF = () => {
     
     // En-têtes du tableau
     const headers = [
-      'N° Commande', 'Date', 'Client', 'Produit', 'Qté', 'Total', 'Statut', 'Boutique'
+      'N° Order', 'Date', 'Customer', 'Product', 'Qty', 'Total', 'Status', 'Store'
     ]
     
     // Configuration du tableau
@@ -1495,24 +1480,23 @@ const exportToPDF = () => {
       doc.setTextColor(220, 38, 38)
       doc.setFontSize(10)
       doc.setFont('helvetica', 'italic')
-      doc.text(`Note: Seules les 50 premières commandes sont affichées (${filteredOrders.value.length} au total)`, 15, yPosition + 10)
+      doc.text(`Note: Only the first 50 orders are displayed (${filteredOrders.value.length} au total)`, 15, yPosition + 10)
     }
     
     // Pied de page
     doc.setTextColor(...darkColor)
     doc.setFontSize(8)
     doc.setFont('helvetica', 'normal')
-    doc.text('DaqAuto - Système de gestion des commandes', 15, 200)
-    doc.text(`Page 1 - Généré le ${new Date().toLocaleDateString('fr-FR')}`, 200, 200)
+    doc.text('DaqAuto - Order management system', 15, 200)
+    doc.text(`Page 1 - Generated on ${new Date().toLocaleDateString('fr-FR')}`, 200, 200)
     
     // Sauvegarder le PDF
     doc.save(`Commandes_DaqAuto_${new Date().toISOString().split('T')[0]}.pdf`)
     
-    showNotificationMessage('success', 'Export PDF réussi', `PDF généré avec ${Math.min(filteredOrders.value.length, 50)} commandes`)
+    showNotificationMessage('success', 'PDF export successful', `PDF generated with ${Math.min(filteredOrders.value.length, 50)} Orders`)
     
   } catch (error) {
-    console.error('Erreur lors de l\'export PDF:', error)
-    showNotificationMessage('error', 'Erreur Export', 'Erreur lors de l\'export PDF')
+    showNotificationMessage('error', 'Error Export', 'Error during Pdf export')
   }
 }
 
@@ -1533,7 +1517,7 @@ const closeNotification = () => {
 
 // Utility Methods
 const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('fr-FR', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'USD',
     minimumFractionDigits: 0
@@ -1557,11 +1541,11 @@ const formatTime = (dateString) => {
 
 const getStatusLabel = (status) => {
   const labels = {
-    'en_attente': 'En attente',
-    'confirmee': 'Confirmée',
-    'en_livraison': 'Expédiée',
-    'livree': 'Livrée',
-    'annulee': 'Annulée'
+    'en_attente': 'Pending',
+    'confirmee': 'Confirmed',
+    'en_livraison': 'Shipped',
+    'livree': 'Delivered',
+    'annulee': 'Cancelled'
   }
   return labels[status] || status
 }
@@ -1605,8 +1589,8 @@ const getBoutiqueStatusLabel = (status) => {
   const labels = {
     'active': 'Active',
     'inactive': 'Inactive',
-    'suspended': 'Suspendue',
-    'pending': 'En attente'
+    'suspended': 'Suspended',
+    'pending': 'Pending'
   }
   return labels[status] || status
 }

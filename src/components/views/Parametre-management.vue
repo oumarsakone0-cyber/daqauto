@@ -42,14 +42,14 @@
         </router-link>
         
         <span class="mx-2">/</span>
-        <span class="font-medium text-gray-700 truncate">Paramètres</span>
+        <span class="font-medium text-gray-700 truncate">Parameters</span>
       </div>
 
       <!-- Header responsive -->
       <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Paramètres de la Boutique</h1>
-          <p class="text-sm sm:text-base text-gray-600">Gérez vos informations et préférences</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Store Settings</h1>
+          <p class="text-sm sm:text-base text-gray-600">Manage your information and preferences</p>
         </div>
         
         <!-- Actions -->
@@ -62,10 +62,10 @@
               hasUnsavedChanges ? 'btn-degrade-orange' : 'btn-gray cursor-not-allowed'
             ]"
           >
-            <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
             </svg>
-            Enregistrer les modifications
+            Save changes
           </button>
         </div>
       </div>
@@ -100,29 +100,29 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nom de la boutique <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Store name <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.name"
                   type="text" 
                   class="input-style"
-                  placeholder="Ma Super Boutique"
+                  placeholder="Your Store Name"
                   @input="markAsChanged"
                 >
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Email de contact <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Contact Email <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.email"
                   type="email" 
                   class="input-style"
-                  placeholder="contact@boutique.com"
+                  placeholder="contact@store.com"
                   @input="markAsChanged"
                 >
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Téléphone <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Phone Number <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.phone"
                   type="tel" 
@@ -133,7 +133,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Pays</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Country</label>
                 <select v-model="shopInfo.country" class="input-style" @change="markAsChanged">
                   <option value="CI">Côte d'Ivoire</option>
                   <option value="SN">Sénégal</option>
@@ -144,29 +144,29 @@
               </div>
 
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Adresse complète <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Full Address <span class="error-color">*</span></label>
                 <input 
                   v-model="shopInfo.address"
                   type="text" 
                   class="input-style"
-                  placeholder="Rue, Quartier, Ville"
+                  placeholder="Your full address"
                   @input="markAsChanged"
                 >
               </div>
 
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Description de la boutique</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Store description</label>
                 <textarea 
                   v-model="shopInfo.description"
                   rows="4" 
                   class="input-style"
-                  placeholder="Décrivez votre boutique et vos produits..."
+                  placeholder="Describe your store and products..."
                   @input="markAsChanged"
                 ></textarea>
               </div>
 
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Logo de la boutique</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Store Logo</label>
                 <div class="flex items-center gap-4">
                   <div class="w-20 h-20 bg-gray-100 rounded-lg flex items-center justify-center overflow-hidden">
                     <img v-if="shopInfo.logo" :src="shopInfo.logo" alt="Logo" class="w-full h-full object-cover">
@@ -175,7 +175,7 @@
                     </svg>
                   </div>
                   <button class="btn-degrade-orange px-4 py-2 rounded-lg text-sm">
-                    Changer le logo
+                    Change Logo
                   </button>
                 </div>
               </div>
@@ -185,7 +185,7 @@
           <!-- Gestion des Utilisateurs -->
           <div v-if="activeTab === 'users'" class="space-y-6">
             <div class="flex justify-between items-center mb-4">
-              <h3 class="text-lg font-semibold text-gray-900">Utilisateurs de la boutique</h3>
+              <h3 class="text-lg font-semibold text-gray-900">Store Users</h3>
               <button 
                 @click="showAddUserModal = true"
                 class="btn-degrade-orange"
@@ -193,7 +193,7 @@
                 <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v16m8-8H4" />
                 </svg>
-                Ajouter un utilisateur
+                Add User
               </button>
             </div>
 
@@ -202,10 +202,10 @@
               <table class="min-w-full divide-y divide-gray-200">
                 <thead class="bg-gray-50">
                   <tr>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Utilisateur</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Rôle</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Statut</th>
-                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Ajouté le</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Users</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Added</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
                   </tr>
                 </thead>
@@ -242,9 +242,9 @@
                         @click="removeUser(user.id)" 
                         class="btn-deconnexion"
                       >
-                        Supprimer
+                        Delete
                       </button>
-                      <span v-else class="text-gray-400">Propriétaire</span>
+                      <span v-else class="text-gray-400">Owner</span>
                     </td>
                   </tr>
                 </tbody>
@@ -260,15 +260,15 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
                 <div>
-                  <h4 class="text-sm font-medium primary-color">Informations sécurisées</h4>
-                  <p class="text-xs primary-color mt-1">Vos informations bancaires sont cryptées et sécurisées.</p>
+                  <h4 class="text-sm font-medium primary-color">Secure information</h4>
+                  <p class="text-xs primary-color mt-1">Your banking information is encrypted and secure.</p>
                 </div>
               </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nom du titulaire <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Name of the holder <span class="error-color">*</span></label>
                 <input 
                   v-model="bankingInfo.accountHolder"
                   type="text" 
@@ -279,9 +279,9 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Banque <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Bank <span class="error-color">*</span></label>
                 <select v-model="bankingInfo.bankName" class="input-style" @change="markAsChanged">
-                  <option value="">Sélectionnez une banque</option>
+                  <option value="">Select your bank</option>
                   <option value="SGCI">Société Générale CI</option>
                   <option value="BICICI">BICICI</option>
                   <option value="BOA">Bank of Africa</option>
@@ -292,7 +292,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Numéro de compte <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Account number <span class="error-color">*</span></label>
                 <input 
                   v-model="bankingInfo.accountNumber"
                   type="text" 
@@ -303,7 +303,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Code SWIFT/BIC</label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">SWIFT/BIC code</label>
                 <input 
                   v-model="bankingInfo.swiftCode"
                   type="text" 
@@ -318,7 +318,7 @@
                 <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
                   <div>
                     <select v-model="bankingInfo.mobileMoneyProvider" class="input-style mb-2" @change="markAsChanged">
-                      <option value="">Sélectionnez un opérateur</option>
+                      <option value="">Select your operator</option>
                       <option value="ORANGE">Orange Money</option>
                       <option value="MTN">MTN Mobile Money</option>
                       <option value="MOOV">Moov Money</option>
@@ -347,15 +347,15 @@
                   <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
                 </svg>
                 <div>
-                  <h4 class="text-sm font-medium primary-color">Sécurité du compte</h4>
-                  <p class="text-xs primary-color mt-1">Utilisez un mot de passe fort avec au moins 8 caractères.</p>
+                  <h4 class="text-sm font-medium primary-color">Account security</h4>
+                  <p class="text-xs primary-color mt-1">Use a strong password with at least 8 characters.</p>
                 </div>
               </div>
             </div>
 
             <div class="max-w-2xl space-y-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mot de passe actuel <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Current password <span class="error-color">*</span></label>
                 <input 
                   v-model="securityInfo.currentPassword"
                   type="password" 
@@ -365,7 +365,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Nouveau mot de passe <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">New Password <span class="error-color">*</span></label>
                 <input 
                   v-model="securityInfo.newPassword"
                   type="password" 
@@ -375,21 +375,21 @@
                 <div class="mt-2 space-y-1">
                   <div class="flex items-center gap-2 text-xs">
                     <div :class="passwordStrength.length ? 'bg-step-color' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
-                    <span :class="passwordStrength.length ? 'green-color' : 'text-gray-500'">Au moins 8 caractères</span>
+                    <span :class="passwordStrength.length ? 'green-color' : 'text-gray-500'">At least 8 characters</span>
                   </div>
                   <div class="flex items-center gap-2 text-xs">
                     <div :class="passwordStrength.uppercase ? 'bg-step-color' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
-                    <span :class="passwordStrength.uppercase ? 'green-color' : 'text-gray-500'">Une majuscule</span>
+                    <span :class="passwordStrength.uppercase ? 'green-color' : 'text-gray-500'">A capital letter</span>
                   </div>
                   <div class="flex items-center gap-2 text-xs">
                     <div :class="passwordStrength.number ? 'bg-step-color' : 'bg-gray-300'" class="w-2 h-2 rounded-full"></div>
-                    <span :class="passwordStrength.number ? 'green-color' : 'text-gray-500'">Un chiffre</span>
+                    <span :class="passwordStrength.number ? 'green-color' : 'text-gray-500'">a number</span>
                   </div>
                 </div>
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Confirmer le nouveau mot de passe <span class="error-color">*</span></label>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Confirm the new password <span class="error-color">*</span></label>
                 <input 
                   v-model="securityInfo.confirmPassword"
                   type="password" 
@@ -397,7 +397,7 @@
                   placeholder="********"
                 >
                 <p v-if="securityInfo.newPassword && securityInfo.confirmPassword && securityInfo.newPassword !== securityInfo.confirmPassword" class="mt-1 text-xs error-color">
-                  Les mots de passe ne correspondent pas
+                  The passwords do not match
                 </p>
               </div>
 
@@ -409,17 +409,17 @@
                   canChangePassword ? 'btn-degrade-orange' : 'btn-gray cursor-not-allowed'
                 ]"
               >
-                Changer le mot de passe
+               Change password
               </button>
             </div>
 
             <!-- Authentification à deux facteurs -->
             <div class="border-t border-gray-200 pt-6 mt-6">
-              <h3 class="text-lg font-semibold text-gray-900 mb-4">Authentification à deux facteurs</h3>
+              <h3 class="text-lg font-semibold text-gray-900 mb-4">Two-factor authentication</h3>
               <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                 <div>
-                  <h4 class="text-sm font-medium text-gray-900">Activer l'authentification à deux facteurs</h4>
-                  <p class="text-sm text-gray-500 mt-1">Ajoutez une couche de sécurité supplémentaire à votre compte</p>
+                  <h4 class="text-sm font-medium text-gray-900">Enable two-factor authentication</h4>
+                  <p class="text-sm text-gray-500 mt-1">Add an extra layer of security to your account</p>
                 </div>
                 <button 
                   @click="toggle2FA"
@@ -447,8 +447,8 @@
               <div class="space-y-3">
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <h4 class="text-sm font-medium text-gray-900">Notifications par email</h4>
-                    <p class="text-sm text-gray-500 mt-1">Recevoir des notifications sur les nouvelles commandes</p>
+                    <h4 class="text-sm font-medium text-gray-900">Email notifications</h4>
+                    <p class="text-sm text-gray-500 mt-1">Receive notifications about new orders</p>
                   </div>
                   <button 
                     @click="preferences.emailNotifications = !preferences.emailNotifications"
@@ -468,8 +468,8 @@
 
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <h4 class="text-sm font-medium text-gray-900">Notifications SMS</h4>
-                    <p class="text-sm text-gray-500 mt-1">Recevoir des alertes importantes par SMS</p>
+                    <h4 class="text-sm font-medium text-gray-900">SMS notifications</h4>
+                    <p class="text-sm text-gray-500 mt-1">Receive important alerts via SMS</p>
                   </div>
                   <button 
                     @click="preferences.smsNotifications = !preferences.smsNotifications"
@@ -489,8 +489,8 @@
 
                 <div class="flex items-center justify-between p-4 bg-gray-50 rounded-lg">
                   <div>
-                    <h4 class="text-sm font-medium text-gray-900">Notifications marketing</h4>
-                    <p class="text-sm text-gray-500 mt-1">Recevoir des conseils et promotions</p>
+                    <h4 class="text-sm font-medium text-gray-900">Marketing notifications</h4>
+                    <p class="text-sm text-gray-500 mt-1">Receive advice and promotions</p>
                   </div>
                   <button 
                     @click="preferences.marketingNotifications = !preferences.marketingNotifications"
@@ -511,11 +511,11 @@
             </div>
 
             <div class="border-t border-gray-200 pt-6 space-y-4">
-              <h3 class="text-lg font-semibold text-gray-900">Langue et région</h3>
+              <h3 class="text-lg font-semibold text-gray-900">Language and region</h3>
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Langue</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Language</label>
                   <select v-model="preferences.language" class="input-style" @change="markAsChanged">
                     <option value="fr">Français</option>
                     <option value="en">English</option>
@@ -523,7 +523,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Fuseau horaire</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Time zone</label>
                   <select v-model="preferences.timezone" class="input-style" @change="markAsChanged">
                     <option value="Africa/Abidjan">Abidjan (GMT+0)</option>
                     <option value="Africa/Dakar">Dakar (GMT+0)</option>
@@ -532,7 +532,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-2">Devise</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-2">Currency</label>
                   <select v-model="preferences.currency" class="input-style" @change="markAsChanged">
                     <option value="XOF">Franc CFA (XOF)</option>
                     <option value="USD">Dollar US (USD)</option>
@@ -552,13 +552,13 @@
     <div v-if="showAddUserModal" class="fixed inset-0 bg-black/60 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div class="bg-white rounded-lg shadow-xl max-w-md w-full p-6">
         <div class="flex justify-between items-center mb-4">
-          <h3 class="text-lg font-semibold text-gray-900">Ajouter un utilisateur</h3>
+          <h3 class="text-lg font-semibold text-gray-900">Add a user</h3>
           <XIcon @click="showAddUserModal = false" class="w-7 h-7 text-gray-500 cursor-pointer" />
         </div>
 
         <div class="space-y-4">
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Nom complet <span class="error-color">*</span></label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Full name <span class="error-color">*</span></label>
             <input 
               v-model="newUser.name"
               type="text" 
@@ -578,11 +578,11 @@
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Rôle <span class="error-color">*</span></label>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Role <span class="error-color">*</span></label>
             <select v-model="newUser.role" class="input-style">
-              <option value="admin">Administrateur</option>
-              <option value="manager">Gestionnaire</option>
-              <option value="staff">Personnel</option>
+              <option value="admin">Administrator</option>
+              <option value="manager">Manager</option>
+              <option value="staff">Staff</option>
             </select>
           </div>
 
@@ -591,13 +591,13 @@
               @click="showAddUserModal = false"
               class="flex-1 btn-gray"
             >
-              Annuler
+              Cancel
             </button>
             <button 
               @click="addUser"
               class="flex-1 btn-degrade-orange"
             >
-              Ajouter
+              Add
             </button>
           </div>
         </div>
@@ -651,11 +651,11 @@ const boutique = ref(null)
 
 // Tabs configuration
 const tabs = [
-  { id: 'shop', label: 'Boutique', shortLabel: 'Boutique', icon: StoreIcon },
-  { id: 'users', label: 'Utilisateurs', shortLabel: 'Users', icon: UsersIcon },
-  { id: 'banking', label: 'Informations bancaires', shortLabel: 'Banque', icon: CreditCardIcon },
-  { id: 'security', label: 'Sécurité', shortLabel: 'Sécurité', icon: LockIcon },
-  { id: 'preferences', label: 'Préférences', shortLabel: 'Préfs', icon: SettingsIcon }
+  { id: 'shop', label: 'Store', shortLabel: 'Sotre', icon: StoreIcon },
+  { id: 'users', label: 'Users', shortLabel: 'Users', icon: UsersIcon },
+  { id: 'banking', label: 'Bank information', shortLabel: 'Bank', icon: CreditCardIcon },
+  { id: 'security', label: 'Security', shortLabel: 'Security', icon: LockIcon },
+  { id: 'preferences', label: 'Preferences', shortLabel: 'Prefs', icon: SettingsIcon }
 ]
 
 // Données de la boutique
@@ -719,8 +719,8 @@ const passwordStrength = computed(() => {
 const handleGetUsersByBoutique = async (boutiqueId) => {
   if (!boutiqueId) {
     ElNotification({
-      title: 'Erreur',
-      message: 'ID de boutique requis',
+      title: 'Error',
+      message: 'Store ID required',
       type: 'error'
     })
     return
@@ -731,24 +731,23 @@ const handleGetUsersByBoutique = async (boutiqueId) => {
     error.value = ''
 
     const response = await usersApi.getUsersByBoutique(boutiqueId)
-    console.log('Réponse API getUsersByBoutique:', response)
 
     if (response.success) {
       users.value = response.data.users
       boutique.value = response.data.boutique
 
       ElNotification({
-        title: 'Succès',
-        message: `Liste des utilisateurs pour ${boutique.value.name} récupérée`,
+        title: 'Success',
+        message: `List of users retrieved for ${boutique.value.name}`,
         type: 'success'
       })
     } else {
-      error.value = response.error || 'Erreur lors de la récupération des utilisateurs'
+      error.value = response.error || 'Error to load users for the store.'
       users.value = []
       boutique.value = null
 
       ElNotification({
-        title: 'Erreur',
+        title: 'Error',
         message: error.value,
         type: 'error'
       })
@@ -761,7 +760,7 @@ const handleGetUsersByBoutique = async (boutiqueId) => {
     boutique.value = null
 
     ElNotification({
-      title: 'Erreur',
+      title: 'Error',
       message: error.value,
       type: 'error'
     })
@@ -789,8 +788,8 @@ const handleAddUserToBoutique = async () => {
   console.log('Ajout de l\'utilisateur:', newUser.value)
   if (!newUser.value.name || !newUser.value.email) {
     ElNotification({
-      title: 'Erreur',
-      message: 'Veuillez remplir tous les champs requis.',
+      title: 'Error',
+      message: 'Please fill in all required fields.',
       type: 'error'
     })
     return
@@ -811,12 +810,12 @@ const handleAddUserToBoutique = async () => {
 
     if (response.success) {
       ElNotification({
-        title: 'Succès',
-        message: 'Utilisateur ajouté et invitation envoyée avec succès.',
+        title: 'Success',
+        message: 'User added and invitation sent successfully.',
         type: 'success'
       })
 
-      successMessage.value = 'Utilisateur ajouté avec succès.'
+      successMessage.value = 'User successfully added.'
       // Si tu veux, tu peux vider le formulaire
       newUser.value.name = ''
       newUser.value.email = ''
@@ -825,7 +824,7 @@ const handleAddUserToBoutique = async () => {
     } else {
       error.value = response.error || 'Erreur lors de l’ajout de l’utilisateur.'
       ElNotification({
-        title: 'Erreur',
+        title: 'Error',
         message: error.value,
         type: 'error'
       })
@@ -835,7 +834,7 @@ const handleAddUserToBoutique = async () => {
     error.value = err.response?.data?.error || 'Erreur réseau. Veuillez réessayer.'
 
     ElNotification({
-      title: 'Erreur',
+      title: 'Error',
       message: error.value,
       type: 'error'
     })
@@ -851,7 +850,7 @@ const initializeUserData = () => {
     const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
     console.log('Token d\'authentification récupéré:',)
     if (!authToken) {
-      error.value = 'Token d\'authentification manquant. Veuillez vous reconnecter.'
+      error.value = 'Authentication token missing. Please login again..'
       // Rediriger vers la page de login
       window.location.href = '/boutique-admin/login'
       return
@@ -861,7 +860,7 @@ const initializeUserData = () => {
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
     
     if (!userData) {
-      error.value = 'Données utilisateur manquantes. Veuillez vous reconnecter.'
+      error.value = 'Missing user data. Please login again.'
       window.location.href = '/boutique-admin/login'
       return
     }
@@ -871,7 +870,7 @@ const initializeUserData = () => {
     
     // ✅ Valider la structure des données
     if (!user.id || !user.email) {
-      error.value = 'Données utilisateur invalides. Veuillez vous reconnecter.'
+      error.value = 'Invalid user data. Please login again.'
       window.location.href = '/boutique-admin/login'
       return
     }
@@ -898,7 +897,7 @@ const initializeUserData = () => {
         }
       }
     } else {
-      error.value = 'Aucune boutique associée à ce compte.'
+      error.value = 'No shops are associated with this account.'
       return
     }
 
@@ -914,7 +913,7 @@ const initializeUserData = () => {
 
   } catch (err) {
     console.error('Erreur lors de la récupération des données utilisateur:', err)
-    error.value = 'Erreur lors du chargement des données utilisateur.'
+    error.value = 'Error loading user data.'
     
     // Nettoyer le stockage en cas d'erreur
     localStorage.removeItem('authToken')
@@ -930,13 +929,13 @@ const initializeUserData = () => {
 const saveAllSettings = () => {
   // Logique de sauvegarde
   console.log('Sauvegarde des paramètres...')
-  showNotificationToast('Paramètres enregistrés avec succès!')
+  showNotificationToast('Settings saved successfully!')
   hasUnsavedChanges.value = false
 }
 
 const addUser = () => {
   if (!newUser.value.name || !newUser.value.email) {
-    alert('Veuillez remplir tous les champs obligatoires')
+    alert('Please fill in all required fields.')
     return
   }
 
@@ -952,13 +951,13 @@ const addUser = () => {
 
   showAddUserModal.value = false
   newUser.value = { name: '', email: '', role: 'staff' }
-  showNotificationToast('Utilisateur ajouté avec succès!')
+  showNotificationToast('User successfully added!')
 }
 
 const removeUser = (userId) => {
-  if (confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?')) {
+  if (confirm('Are you sure you want to delete this user? ?')) {
     users.value = users.value.filter(u => u.id !== userId)
-    showNotificationToast('Utilisateur supprimé')
+    showNotificationToast('User successfully deleted!')
   }
 }
 
@@ -972,15 +971,15 @@ const changePassword = () => {
     newPassword: '',
     confirmPassword: ''
   }
-  showNotificationToast('Mot de passe modifié avec succès!')
+  showNotificationToast('Password successfully changed!')
 }
 
 const toggle2FA = () => {
   twoFactorEnabled.value = !twoFactorEnabled.value
   showNotificationToast(
-    twoFactorEnabled.value 
-      ? 'Authentification à deux facteurs activée' 
-      : 'Authentification à deux facteurs désactivée'
+    twoFactorEnabled.value
+      ? 'Two-factor authentication enabled'
+      : 'Two-factor authentication disabled'
   )
 }
 
