@@ -47,7 +47,7 @@
             Réinitialiser
           </button>
           <button 
-            @click="downloadPDF3"
+            @click="downloadPDF"
             class="btn-degrade-orange"
           >
             <Download class="w-4 h-4 mr-2" />
@@ -285,7 +285,7 @@
             </div>
 
             <!-- TVA -->
-            <div class="pt-2 mt-2 border-t-2 border-gray-200">
+            <!-- <div class="pt-2 mt-2 border-t-2 border-gray-200">
               <label class="block text-sm font-medium text-gray-700 mb-1">TVA (%)</label>
               <input 
                 v-model.number="invoice.taxRate" 
@@ -296,7 +296,7 @@
                 class="input-style"
                 placeholder="18"
               >
-            </div>
+            </div> -->
 
             <!-- Notes -->
             <div class="pt-2 mt-2">
@@ -426,10 +426,6 @@
                   <span class="text-xs font-semibold text-gray-900">{{ formatCurrency(subtotal) }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                  <span class="text-xs font-medium text-gray-600">TVA ({{ invoice.taxRate }}%):</span>
-                  <span class="text-xs font-semibold text-gray-900">{{ formatCurrency(tax) }}</span>
-                </div>
-                <div class="flex justify-between items-center py-2 border-b border-gray-200">
                   <span class="text-xs font-medium text-gray-600">Shipping / Handling :</span>
                   <span class="text-xs font-semibold text-gray-900"></span>
                 </div>
@@ -550,7 +546,6 @@ const invoice = ref({
   number: 'FAC-2025-001',
   date: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-  taxRate: 18,
   client: {
     name: '',
     email: '',
@@ -559,6 +554,7 @@ const invoice = ref({
   },
   items: [
     {
+      index:'',
       productId: '',
       product_type:'',
       product_name:"",
@@ -570,7 +566,7 @@ const invoice = ref({
       price: 0
     }
   ],
-  notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
+  // notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
 })
 
 const initializeUserData = () => {
@@ -690,7 +686,6 @@ const onProductSelect = (index) => {
   item.trim_number = ""
   
   if (selectedProduct) {
-    console.log(selectedProduct)
     item.price = selectedProduct.unit_price || selectedProduct.price || 0
     item.product_type = selectedProduct.category_name || ""
     item.product_name= selectedProduct.name || ""
@@ -734,12 +729,8 @@ const subtotal = computed(() => {
   return invoice.value.items.reduce((sum, item) => sum + (item.quantity * item.price), 0)
 })
 
-const tax = computed(() => {
-  return subtotal.value * (invoice.value.taxRate / 100)
-})
-
 const total = computed(() => {
-  return subtotal.value + tax.value
+  return subtotal.value 
 })
 
 // Méthodes
@@ -764,7 +755,7 @@ const formatDate = (dateString) => {
 
 const addItem = () => {
   invoice.value.items.push({
-    productId: '',
+      productId: '',
       product_type:'',
       product_name:"",
       trim_number:"",
@@ -774,7 +765,6 @@ const addItem = () => {
       quantity: 1,
       price: 0
   })
-  console.log("items added: ",invoice.value.items)
 }
 
 const removeItem = (index) => {
@@ -810,7 +800,7 @@ const resetForm = () => {
         price: 0
       }
     ],
-    notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
+    // notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
   }
 }
 
@@ -821,8 +811,20 @@ const downloadPDF = () => {
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
   let yPos = 16
-  let xPos= 20
-  const margin = 20
+  let margin= 20
+
+  // Pied de page
+  const footer = ()=>{
+
+    doc.setFontSize(8)
+    doc.setTextColor(107, 114, 128)
+    doc.text('Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com', pageWidth / 2, pageHeight - 20, { align: 'center' })
+    doc.text('AliAdjamé Marketplace - Votre partenaire de confiance', pageWidth / 2, pageHeight - 15, { align: 'center' })
+    
+    doc.setTextColor(254, 121, 0)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Facture générée sur DaqAuto.com', pageWidth / 2, pageHeight - 10, { align: 'center' })
+  }
   
   // En-tête
   doc.setFillColor(255, 255, 255)
@@ -832,15 +834,18 @@ const downloadPDF = () => {
   doc.setFontSize(14)
   doc.addImage(logo, 20, 12, 8, 8)
   doc.setFont('helvetica', 'bold')
-  doc.text('FACTURE', xPos+10, yPos)
+  doc.text('FACTURE', margin+10, yPos)
   
   doc.setFontSize(7)
+  doc.setTextColor(107, 114, 128)
   doc.setFont('helvetica', 'normal')
-  doc.text('DAQ AUTO Marketplace',xPos+10, yPos+4)
+  doc.text('DAQ AUTO Marketplace',margin+10, yPos+4)
   
+
   // Numéro de facture
-   doc.setFillColor(254, 121, 0)
-  doc.rect(pageWidth -50, yPos-4, 33, 5, 'F')
+  margin = 30
+  doc.setFillColor(254, 121, 0)
+  doc.rect(pageWidth - margin -30, yPos-4, 33, 5, 'F')
   
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
@@ -855,121 +860,114 @@ const downloadPDF = () => {
   doc.text(`Échéance: ${formatDate(invoice.value.dueDate)}`, pageWidth - margin, yPos+8, { align: 'right' })
 
     // doc.setLineWidth(200)
+
+  /// Fin entête ----- Debut sous entête
+
   
-  yPos = 40
+  yPos += 24
+  margin = 20
   doc.setFontSize(9) 
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(0, 0, 0)
-  doc.text('Seller :', xPos, yPos)
+  doc.text('Seller :', margin, yPos)
   
-  yPos=43
+  yPos += 3
   // Informations entreprise
   doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
   doc.setTextColor(0, 0, 0)
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
-  doc.text('DAQ AUTO', xPos+8, yPos+5)
+  doc.text('DAQ AUTO', margin+8, yPos+5)
   doc.setFontSize(7)
   doc.setFont('helvetica', 'normal')
-  doc.text('Abidjan, Côte d\'Ivoire', xPos, yPos +10 )
-  doc.text('+225 01 53 67 60 62', xPos, yPos + 13)
-  doc.text('commandes@daqauto.com', xPos, yPos + 16)
-  doc.text('(USCC): 91310000MA1K4T123X', xPos, yPos + 19)
+  doc.text('Abidjan, Côte d\'Ivoire', margin, yPos +10 )
+  doc.text('+225 01 53 67 60 62', margin, yPos + 13)
+  doc.text('commandes@daqauto.com', margin, yPos + 16)
+  doc.text('(USCC): 91310000MA1K4T123X', margin, yPos + 19)
   
-  // Dates
-   doc.setFontSize(9) 
+  // Infos client
+  margin=60
+  doc.setFontSize(9) 
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(0, 0, 0)
-  doc.text('Buyer :', pageWidth - 50, yPos-3, { align: 'left' })
-
-
-  doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.text('DAQ AUTO', pageWidth -xPos+8, yPos+5,{ align: 'right' })
+  doc.text('Buyer :', pageWidth - margin, yPos-3, { align: 'left' })
+  doc.text(invoice.value.client.name || 'Nom du client', pageWidth - margin, yPos+4,{ align: 'left' })
   doc.setFontSize(7)
   doc.setFont('helvetica', 'normal')
-  doc.text('Abidjan, Côte d\'Ivoire', pageWidth -xPos, yPos +10,{ align: 'right' } )
-  doc.text('+225 01 53 67 60 62', pageWidth -xPos, yPos + 13,{ align: 'right' })
-  doc.text('commandes@daqauto.com', pageWidth -xPos, yPos + 16,{ align: 'right' })
-  doc.text('(USCC): 91310000MA1K4T123X', pageWidth -xPos, yPos + 19,{ align: 'right' })
+  doc.text(invoice.value.client.address || 'Adresse du client', pageWidth - margin, yPos + 7,{ align: 'left' })
+  doc.text(invoice.value.client.phone || '+225 XX XX XX XX XX', pageWidth - margin, yPos + 10,{ align: 'left' })
+  doc.text(invoice.value.client.email || 'email@exemple.com', pageWidth - margin, yPos + 13,{ align: 'left' })
 
-
-  doc.setFontSize(10)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Date:', pageWidth - 70, yPos, { align: 'left' })
-  doc.setFont('helvetica', 'normal')
-  doc.text(formatDate(invoice.value.date), pageWidth - 20, yPos, { align: 'right' })
-  
-  doc.setFont('helvetica', 'bold')
-  doc.text('Échéance:', pageWidth - 70, yPos + 5, { align: 'left' })
-  doc.setFont('helvetica', 'normal')
-  doc.text(formatDate(invoice.value.dueDate), pageWidth - 20, yPos + 5, { align: 'right' })
-  
-  yPos += 30
-  
-  // Informations client
-  doc.setFillColor(254, 243, 199) // Orange clair
-  doc.rect(20, yPos, pageWidth - 40, 30, 'F')
-  
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(254, 121, 0) // Orange foncé
-  doc.text('FACTURÉ À', 25, yPos + 7)
-  
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(10)
-  doc.text(invoice.value.client.name || 'Nom du client', 25, yPos + 13)
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(9)
-  doc.text(invoice.value.client.email || 'email@exemple.com', 25, yPos + 18)
-  doc.text(invoice.value.client.phone || '+225 XX XX XX XX XX', 25, yPos + 23)
-  
-  yPos += 40
   
   // Tableau des articles
-  doc.setFontSize(9)
+  yPos += 25
+  margin = 15
+  doc.setFontSize(6)
   doc.setFont('helvetica', 'bold')
   doc.setFillColor(243, 244, 246) // Gris clair
-  doc.rect(20, yPos, pageWidth - 40, 8, 'F')
+  doc.rect(margin, yPos, pageWidth - margin-15, 8, 'F')
   
-  doc.text('DESCRIPTION', 25, yPos + 5)
-  doc.text('QTÉ', pageWidth - 100, yPos + 5, { align: 'center' })
-  doc.text('PRIX UNIT.', pageWidth - 70, yPos + 5, { align: 'right' })
-  doc.text('TOTAL', pageWidth - 25, yPos + 5, { align: 'right' })
+  doc.text('NO.', margin + 5, yPos + 5, { align: 'center' })
+  doc.text('Product Type', margin + 20, yPos + 5, { align: 'center' })
+  doc.text('DESCRIPTION', margin + 40, yPos + 5, { align: 'center' })
+  doc.text('Trim / Vehicle Model', margin + 70, yPos + 5, { align: 'center' })
+  doc.text('VIN', margin + 95, yPos + 5, { align: 'center' })
+  doc.text('Stock Number', margin + 115, yPos + 5, { align: 'center' })
+  doc.text('Color', margin + 130, yPos + 5, { align: 'center' })
+  doc.text('QUANTITY',margin + 145, yPos + 5, { align: 'center' })
+  doc.text('UNIT PRICE', margin +160, yPos + 5, { align: 'center' })
+  doc.text('TOTAL', margin + 175, yPos + 5, { align: 'center' })
   
   yPos += 12
   
   // Articles - Use product name from products list
   doc.setFont('helvetica', 'normal')
-  invoice.value.items.forEach((item) => {
-    if (yPos > pageHeight - 60) {
+  for (let index = 0; index < invoice.value.items.length; index++) {
+     if (yPos > pageHeight - 40) {
       doc.addPage()
       yPos = 20
     }
-    
-    const productName = getProductName(item.productId) || 'Article sans nom'
-    doc.text(productName, 25, yPos)
-    doc.text(String(item.quantity), pageWidth - 100, yPos, { align: 'center' })
-    doc.text(formatCurrency(item.price), pageWidth - 70, yPos, { align: 'right' })
-    doc.text(formatCurrency(item.quantity * item.price), pageWidth - 25, yPos, { align: 'right' })
+
+    doc.text(String(index+1),margin + 5, yPos , { align: 'center' })
+    doc.text( invoice.value.items[index].product_type || "N/A",margin + 20, yPos, { align: 'center' })
+    doc.text(invoice.value.items[index].product_name || "N/A",margin + 40, yPos, { align: 'center' })
+    doc.text(invoice.value.items[index].trim_number || "N/A",margin + 70, yPos, { align: 'center' })
+    doc.text(invoice.value.items[index].vin || "N/A",margin + 95, yPos, { align: 'center' } )
+    doc.text(invoice.value.items[index].stock_number || "N/A",margin + 115, yPos, { align: 'center' } )
+    doc.text(invoice.value.items[index].color || "N/A", margin + 130, yPos, { align: 'center' })
+    doc.text(String(invoice.value.items[index].quantity), margin + 145, yPos, { align: 'center' })
+    doc.text(formatCurrency(invoice.value.items[index].price), margin +160, yPos, { align: 'center' })
+    doc.text(formatCurrency(invoice.value.items[index].quantity * invoice.value.items[index].price), margin + 175, yPos, { align: 'center' })
     
     yPos += 7
-  })
+
+  }
   
   yPos += 10
-  
+   if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 20
+    }
   // Totaux
   doc.setFont('helvetica', 'normal')
   doc.text('Sous-total:', pageWidth - 80, yPos)
   doc.text(formatCurrency(subtotal.value), pageWidth - 25, yPos, { align: 'right' })
   
   yPos += 7
-  doc.text(`TVA (${invoice.value.taxRate}%):`, pageWidth - 80, yPos)
-  doc.text(formatCurrency(tax.value), pageWidth - 25, yPos, { align: 'right' })
+  doc.text("Shipping / Handling :", pageWidth - 80, yPos)
+  doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
+  yPos += 7
+  doc.text("Insurance :", pageWidth - 80, yPos)
+  doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
+  yPos += 7
+  doc.text("Sea Shipping :", pageWidth - 80, yPos)
+  doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
   
   yPos += 10
+   if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 20
+    }
   doc.setFillColor(254, 121, 0)
   doc.rect(pageWidth - 90, yPos - 5, 70, 10, 'F')
   
@@ -978,9 +976,114 @@ const downloadPDF = () => {
   doc.setFontSize(11)
   doc.text('TOTAL:', pageWidth - 85, yPos + 2)
   doc.text(formatCurrency(total.value), pageWidth - 30, yPos + 2, { align: 'right' })
+
+
+
+  yPos += 15
+   if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 20
+    }
   
-  yPos += 20
+  // Informations client
+  doc.setFillColor(254, 243, 199) // Orange clair
+  doc.rect(20, yPos, pageWidth - 40, 43, 'F')
   
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(254, 121, 0) // Orange foncé
+  doc.text(' Bank Information', 25, yPos + 7)
+  
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(8)
+  doc.setFont('helvetica', 'normal')
+  doc.text( 'Beneficiary Name :', 25, yPos + 13)
+  doc.setFont('helvetica', 'bold')
+  doc.text( 'DAQ AUTO CO., LTD', 50, yPos + 13, )
+  doc.setFont('helvetica', 'normal')
+  doc.text('Bank Name :', 25, yPos + 18)
+  doc.setFont('helvetica', 'bold')
+  doc.text( ' Bank of China, Chongqing Branch', 50, yPos + 18, )
+  doc.setFont('helvetica', 'normal')
+  doc.text('Account Number :', 25, yPos + 23)
+  doc.setFont('helvetica', 'bold')
+  doc.text( '123 456 7890', 50, yPos + 23, )
+  doc.setFont('helvetica', 'normal')
+  doc.text('SWIFT Code :', 25, yPos + 28)
+  doc.setFont('helvetica', 'bold')
+  doc.text( 'BKCHCNBJ600', 50, yPos + 28, )
+  doc.setFont('helvetica', 'normal')
+  doc.text('Bank Address :', 25, yPos + 33)
+  doc.setFont('helvetica', 'bold')
+  doc.text( 'No. 123 Jiangbei District, Chongqing, China', 50, yPos + 33, )
+  
+  yPos += 60
+   if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 20
+    }
+
+    doc.setTextColor(0, 0, 0)
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Terms & Conditions ', 20, yPos-2)
+    doc.setFont('helvetica', 'normal')
+    doc.text("-", 20, yPos+5, {align:"center"})
+    doc.text('Incoterm : CIF / FOB / EXW [Specify port ]', 22, yPos+5)
+    doc.text("-", 20, yPos+10, {align:"center"})
+    doc.text('Payment Terms : T/T — 100% payment received before shipment', 22, yPos+10)
+    doc.text("-", 20, yPos+15, {align:"center"})
+    doc.text('Production Time : [e.g. 15–20 working days after deposit ]', 22, yPos+15)
+    doc.text("-", 20, yPos+20, {align:"center"})
+    doc.text('Estimated Delivery : [Insert ] ', 22, yPos+20)
+    doc.text("-", 20, yPos+25, {align:"center"})
+    doc.text('Commercial invoice :This is the final commercial invoice for customs and payment confirmation.', 22, yPos+25)
+    
+    yPos += 35
+     if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 20
+    }
+    doc.setTextColor(0, 0, 0)
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Shipping & Packaging ', 20, yPos-2)
+    doc.setFont('helvetica', 'normal')
+    doc.text("-", 20, yPos+5, {align:"center"})
+    doc.text('Mode of Transport: [Sea / Air / Road / ]', 22, yPos+5)
+    doc.text("-", 20, yPos+10, {align:"center"})
+    doc.text('Port of Loading : [Insert ]', 22, yPos+10)
+    doc.text("-", 20, yPos+15, {align:"center"})
+    doc.text('Port of Destination : [Insert ]', 22, yPos+15)
+    doc.text("-", 20, yPos+20, {align:"center"})
+    doc.text('Port of Destination : [Insert ] ', 22, yPos+20)
+
+    yPos += 33
+     if (yPos > pageHeight - 40) {
+      footer()
+      doc.addPage()
+      yPos = 20
+    }
+    doc.setTextColor(0, 0, 0)
+    doc.setFontSize(9)
+    doc.setFont('helvetica', 'bold')
+    doc.text('Shipping & Packaging ', 20, yPos-2)
+    doc.setFont('helvetica', 'normal')
+    doc.text("-", 20, yPos+5, {align:"center"})
+    doc.text('Mode of Transport: [Sea / Air / Road / ]', 22, yPos+5)
+    doc.text("-", 20, yPos+10, {align:"center"})
+    doc.text('Port of Loading : [Insert ]', 22, yPos+10)
+    doc.text("-", 20, yPos+15, {align:"center"})
+    doc.text('Port of Destination : [Insert ]', 22, yPos+15)
+    doc.text("-", 20, yPos+20, {align:"center"})
+    doc.text('Port of Destination : [Insert ] ', 22, yPos+20)
+
+
+  yPos += 33
+   if (yPos > pageHeight - 40) {
+      doc.addPage()
+      yPos = 20
+    }
   // Notes
   if (invoice.value.notes) {
     doc.setTextColor(0, 0, 0)
@@ -993,16 +1096,18 @@ const downloadPDF = () => {
     doc.text(splitNotes, 20, yPos + 5)
     yPos += splitNotes.length * 5 + 10
   }
+
+  yPos += 20
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'normal')
+  doc.text('Authorized Signature & Stamp ', pageWidth - margin - 80, yPos)
+  doc.text('Name : [Authorized person ]', pageWidth - margin - 80, yPos + 6)
+  doc.text('Signature : ___________________', pageWidth - margin - 80, yPos + 12)
+  doc.text('Company Stamp : ___________________', pageWidth - margin - 80, yPos + 18)
+
   
-  // Pied de page
-  doc.setFontSize(8)
-  doc.setTextColor(107, 114, 128)
-  doc.text('Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com', pageWidth / 2, pageHeight - 20, { align: 'center' })
-  doc.text('AliAdjamé Marketplace - Votre partenaire de confiance', pageWidth / 2, pageHeight - 15, { align: 'center' })
   
-  doc.setTextColor(254, 121, 0)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Facture générée sur DaqAuto.com', pageWidth / 2, pageHeight - 10, { align: 'center' })
+  footer()
   
   // Téléchargement
   doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
