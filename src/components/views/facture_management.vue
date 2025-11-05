@@ -566,7 +566,7 @@ const invoice = ref({
       price: 0
     }
   ],
-  // notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
+  notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
 })
 
 const initializeUserData = () => {
@@ -811,10 +811,14 @@ const downloadPDF = () => {
   const pageWidth = doc.internal.pageSize.getWidth()
   const pageHeight = doc.internal.pageSize.getHeight()
   let yPos = 16
-  let margin= 20
+  let margin= 15
 
   // Pied de page
   const footer = ()=>{
+    // divider
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(0.1);
+    doc.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
 
     doc.setFontSize(8)
     doc.setTextColor(107, 114, 128)
@@ -832,7 +836,7 @@ const downloadPDF = () => {
   
   doc.setTextColor(0, 0, 0)
   doc.setFontSize(14)
-  doc.addImage(logo, 20, 12, 8, 8)
+  doc.addImage(logo, margin, 12, 8, 8)
   doc.setFont('helvetica', 'bold')
   doc.text('FACTURE', margin+10, yPos)
   
@@ -843,9 +847,10 @@ const downloadPDF = () => {
   
 
   // Numéro de facture
-  margin = 30
+  margin = 20
   doc.setFillColor(254, 121, 0)
-  doc.rect(pageWidth - margin -30, yPos-4, 33, 5, 'F')
+  doc.setDrawColor(254, 121, 0);
+  doc.roundedRect(pageWidth - margin -30, yPos-4, 33, 5,1,1, 'FD')
   
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
@@ -859,41 +864,42 @@ const downloadPDF = () => {
   doc.text(`Date: ${formatDate(invoice.value.date)}`, pageWidth - margin-7, yPos+4, { align: 'right' })
   doc.text(`Échéance: ${formatDate(invoice.value.dueDate)}`, pageWidth - margin, yPos+8, { align: 'right' })
 
-    // doc.setLineWidth(200)
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.2);
+  doc.line(margin-5, yPos+15,  pageWidth-15 , yPos+15);
 
   /// Fin entête ----- Debut sous entête
 
   
   yPos += 24
-  margin = 20
+  margin = 15
   doc.setFontSize(9) 
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(0, 0, 0)
+  doc.setTextColor(107, 114, 128)
   doc.text('Seller :', margin, yPos)
   
   yPos += 3
   // Informations entreprise
-  doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
-  doc.setTextColor(0, 0, 0)
+  doc.addImage(logo, 'PNG', margin, yPos, 6, 6)
   doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
+  doc.setFont('helvetica', 'normal')
   doc.text('DAQ AUTO', margin+8, yPos+5)
   doc.setFontSize(7)
-  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(107, 114, 128)
   doc.text('Abidjan, Côte d\'Ivoire', margin, yPos +10 )
   doc.text('+225 01 53 67 60 62', margin, yPos + 13)
   doc.text('commandes@daqauto.com', margin, yPos + 16)
   doc.text('(USCC): 91310000MA1K4T123X', margin, yPos + 19)
   
   // Infos client
-  margin=60
+  margin=50
   doc.setFontSize(9) 
   doc.setFont('helvetica', 'bold')
-  doc.setTextColor(0, 0, 0)
   doc.text('Buyer :', pageWidth - margin, yPos-3, { align: 'left' })
+  doc.setFont('helvetica', 'normal')
   doc.text(invoice.value.client.name || 'Nom du client', pageWidth - margin, yPos+4,{ align: 'left' })
   doc.setFontSize(7)
-  doc.setFont('helvetica', 'normal')
+  doc.setTextColor(107, 114, 128)
   doc.text(invoice.value.client.address || 'Adresse du client', pageWidth - margin, yPos + 7,{ align: 'left' })
   doc.text(invoice.value.client.phone || '+225 XX XX XX XX XX', pageWidth - margin, yPos + 10,{ align: 'left' })
   doc.text(invoice.value.client.email || 'email@exemple.com', pageWidth - margin, yPos + 13,{ align: 'left' })
@@ -904,18 +910,19 @@ const downloadPDF = () => {
   margin = 15
   doc.setFontSize(6)
   doc.setFont('helvetica', 'bold')
+  doc.setTextColor(0,0,0)
   doc.setFillColor(243, 244, 246) // Gris clair
   doc.rect(margin, yPos, pageWidth - margin-15, 8, 'F')
   
   doc.text('NO.', margin + 5, yPos + 5, { align: 'center' })
-  doc.text('Product Type', margin + 20, yPos + 5, { align: 'center' })
-  doc.text('DESCRIPTION', margin + 40, yPos + 5, { align: 'center' })
-  doc.text('Trim / Vehicle Model', margin + 70, yPos + 5, { align: 'center' })
-  doc.text('VIN', margin + 95, yPos + 5, { align: 'center' })
-  doc.text('Stock Number', margin + 115, yPos + 5, { align: 'center' })
-  doc.text('Color', margin + 130, yPos + 5, { align: 'center' })
-  doc.text('QUANTITY',margin + 145, yPos + 5, { align: 'center' })
-  doc.text('UNIT PRICE', margin +160, yPos + 5, { align: 'center' })
+  doc.text('Product Type', margin + 15, yPos + 5, { align: 'center' })
+  doc.text('DESCRIPTION', margin + 50, yPos + 5, { align: 'center' })
+  doc.text('Trim / Vehicle Model', margin + 90, yPos + 5, { align: 'center' })
+  doc.text('VIN', margin + 110, yPos + 5, { align: 'center' })
+  doc.text('Stock Number', margin + 130, yPos + 5, { align: 'center' })
+  doc.text('Color', margin + 145, yPos + 5, { align: 'center' })
+  doc.text('QTY',margin + 152, yPos + 5, { align: 'center' })
+  doc.text('UNIT PRICE', margin +163, yPos + 5, { align: 'center' })
   doc.text('TOTAL', margin + 175, yPos + 5, { align: 'center' })
   
   yPos += 12
@@ -929,19 +936,23 @@ const downloadPDF = () => {
     }
 
     doc.text(String(index+1),margin + 5, yPos , { align: 'center' })
-    doc.text( invoice.value.items[index].product_type || "N/A",margin + 20, yPos, { align: 'center' })
-    doc.text(invoice.value.items[index].product_name || "N/A",margin + 40, yPos, { align: 'center' })
-    doc.text(invoice.value.items[index].trim_number || "N/A",margin + 70, yPos, { align: 'center' })
-    doc.text(invoice.value.items[index].vin || "N/A",margin + 95, yPos, { align: 'center' } )
-    doc.text(invoice.value.items[index].stock_number || "N/A",margin + 115, yPos, { align: 'center' } )
-    doc.text(invoice.value.items[index].color || "N/A", margin + 130, yPos, { align: 'center' })
-    doc.text(String(invoice.value.items[index].quantity), margin + 145, yPos, { align: 'center' })
-    doc.text(formatCurrency(invoice.value.items[index].price), margin +160, yPos, { align: 'center' })
+    doc.text( invoice.value.items[index].product_type || "N/A",margin + 15, yPos, { align: 'center' })
+    doc.text(invoice.value.items[index].product_name || "N/A",margin + 50, yPos, { align: 'center' })
+    doc.text(invoice.value.items[index].trim_number || "N/A",margin + 90, yPos, { align: 'center' })
+    doc.text(invoice.value.items[index].vin || "N/A",margin + 110, yPos, { align: 'center' } )
+    doc.text(invoice.value.items[index].stock_number || "N/A",margin + 130, yPos, { align: 'center' } )
+    doc.text(invoice.value.items[index].color || "N/A", margin + 145, yPos, { align: 'center' })
+    doc.text(String(invoice.value.items[index].quantity), margin + 152, yPos, { align: 'center' })
+    doc.text(formatCurrency(invoice.value.items[index].price), margin +163, yPos, { align: 'center' })
     doc.text(formatCurrency(invoice.value.items[index].quantity * invoice.value.items[index].price), margin + 175, yPos, { align: 'center' })
     
     yPos += 7
 
   }
+  // divider
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.1);
+  doc.line(margin, yPos,  pageWidth-15 , yPos);
   
   yPos += 10
    if (yPos > pageHeight - 40) {
@@ -950,32 +961,49 @@ const downloadPDF = () => {
     }
   // Totaux
   doc.setFont('helvetica', 'normal')
+  doc.setTextColor(107, 114, 128)
+  doc.setFontSize(7)
   doc.text('Sous-total:', pageWidth - 80, yPos)
   doc.text(formatCurrency(subtotal.value), pageWidth - 25, yPos, { align: 'right' })
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.1);
+  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
   
-  yPos += 7
+  yPos += 10
   doc.text("Shipping / Handling :", pageWidth - 80, yPos)
   doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  yPos += 7
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.1);
+  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
+
+  yPos += 10
   doc.text("Insurance :", pageWidth - 80, yPos)
   doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  yPos += 7
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.1);
+  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
+
+  yPos += 10
   doc.text("Sea Shipping :", pageWidth - 80, yPos)
   doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.1);
+  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
   
   yPos += 10
    if (yPos > pageHeight - 40) {
       doc.addPage()
       yPos = 20
     }
+  doc.setDrawColor(254, 121, 0);
   doc.setFillColor(254, 121, 0)
-  doc.rect(pageWidth - 90, yPos - 5, 70, 10, 'F')
+  doc.roundedRect(pageWidth - 90, yPos - 5, 75, 10,2, 2, 'FD')
   
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(11)
   doc.text('TOTAL:', pageWidth - 85, yPos + 2)
-  doc.text(formatCurrency(total.value), pageWidth - 30, yPos + 2, { align: 'right' })
+  doc.text(formatCurrency(total.value), pageWidth - 20, yPos + 2, { align: 'right' })
 
 
 
@@ -985,14 +1013,15 @@ const downloadPDF = () => {
       yPos = 20
     }
   
-  // Informations client
-  doc.setFillColor(254, 243, 199) // Orange clair
-  doc.rect(20, yPos, pageWidth - 40, 43, 'F')
+  // Informations Bank
+  doc.setFillColor(254, 243, 199)
+  doc.setDrawColor(254, 121, 0); // Orange clair
+  doc.roundedRect(margin, yPos, pageWidth - 30, 38,1,1, 'FD')
   
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(254, 121, 0) // Orange foncé
-  doc.text(' Bank Information', 25, yPos + 7)
+  doc.text(' Bank Information', margin+5, yPos + 7)
   
   doc.setTextColor(0, 0, 0)
   doc.setFontSize(8)
@@ -1016,8 +1045,13 @@ const downloadPDF = () => {
   doc.text('Bank Address :', 25, yPos + 33)
   doc.setFont('helvetica', 'bold')
   doc.text( 'No. 123 Jiangbei District, Chongqing, China', 50, yPos + 33, )
+
+  // divider
+  doc.setDrawColor(220, 220, 220);
+  doc.setLineWidth(0.1);
+  doc.line(margin, yPos+43,  pageWidth-15 , yPos+43);
   
-  yPos += 60
+  yPos += 55
    if (yPos > pageHeight - 40) {
       doc.addPage()
       yPos = 20
@@ -1026,18 +1060,19 @@ const downloadPDF = () => {
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text('Terms & Conditions ', 20, yPos-2)
+    doc.text('Terms & Conditions ', margin, yPos-2)
     doc.setFont('helvetica', 'normal')
-    doc.text("-", 20, yPos+5, {align:"center"})
-    doc.text('Incoterm : CIF / FOB / EXW [Specify port ]', 22, yPos+5)
-    doc.text("-", 20, yPos+10, {align:"center"})
-    doc.text('Payment Terms : T/T — 100% payment received before shipment', 22, yPos+10)
-    doc.text("-", 20, yPos+15, {align:"center"})
-    doc.text('Production Time : [e.g. 15–20 working days after deposit ]', 22, yPos+15)
-    doc.text("-", 20, yPos+20, {align:"center"})
-    doc.text('Estimated Delivery : [Insert ] ', 22, yPos+20)
-    doc.text("-", 20, yPos+25, {align:"center"})
-    doc.text('Commercial invoice :This is the final commercial invoice for customs and payment confirmation.', 22, yPos+25)
+    doc.setTextColor(107, 114, 128)
+    doc.text("-", margin, yPos+5, {align:"center"})
+    doc.text('Incoterm : CIF / FOB / EXW [Specify port ]', margin+2, yPos+5)
+    doc.text("-", margin, yPos+10, {align:"center"})
+    doc.text('Payment Terms : T/T — 100% payment received before shipment', margin+2, yPos+10)
+    doc.text("-", margin, yPos+15, {align:"center"})
+    doc.text('Production Time : [e.g. 15–20 working days after deposit ]', margin+2, yPos+15)
+    doc.text("-", margin, yPos+20, {align:"center"})
+    doc.text('Estimated Delivery : [Insert ] ', margin+2, yPos+20)
+    doc.text("-", margin, yPos+25, {align:"center"})
+    doc.text('Commercial invoice :This is the final commercial invoice for customs and payment confirmation.', margin+2, yPos+25)
     
     yPos += 35
      if (yPos > pageHeight - 40) {
@@ -1047,16 +1082,17 @@ const downloadPDF = () => {
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text('Shipping & Packaging ', 20, yPos-2)
+    doc.text('Shipping & Packaging ', margin, yPos-2)
     doc.setFont('helvetica', 'normal')
-    doc.text("-", 20, yPos+5, {align:"center"})
-    doc.text('Mode of Transport: [Sea / Air / Road / ]', 22, yPos+5)
-    doc.text("-", 20, yPos+10, {align:"center"})
-    doc.text('Port of Loading : [Insert ]', 22, yPos+10)
-    doc.text("-", 20, yPos+15, {align:"center"})
-    doc.text('Port of Destination : [Insert ]', 22, yPos+15)
-    doc.text("-", 20, yPos+20, {align:"center"})
-    doc.text('Port of Destination : [Insert ] ', 22, yPos+20)
+    doc.setTextColor(107, 114, 128)
+    doc.text("-", margin, yPos+5, {align:"center"})
+    doc.text('Mode of Transport: [Sea / Air / Road / ]', margin+2, yPos+5)
+    doc.text("-", margin, yPos+10, {align:"center"})
+    doc.text('Port of Loading : [Insert ]', margin+2, yPos+10)
+    doc.text("-", margin, yPos+15, {align:"center"})
+    doc.text('Port of Destination : [Insert ]', margin+2, yPos+15)
+    doc.text("-", margin, yPos+20, {align:"center"})
+    doc.text('Port of Destination : [Insert ] ', margin+2, yPos+20)
 
     yPos += 33
      if (yPos > pageHeight - 40) {
@@ -1067,19 +1103,13 @@ const downloadPDF = () => {
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text('Shipping & Packaging ', 20, yPos-2)
+    doc.text('Declaration  ', margin, yPos-2)
     doc.setFont('helvetica', 'normal')
-    doc.text("-", 20, yPos+5, {align:"center"})
-    doc.text('Mode of Transport: [Sea / Air / Road / ]', 22, yPos+5)
-    doc.text("-", 20, yPos+10, {align:"center"})
-    doc.text('Port of Loading : [Insert ]', 22, yPos+10)
-    doc.text("-", 20, yPos+15, {align:"center"})
-    doc.text('Port of Destination : [Insert ]', 22, yPos+15)
-    doc.text("-", 20, yPos+20, {align:"center"})
-    doc.text('Port of Destination : [Insert ] ', 22, yPos+20)
+    doc.setTextColor(107, 114, 128)
+    doc.text('We hereby certify that the goods listed above are of Chinese origin and the details given are true and correct. ', margin, yPos+5)
 
 
-  yPos += 33
+  yPos += 15
    if (yPos > pageHeight - 40) {
       doc.addPage()
       yPos = 20
@@ -1089,21 +1119,22 @@ const downloadPDF = () => {
     doc.setTextColor(0, 0, 0)
     doc.setFontSize(9)
     doc.setFont('helvetica', 'bold')
-    doc.text('NOTES / CONDITIONS', 20, yPos)
+    doc.text('NOTES / CONDITIONS', margin, yPos)
     doc.setFont('helvetica', 'normal')
+    doc.setTextColor(107, 114, 128)
     
     const splitNotes = doc.splitTextToSize(invoice.value.notes, pageWidth - 40)
-    doc.text(splitNotes, 20, yPos + 5)
+    doc.text(splitNotes, margin, yPos + 5)
     yPos += splitNotes.length * 5 + 10
   }
 
   yPos += 20
   doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
-  doc.text('Authorized Signature & Stamp ', pageWidth - margin - 80, yPos)
-  doc.text('Name : [Authorized person ]', pageWidth - margin - 80, yPos + 6)
-  doc.text('Signature : ___________________', pageWidth - margin - 80, yPos + 12)
-  doc.text('Company Stamp : ___________________', pageWidth - margin - 80, yPos + 18)
+  doc.text('Authorized Signature & Stamp ', pageWidth - margin - 60, yPos)
+  doc.text('Name : [Authorized person ]', pageWidth - margin - 60, yPos + 6)
+  doc.text('Signature : ___________________', pageWidth - margin - 60, yPos + 12)
+  doc.text('Company Stamp : ___________________', pageWidth - margin - 60, yPos + 18)
 
   
   
