@@ -47,7 +47,7 @@
             Réinitialiser
           </button>
           <button 
-            @click="downloadPDF"
+            @click="downloadPDF3"
             class="btn-degrade-orange"
           >
             <Download class="w-4 h-4 mr-2" />
