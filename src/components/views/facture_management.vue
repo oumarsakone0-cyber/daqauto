@@ -43,14 +43,14 @@
             @click="resetForm"
             class="submit-btn"
           >
-            <RefreshCw class="w-4 h-4 mr-2" />
+            <RefreshCw class="w-4 h-4" />
             Reset
           </button>
           <button 
             @click="downloadPDF"
             class="btn-degrade-orange"
           >
-            <Download class="w-4 h-4 mr-2" />
+            <Download class="w-4 h-4" />
             Download PDF
           </button>
         </div>
@@ -539,7 +539,6 @@ const invoice = ref({
   },
   items: [
     {
-      index:'',
       productId: '',
       product_type:'',
       product_name:"",
@@ -551,8 +550,26 @@ const invoice = ref({
       price: 0
     }
   ],
+  specs:[],
   notes: 'Payment is due within 30 days. Please mention the invoice number when making your payment.'
 })
+
+const overviewTitles=[
+  "Conditions",
+  "Mileage",
+  "Production date",
+  "Year",
+  "Country of Origin",
+
+]
+
+const technical=[
+  "Brand",
+  "Model",
+  "Drive Type",
+  "Wheelbases (mm)",
+  "Economic speed /\nMaximum speed (km/h)"
+]
 
 const initializeUserData = () => {
   try {
@@ -615,13 +632,11 @@ onMounted(async () => {
   if (initialized) {
     await fetchProducts()
   } else {
-    console.error('[v0] Impossible de charger les produits sans authentification')
   }
 })
 
 const fetchProducts = async () => {
   if (!currentBoutique.value?.id || !currentUser.value?.id) {
-    console.error('[v0] Informations utilisateur manquantes pour charger les produits')
     return
   }
 
@@ -637,7 +652,7 @@ const fetchProducts = async () => {
     
     if (response.success) {
       products.value = response.data || []
-      console.log('[v0] Produits chargés:', products.value.length, 'produits')
+      console.log('[v0] Produits chargés:', products.value)
     } else {
       console.error('[v0] Erreur API:', response.error)
     }
@@ -696,7 +711,64 @@ const onProductSelect = (index) => {
               trim_numbers:selectedProduct.trim_numbers
             }
           )
-    } 
+    }
+
+    if (!invoice.value.specs.some(spec => spec.id === selectedProduct.id)) {
+      if(invoice.value.items.length ===1 && invoice.value.specs.length >0){
+        invoice.value.specs=[]
+      }
+      invoice.value.specs.push(
+        {
+          id:selectedProduct.id,
+          product_name: selectedProduct.name || "N/A",
+          primary_image:selectedProduct.primary_image || 'N/A',
+          vehicle_condition: selectedProduct.vehicle_condition || 'N/A',
+          vehicle_mileage:selectedProduct.vehicle_mileage || 'N/A',
+          production_date:selectedProduct.production_date || 'N/A',
+          vehicle_year: selectedProduct.vehicle_year || 'N/A',
+          country_of_origin: selectedProduct.country_of_origin || 'N/A',
+          vehicle_brand: selectedProduct.vehicle_make || 'N/A',
+          vehicle_model: selectedProduct.vehicle_model || 'N/A',
+          drive_type:selectedProduct.drive_type || 'N/A',
+          wheelbase : selectedProduct.wheelbase || 'N/A',
+          engine_number:selectedProduct.engine_number || 'N/A',
+          engine_brand:selectedProduct.engine_brand || 'N/A',
+          power:selectedProduct.power || 'N/A',
+          engine_emissions:selectedProduct.engine_emissions || 'N/A',
+          transmission_type:selectedProduct.transmission_type || 'N/A',
+          curb_weight:selectedProduct.curb_weight || 'N/A',
+          gvw:selectedProduct.gvw || 'N/A',
+          vehicle_dimensions:selectedProduct.dimensions || 'N/A',
+          suspension_type:selectedProduct.suspension_type || 'N/A',
+          fuel_tank_capacity:selectedProduct.fuel_tank_capacity || 'N/A',
+          fuel_type:selectedProduct.fuel_type || 'N/A',
+          brake_system:selectedProduct.brake_system || 'N/A',
+          cabin_type:selectedProduct.cabin_type || 'N/A',
+          tire_size:selectedProduct.tyre_size || 'N/A',
+          payload_capacity: selectedProduct.payload_capacity || 'N/A',
+          speed:selectedProduct.speed || 'N/A',
+          engine_model:selectedProduct.engine_model || 'N/A' ,
+          hor_sepower:selectedProduct.hor_sepower || 'N/A',
+          gear_box_brand:selectedProduct.gear_box_brand || 'N/A',
+          gear_box_model:selectedProduct.gear_box_model || 'N/A',
+          chassis_dimensions:selectedProduct.chassis_dimensions || 'N/A',
+          frame_rear_suspension:selectedProduct.frame_rear_suspension || 'N/A',
+          overall_dimensions:selectedProduct.overall_dimensions || 'N/A',
+          suspension_front:selectedProduct.suspension_front || 'N/A',
+          suspension_rear:selectedProduct.suspension_rear || 'N/A',
+          axle_brand:selectedProduct.axle_brand || 'N/A',
+          axle_front:selectedProduct.axle_front || 'N/A',
+          axle_rear:selectedProduct.axle_rear || 'N/A' ,
+          axle_speed_ratio:selectedProduct.axle_speed_ratio || 'N/A',
+          air_filter:selectedProduct.air_filter || 'N/A',
+          electrics:selectedProduct.electrics || 'N/A',
+        }
+      )
+    }
+    console.log("selected specs: ",invoice.value.specs)
+    
+    
+
   }
 }
 
@@ -752,7 +824,10 @@ const addItem = () => {
 const removeItem = (index) => {
   if (invoice.value.items.length > 1) {
     invoice.value.items.splice(index, 1)
-    
+    specsToRemove = invoice.value.specs.findIndex(spec => spec.id === invoice.value.items[index]?.productId)
+    if(specsToRemove !== -1){
+      invoice.value.specs.splice(specsToRemove,1)
+    }
   }
   console.log("items removed: ",invoice.value.items)
 }
@@ -782,11 +857,34 @@ const resetForm = () => {
         price: 0
       }
     ],
+    specs:[],
     notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
   }
 }
 
-const downloadPDF = () => {
+function imgUrlToDataUrl(url) {
+    return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.crossOrigin = 'Anonymous'; // Important pour les images provenant d'autres domaines (CORS)
+        img.onload = () => {
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = img.naturalWidth;
+            canvas.height = img.naturalHeight;
+            ctx.drawImage(img, 0, 0);
+            resolve(canvas.toDataURL('image/png')); // Convertion l'image en PNG data URL
+        };
+        img.onerror = (error) => reject(error);
+        img.src = url;
+
+        if (img.complete || img.complete === undefined) {
+            img.src = "data:image/gif;base64,R0lGODlhAQABAIAAAAAAAP///ywAAAAAAQABAAACAUwAOw==";
+            img.src = url;
+        }
+    });
+}
+
+const downloadPDF = async() => {
   const doc = new jsPDF()
   
   // Configuration
@@ -795,12 +893,17 @@ const downloadPDF = () => {
   let yPos = 16
   let margin= 15
 
+  const divider = (lineWidth,x1,y1,x2,y2)=>{
+    doc.setDrawColor(220, 220, 220);
+    doc.setLineWidth(lineWidth);
+    doc.line(x1,y1,x2,y2);
+
+  }
+
   // Pied de page
   const footer = ()=>{
     // divider
-    doc.setDrawColor(220, 220, 220);
-    doc.setLineWidth(0.1);
-    doc.line(margin, pageHeight - 25, pageWidth - margin, pageHeight - 25);
+    divider(0.1,margin, pageHeight - 25, pageWidth - margin, pageHeight - 25)
 
     doc.setFontSize(8)
     doc.setTextColor(107, 114, 128)
@@ -846,9 +949,7 @@ const downloadPDF = () => {
   doc.text(`Date: ${formatDate(invoice.value.date)}`, pageWidth - margin-7, yPos+5, { align: 'right' })
   doc.text(`Due date: ${formatDate(invoice.value.dueDate)}`, pageWidth - margin-1, yPos+9, { align: 'right' })
 
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.2);
-  doc.line(margin-5, yPos+15,  pageWidth-15 , yPos+15);
+  divider(0.2,margin-5, yPos+15,  pageWidth-15 , yPos+15)
 
 
   /// Fin entête ----- Debut sous entête
@@ -931,10 +1032,9 @@ const downloadPDF = () => {
     yPos += 7
 
   }
+
   // divider
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.1);
-  doc.line(margin, yPos,  pageWidth-15 , yPos);
+  divider(0.1,margin, yPos,  pageWidth-15 , yPos)
   
   yPos += 10
    if (yPos > pageHeight - 40) {
@@ -948,30 +1048,22 @@ const downloadPDF = () => {
   doc.setFontSize(7)
   doc.text('Subtotal:', pageWidth - 80, yPos)
   doc.text(formatCurrency(subtotal.value), pageWidth - 25, yPos, { align: 'right' })
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.1);
-  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
+  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
   
   yPos += 10
   doc.text("Shipping / Handling :", pageWidth - 80, yPos)
   doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.1);
-  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
+  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
 
   yPos += 10
   doc.text("Insurance :", pageWidth - 80, yPos)
   doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.1);
-  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
+  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
 
   yPos += 10
   doc.text("Sea Shipping :", pageWidth - 80, yPos)
   doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.1);
-  doc.line(pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2);
+  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
   
   yPos += 10
    if (yPos > pageHeight - 40) {
@@ -1032,9 +1124,7 @@ const downloadPDF = () => {
   doc.text( 'No. 123 Jiangbei District, Chongqing, China', 50, yPos + 33, )
 
   // divider
-  doc.setDrawColor(220, 220, 220);
-  doc.setLineWidth(0.1);
-  doc.line(margin, yPos+43,  pageWidth-15 , yPos+43);
+  divider(0.1,margin, yPos+43,  pageWidth-15 , yPos+43)
   
   yPos += 55
    if (yPos > pageHeight - 40) {
@@ -1113,6 +1203,7 @@ const downloadPDF = () => {
     yPos += splitNotes.length * 5 + 10
   }
 
+// signature
   yPos += 20
   doc.setTextColor(107, 114, 128)
   doc.setFontSize(9)
@@ -1121,10 +1212,560 @@ const downloadPDF = () => {
   doc.text('Name : [Authorized person ]', pageWidth - margin - 60, yPos + 6)
   doc.text('Signature : ___________________', pageWidth - margin - 60, yPos + 12)
   doc.text('Company Stamp : ___________________', pageWidth - margin - 60, yPos + 18)
-
-  
-  
   footer()
+
+  const capitalizeFirst=(str)=> {
+  if (!str) return ''
+  const s = String(str).trim()
+  return s ? s[0].toUpperCase() + s.slice(1) : ''
+}
+
+  const specifications = async()=>{
+
+    for (let index = 0; index < invoice.value.specs.length; index++) {
+      doc.addPage()
+      doc.setTextColor(0,0,0)
+      yPos = 20
+      margin = 15
+      doc.setFontSize(14)
+      doc.setFont("helvetica", "bold")
+      doc.text("Specifications Of ", pageWidth/2,yPos,{align:"center"})
+      doc.setFontSize(10)
+      doc.text(invoice.value.specs[index].product_name,pageWidth/2,yPos+5,{align:"center"})
+      
+      yPos +=5
+      // 1ere partie
+
+      // Overview
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 60,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 52, 'FD')
+      
+      
+      doc.text("Overview",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text(overviewTitles[0], margin + 15, yPos + 20, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].vehicle_condition), margin+50,yPos + 20, { align: 'center' })
+      divider(0.1,margin,yPos + 25,pageWidth /2-5,yPos + 25)
+  
+      doc.text(overviewTitles[1], margin + 15, yPos + 30, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].vehicle_mileage), margin+50,yPos + 30, { align: 'center' })
+      divider(0.1,margin,yPos + 35,pageWidth /2-5,yPos + 35)
+  
+      doc.text(overviewTitles[2], margin + 15, yPos + 40, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].production_date), margin + 50,yPos + 40, { align: 'center' })
+      divider(0.1,margin,yPos + 45,pageWidth /2-5,yPos + 45)
+  
+      doc.text(overviewTitles[3], margin + 15, yPos + 50, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].vehicle_year), margin + 50, yPos + 50, { align: 'center' })
+      divider(0.1,margin,yPos + 55,pageWidth /2-5,yPos + 55)
+  
+      doc.text(overviewTitles[4], margin + 15, yPos + 60, { align: 'center' })
+      doc.text(invoice.value.specs[index].country_of_origin, margin + 50, yPos + 60, { align: 'center' })
+
+
+      // Technical specification
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 60,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 40, 52, 'FD')
+      
+      
+      doc.text("Technical specification",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text(technical[0], margin + 115, yPos + 20, { align: 'center' })
+      doc.text(invoice.value.specs[index].vehicle_brand, margin+150,yPos + 20, { align: 'center' })
+      divider(0.1,margin+95,yPos + 25,pageWidth -margin,yPos + 25)
+  
+      doc.text(technical[1], margin + 115, yPos + 30, { align: 'center' })
+      doc.text(invoice.value.specs[index].vehicle_model, margin+150,yPos + 30, { align: 'center' })
+      divider(0.1,margin+95,yPos + 35,pageWidth -margin,yPos + 35)
+  
+      doc.text(technical[2], margin + 115, yPos + 40, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].drive_type), margin + 150,yPos + 40, { align: 'center' })
+      divider(0.1,margin+95,yPos + 45,pageWidth-margin,yPos + 45)
+  
+      doc.text(technical[3], margin + 115, yPos + 50, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].wheelbase), margin + 150, yPos + 50, { align: 'center' })
+      divider(0.1,margin+95,yPos + 55,pageWidth -margin,yPos + 55)
+  
+      doc.text(technical[4], margin + 115, yPos + 60, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].speed), margin + 150, yPos + 60, { align: 'center' })
+
+      yPos += 65
+      // 2e partie 
+
+      // Engine
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 70,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 62, 'FD')
+      
+      
+      doc.text("Engine",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Number", margin + 15, yPos + 20, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].engine_number), margin+50,yPos + 20, { align: 'center' })
+      divider(0.1,margin,yPos + 25,pageWidth /2-5,yPos + 25)
+  
+      doc.text("Brand", margin + 15, yPos + 30, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].engine_brand), margin+50,yPos + 30, { align: 'center' })
+      divider(0.1,margin,yPos + 35,pageWidth /2-5,yPos + 35)
+  
+      doc.text("Model", margin + 15, yPos + 40, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].engine_model), margin + 50,yPos + 40, { align: 'center' })
+      divider(0.1,margin,yPos + 45,pageWidth /2-5,yPos + 45)
+  
+      doc.text("Power", margin + 15, yPos + 50, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].power), margin + 50, yPos + 50, { align: 'center' })
+      divider(0.1,margin,yPos + 55,pageWidth /2-5,yPos + 55)
+  
+      doc.text("Hor sepower", margin + 15, yPos + 60, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].hor_sepower), margin + 50, yPos + 60, { align: 'center' })
+      divider(0.1,margin,yPos + 65,pageWidth /2-5,yPos + 65)
+
+      doc.text("Emission standards", margin + 15, yPos + 70, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].engine_emissions), margin + 50, yPos + 70, { align: 'center' })
+
+
+      // Dimensions(mm)
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 52,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 40, 44, 'FD')
+      
+      
+      doc.text("Dimensions(mm)",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Chassis(mm)", margin + 115, yPos + 20, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].chassis_dimensions), margin+150,yPos + 20, { align: 'center' })
+      divider(0.1,margin+95,yPos + 25,pageWidth -margin,yPos + 25)
+  
+      doc.text("Frame rear \nsuspension(mm)", margin + 115, yPos + 30, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].frame_rear_suspension), margin+150,yPos + 30, { align: 'center' })
+      divider(0.1,margin+95,yPos + 35,pageWidth -margin,yPos + 35)
+  
+      doc.text("Overall Dimensions(mm)", margin + 115, yPos + 40, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].overall_dimensions), margin + 150,yPos + 40, { align: 'center' })
+      divider(0.1,margin+95,yPos + 45,pageWidth-margin,yPos + 45)
+  
+      doc.text("Vehicle Dimensions(LxlxH)", margin + 115, yPos + 50, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].vehicle_dimensions), margin + 150, yPos + 50, { align: 'center' })
+     
+     
+      yPos += 75
+      // 3e partie 
+
+      // Vehicle Weight
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 40,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 32, 'FD')
+      
+      
+      doc.text("Vehicle Weight",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Curb Weight", margin + 15, yPos + 20, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].curb_weight), margin+50,yPos + 20, { align: 'center' })
+      divider(0.1,margin,yPos + 25,pageWidth /2-5,yPos + 25)
+  
+      doc.text("Payload Capacity", margin + 15, yPos + 30, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].payload_capacity), margin+50,yPos + 30, { align: 'center' })
+      divider(0.1,margin,yPos + 35,pageWidth /2-5,yPos + 35)
+  
+      doc.text("Gross Vehicle\n Weight (GVW)", margin + 15, yPos + 40, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].gvw), margin + 50,yPos + 40, { align: 'center' })
+  
+
+
+      // Gear box
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 40,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 44, 32, 'FD')
+      
+      
+      doc.text("Gear box",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Brand", margin + 115, yPos + 20, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].gear_box_brand), margin+150,yPos + 20, { align: 'center' })
+      divider(0.1,margin+95,yPos + 25,pageWidth -margin,yPos + 25)
+  
+      doc.text("Model", margin + 115, yPos + 30, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].gear_box_model), margin+150,yPos + 30, { align: 'center' })
+      divider(0.1,margin+95,yPos + 35,pageWidth -margin,yPos + 35)
+  
+      doc.text("type", margin + 115, yPos + 40, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].transmission_type), margin + 150,yPos + 40, { align: 'center' })
+  
+
+      yPos += 45
+      // 4e partie 
+
+      // Suspension
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 40,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 32, 'FD')
+      
+      
+      doc.text("Suspension",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Suspension Type", margin + 15, yPos + 20, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].suspension_type), margin+50,yPos + 20, { align: 'center' })
+      divider(0.1,margin,yPos + 25,pageWidth /2-5,yPos + 25)
+  
+      doc.text("Front", margin + 15, yPos + 30, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].suspension_front), margin+50,yPos + 30, { align: 'center' })
+      divider(0.1,margin,yPos + 35,pageWidth /2-5,yPos + 35)
+  
+      doc.text("Rear", margin + 15, yPos + 40, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].suspension_rear), margin + 50,yPos + 40, { align: 'center' })
+  
+
+
+      // Axles
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 50,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 44, 42, 'FD')
+      
+      
+      doc.text("Axles",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Brand", margin + 115, yPos + 20, { align: 'center' })
+      doc.text(invoice.value.specs[index].axle_brand, margin+150,yPos + 20, { align: 'center' })
+      divider(0.1,margin+95,yPos + 25,pageWidth -margin,yPos + 25)
+  
+      doc.text("Front axle", margin + 115, yPos + 30, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].axle_front), margin+150,yPos + 30, { align: 'center' })
+      divider(0.1,margin+95,yPos + 35,pageWidth -margin,yPos + 35)
+      
+      doc.text("Rear axle", margin + 115, yPos + 40, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].axle_rear), margin + 150,yPos + 40, { align: 'center' })
+      divider(0.1,margin+95,yPos + 45,pageWidth -margin,yPos + 45)
+      
+      doc.text("Speed ratio", margin + 115, yPos + 50, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].axle_speed_ratio), margin + 150,yPos + 50, { align: 'center' })
+  
+      footer()
+      // Nouvelle page pour la 5e partie
+      doc.addPage()
+      yPos=20
+
+      // 5e partie
+      // Fuel tank
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); 
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 30,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 22, 'FD')
+      
+      
+      doc.text("Fuel tank",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Fuel Tank Capacity", margin + 15, yPos + 20, { align: 'center' })
+      doc.text(String(invoice.value.specs[index].fuel_tank_capacity), margin+50,yPos + 20, { align: 'center' })
+      divider(0.1,margin,yPos + 25,pageWidth /2-5,yPos + 25)
+  
+      doc.text("Fuel Type", margin + 15, yPos + 30, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].fuel_type), margin+50,yPos + 30, { align: 'center' })
+  
+      // Brake System
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 20,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 44, 12, 'FD')
+      
+      
+      doc.text("Brake System",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Type", margin + 115, yPos + 20, { align: 'center' })
+      doc.text(invoice.value.specs[index].brake_system, margin+150,yPos + 20, { align: 'center' })
+      
+      yPos += 30
+
+       // 6e partie
+      // Tires
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); 
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 20,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 12, 'FD')
+      
+      
+      doc.text("Tires",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Type", margin + 15, yPos + 20, { align: 'center' })
+      doc.text(invoice.value.specs[index].tire_size, margin+50,yPos + 20, { align: 'center' })
+  
+      // Cab
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 20,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 44, 12, 'FD')
+      
+      
+      doc.text("Cab",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Type", margin + 115, yPos + 20, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].cabin_type), margin+150,yPos + 20, { align: 'center' })
+      
+      yPos += 30
+
+       // 7e partie
+      // Air filter
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); 
+      doc.roundedRect(margin, yPos+5, pageWidth /2-20, 20,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin, yPos+13, 30, 12, 'FD')
+      
+      
+      doc.text("Air filter",  pageWidth /3-15, yPos + 10, { align: 'center' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Type", margin + 15, yPos + 20, { align: 'center' })
+      doc.text(capitalizeFirst(invoice.value.specs[index].air_filter), margin+50,yPos + 20, { align: 'center' })
+  
+      // Electrics
+      //Cadre principal
+      doc.setFillColor(255, 255, 255)
+      doc.setDrawColor(235, 235, 235); // Orange clair
+      doc.roundedRect(margin+95, yPos+5, pageWidth /2-20, 20,1,1, 'FD')
+  
+      doc.setFontSize(10)
+      doc.setFont('helvetica', 'bold')
+      doc.setTextColor(0,0,0)
+  
+      // Cadre entête
+      doc.setFillColor(243, 244, 246) // Gris clair
+      doc.rect(margin+95, yPos+5, pageWidth /2-20, 8, 'F')
+  
+      // Cadre vertical des titres
+      doc.setFillColor(250, 250, 250)
+      doc.rect(margin+95, yPos+13, 44, 12, 'FD')
+      
+      
+      doc.text("Electrics",  margin + 115, yPos + 10, { align: 'left' })
+      doc.setFontSize(8)
+      doc.setFont('helvetica', 'normal')
+      doc.setTextColor(107, 114, 128)
+  
+      doc.text("Type", margin + 115, yPos + 20, { align: 'center' })
+      doc.text(invoice.value.specs[index].electrics, margin+150,yPos + 20, { align: 'center' })
+  
+      yPos += 50
+
+      // URL de l'image à ajouter
+      const imageUrl = invoice.value.specs[index].primary_image;
+      // chargement de l'image
+      const imageDataUrl = await imgUrlToDataUrl(imageUrl);
+        
+      doc.setFillColor(254, 121, 0)
+      doc.setDrawColor(0, 0, 0); // Orange clair
+      doc.roundedRect(margin+60, yPos, pageWidth /2-35, 70,1,1, 'FD')
+      doc.addImage(imageDataUrl, 'PNG', margin+60, yPos, 70, 70);
+
+    }
+    
+    
+    footer()
+  }
+
+  await specifications()
   
   // Téléchargement
   doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
