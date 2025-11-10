@@ -100,7 +100,7 @@
                       <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Wheelbases (mm)</div>
+                      <div class="spec-name">Wheelbase (mm)</div>
                       <div class="spec-value">{{ product.wheelbase || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
@@ -125,27 +125,24 @@
                       <div class="spec-value">{{ product.engine_model || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Power</div>
+                      <div class="spec-name">Horse Power</div>
                       <div class="spec-value">{{ product.power || 'N/A' }}</div>
                     </div>
-                    <div class="spec-row">
-                      <div class="spec-name">Hor sepower</div>
-                      <div class="spec-value">{{ product.hor_sepower || 'N/A' }}</div>
-                    </div>
+                   
                     <div class="spec-row">
                       <div class="spec-name">Emission standards</div>
                       <div class="spec-value">{{ product.engine_emissions || 'N/A' }}</div>
                     </div>
                   </div>
                   <div class="spec-group ">
-                    <h3 class="spec-group-title">Gear box</h3>
+                    <h3 class="spec-group-title">Gearbox</h3>
                     <div class="spec-row">
                       <div class="spec-name">Brand</div>
-                      <div class="spec-value">{{ product.gear_box_brand || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.gearbox_brand || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Model</div>
-                      <div class="spec-value">{{ product.gear_box_model || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.gearbox_model || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">type</div>
@@ -219,7 +216,7 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Speed ratio</div>
-                      <div class="spec-value">{{ product.axles_speed_ratio || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.axle_speed_ratio || 'N/A' }}</div>
                     </div>
                   </div>
 
