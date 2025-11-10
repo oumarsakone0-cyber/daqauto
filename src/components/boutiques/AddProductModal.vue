@@ -309,6 +309,42 @@
                   >
                 </div>
                 <div>
+                  <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
+                    Production date <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="production_date"
+                    v-model="productData.production_date"
+                    type="date"
+                    class="text-sm sm:text-base input-style"
+                  >
+                </div>
+                <div>
+                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Fuel tank capacity (L) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="fuel_tank_capacity"
+                    v-model="productData.fuel_tank_capacity"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 400"
+                  >
+                </div>
+                <div>
+                  <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
+                    Country of origin <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="country_of_origin"
+                    v-model="productData.country_of_origin"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Allemagne, Chine, Japon"
+                  >
+                </div>
+                <div>
                   <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Transmission type<span class="error-color">*</span>
                   </label>
@@ -328,28 +364,19 @@
                   </select>
                 </div>
                 <div>
-                  <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
-                    Production date <span class="error-color">*</span>
+                  <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
+                    Curb weight (T) <span class="error-color">*</span>
                   </label>
                   <input
-                    id="production_date"
-                    v-model="productData.production_date"
-                    type="date"
+                    id="curb_weight"
+                    v-model="productData.curb_weight"
+                    type="number"
+                    min="0"
                     class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 10000"
                   >
                 </div>
-                <div>
-                  <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
-                    Country of origin <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="country_of_origin"
-                    v-model="productData.country_of_origin"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Allemagne, Chine, Japon"
-                  >
-                </div>
+                
                 <div>
                   <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
                     Wheelbase <span class="error-color">*</span>
@@ -364,8 +391,21 @@
                   >
                 </div>
                 <div>
+                  <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Payload capacity (kg) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="payload_capacity"
+                    v-model="productData.payload_capacity"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 15000"
+                  >
+                </div>
+                <div>
                   <label for="speed" class="block text-sm font-medium text-gray-700 mb-2">
-                    Economic speed/Maximum speed (km/h)
+                    Economic speed / Maximum speed (km/h)
                   </label>
                   <input
                     id="speed"
@@ -389,19 +429,7 @@
                     placeholder="Ex: 25000"
                   >
                 </div>
-                <div>
-                  <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Payload capacity (kg) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="payload_capacity"
-                    v-model="productData.payload_capacity"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 15000"
-                  >
-                </div>
+                
                 <div>
                   <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Cabin type <span class="error-color">*</span>
@@ -414,33 +442,9 @@
                     placeholder="Ex: Short cabin, Long cabin"
                   >
                 </div>
-                <div>
-                  <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
-                    Curb weight (T) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="curb_weight"
-                    v-model="productData.curb_weight"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 10000"
-                  >
-                </div>
+                
 
-                <div>
-                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Fuel tank capacity (L) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="fuel_tank_capacity"
-                    v-model="productData.fuel_tank_capacity"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 400"
-                  >
-                </div>
+                
                 <div>
                   <label for="chassis_dimensions" class="block text-sm font-medium text-gray-700 mb-2">
                     Chassis Dimensions (mm) <span class="error-color">*</span>
@@ -613,17 +617,16 @@
                     placeholder="Gearbox model"
                   >
                 </div>
-                <div>
-                  <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Power (ch/kW)
+                <div >
+                  <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine Number
                   </label>
                   <input
-                    id="power"
-                    v-model="productData.power"
-                    type="number"
-                    min="0"
+                    id="vehicle_number"
+                    v-model="productData.engine_number"
+                    type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 400"
+                    placeholder="Ex: FHEGEJGE776JH8"
                   >
                 </div>
                 <div>
@@ -639,6 +642,20 @@
                     <option value="Automatic">Automatic</option>
                     <option value="Manual">Manual</option>
                   </select>
+                </div>
+                
+                <div>
+                  <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine Power (ch/kW)
+                  </label>
+                  <input
+                    id="power"
+                    v-model="productData.power"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 400"
+                  >
                 </div>
                 <div>
                   <label for="engine_emissions" class="block text-sm font-medium text-gray-700 mb-2">
@@ -715,19 +732,6 @@
                   </div>
                 </div>
                 <div >
-                  <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Number
-                  </label>
-                  <input
-                    id="vehicle_number"
-                    v-model="productData.engine_number"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: FHEGEJGE776JH8"
-                  >
-                </div>
-
-                <div >
                   <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
                     Mileage (km)
                   </label>
@@ -742,6 +746,18 @@
                   >
                   <p class="text-xs text-gray-500 mt-1">Between 0 and 200,000 km</p>
                 </div>
+                <div>
+                  <label for="axle_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Axle Brand
+                  </label>
+                  <input
+                    id="axle_brand"
+                    v-model="productData.axle_brand"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Axle brand"
+                  >
+                </div>
 
                 <div>
                   <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
@@ -755,6 +771,18 @@
                     placeholder="Ex: Pneumatic, Mechanical"
                   >
                 </div>
+                 <div>
+                  <label for="axle_front" class="block text-sm font-medium text-gray-700 mb-2">
+                    Front axle
+                  </label>
+                  <input
+                    id="axle_front"
+                    v-model="productData.axle_front"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Front axle"
+                  >
+                </div>
                 <div>
                   <label for="suspension_front" class="block text-sm font-medium text-gray-700 mb-2">
                     Front Suspension
@@ -765,6 +793,18 @@
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Front suspension"
+                  >
+                </div>
+                 <div>
+                  <label for="axle_rear" class="block text-sm font-medium text-gray-700 mb-2">
+                    Rear axle
+                  </label>
+                  <input
+                    id="axle_rear"
+                    v-model="productData.axle_rear"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Rear axle"
                   >
                 </div>
                 <div>
@@ -780,42 +820,9 @@
                   >
                 </div>
 
-                <div>
-                  <label for="axle_brand" class="block text-sm font-medium text-gray-700 mb-2">
-                    Axle Brand
-                  </label>
-                  <input
-                    id="axle_brand"
-                    v-model="productData.axle_brand"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Axle brand"
-                  >
-                </div>
-                <div>
-                  <label for="axle_front" class="block text-sm font-medium text-gray-700 mb-2">
-                    Front axle
-                  </label>
-                  <input
-                    id="axle_front"
-                    v-model="productData.axle_front"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Front axle"
-                  >
-                </div>
-                <div>
-                  <label for="axle_rear" class="block text-sm font-medium text-gray-700 mb-2">
-                    Rear axle
-                  </label>
-                  <input
-                    id="axle_rear"
-                    v-model="productData.axle_rear"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Rear axle"
-                  >
-                </div>
+                
+               
+               
                 <div>
                   <label for="axle_speed_ratio" class="block text-sm font-medium text-gray-700 mb-2">
                     Speed ratio
