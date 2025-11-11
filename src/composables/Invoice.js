@@ -3,7 +3,7 @@ import { imgUrlToDataUrl } from './imgUrlToDataUrl.js'
 import logo from "../assets/favicon.jpg"
 import { formatCurrency, formatDate, capitalizeFirst } from './utils.js'
 
-export const downloadPDF = async(invoice,subtotal,total) => {
+export const downloadInvoice = async(invoice,subtotal,total) => {
   const doc = new jsPDF()
   
   // Configuration
@@ -297,6 +297,8 @@ const termsAndConditions = ()=>{
     doc.text('Port of Loading : [Insert ]', margin+2, yPos+10)
     doc.text("-", margin, yPos+15, {align:"center"})
     doc.text('Port of Destination : [Insert ]', margin+2, yPos+15)
+    doc.text("-", margin, yPos+20, {align:"center"})
+    doc.text('Packaging Type : [Export Standard]', margin+2, yPos+20)
 
     yPos += 33
      if (yPos > pageHeight - 40) {

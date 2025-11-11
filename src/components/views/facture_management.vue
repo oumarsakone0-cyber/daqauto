@@ -47,11 +47,18 @@
             Reset
           </button>
           <button 
-            @click="downloadPDF(invoice,subtotal,total)"
+            @click="downloadProforma(invoice,subtotal,total)"
             class="btn-degrade-orange"
           >
             <Download class="w-4 h-4" />
-            Download PDF
+            Proforma PDF
+          </button>
+          <button 
+            @click="downloadInvoice(invoice,subtotal,total)"
+            class="btn-degrade-orange"
+          >
+            <Download class="w-4 h-4" />
+            Invoice PDF
           </button>
         </div>
       </div>
@@ -513,7 +520,8 @@ import {
 import { productsApi } from '../../services/api'
 import logo from "../../assets/favicon.jpg"
 import Navbar from '../boutiques/Navbar.vue'
-import { downloadPDF } from '../../composables/downloadPDF.js'
+import { downloadInvoice } from '../../composables/Invoice.js'
+import { downloadProforma } from '../../composables/ProformaInvoice.js'
 import { formatCurrency, formatDate} from '../../composables/utils.js'
 
 const products = ref([])
