@@ -893,5 +893,5 @@ const signature = ()=>{
     await specifications()
   
   // Téléchargement
-  doc.save(`Invoice_${invoice.number || 'XXXX'}.pdf`)
+  doc.save(`Proforma_${invoice.number || 'XXXX'}.pdf`)
 }
