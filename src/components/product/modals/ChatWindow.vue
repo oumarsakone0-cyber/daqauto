@@ -136,7 +136,6 @@
       </div>
 
       <div class="flex-1 flex flex-col bg-white">
-
         <div ref="messagesContainer" class="flex-1 overflow-y-auto p-4 space-y-4">
           <div
             v-for="message in activeConversation.messages"
@@ -181,10 +180,12 @@
                 ]"
                 :style="message.sender === 'user' ? 'background: linear-gradient(160deg, #fe9700, #fc4618)' : ''"
               >
-                <p class="text-sm leading-relaxed">{{ message.text }}</p>
+                <p class="text-sm leading-relaxed">{{ message.message}}</p>
               </div>
               <span class="text-xs text-gray-500 mt-1 block">{{ formatTime(message.timestamp) }}</span>
             </div>
+            
+           
           </div>
         </div>
 
@@ -215,153 +216,25 @@
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useChatStore } from '../../../stores/chat'
-
-interface Product {
-  name: string
-  price: number
-  image: string
-  shop: string
-  rating?: number
-}
-
-interface Message {
-  id: number
-  text?: string
-  sender: 'user' | 'bot'
-  timestamp: Date
-  type?: 'product'
-  product?: Product
-}
-
-interface Conversation {
-  id: number
-  name: string
-  avatar: string
-  status: string
-  online: boolean
-  lastMessage: string
-  lastMessageTime: string
-  unreadCount: number
-  messages: Message[]
-}
+import axios from 'axios' // ✅ on utilise axios (tu peux remplacer par fetch)
 
 const isOpen = ref(false)
 const showSidebar = ref(false)
 const newMessage = ref('')
 const searchQuery = ref('')
-const messagesContainer = ref<HTMLElement | null>(null)
+const messagesContainer = ref(null)
 const activeConversationId = ref(1)
-
-const conversations = ref<Conversation[]>([
-  {
-    id: 1,
-    name: 'Apple Store',
-    avatar: 'https://cdn-icons-png.flaticon.com/512/4526/4526832.png',
-    status: 'En ligne',
-    online: true,
-    lastMessage: 'Voici le produit que vous cherchez',
-    lastMessageTime: '10:30',
-    unreadCount: 2,
-    messages: [
-      {
-        id: 1,
-        text: 'Bonjour, je cherche un iPhone',
-        sender: 'user',
-        timestamp: new Date('2024-01-15T10:00:00')
-      },
-      {
-        id: 2,
-        text: 'Bonjour! Je peux vous aider avec ça',
-        sender: 'bot',
-        timestamp: new Date('2024-01-15T10:01:00')
-      },
-      {
-        id: 3,
-        sender: 'bot',
-        timestamp: new Date('2024-01-15T10:02:00'),
-        type: 'product',
-        product: {
-          name: 'iPhone 15 Pro Max',
-          price: 1299,
-          image: 'https://images.unsplash.com/photo-1592750475338-74b7b21085ab?w=400',
-          shop: 'Apple Store',
-          rating: 4.8
-        }
-      }
-    ]
-  },
-  {
-    id: 2,
-    name: 'Samsung Electronics',
-    avatar: 'https://cdn-icons-png.flaticon.com/512/732/732221.png',
-    status: 'En ligne',
-    online: true,
-    lastMessage: 'Merci pour votre commande',
-    lastMessageTime: '09:15',
-    unreadCount: 0,
-    messages: [
-      {
-        id: 1,
-        text: 'Bonjour',
-        sender: 'user',
-        timestamp: new Date('2024-01-15T09:00:00')
-      },
-      {
-        id: 2,
-        text: 'Bonjour! Comment puis-je vous aider?',
-        sender: 'bot',
-        timestamp: new Date('2024-01-15T09:01:00')
-      }
-    ]
-  },
-  {
-    id: 3,
-    name: 'Nike Store',
-    avatar: 'https://cdn-icons-png.flaticon.com/512/732/732084.png',
-    status: 'Hors ligne',
-    online: false,
-    lastMessage: 'Nous vous répondrons bientôt',
-    lastMessageTime: 'Hier',
-    unreadCount: 1,
-    messages: [
-      {
-        id: 1,
-        text: 'Avez-vous des chaussures de sport?',
-        sender: 'user',
-        timestamp: new Date('2024-01-14T15:00:00')
-      }
-    ]
-  },
-  {
-    id: 4,
-    name: 'Adidas Official',
-    avatar: 'https://cdn-icons-png.flaticon.com/512/732/732190.png',
-    status: 'En ligne',
-    online: true,
-    lastMessage: 'Oui, nous avons en stock',
-    lastMessageTime: '08:45',
-    unreadCount: 0,
-    messages: [
-      {
-        id: 1,
-        text: 'Bonjour, avez-vous des baskets?',
-        sender: 'user',
-        timestamp: new Date('2024-01-15T08:30:00')
-      },
-      {
-        id: 2,
-        text: 'Oui, nous avons en stock',
-        sender: 'bot',
-        timestamp: new Date('2024-01-15T08:45:00')
-      }
-    ]
-  }
-])
+const isLoggedIn = ref(false)
+const user = ref(null)
+const conversations = ref([])
 
 const chatStore = useChatStore()
+
+// ✅ URL de ton backend (à adapter à ton API)
+const API_BASE_URL = 'https://sastock.com/api_adjame/chat.php'
 
 const activeConversation = computed(() => {
   return conversations.value.find(c => c.id === activeConversationId.value) || conversations.value[0]
@@ -375,78 +248,120 @@ const filteredConversations = computed(() => {
 })
 
 const totalUnreadCount = computed(() => {
-  return conversations.value.reduce((sum, conv) => sum + conv.unreadCount, 0)
+  return conversations.value.reduce((sum, conv) => sum + (conv.unreadCount || 0), 0)
 })
 
-watch(() => chatStore.chatMessages, (newMessages) => {
-  if (newMessages.length === 0) return
-  
-  const lastStoreMessage = newMessages[newMessages.length - 1]
-  
-  if (lastStoreMessage.type === 'product') {
-    try {
-      const productData = JSON.parse(lastStoreMessage.message)
-      
-      let conversation = conversations.value.find(c => c.name === chatStore.supplier.name)
-      
-      if (!conversation) {
-        const newConv = {
-          id: Date.now(),
-          name: chatStore.supplier.name,
-          avatar: chatStore.supplier.logo,
-          status: chatStore.supplier.status,
-          online: true,
-          lastMessage: 'Nouveau produit partagé',
-          lastMessageTime: formatTime(new Date()),
-          unreadCount: 0,
-          messages: []
-        }
-        conversations.value.unshift(newConv)
-        conversation = newConv
-      }
-      
-      const productMessage = {
-        id: lastStoreMessage.id,
-        sender: 'bot' as const,
-        timestamp: lastStoreMessage.timestamp,
-        type: 'product' as const,
-        product: {
-          name: productData.name,
-          price: productData.price,
-          image: productData.image,
-          shop: productData.shop,
-          rating: productData.rating
-        }
-      }
-      
-      const messageExists = conversation.messages.some(m => m.id === productMessage.id)
-      if (!messageExists) {
-        conversation.messages.push(productMessage)
-        conversation.lastMessage = 'Nouveau produit partagé'
-        conversation.lastMessageTime = formatTime(new Date())
-        
-        activeConversationId.value = conversation.id
-        scrollToBottom()
-      }
-    } catch (error) {
-      console.error('[v0] Error parsing product message:', error)
-    }
+// 🔹 Vérifie la connexion utilisateur
+const checkUserLogin = () => {
+  const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
+  if (!userRaw) {
+    isLoggedIn.value = false
+    user.value = null
+    return
   }
+
+  try {
+    const parsed = JSON.parse(userRaw)
+    if (parsed && parsed.id) {
+      user.value = parsed
+      isLoggedIn.value = true
+    } else {
+      isLoggedIn.value = false
+      user.value = null
+    }
+  } catch (err) {
+    console.error("❌ Erreur parsing utilisateur :", err)
+    isLoggedIn.value = false
+  }
+}
+
+// 🔹 Initialise les conversations si connecté
+const initChat = async () => {
+  if (!isLoggedIn.value) return
+  await chatStore.fetchSupplierSessions()
+  conversations.value = chatStore.conversations
+  if (chatStore.activeConversationId) {
+    activeConversationId.value = chatStore.activeConversationId
+  }
+}
+
+// 🔹 Synchronise automatiquement avec le store
+watch(() => chatStore.conversations, (newVal) => {
+  conversations.value = newVal
+}, { deep: true, immediate: true })
+
+// 🔹 Synchronise les messages entrants
+watch(() => chatStore.chatMessages, (newMessages) => {
+  if (!newMessages || newMessages.length === 0) return
+
+  let conversation = conversations.value.find(c => c.name === chatStore.supplier.name)
+  if (!conversation) {
+    conversation = {
+      id: Date.now(),
+      name: chatStore.supplier.name,
+      avatar: chatStore.supplier.logo,
+      status: chatStore.supplier.status,
+      online: true,
+      lastMessage: '',
+      lastMessageTime: formatTime(new Date()),
+      unreadCount: 0,
+      messages: []
+    }
+    conversations.value.unshift(conversation)
+  }
+
+  newMessages.forEach(msg => {
+    const exists = conversation.messages.some(m => m.id === msg.id)
+    if (exists) return
+
+    if (msg.type === 'text' || !msg.type) {
+      conversation.messages.push({
+        id: msg.id,
+        sender: msg.sender,
+        text: msg.message || msg.text || '',
+        timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date()
+      })
+    }
+
+    if (msg.type === 'product') {
+      try {
+        const productData = JSON.parse(msg.message)
+        conversation.messages.push({
+          id: msg.id,
+          sender: 'bot',
+          timestamp: msg.timestamp ? new Date(msg.timestamp) : new Date(),
+          type: 'product',
+          product: productData
+        })
+      } catch (error) {
+        console.error('❌ Erreur parsing message produit:', error)
+      }
+    }
+  })
+
+  const lastMsg = conversation.messages[conversation.messages.length - 1]
+  conversation.lastMessage = lastMsg?.text || 'Nouveau message'
+  conversation.lastMessageTime = formatTime(new Date())
+  activeConversationId.value = conversation.id
+
+  scrollToBottom()
 }, { deep: true })
 
+
 watch(() => chatStore.isDesktopChatOpen, (newValue) => {
-  if (newValue && !isOpen.value) {
-    isOpen.value = true
-  }
+  if (newValue && !isOpen.value) isOpen.value = true
 })
 
 watch(() => chatStore.isChatOpen, (newValue) => {
-  if (newValue && !isOpen.value) {
-    isOpen.value = true
-  }
+  if (newValue && !isOpen.value) isOpen.value = true
 })
 
 const toggleChat = () => {
+  if (!isLoggedIn.value) {
+    alert("Veuillez vous connecter pour accéder au chat.")
+    return
+  }
+
   isOpen.value = !isOpen.value
   if (!isOpen.value) {
     showSidebar.value = false
@@ -465,42 +380,61 @@ const toggleSidebar = () => {
   showSidebar.value = !showSidebar.value
 }
 
-const selectConversation = (id: number) => {
+const selectConversation = (id) => {
   activeConversationId.value = id
   const conv = conversations.value.find(c => c.id === id)
-  if (conv) {
-    conv.unreadCount = 0
-  }
+  if (conv) conv.unreadCount = 0
   showSidebar.value = false
   scrollToBottom()
 }
 
-const sendMessage = () => {
+const sendMessage = async () => {
   if (!newMessage.value.trim()) return
 
-  const message: Message = {
+  const sessionId = activeConversationId.value
+  const messageText = newMessage.value
+
+  // ✅ 1. Ajoute le message localement
+  const message = {
     id: Date.now(),
-    text: newMessage.value,
+    text: messageText,
     sender: 'user',
     timestamp: new Date()
   }
 
-  activeConversation.value.messages.push(message)
-  activeConversation.value.lastMessage = newMessage.value
-  activeConversation.value.lastMessageTime = formatTime(new Date())
+  const activeConv = conversations.value.find(c => c.id === sessionId)
+  if (activeConv) {
+    activeConv.messages.push(message)
+    activeConv.lastMessage = messageText
+    activeConv.lastMessageTime = formatTime(new Date())
+  }
 
   newMessage.value = ''
   scrollToBottom()
+
+  // ✅ 2. Envoie le message au backend
+  try {
+    await axios.post(`${API_BASE_URL}?action=send_message`, {
+      session_id: sessionId,
+      sender: 'user',
+      message: messageText
+    })
+
+    console.log('✅ Message envoyé au backend !')
+  } catch (error) {
+    console.error('❌ Erreur lors de l’envoi du message :', error)
+    alert("Erreur lors de l’envoi du message. Veuillez réessayer.")
+  }
 }
 
-const formatPrice = (price: number) => {
+const formatPrice = (price) => {
   return new Intl.NumberFormat('fr-FR', {
     style: 'currency',
     currency: 'EUR'
   }).format(price)
 }
 
-const formatTime = (timestamp: Date) => {
+const formatTime = (timestamp) => {
   return new Date(timestamp).toLocaleTimeString('fr-FR', {
     hour: '2-digit',
     minute: '2-digit'
@@ -515,11 +449,17 @@ const scrollToBottom = () => {
   })
 }
 
-watch(() => activeConversation.value.messages, scrollToBottom, { deep: true })
+watch(() => activeConversation.value?.messages, scrollToBottom, { deep: true })
 
-onMounted(() => {
+onMounted(async () => {
   chatStore.checkMobile()
   window.addEventListener('resize', chatStore.checkMobile)
+
+  checkUserLogin()
+  if (isLoggedIn.value) {
+    await chatStore.fetchSupplierSessions()
+    conversations.value = chatStore.conversations
+  }// ✅ Charge les sessions seulement si connecté
 })
 </script>
 

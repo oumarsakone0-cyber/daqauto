@@ -1,8 +1,8 @@
 import { useCurrencyStore } from '../stores/currency'
 
 // Taux et symboles
-const exchangeRates = { USD: 1, XOF: 600, EUR: 0.001524, NGN: 450 }
-const currencySymbols = { USD: '$', XOF: 'F CFA', EUR: '€', NGN: '₦' }
+const exchangeRates = { USD: 1, XOF: 600, EUR: 0.001524, NGN: 450, CNY: 7.1 } // ajout du chinois
+const currencySymbols = { USD: '$', XOF: 'F CFA', EUR: '€', NGN: '₦', CNY: '¥' } // ajout du chinois
 
 export function formatPrice(priceInUSD, options = { showFOB: false }) {
   const currencyStore = useCurrencyStore() // <-- pas de destructuration
@@ -14,7 +14,7 @@ export function formatPrice(priceInUSD, options = { showFOB: false }) {
   const converted = priceInUSD * rate
 
   let formatted = ''
-  if (['USD', 'EUR'].includes(cur)) {
+  if (['USD', 'EUR', 'CNY'].includes(cur)) { // inclut le chinois
     formatted = new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency: cur,

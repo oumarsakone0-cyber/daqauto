@@ -139,43 +139,40 @@
             </div>
 
             <!-- Updated language selector with MyMemory translation logic -->
+            <!-- Sélecteur de langue -->
             <div class="language-selector relative" :class="{ open: showLanguageDropdown }">
-              <div 
-                class="flex items-center cursor-pointer gap-2" 
-                @click="toggleLanguageDropdown"
-                :disabled="isTranslating"
-                :class="{ 'opacity-50': isTranslating }"
-              >
-                <img :src="currentLanguageDisplay.flag" :alt="currentLanguageDisplay.code" class="w-6 h-4" />
+              <div class="flex items-center cursor-pointer gap-2" @click="toggleLanguageDropdown">
+                <img :src="selectedLanguage.flag" :alt="selectedLanguage.code" class="w-6 h-4" />
                 <span v-if="isTranslating">⏳ Translating...</span>
-                <span v-else>{{ currentLanguageDisplay.label }}</span>
+                <span v-else>{{ selectedLanguage.Langue }}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <polyline points="6,9 12,15 18,9"/>
                 </svg>
               </div>
-
-              <!-- Translation Stats Tooltip -->
-              <div v-if="showStats" class="absolute top-full mt-2 right-0 bg-white rounded-lg shadow-xl border border-gray-200 p-3 text-xs text-gray-600 min-w-[200px] z-50">
-                <div class="font-semibold mb-1">📊 static Cache</div>
-                <div>✅ Cache translation: {{ cacheStats.cached }}</div>
-                <div>🔄 New translation: {{ cacheStats.new }}</div>
-                <div>💾 API saving: {{ cacheStats.saved }}%</div>
-              </div>
-
-              <!-- Original Dropdown (hidden when translating) -->
-              <div 
-                v-if="showLanguageDropdown && !isTranslating" 
-                class="absolute mt-2 bg-white shadow-md rounded-lg w-40 z-50"
-              >
+              
+              <div v-if="showLanguageDropdown && !isTranslating" class="absolute mt-2 bg-white shadow-md rounded-lg w-40 z-50">
                 <ul class="divide-y divide-gray-100">
-                  <li 
-                    v-for="lang in languages" 
-                    :key="lang.code" 
-                    @click="selectLanguageWithTranslation(lang)"
-                    class="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100"
-                  >
+                  <li v-for="lang in uniqueLanguages" :key="lang.code" @click="selectLanguage(lang)" class="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100">
                     <img :src="lang.flag" :alt="lang.code" class="w-6 h-4" />
-                    <span>{{ lang.label }}</span>
+                    <span>{{ lang.Langue }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Sélecteur de devise (NOUVEAU) -->
+            <div class="currency-selector relative ml-4" :class="{ open: showCurrencyDropdown }">
+              <div class="flex items-center cursor-pointer gap-2" @click="toggleCurrencyDropdown">
+                <span>{{ selectedCurrency }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"/>
+                </svg>
+              </div>
+              
+              <div v-if="showCurrencyDropdown" class="absolute mt-2 bg-white shadow-md rounded-lg w-32 z-50">
+                <ul class="divide-y divide-gray-100">
+                  <li v-for="curr in availableCurrencies" :key="curr" @click="selectCurrency(curr)" class="px-3 py-2 cursor-pointer hover:bg-gray-100">
+                    {{ curr }}
                   </li>
                 </ul>
               </div>
@@ -190,15 +187,30 @@
               <span>Mon Dashboard</span>
             </div> -->
             <div class="user-account">
-              <svg v-if="currentUser && !currentUser.profile_image" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <img v-if="currentUser && currentUser.profile_image" :src="currentUser.profile_image" alt="Profile" class="h-8 w-8 rounded-full" />
-              <span v-if="currentUser && currentUser.email">
-                 {{ currentUser.full_name }}
-              </span>
-              <span @click="goToAuthentication" v-else>Login / Register</span>
+              <div class="flex items-center">
+                <!-- Si l'utilisateur n'a pas de photo -->
+                <svg v-if="!currentUser?.picture || currentUser.picture === '0'" 
+                    width="18" height="18" viewBox="0 0 24 24" 
+                    fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                  <circle cx="12" cy="7" r="4"/>
+                </svg>
+
+                <!-- Si l'utilisateur a une photo -->
+                <img v-else 
+                    :src="currentUser.picture" 
+                    alt="Profile" 
+                    class="h-8 w-8 rounded-full object-cover" />
+              </div>
+              <div @click="goToProfile" v-if="currentUser">
+                
+                <span v-if="currentUser && currentUser.email">
+                  {{ currentUser.full_name }}
+                </span>
+              </div>
+              <div v-else>
+                 <span @click="goToAuthentication">Login / Register</span>
+              </div>
             </div>
             
             <div class="cart">
@@ -740,6 +752,8 @@ const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
 // Translation states
 const currentLanguage = ref('fr')
 const isTranslating = ref(false)
+const showCurrencyDropdown = ref(false)
+const selectedCurrency = ref('XOF')
 const showStats = ref(false)
 const originalTexts = new Map()
 const translationCache = new Map()
@@ -778,16 +792,17 @@ const selectedLanguage = ref({
   code: 'FR',
   currency: 'XOF',
   label: 'FR / F CFA',
-  flag: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png'
+  flag: 'https://flagcdn.com/w20/us.png'
 })
 
 const languages = ref([
   {
-    code: 'FR',
-    currency: 'EUR',
+    code: 'FR-XOF',
+    langCode: 'FR',
     Langue: 'Francais',
-    label: 'FR / EURO',
-    flag: 'https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png'
+    currency: 'XOF',
+    label: 'FR / XOF',
+    flag: 'https://flagcdn.com/w20/ci.png'
   },
   {
     code: 'EN-USD',
@@ -799,20 +814,18 @@ const languages = ref([
   },
   {
     code: 'EN-NGN',
-    langCode: 'EN',
-    Langue: 'English',
     currency: 'NGN',
     label: 'EN / NGN',
-    flag: 'https://upload.wikimedia.org/wikipedia/commons/7/79/Flag_of_Nigeria.svg'
   },
   {
-    code: 'FR-XOF',
-    langCode: 'FR',
-    Langue: 'Francais',
-    currency: 'XOF',
-    label: 'FR / XOF',
-    flag: 'https://flagcdn.com/w20/ci.png'
+    code: 'ZH-CNY',
+    langCode: 'ZH',
+    Langue: '中文 (Chinois)',
+    currency: 'CNY',
+    label: 'ZH / CNY',
+    flag: 'https://flagcdn.com/w20/cn.png'
   }
+  
 ])
 
 // === États pour la version mobile ===
@@ -875,11 +888,23 @@ const searchSuggestions = ref([
 
 const router = useRouter(); // Declare router variable
 
-const currentLanguageDisplay = computed(() => {
-  if (currentLanguage.value === 'en') {
-    return languages.value.find(lang => lang.code === 'EN') || selectedLanguage.value
-  }
-  return selectedLanguage.value
+const uniqueLanguages = computed(() => {
+  const seen = new Set()
+  return languages.value.filter(lang => {
+    // 🔹 Ignorer si pas de langue définie
+    if (!lang.langCode || !lang.Langue) return false
+
+    if (seen.has(lang.code)) return false
+    seen.add(lang.code)
+    return true
+  })
+})
+
+// Devises disponibles selon la langue sélectionnée
+const availableCurrencies = computed(() => {
+  // Récupérer toutes les devises uniques sans filtrer par langue
+  const allCurrencies = languages.value.map(lang => lang.currency)
+  return [...new Set(allCurrencies)] // Supprimer les doublons
 })
 
 const getResultDisplayName = (result) => {
@@ -1034,7 +1059,7 @@ const translatePage = async () => {
   
   if (textsToTranslate.length > 0) {
     console.log('[v0] Translating', textsToTranslate.length, 'texts')
-    const translations = await translateWithMyMemory(textsToTranslate, 'fr', 'en')
+    const translations = await translateWithMyMemory(textsToTranslate, 'fr', targetLang)
     
     let processedCount = 0
     textNodes.forEach((node, index) => {
@@ -1084,30 +1109,37 @@ const toggleLanguageWithTranslation = async () => {
   showLanguageDropdown.value = false
 }
 
-const selectLanguageWithTranslation = async (langOption) => {
-  languet.value = langOption
+// Nouvelle fonction pour sélectionner la langue
+const selectLanguage = async (langOption) => {
   if (isTranslating.value) return
-
-  // 1️⃣ Gestion de la devise AVANT la langue
-  if (langOption.currency) {
-    currencyStore.currency = langOption.currency
-    localStorage.setItem('preferred-currency', langOption.currency)
-  }
-
-  // 2️⃣ Gestion de la langue
+  
   selectedLanguage.value = langOption
   showLanguageDropdown.value = false
-
-  if (langOption.langCode === 'EN' && currentLanguage.value === 'fr') {
-    currentLanguage.value = 'en'
-    await translatePage()
-  } else if (langOption.langCode !== 'EN' && currentLanguage.value === 'en') {
+  
+  // Gestion de la traduction
+  if (langOption.langCode !== 'FR' && currentLanguage.value === 'fr') {
+    currentLanguage.value = langOption.langCode.toLowerCase()
+    await translatePage(langOption.langCode.toLowerCase()) // Passer la langue cible
+  } else if (langOption.langCode === 'FR' && currentLanguage.value !== 'fr') {
     currentLanguage.value = 'fr'
     restoreOriginalTexts()
   }
-
+  
   localStorage.setItem('preferred-language', currentLanguage.value)
   localStorage.setItem('selected-language', JSON.stringify(langOption))
+}
+
+// Nouvelle fonction pour sélectionner la devise
+const selectCurrency = (currency) => {
+  selectedCurrency.value = currency
+  currencyStore.currency = currency
+  showCurrencyDropdown.value = false
+  localStorage.setItem('preferred-currency', currency)
+}
+
+// Nouveaux toggles
+const toggleCurrencyDropdown = () => {
+  showCurrencyDropdown.value = !showCurrencyDropdown.value
 }
 
 
@@ -1617,6 +1649,10 @@ const mobileMenuBack = () => {
   }
 };
 
+const goToProfile = () => {
+  router.push('/profile_client')
+};  
+
 // Lifecycle - Load categories on component mount
 onMounted(async () => {
   console.log('[v0] Navbar with MyMemory Translation mounted')
@@ -1631,8 +1667,11 @@ onMounted(async () => {
       id: user.id,
       full_name: user.full_name,
       email: user.email,
+      picture: user.picture,
+      phone: user.phone,
       boutiques: user.boutiques || []
     }
+    console.log('[v0] Current user:', currentUser.value)
   const savedSelectedLang = localStorage.getItem('selected-language')
   
   if (savedSelectedLang) {

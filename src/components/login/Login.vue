@@ -148,6 +148,24 @@
               </svg>
               {{ isLoading ? 'Loging...' : 'Login' }}
             </button>
+            
+            <hr>
+
+            <GoogleLogin
+              :callback="handleGoogleLogin"
+              :clientId="'193293694483-giv3vlq8iiod8i2ju6vusod77ert1p06.apps.googleusercontent.com'"
+              class="google-login-button"
+            >
+              <div v-if="loading">
+                <ActivityIndicator size="small" color="orange" />
+                <span class="ml-3">Signing in...</span>
+              </div>
+              <div v-else class="button-content">
+                <img :src="logo.google" alt="Google logo" class="button-icon" />
+                <span class="button-text">Continue with Google</span>
+              </div>
+            </GoogleLogin>
+            
           </form>
   
           <!-- Divider -->
@@ -255,12 +273,14 @@
   </template>
   
   <script setup>
+  import { ElNotification, ElLoading } from 'element-plus'
   import { ref, reactive, computed, onMounted } from 'vue'
   import { useRouter } from 'vue-router'
-  import { ElNotification } from 'element-plus'
   import { usersApi } from '../../services/api.js'
   
   const router = useRouter()
+
+  const loading = ref(false)
   
   // Reactive data
   const loginData = reactive({
@@ -268,6 +288,11 @@
     password: '',
     rememberMe: false
   })
+
+  const logo = ref({
+  facebook: 'https://upload.wikimedia.org/wikipedia/commons/5/51/Facebook_f_logo_%282019%29.svg',
+  google: 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Google_%22G%22_logo.svg/768px-Google_%22G%22_logo.svg.png'
+})
   
   const forgotPasswordData = reactive({
     identifier: ''
@@ -355,6 +380,8 @@
           id: userData.id,
           full_name: userData.full_name,
           email: userData.email,
+          picture: userData.picture,
+          phone: userData.phone,
           boutiques: userData.boutiques
         }))
   
@@ -403,6 +430,155 @@
       isLoading.value = false
     }
   }
+
+const handleGoogleLogin = async (response) => {
+  const loadingInstance = ElLoading.service({
+    lock: true,
+    text: 'Connexion en cours...',
+    background: 'rgba(0, 0, 0, 0.7)',
+  })
+  loading.value = true
+
+  try {
+    console.log('Réponse Google:', response)
+
+    const code = response.code
+    console.log('Code Google:', code)
+
+    // 1️⃣ Échanger le code contre un access_token
+    const tokenRes = await fetch('https://oauth2.googleapis.com/token', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams({
+        code,
+        client_id: '193293694483-giv3vlq8iiod8i2ju6vusod77ert1p06.apps.googleusercontent.com',
+        client_secret: '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',
+        redirect_uri: 'http://localhost:5173', // adapter pour prod
+        grant_type: 'authorization_code',
+      }),
+    })
+
+    if (!tokenRes.ok) throw new Error('Erreur lors de l\'obtention du token Google')
+    const tokenData = await tokenRes.json()
+    const accessToken = tokenData.access_token
+    console.log("Token d'accès:", accessToken)
+
+    // 2️⃣ Récupérer le profil utilisateur Google
+    const userProfileRes = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    if (!userProfileRes.ok) throw new Error('Erreur lors de la récupération du profil utilisateur Google')
+    const userProfile = await userProfileRes.json()
+    userProfile.network = 'Google'
+    console.log('Profil utilisateur Google:', userProfile)
+
+    // 3️⃣ Envoyer le profil au backend
+    const backendRes = await fetch('https://sastock.com/api_adjame/users.php?action=login_google', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(userProfile),
+    })
+
+    if (!backendRes.ok) throw new Error('Erreur lors de la connexion au backend')
+    const backendData = await backendRes.json()
+    console.log('Réponse backend:', backendData)
+
+    if (backendData.success) {
+      const userData = backendData.data
+
+      // Choisir le stockage (localStorage / sessionStorage)
+      const storage = localStorage // tu peux gérer rememberMe si tu veux
+      storage.setItem('authToken', userData.session_token)
+      storage.setItem('user', JSON.stringify({
+        id: userData.id,
+        full_name: userData.full_name,
+        email: userData.email,
+        boutiques: userData.boutiques || [],
+        picture: userData.picture || '',
+      }))
+
+      //closeLogin()
+      //store.commit('ConnexionAgent', userData)
+      //router.push({ path: '/dashboard_mobile' })
+
+      ElNotification({
+        title: 'Succès',
+        message: 'Connexion réussie via Google.',
+        type: 'success',
+      })
+
+      setTimeout(() => {
+            router.push('/')
+        }, 1500)
+    } else {
+      ElNotification({
+        title: 'Erreur',
+        message: backendData.error || 'Impossible de se connecter via Google.',
+        type: 'error',
+      })
+    }
+
+  } catch (error) {
+    console.error('Erreur lors de la connexion Google:', error)
+    ElNotification({
+      title: 'Erreur',
+      message: 'Une erreur est survenue lors de la connexion Google.',
+      type: 'error',
+    })
+  } finally {
+    loading.value = false
+    loadingInstance.close()
+  }
+}
+
+const getUserProfile = async (accessToken) => {
+  try {
+    const res = await fetch('https://www.googleapis.com/oauth2/v3/userinfo', {
+      headers: { Authorization: `Bearer ${accessToken}` },
+    })
+    if (!res.ok) throw new Error('Erreur lors de la récupération du profil')
+    const data = await res.json()
+    return data
+  } catch (error) {
+    console.error('Erreur lors de la récupération du profil utilisateur:', error)
+    return null
+  }
+}
+
+const handleCredentialResponse = async (response) => {
+  try {
+    // Le token JWT Google
+    const credential = response.credential
+    console.log('JWT Google reçu:', credential)
+
+    // Envoi ce token à ton backend avec fetch
+    const backendRes = await fetch('https://tonserveur.com/api/google-login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ token: credential }),
+    })
+
+    if (!backendRes.ok) {
+      throw new Error('Erreur réseau lors de la connexion Google')
+    }
+
+    const backendData = await backendRes.json()
+
+    if (backendData.success) {
+      // Connexion réussie
+      console.log('Connexion réussie:', backendData.user)
+
+      // Exemple : stockage local
+      localStorage.setItem('authToken', backendData.user.session_token)
+      localStorage.setItem('user', JSON.stringify(backendData.user))
+    } else {
+      console.error('Erreur backend:', backendData)
+    }
+  } catch (error) {
+    console.error('Erreur Google Login:', error)
+  }
+}
+
   
 const handleForgotPassword = async () => {
   const email = forgotPasswordData.identifier?.trim()
@@ -479,10 +655,60 @@ const handleForgotPassword = async () => {
     if (token) {
      // router.push('/boutique-admin/dashboard')
     }
+    google.accounts.id.initialize({
+    client_id: '193293694483-giv3vlq8iiod8i2ju6vusod77ert1p06.apps.googleusercontent.com',
+    callback: handleCredentialResponse
+    })
+    google.accounts.id.renderButton(
+      document.getElementById('googleSignInDiv'),
+      { theme: 'outline', size: 'large' }
+    )
   })
   </script>  
   
   <style scoped>
+.google-login-button {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrage horizontal */
+  width: 100%;
+  height: 50px;
+  background-color: #ffffff;
+  border: 2px solid #000000;
+  border-radius: 12px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+  margin-bottom: 10px;
+}
 
+.google-login-button:hover {
+  background-color: #f1f1f1;
+}
+
+.google-login-button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
+}
+
+.button-content {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* Centrage horizontal */
+  width: 100%; /* Prend toute la largeur du bouton */
+  padding-top: 8px;
+}
+
+.button-icon {
+  height: 30px;
+  width: 30px;
+  margin-right: 10px;
+}
+
+.button-text {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: bold;
+  color: #000000;
+  font-size: 15px;
+}
   
   </style>

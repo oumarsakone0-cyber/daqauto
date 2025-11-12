@@ -1,14 +1,14 @@
 <template>
   <div class="order-validation-page">
     <div class="page-header">
-      <div class="container">
+      <div class="container" style="margin-top: 40px">
         <button class="back-btn" @click="goBack">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
           Retour
         </button>
-        <h1 class="page-title">Validation de la commande</h1>
+        <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">Validation de la commande</h1>
       </div>
     </div>
 
@@ -360,6 +360,7 @@
 import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { productsApi } from '../../services/api.js'
+import { formatPrice } from '../../services/formatPrice'
 
 const router = useRouter()
 const route = useRoute()
@@ -444,10 +445,6 @@ const canSubmitOrder = computed(() => {
          orderForm.value.adresse &&
          quantity.value > 0
 })
-
-const formatPrice = (price) => {
-  return Number(price).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
-}
 
 const increaseQuantity = () => {
   quantity.value++
@@ -702,6 +699,7 @@ onMounted(() => {
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 16px;
+  display: flex
 }
 
 .back-btn {
@@ -725,7 +723,7 @@ onMounted(() => {
 }
 
 .page-title {
-  font-size: 28px;
+  font-size: 22px;
   font-weight: 600;
   color: #333;
   margin: 0;
@@ -1324,7 +1322,7 @@ onMounted(() => {
 
 @media (max-width: 768px) {
   .page-title {
-    font-size: 22px;
+    font-size: 18px;
   }
 
   .product-info {

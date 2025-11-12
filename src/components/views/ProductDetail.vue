@@ -811,14 +811,41 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   // Méthodes d'actions
-  const toggleFavorite = () => {
-    isFavorite.value = !isFavorite.value
-    displayNotification(
-      isFavorite.value ? 'success' : 'info',
-      isFavorite.value ? 'Added to favorites' : 'Removed to favorites',
-      isFavorite.value ? 'Product addedà to your favorites.' : 'Produit remove to your favorites.'
-    )
+  const toggleFavorite = async (idProduit) => {
+  // On inverse l'état local
+  isFavorite.value = !isFavorite.value;
+
+  try {
+    const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+    const user = JSON.parse(userData)
+    // Préparer les données pour l'API
+    const likeData = { id_produit: product.value.id, user_id: user.id };
+
+    // Appeler l'API pour ajouter ou retirer le like
+    const result = await productsApi.addLike(likeData);
+
+    if (result.success) {
+      // Notification selon le nouvel état
+      displayNotification(
+        isFavorite.value ? 'success' : 'info',
+        isFavorite.value ? 'Added to favorites' : 'Removed from favorites',
+        isFavorite.value
+          ? 'Product added to your favorites.'
+          : 'Product removed from your favorites.'
+      );
+    } else {
+      // Si erreur backend, on remet l'état à l'inverse
+      isFavorite.value = !isFavorite.value;
+      displayNotification('error', 'Error', result.error || 'Impossible to update favorites.');
+    }
+  } catch (error) {
+    console.error('Erreur toggleFavorite:', error);
+    // Annuler le changement local en cas d'erreur
+    isFavorite.value = !isFavorite.value;
+    displayNotification('error', 'Error', 'Une erreur est survenue lors de la mise à jour.');
   }
+};
+
   
   const addToCompare = () => {
     displayNotification('success', 'Added to benchmark', 'Produit addedon benchmark list.')

@@ -5,7 +5,10 @@ import ChatApiClient from '../services/chat-api-client'
 export const useChatStore = defineStore('chat', () => {
   const isChatOpen = ref(false)
   const isDesktopChatOpen = ref(false)
+  const activeProductId = ref(null)
+  const activeConversationId = ref(null)
   const chatMessages = ref([])
+  const conversations = ref([])
   const unreadCount = ref(0)
   const isMobile = ref(false)
   const chatClient = ref(new ChatApiClient())
@@ -14,7 +17,7 @@ export const useChatStore = defineStore('chat', () => {
 
   const supplier = ref({
     name: 'Support Client DAQ AUTO',
-    logo: '/placeholder.svg?height=40&width=40',
+    logo: 'https://static.vecteezy.com/ti/vecteur-libre/p1/5005788-user-icon-in-trendy-flat-style-isolated-on-grey-background-user-symbol-for-your-web-site-design-logo-app-ui-vector-illustration-eps10-gratuit-vectoriel.jpg',
     status: 'En ligne'
   })
 
@@ -22,7 +25,7 @@ export const useChatStore = defineStore('chat', () => {
     isMobile.value = window.innerWidth < 768
   }
 
-  // ✅ Injecte dynamiquement le produit comme "carte message" dans le chat
+  // 🔹 Crée un message "carte produit" pour affichage spécial
   const sendProductIntroMessage = (product) => {
     if (!product) return
 
@@ -37,23 +40,179 @@ export const useChatStore = defineStore('chat', () => {
       }),
       sender: 'bot',
       timestamp: new Date(),
-      type: 'product' // type personnalisé pour affichage spécial
+      type: 'product'
     }
 
-    chatMessages.value.push(productMessage)
+    addMessageToConversation(activeConversationId.value, productMessage)
   }
 
-  // ✅ Définit le fournisseur et envoie automatiquement un message produit
-  const setSupplier = (product) => {
-    supplier.value = {
-      name: product?.boutique_name || 'Fournisseur inconnu',
-      logo: product?.primary_image || '/placeholder.svg?height=40&width=40',
-      status: 'En ligne'
+  // 🔹 Ajoute un message à la bonne conversation
+  const addMessageToConversation = (conversationId, msg) => {
+    if (!conversationId || !msg) return
+
+    const conversation = conversations.value.find(c => c.id === conversationId)
+    if (!conversation) return console.warn("Session non trouvée", conversationId)
+
+    const exists = conversation.messages.some(m => m.id === msg.id)
+    if (exists) return
+
+    conversation.messages.push({
+      id: msg.id,
+      message: msg.text || msg.message,
+      sender: msg.sender,
+      timestamp: new Date(msg.timestamp || msg.created_at),
+      type: msg.type || 'text',
+      product: msg.product || null
+    })
+
+    // Met à jour dernier message
+    const lastMsg = conversation.messages[conversation.messages.length - 1]
+    conversation.lastMessage = lastMsg?.text || lastMsg?.message || "Nouveau message"
+    conversation.lastMessageTime = lastMsg?.timestamp || new Date()
+
+    // Si c'est la session active, met à jour chatMessages
+    if (activeConversationId.value === conversationId) {
+      chatMessages.value = conversation.messages
+    }
+  }
+
+  // 🔹 Envoie fournisseur + user + produit au backend
+  const sendSupplierToBackend = async (product, user) => {
+    const payload = {
+      supplier_id: product.boutique_id,
+      supplier_name: product.boutique_name,
+      user_id: user.id,
+      user_name: user.name,
+      user_email: user.email,
+      product_id: product.id,
+      product_name: product.name,
+      product_price: product.unit_price,
+      product_image: product.primary_image,
+      product_rating: product.rating
     }
 
-    sendProductIntroMessage(product)
+    try {
+      const response = await fetch('https://sastock.com/api_adjame/chat.php?action=create_session_chat', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+      const data = await response.json()
+      if (data.session_id) {
+        localStorage.setItem("chat_session_id", data.session_id)
+        chatClient.value.sessionId = data.session_id
+        activeProductId.value = product.id
+      }
+      await fetchSupplierSessions()
+      return data
+    } catch (error) {
+      console.error('❌ Erreur backend:', error)
+      throw error
+    }
   }
 
+  // 🔹 Récupère toutes les sessions pour l'utilisateur
+  const fetchSupplierSessions = async () => {
+    const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
+    if (!userRaw) return console.error("❌ Aucun utilisateur connecté")
+
+    let currentUser
+    try {
+      currentUser = JSON.parse(userRaw)
+    } catch (err) {
+      return console.error("❌ Impossible de parser l'utilisateur :", err)
+    }
+
+    try {
+      const random = Math.floor(Math.random() * 1000000)
+      const response = await fetch(
+        `https://sastock.com/api_adjame/chat.php?action=get_sessions_chat&user_id=${currentUser.id}&_=${random}`
+      )
+      const data = await response.json()
+
+      if (!data.success || !Array.isArray(data.sessions) || data.sessions.length === 0) {
+        conversations.value = []
+        return
+      }
+
+      // 🧩 Crée toutes les conversations
+      conversations.value = data.sessions.map(session => ({
+        id: session.id,
+        name: session.supplier_name || "Fournisseur inconnu",
+        avatar: session.product_image || "/placeholder.svg?height=40&width=40",
+        status: "En ligne",
+        online: true,
+        lastMessage: session.messages?.length
+          ? session.messages[session.messages.length - 1].text
+          : "Aucun message",
+        lastMessageTime: session.messages?.length
+          ? session.messages[session.messages.length - 1].timestamp
+          : session.created_at,
+        messages: (session.messages || []).map(msg => ({
+          id: msg.id,
+          message: msg.text,
+          sender: msg.sender,
+          timestamp: new Date(msg.timestamp || msg.created_at),
+          type: msg.product?.id ? "product" : "text",
+          product: msg.product || null
+        }))
+      }))
+
+      // Active automatiquement la dernière session
+      if (conversations.value.length > 0 && !activeConversationId.value) {
+        setActiveConversation(conversations.value[0].id)
+      }
+
+    } catch (error) {
+      console.error("❌ Erreur récupération sessions:", error)
+    }
+  }
+
+  // 🔹 Définir la conversation active
+  const setActiveConversation = (conversationId) => {
+    activeConversationId.value = conversationId
+    const conversation = conversations.value.find(c => c.id === conversationId)
+    if (conversation) {
+      chatMessages.value = conversation.messages
+      supplier.value = {
+        name: conversation.name,
+        logo: conversation.avatar,
+        status: conversation.status
+      }
+    }
+  }
+
+  // 🔹 Définit le fournisseur et envoie le message produit
+  const setSupplier = async (product) => {
+    const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
+    if (!userRaw) return console.error("❌ Aucun utilisateur connecté")
+
+    let currentUser
+    try {
+      currentUser = JSON.parse(userRaw)
+    } catch (err) {
+      return console.error("❌ Impossible de parser l'utilisateur :", err)
+    }
+
+    if (!currentUser.id) return console.error("❌ L'utilisateur n'a pas d'ID :", currentUser)
+
+    try {
+      await sendSupplierToBackend(product, currentUser)
+      activeProductId.value = product.id
+
+      supplier.value = {
+        name: product?.boutique_name || 'Fournisseur inconnu',
+        logo: product?.primary_image || '/placeholder.svg?height=40&width=40',
+        status: 'En ligne'
+      }
+
+      sendProductIntroMessage(product)
+    } catch (error) {
+      console.error('❌ setSupplier failed:', error)
+    }
+  }
+
+  // 🔹 Initialise le chat avec message de bienvenue
   const initializeChat = async () => {
     try {
       const result = await chatClient.value.initializeChat()
@@ -87,30 +246,108 @@ export const useChatStore = defineStore('chat', () => {
     }
   }
 
-  const loadMessages = async () => {
-    try {
-      const result = await chatClient.value.getMessages()
-      if (result.success && result.messages) {
-        chatMessages.value = result.messages.map(msg => ({
+  const initChatStore = async () => {
+    checkMobile()
+    await fetchSupplierSessions()  // charge les sessions existantes
+    startPolling() // si tu veux récupérer les nouveaux messages en continu
+  }
+  
+  const updateConversationsIfChanged = (serverSessions) => {
+  serverSessions.forEach(serverSession => {
+    const conversation = conversations.value.find(c => c.id == serverSession.id)
+
+    const serverMessagesCount = serverSession.messages?.length || 0
+    const localMessagesCount = conversation?.messages?.length || 0
+
+    // Si le nombre de messages diffère, on met à jour
+    if (!conversation) {
+      // Nouvelle session => ajouter
+      conversations.value.push({
+        id: serverSession.id,
+        name: serverSession.supplier_name || "Fournisseur inconnu",
+        avatar: serverSession.product_image || "/placeholder.svg?height=40&width=40",
+        status: "En ligne",
+        online: true,
+        lastMessage: serverSession.messages?.length
+          ? serverSession.messages[serverSession.messages.length - 1].message
+          : "Aucun message",
+        lastMessageTime: serverSession.messages?.length
+          ? serverSession.messages[serverSession.messages.length - 1].timestamp
+          : serverSession.created_at,
+        messages: (serverSession.messages || []).map(msg => ({
           id: msg.id,
           message: msg.message,
           sender: msg.sender,
-          timestamp: new Date(msg.timestamp || msg.created_at)
+          timestamp: new Date(msg.timestamp || msg.created_at),
+          type: msg.product?.id ? "product" : "text",
+          product: msg.product || null
         }))
+      })
+    } else if (serverMessagesCount !== localMessagesCount) {
+      // Mise à jour des messages
+      conversation.messages = (serverSession.messages || []).map(msg => ({
+        id: msg.id,
+        message: msg.message,
+        sender: msg.sender,
+        timestamp: new Date(msg.timestamp || msg.created_at),
+        type: msg.product?.id ? "product" : "text",
+        product: msg.product || null
+      }))
+
+      // Mettre à jour le dernier message
+      const lastMsg = conversation.messages[conversation.messages.length - 1]
+      conversation.lastMessage = lastMsg?.message || "Nouveau message"
+      conversation.lastMessageTime = lastMsg?.timestamp || new Date()
+
+      // Si c'est la session active, mettre à jour chatMessages
+      if (activeConversationId.value === conversation.id) {
+        chatMessages.value = conversation.messages
       }
-    } catch (e) {
-      console.error(e)
+    }
+  })
+}
+
+
+  const sendMessage = async (text) => {
+    if (!text || !text.trim()) return
+
+    const newMessage = {
+      id: Date.now(),
+      message: text,
+      sender: 'user',
+      timestamp: new Date()
+    }
+
+    chatMessages.value.push(newMessage)
+    addMessageToConversation(activeConversationId.value, newMessage)
+
+    try {
+      await chatClient.value.sendMessage(text, 'user', activeProductId.value)
+    } catch (error) {
+      console.error("❌ Erreur lors de l’envoi du message :", error)
     }
   }
 
-  const startPolling = () => {
-    if (pollingInterval) clearInterval(pollingInterval)
-    pollingInterval = setInterval(() => {
-      if (isChatOpen.value || isDesktopChatOpen.value) {
-        loadMessages()
-      }
-    }, 2000)
+  // 🔹 Polling automatique
+
+  const loadMessages = async () => {
+  try {
+    const result = await chatClient.value.getMessages()
+    if (result.success && result.sessions) {
+      // Compare et met à jour seulement si nécessaire
+      updateConversationsIfChanged(result.sessions)
+    }
+  } catch (e) {
+    console.error(e)
   }
+}
+
+const startPolling = () => {
+  if (pollingInterval) clearInterval(pollingInterval)
+  pollingInterval = setInterval(() => {
+    if (isChatOpen.value || isDesktopChatOpen.value) loadMessages()
+  }, 2000)
+}
 
   const stopPolling = () => {
     if (pollingInterval) {
@@ -119,14 +356,15 @@ export const useChatStore = defineStore('chat', () => {
     }
   }
 
-  const openChat = () => {
+  const openChat = async () => {
     if (isMobile.value) {
       isChatOpen.value = true
       unreadCount.value = 0
-      if (chatMessages.value.length === 0) initializeChat()
+      if (chatMessages.value.length === 0) await initializeChat()
+      await fetchSupplierSessions()
       startPolling()
     } else {
-      openDesktopChat()
+      await openDesktopChat()
     }
   }
 
@@ -135,10 +373,11 @@ export const useChatStore = defineStore('chat', () => {
     if (!isDesktopChatOpen.value) stopPolling()
   }
 
-  const openDesktopChat = () => {
+  const openDesktopChat = async () => {
     isDesktopChatOpen.value = true
     unreadCount.value = 0
-    if (chatMessages.value.length === 0) initializeChat()
+    if (chatMessages.value.length === 0) await initializeChat()
+    await fetchSupplierSessions()
     startPolling()
   }
 
@@ -154,12 +393,17 @@ export const useChatStore = defineStore('chat', () => {
     unreadCount,
     isMobile,
     supplier,
+    conversations,
+    activeConversationId,
     checkMobile,
     openChat,
     closeChat,
     openDesktopChat,
     closeDesktopChat,
     setSupplier,
-    sendProductIntroMessage
+    sendProductIntroMessage,
+    fetchSupplierSessions,
+    sendMessage,
+    setActiveConversation
   }
 })

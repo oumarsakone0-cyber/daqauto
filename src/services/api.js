@@ -827,12 +827,44 @@ export const productsApi = {
   },
 
   /**
+ * Ajouter un like à un produit
+ * @param {Object} likeData - Données du like { id_produit, user }
+ * @returns {Promise} Réponse du backend
+ */
+async addLike(likeData) {
+  try {
+    const response = await apiClient.post("/products.php", likeData, {
+      params: { action: "addProductLike" },
+    });
+    return response.data;
+  } catch (error) {
+    throw this.handleError(error, "Erreur lors de l'ajout du like");
+  }
+},
+
+/**
+ * Récupérer les favoris d'un utilisateur
+ * @param {number|string} userId - ID de l'utilisateur
+ * @returns {Promise} Liste des favoris
+ */
+async getFavorites(userId) {
+  try {
+    const response = await apiClient.post("/products.php", { user: userId }, {
+      params: { action: "get_my_favorite" }
+    });
+    return response.data;
+  } catch (error) {
+    throw this.handleError(error, "Erreur lors de la récupération des favoris");
+  }
+},
+
+  /**
    * Rechercher des produits
    * @param {string} query - Terme de recherche
    * @param {Object} filters - Filtres additionnels
    * @returns {Promise} Résultats de recherche
    */
-  async searchProducts(query, filters = {}) {
+  async searchProducts(query, filters = {}) {y
     try {
       // Ajouter boutique_id et user_id aux paramètres
       const baseParams = boutiqueUtils.buildBaseParams()

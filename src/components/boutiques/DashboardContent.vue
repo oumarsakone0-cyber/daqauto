@@ -1100,6 +1100,15 @@
       
     />
 
+    <DuplicateProductModal 
+      v-if="showDuplicateProductModal" 
+      :boutique-id="currentBoutique?.id"
+      :dataduplicate="DataDuplicate"
+      :user-id="currentUser?.id"
+      @close="showDuplicateProductModal = false"
+      @save="handleAddProduct"
+    />
+
     <ViewProductModal 
       v-if="showViewModal" 
       :product="selectedProduct"
@@ -1134,6 +1143,7 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 // Dans les imports
 import Navbar from './Navbar.vue'
 import AddProductModal from './AddProductModal.vue'
+import DuplicateProductModal from './DuplicateProductModal.vue'
 import ViewProductModal from './ViewProductModal.vue'
 import EditProductModal from './EditProductModal.vue'
 
@@ -1183,6 +1193,8 @@ const productBoosts = ref([])
 const boutiqueBoosts = ref([])
 
 const showAddProductModal = ref(false)
+const showDuplicateProductModal = ref(false)
+const DataDuplicate = ref(false)
 const showViewModal = ref(false)
 const showEditModal = ref(false)
 const showExportDropdown = ref(false)
@@ -2020,36 +2032,9 @@ const proceedToPayment = async () => {
 }
 
 const duplicateProduct = async (product) => {
-  try {
-    const duplicatedData = {
-      name: product.name + ' (Copie)',
-      description: product.description,
-      category_id: product.category_id,
-      subcategory_id: product.subcategory_id,
-      unit_price: product.unit_price,
-      wholesale_price: product.wholesale_price,
-      wholesale_min_qty: product.wholesale_min_qty,
-      stock: 0,
-      colors: product.colors || [],
-      sizes: product.sizes || [],
-      is_active: false
-    }
-    
-    const response = await productsApi.createProduct(duplicatedData, {
-      boutique_id: currentBoutique.value.id,
-      user_id: currentUser.value.id
-    })
-    
-    if (response.success) {
-      await fetchProducts()
-      showNotification('Product duplicated with success!')
-    } else {
-      showNotification('Error to duplicate: ' + response.error)
-    }
-  } catch (err) {
-    showNotification('Error to duplicate : ' + err.message)
-  }
-  activeActionMenu.value = null
+  DataDuplicate.value = product
+  console.log('Duplicate data:', DataDuplicate.value)
+  showDuplicateProductModal.value = true
 }
 
 const deleteProductAction = async (productId) => {

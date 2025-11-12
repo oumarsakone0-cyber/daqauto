@@ -24,6 +24,8 @@ import Facture_management from "../components/views/facture_management.vue"
 import ParametreManagement from "../components/views/Parametre-management.vue"
 import OrderValidation from "../components/product/OrderValidation.vue"
 import MesCommandes from "../components/product/MesCommandes.vue"
+import MessagesManagement from "../components/views/Messages-management.vue"
+import ProfileClient from "../components/product/profileClient.vue"
 
 
 const routes = [
@@ -91,6 +93,15 @@ const routes = [
     },
   },
   {
+    path: "/profile_client",
+    name: "profile_client",
+    component: ProfileClient,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
     path: "/mes-commandes",
     name: "mes-commandes",
     component: MesCommandes,
@@ -103,6 +114,15 @@ const routes = [
     path: "/dashboard-admin/factures",
     name: "dashboard-factures",
     component: Facture_management,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/dashboard-admin/messages",
+    name: "dashboard-messages",
+    component: MessagesManagement,
     meta: {
       requiresAuth: false,
       hideNavigation: false,

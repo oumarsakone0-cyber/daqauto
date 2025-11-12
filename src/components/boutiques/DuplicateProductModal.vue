@@ -19,7 +19,7 @@
               <PlusIcon class="w-5 h-5 text-white" />
             </div>
             <div>
-              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Add a product</h2>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Duplicate a product</h2>
               <p class="text-sm text-gray-600 hidden sm:block">Create a new product for your store</p>
             </div>
           </div>
@@ -1217,7 +1217,7 @@
 </template>
 
 <script setup>
-import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
+import { ref, defineProps, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import axios from 'axios'
 import { categoriesApi , brandsApi } from '../../services/api'
 import { 
@@ -1239,6 +1239,21 @@ import {
   Video as VideoIcon,
   FileText as FileTextIcon
 } from 'lucide-vue-next'
+
+const props = defineProps({
+  boutiqueId: {
+    type: [String, Number],
+    required: true
+  },
+  userId: {
+    type: [String, Number],
+    required: true
+  },
+  dataduplicate: {
+    type: Object,
+    default: () => ({})
+  }
+})
 
 const emit = defineEmits(['close', 'save'])
 
@@ -1282,60 +1297,58 @@ const steps = [
 
 //  Added new fields to productData
 const productData = reactive({
-  name: '',
+  name: props.dataduplicate.name || '',
   description: '',
   hasDetailedDescription: false,
   description_plus: '',
-  category_id: '',
-  subcategory_id: '',
+  category_id: props.dataduplicate.category_id || '',
+  subcategory_id: props.dataduplicate.subcategory_id || '',
   subsubcategory_id: '',
   subsubsubcategory_id: '',
-  tags: '',
-  unit_price: '',
+  tags: props.dataduplicate.tags || '',
+  unit_price: props.dataduplicate.unit_price || null,
   stock: '',
   unit_type: 'quantity',
-  disponibility: 'available',
+  disponibility: props.dataduplicate.disponibility || 'In Stock',
   hasWholesalePrice: false,
   wholesale_price: null,
   wholesale_min_qty: null,
-  colors_names: [],
-  colors: [],
-  images: [],
+  colors_names: props.dataduplicate.colors_names || [],
+  colors: props.dataduplicate.colors || [],
+  images: props.dataduplicate.images || [],
   imageUrls: [],
   video: null,
   videoUrl: '',
   is_active: true,
-  vehicle_condition: '',
-  vehicle_brand_id: '',
-  vehicle_model_id: '',
-  drive_type: '',
-  vehicle_year: null,
-  fuel_type: '',
-  transmission_type: '',
-  engine_brand: '',
-  trim_numbers: [],
-  vin: [],
-  engine_number: "",
-  power: '',
-  engine_emissions: '',
-  vehicle_mileage: null,
-  production_date: '',
-  country_of_origin: '',
-  wheelbase: null,
-  gvw: null,
-  payload_capacity: null,
-  cabin_type: '',
-  suspension_type: '',
-  brake_system: '',
-  type_size: '',
-  dimensions_length: null,
-  dimensions_width: null,
-  dimensions_height: null,
-  curb_weight: null,
-  fuel_tank_capacity: null
+  vehicle_condition: props,
+  vehicle_brand_id: props.dataduplicate.vehicle_brand_id || '',
+  vehicle_model_id: props.dataduplicate.vehicle_model_id || '',
+  drive_type: props.dataduplicate.drive_type || '',
+  vehicle_year: props.dataduplicate.vehicle_year || '',
+  fuel_type: props.dataduplicate.fuel_type || '',
+  transmission_type: props.dataduplicate.transmission_type || '',
+  engine_brand: props.dataduplicate.engine_brand || '',
+  trim_numbers: props.dataduplicate.trim_numbers || [],
+  vin: props.dataduplicate.vin || [],
+  engine_number: props.dataduplicate.engine_number || '',
+  power: props.dataduplicate.power || '',
+  engine_emissions: props.dataduplicate.engine_emissions || '',
+  vehicle_mileage: props.dataduplicate.vehicle_mileage || null,
+  production_date: props.dataduplicate.production_date || '',
+  country_of_origin: props.dataduplicate.country_of_origin || ''    ,
+  wheelbase: props.dataduplicate.wheelbase || null,
+  gvw: props.dataduplicate.gvw || null,
+  payload_capacity: props.dataduplicate.payload_capacity || null,
+  cabin_type: props.dataduplicate.cabin_type || '',
+  suspension_type: props.dataduplicate.suspension_type || '',
+  brake_system: props.dataduplicate.brake_system || '',
+  type_size: props.dataduplicate.type_size || '',
+  dimensions_length: props.dataduplicate.dimensions_length || null,
+  dimensions_width: props.dataduplicate.dimensions_width || null,
+  dimensions_height: props.dataduplicate.dimensions_height || null,
+  curb_weight: props.dataduplicate.curb_weight || null,
+  fuel_tank_capacity: props.dataduplicate.fuel_tank_capacity || null,
 })
-
-
 
 
 const availableSubcategories = computed(() => {

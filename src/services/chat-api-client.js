@@ -2,7 +2,8 @@
 class ChatApiClient {
   constructor(baseUrl = "https://sastock.com/api_adjame") {
     this.baseUrl = baseUrl
-    this.userCode = localStorage.getItem("chat_user_code")
+    const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user')
+    this.userCode = storedUser ? JSON.parse(storedUser) : null
     this.sessionId = localStorage.getItem("chat_session_id")
   }
 
@@ -34,24 +35,33 @@ class ChatApiClient {
   }
 
   // Créer ou récupérer un utilisateur
-  async createOrGetUser() {
-    try {
-      const response = await this.request("create_user", {
-        method: "POST",
-        body: JSON.stringify({
-          user_code: this.userCode,
-        }),
-      })
+async createOrGetUser() {
+  console.log("Creating or getting user with data:", this.userCode);
 
-      this.userCode = response.user_code
-      localStorage.setItem("chat_user_code", this.userCode)
+  try {
 
-      return response
-    } catch (error) {
-      console.error("Erreur création utilisateur:", error)
-      throw error
+    // 📨 Envoi complet au backend
+    const response = await this.request("create_user", {
+      method: "POST",
+      body: JSON.stringify({
+        user_code: this.userCode.id,
+        full_name: this.userCode.full_name,
+        email: this.userCode.email,
+      }),
+    });
+
+    // 💾 Sauvegarde locale (si ton backend renvoie un code unique)
+    if (response.user_code) {
+      this.userCode = response.user_code;
+      localStorage.setItem("chat_user_code", this.userCode);
     }
+
+    return response;
+  } catch (error) {
+    console.error("❌ Erreur création utilisateur:", error);
+    throw error;
   }
+}
 
   // Démarrer une nouvelle session
   async startSession(productId = null) {
@@ -101,39 +111,46 @@ class ChatApiClient {
   }
 
   // Envoyer un message
-  async sendMessage(message, sender = "user", productId = null) {
-    try {
-      if (!this.sessionId) {
-        await this.startSession(productId)
-      }
-
-      const response = await this.request("send_message", {
-        method: "POST",
-        body: JSON.stringify({
-          user_code: this.userCode,
-          session_id: this.sessionId,
-          message: message,
-          sender: sender,
-          product_id: productId,
-        }),
-      })
-
-      return response
-    } catch (error) {
-      console.error("Erreur envoi message:", error)
-      throw error
+  // Envoyer un message
+async sendMessage(message, sender = "user", productId = null) {
+  try {
+    // Si aucune session active → on en démarre une
+    if (!this.sessionId) {
+      console.warn("⚠️ Aucune session active, démarrage automatique...");
+      const session = await this.startSession(productId);
+      this.sessionId = session.session_id;
+      localStorage.setItem("chat_session_id", this.sessionId);
     }
+
+    const response = await this.request("add_session_message", {
+      method: "POST",
+      body: JSON.stringify({
+        session_id: this.sessionId,  // ✅ pas userCode
+        message: message,
+        sender: sender,
+        product_id: productId,       // ✅ transmis depuis Pinia
+        prix: null,
+        image: null
+      }),
+    });
+
+    return response;
+  } catch (error) {
+    console.error("Erreur envoi message:", error);
+    throw error;
   }
+}
+
 
   // Récupérer l'historique des messages
+
   async getMessages() {
     try {
-      if (!this.userCode || !this.sessionId) {
-        return { success: false, messages: [] }
+      if (!this.userCode) {
+        return { success: false, sessions: {} }
       }
 
-      const response = await this.request(`get_messages&user_code=${this.userCode}&session_id=${this.sessionId}`)
-
+      const response = await this.request(`get_messages&user_id=${this.userCode.id}`)
       return response
     } catch (error) {
       console.error("Erreur récupération messages:", error)
@@ -176,10 +193,10 @@ class ChatApiClient {
       // Vérifier s'il y a une session active
       const sessionCheck = await this.checkSession()
 
-      if (!sessionCheck.success || sessionCheck.session.status !== "active") {
+     // if (!sessionCheck.success || sessionCheck.session.status !== "active") {
         // Démarrer une nouvelle session
-        await this.startSession(productId)
-      }
+      //  await this.startSession(productId)
+     // }
 
       // Récupérer l'historique des messages
       const messages = await this.getMessages()
