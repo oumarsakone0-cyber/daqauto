@@ -7,11 +7,11 @@
         <div class="container mx-auto px-4 flex justify-between items-center">
           <span class="hidden sm:block">We're offering free shipping on all orders over $50! </span>
           <span class="sm:hidden">Free shipping over $50!</span>
-          <div class="flex items-center gap-4 text-sm">
+          <!-- <div class="flex items-center gap-4 text-sm">
             <span class="hidden md:block">{{languet.Langue}}</span>
             <span class="hidden lg:block">({{ languet.code }})</span>
             <span class="lg:hidden">USD $</span>
-          </div>
+          </div> -->
         </div>
       </div>
 

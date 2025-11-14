@@ -565,14 +565,14 @@
           <!-- Onglet 2: Galerie et médias -->
           <div v-else-if="activeTab === 'media'" class="space-y-4 sm:space-y-8 mb-30">
             <!-- Galerie d'images -->
-            <div v-if="product.images && product.images.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div v-if="product.all_images && product.all_images.length > 0" class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center justify-between mb-4 sm:mb-6">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
                   <ImageIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
                   Image gallery
                 </h4>
                 <span class="text-sm bg-gray-100 text-gray-600 px-3 py-1 rounded-full font-medium">
-                  {{ product.images.length }} image{{ product.images.length > 1 ? 's' : '' }}
+                  {{ product.all_images.length }} image{{ product.all_images.length > 1 ? 's' : '' }}
                 </span>
               </div>
               
@@ -587,14 +587,14 @@
                   >
                   <!-- Boutons de navigation -->
                   <button 
-                    v-if="product.images.length > 1"
+                    v-if="product.all_images.length > 1"
                     @click="previousImage"
                     class="absolute left-2 sm:left-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 sm:p-3 rounded-full hover:bg-opacity-70 transition-all backdrop-blur-sm"
                   >
                     <ChevronLeftIcon class="w-4 h-4 sm:w-6 sm:h-6" />
                   </button>
                   <button 
-                    v-if="product.images.length > 1"
+                    v-if="product.all_images.length > 1"
                     @click="nextImage"
                     class="absolute right-2 sm:right-4 top-1/2 transform -translate-y-1/2 bg-black bg-opacity-50 text-white p-2 sm:p-3 rounded-full hover:bg-opacity-70 transition-all backdrop-blur-sm"
                   >
@@ -602,7 +602,7 @@
                   </button>
                   <!-- Indicateur de position -->
                   <div class="absolute bottom-2 sm:bottom-4 right-2 sm:right-4 bg-black bg-opacity-50 text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium backdrop-blur-sm">
-                    {{ currentImageIndex + 1 }} / {{ product.images.length }}
+                    {{ currentImageIndex + 1 }} / {{ product.all_images.length }}
                   </div>
                   <!-- Badge image principale -->
                   <div v-if="currentImageIndex === 0" class="absolute top-2 sm:top-4 left-2 sm:left-4 primary-color text-white px-2 sm:px-3 py-1 rounded-full text-xs sm:text-sm font-medium shadow-lg">
@@ -614,7 +614,7 @@
               <!-- Grille de miniatures -->
               <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2 sm:gap-3">
                 <div 
-                  v-for="(image, index) in product.images" 
+                  v-for="(image, index) in product.all_images" 
                   :key="index"
                   class="relative cursor-pointer group"
                   @click="selectImage(index)"
@@ -643,7 +643,7 @@
             </div>
 
             <!-- Vidéo du produit -->
-            <div v-if="product.images?.length || product.video_url"  class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+            <div v-if="product.all_images?.length || product.video_url"  class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center justify-between mb-4 sm:mb-6">
                 <h4 class="text-lg sm:text-xl font-semibold text-gray-900 flex items-center">
                   <VideoIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
@@ -668,7 +668,7 @@
             </div>
 
             <!-- Message si aucun média -->
-            <div v-if="!product.images?.length && !product.video_url" class="text-center py-12 sm:py-16">
+            <div v-if="!product.all_images?.length && !product.video_url" class="text-center py-12 sm:py-16">
               <div class="w-16 h-16 sm:w-24 sm:h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4 sm:mb-6">
                 <ImageIcon class="w-8 h-8 sm:w-12 sm:h-12 primary-color" />
               </div>
@@ -810,8 +810,8 @@ const primaryImage = computed(() => {
 
 // Image sélectionnée dans la galerie
 const selectedImage = computed(() => {
-  if (props.product?.images && props.product.images.length > 0) {
-    return props.product.images[currentImageIndex.value]
+  if (props.product?.all_images && props.product.all_images.length > 0) {
+    return props.product.all_images[currentImageIndex.value]
   }
   return null
 })
@@ -851,15 +851,15 @@ const selectImage = (index) => {
 }
 
 const nextImage = () => {
-  if (props.product?.images && props.product.images.length > 0) {
-    currentImageIndex.value = (currentImageIndex.value + 1) % props.product.images.length
+  if (props.product?.all_images && props.product.all_images.length > 0) {
+    currentImageIndex.value = (currentImageIndex.value + 1) % props.product.all_images.length
   }
 }
 
 const previousImage = () => {
-  if (props.product?.images && props.product.images.length > 0) {
+  if (props.product?.all_images && props.product.all_images.length > 0) {
     currentImageIndex.value = currentImageIndex.value === 0 
-      ? props.product.images.length - 1 
+      ? props.product.all_images.length - 1 
       : currentImageIndex.value - 1
   }
 }

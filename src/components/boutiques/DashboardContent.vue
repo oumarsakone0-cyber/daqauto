@@ -1422,6 +1422,7 @@ const detailedStats = computed(() => {
 
 const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage.value))
 const paginatedProducts = computed(() => {
+  
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return filteredProducts.value.slice(start, end)
