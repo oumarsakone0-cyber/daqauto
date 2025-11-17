@@ -625,7 +625,7 @@
                   <PackageIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Small Store</h3>
-                <div class="text-3xl font-bold text-blue-600 mb-1">3 000 FCFA</div>
+                <div class="text-3xl font-bold text-blue-600 mb-1">$15</div>
                 <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">15 products</div>
                 
@@ -666,7 +666,7 @@
                   <WarehouseIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Average Store</h3>
-                <div class="text-3xl font-bold text-green-500 mb-1">5 000 FCFA</div>
+                <div class="text-3xl font-bold text-green-500 mb-1">$15</div>
                 <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">50 products</div>
                 
@@ -706,7 +706,7 @@
                   <CrownIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Big Store</h3>
-                <div class="text-3xl font-bold primary-color mb-1">10 000 FCFA</div>
+                <div class="text-3xl font-bold primary-color mb-1">$25</div>
                 <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">120 products</div>
                 
@@ -822,7 +822,7 @@
                   </ul>
                 </div>
                 <div class="text-right">
-                  <div class="text-2xl font-bold text-green-600">1 000 FCFA</div>
+                  <div class="text-2xl font-bold text-green-600">$5</div>
                   <div class="text-sm text-gray-500">By week</div>
                 </div>
               </div>
@@ -866,7 +866,7 @@
                   </ul>
                 </div>
                 <div class="text-right">
-                  <div class="text-2xl font-bold primary-color">2 500 FCFA</div>
+                  <div class="text-2xl font-bold primary-color">$12</div>
                   <div class="text-sm text-gray-500">By week</div>
                 </div>
               </div>
@@ -887,7 +887,7 @@
                       {{ selectedBoostOption === 'basic' ? 'Basic Boost ' : 'Premium Boost ' }}
                     </h4>
                     <p class="text-sm text-gray-600">
-                      {{ selectedBoostOption === 'basic' ? '1 000 FCFA By week' : '2 500 FCFA By week' }}
+                      {{ selectedBoostOption === 'basic' ? '$5 By week' : '$12 By week' }}
                     </p>
                   </div>
                 </div>
@@ -1205,7 +1205,7 @@ const selectedProductForBoost = ref(null)
 const selectedBoostOption = ref(null)
 const activeActionMenu = ref(null)
 const searchQuery = ref('')
-const activeFilter = ref('active')
+const activeFilter = ref('all')
 const selectedPeriod = ref('all')
 const notification = ref({ show: false, message: '' })
 
@@ -1346,14 +1346,18 @@ const filteredProducts = computed(() => {
 
   if (activeFilter.value !== 'all') {
     const statusMap = {
-      'active': 'Active',
-      'low-stock': 'Low Stock', 
-      'out-of-stock': 'Out Of Stock',
-      'draft': 'Draft'
+      'active': 'Actif',
+      'low-stock': 'Stock faible', 
+      'out-of-stock': 'Rupture',
+      'draft': 'Brouillon'
     }
     const targetStatus = statusMap[activeFilter.value]
     if (targetStatus) {
+      if (activeFilter.value === 'low-stock') {
+        filtered = filtered.filter(product => product.stock > 0 && product.stock <= 5)
+      } else {  
       filtered = filtered.filter(product => product.status === targetStatus)
+      }
     }
   }
 
@@ -1372,12 +1376,13 @@ const filteredProducts = computed(() => {
 const filterCounts = computed(() => {
   if (!products.value) return { all: 0, active: 0, 'low-stock': 0, 'out-of-stock': 0, draft: 0 }
 
+
   return {
     'all': products.value.length,
-    'active': products.value.filter(product => product.status === 'Active').length,
-    'low-stock': products.value.filter(product => product.status === 'Low Stock ').length,
-    'out-of-stock': products.value.filter(product => product.status === 'Out Of Stock').length,
-    'draft': products.value.filter(product => product.status === 'Draft').length
+    'active': products.value.filter(product => product.status === 'Actif').length,
+    'low-stock': products.value.filter(product => product.stock > 0 && product.stock <= 5).length,
+    'out-of-stock': products.value.filter(product => product.status === 'Rupture').length,
+    'draft': products.value.filter(product => product.status === 'Brouillon').length
   }
 })
 
@@ -1387,7 +1392,7 @@ const currentStats = computed(() => {
   }
 
   const totalProducts = products.value.length
-  const activeProducts = products.value.filter(product => product.status === 'Active').length
+  const activeProducts = products.value.filter(product => product.status === 'Actif').length
   const totalStock = products.value.reduce((sum, product) => sum + (product.stock || 0), 0)
   const totalViews = products.value.reduce((sum, product) => sum + (product.views_count || 0), 0)
 
@@ -1412,7 +1417,7 @@ const detailedStats = computed(() => {
 
   const lowStock = products.value.filter(product => product.stock > 0 && product.stock <= 5).length
   const outOfStock = products.value.filter(product => product.stock === 0).length
-  const draft = products.value.filter(product => product.status === 'Draft').length
+  const draft = products.value.filter(product => product.status === 'Brouillon').length
   const totalSales = products.value.reduce((sum, product) => sum + (product.sales_count || 0), 0)
   
   const totalPrice = products.value.reduce((sum, product) => sum + (product.unit_price || 0), 0)
@@ -1429,6 +1434,7 @@ const detailedStats = computed(() => {
 
 const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage.value))
 const paginatedProducts = computed(() => {
+  
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return filteredProducts.value.slice(start, end)

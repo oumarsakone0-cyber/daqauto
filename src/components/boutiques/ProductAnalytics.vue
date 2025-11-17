@@ -8,7 +8,7 @@
         @click.stop
       >
         <div class="flex justify-between items-center mb-6">
-          <h2 class="text-2xl font-bold text-gray-900">Analytics & Rapports</h2>
+          <h2 class="text-2xl font-bold text-gray-900">Analytics & Reports</h2>
           <button @click="$emit('close')" class="text-gray-400 hover:text-gray-600">
             <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"></path>
@@ -19,16 +19,16 @@
         <!-- Période de sélection -->
         <div class="mb-6">
           <div class="flex items-center space-x-4">
-            <label class="text-sm font-medium text-gray-700">Période d'analyse :</label>
+            <label class="text-sm font-medium text-gray-700">Analysis period :</label>
             <select 
               v-model="selectedPeriod" 
               @change="updateAnalytics"
               class="border border-gray-300 rounded-lg px-3 py-2 focus:ring-orange focus:border-orange"
             >
-              <option value="7days">7 derniers jours</option>
-              <option value="30days">30 derniers jours</option>
-              <option value="3months">3 derniers mois</option>
-              <option value="year">Cette année</option>
+              <option value="7days">last 7 days</option>
+              <option value="30days">Last 30 days</option>
+              <option value="3months">last 3 months</option>
+              <option value="year">This year</option>
             </select>
           </div>
         </div>
@@ -38,12 +38,12 @@
           <div class="bg-gradient-to-r from-blue-500 to-blue-600 rounded-lg p-6 text-white">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-blue-100 text-sm">Ventes Totales</p>
-                <p class="text-2xl font-bold">{{ analytics.totalSales.toLocaleString() }} FCFA</p>
+                <p class="text-blue-100 text-sm">Total Sales</p>
+                <p class="text-2xl font-bold">${{ analytics.totalSales.toLocaleString() }}</p>
                 <p class="text-blue-100 text-xs mt-1">
                   <span :class="analytics.salesGrowth >= 0 ? 'text-green-200' : 'text-red-200'">
                     {{ analytics.salesGrowth >= 0 ? '+' : '' }}{{ analytics.salesGrowth }}%
-                  </span> vs période précédente
+                  </span> vs. previous period
                 </p>
               </div>
               <div class="w-12 h-12 bg-blue-400 rounded-full flex items-center justify-center">
@@ -57,12 +57,12 @@
           <div class="bg-gradient-to-r from-green-500 to-green-600 rounded-lg p-6 text-white">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-green-100 text-sm">Commandes</p>
+                <p class="text-green-100 text-sm">Orders</p>
                 <p class="text-2xl font-bold">{{ analytics.totalOrders }}</p>
                 <p class="text-green-100 text-xs mt-1">
                   <span :class="analytics.ordersGrowth >= 0 ? 'text-green-200' : 'text-red-200'">
                     {{ analytics.ordersGrowth >= 0 ? '+' : '' }}{{ analytics.ordersGrowth }}%
-                  </span> vs période précédente
+                  </span> vs. previous period
                 </p>
               </div>
               <div class="w-12 h-12 bg-green-400 rounded-full flex items-center justify-center">
@@ -76,12 +76,12 @@
           <div class="bg-gradient-to-r from-purple-500 to-purple-600 rounded-lg p-6 text-white">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-purple-100 text-sm">Produits Vus</p>
+                <p class="text-purple-100 text-sm">Products Seen</p>
                 <p class="text-2xl font-bold">{{ analytics.totalViews.toLocaleString() }}</p>
                 <p class="text-purple-100 text-xs mt-1">
                   <span :class="analytics.viewsGrowth >= 0 ? 'text-green-200' : 'text-red-200'">
                     {{ analytics.viewsGrowth >= 0 ? '+' : '' }}{{ analytics.viewsGrowth }}%
-                  </span> vs période précédente
+                  </span> vs. previous period
                 </p>
               </div>
               <div class="w-12 h-12 bg-purple-400 rounded-full flex items-center justify-center">
@@ -96,12 +96,12 @@
           <div class="bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg p-6 text-white">
             <div class="flex items-center justify-between">
               <div>
-                <p class="text-orange-100 text-sm">Taux de Conversion</p>
+                <p class="text-orange-100 text-sm">Conversion Rate</p>
                 <p class="text-2xl font-bold">{{ analytics.conversionRate }}%</p>
                 <p class="text-orange-100 text-xs mt-1">
                   <span :class="analytics.conversionGrowth >= 0 ? 'text-green-200' : 'text-red-200'">
                     {{ analytics.conversionGrowth >= 0 ? '+' : '' }}{{ analytics.conversionGrowth }}%
-                  </span> vs période précédente
+                  </span> vs. previous period
                 </p>
               </div>
               <div class="w-12 h-12 bg-orange-400 rounded-full flex items-center justify-center">
@@ -117,7 +117,7 @@
         <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
           <!-- Graphique des ventes -->
           <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Évolution des Ventes</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Sales Trends</h3>
             <div class="h-64">
               <canvas ref="salesChart" class="w-full h-full"></canvas>
             </div>
@@ -125,7 +125,7 @@
   
           <!-- Graphique des catégories -->
           <div class="bg-white border border-gray-200 rounded-lg p-6">
-            <h3 class="text-lg font-semibold text-gray-900 mb-4">Ventes par Catégorie</h3>
+            <h3 class="text-lg font-semibold text-gray-900 mb-4">Sales by Category</h3>
             <div class="space-y-4">
               <div v-for="category in analytics.categorySales" :key="category.name" class="flex items-center justify-between">
                 <div class="flex items-center space-x-3">
@@ -133,7 +133,7 @@
                   <span class="text-sm font-medium text-gray-900">{{ category.name }}</span>
                 </div>
                 <div class="text-right">
-                  <div class="text-sm font-semibold text-gray-900">{{ category.sales.toLocaleString() }} FCFA</div>
+                  <div class="text-sm font-semibold text-gray-900">${{ category.sales.toLocaleString() }} </div>
                   <div class="text-xs text-gray-500">{{ category.percentage }}%</div>
                 </div>
               </div>

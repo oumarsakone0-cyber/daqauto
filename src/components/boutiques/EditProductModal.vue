@@ -928,7 +928,7 @@
                 <ImageIcon class="w-4 h-4 text-white" />
               </div>
               <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Product images</h3>
-              <span class="text-sm text-gray-500">({{ editData.images.length }}/8)</span>
+              <span class="text-sm text-gray-500">({{ editData.all_images.length }}/8)</span>
             </div>
 
             <div class="mb-6">
@@ -936,7 +936,7 @@
                 <label 
                   for="image-upload" 
                   class="flex flex-col items-center justify-center w-full h-32 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100 transition-colors"
-                  :class="{ 'opacity-50 cursor-not-allowed': editData.images.length >= 8 }"
+                  :class="{ 'opacity-50 cursor-not-allowed': editData.all_images.length >= 8 }"
                 >
                   <div class="flex flex-col items-center justify-center pt-5 pb-6">
                     <ImageIcon class="w-8 h-8 mb-4 text-gray-500" />
@@ -953,15 +953,15 @@
                     accept="image/*"
                     @change="handleImageUpload"
                     class="hidden"
-                    :disabled="editData.images.length >= 8"
+                    :disabled="editData.all_images.length >= 8"
                   >
                 </label>
               </div>
             </div>
 
-            <div v-if="editData.images.length > 0" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
+            <div v-if="editData.all_images.length > 0" class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4 mb-6">
               <div 
-                v-for="(image, index) in editData.images" 
+                v-for="(image, index) in editData.all_images" 
                 :key="index"
                 class="relative group"
               >
@@ -1061,7 +1061,7 @@
               </div>
             </div>
 
-            <div v-if="editData.images.length === 0" class="text-center py-8 text-gray-500">
+            <div v-if="editData.all_images.length === 0" class="text-center py-8 text-gray-500">
               <ImageIcon class="w-12 h-12 mx-auto mb-4 text-gray-300" />
               <p>No image added</p>
               <p class="text-sm">Add up to 8 images for your product</p>
@@ -1249,7 +1249,7 @@ const editData = ref({
   colors: [],
   sizes: [],
   sizeType: '',
-  images: [],
+  all_images: [],
   video: null,
   is_active: true,
   wholesale_price: null,
@@ -1595,7 +1595,7 @@ const handleSubmit = async () => {
     }
     
     // Préparer les URLs finales des images
-    const finalImageUrls = editData.value.images.map(image => {
+    const finalImageUrls = editData.value.all_images.map(image => {
       if (typeof image === 'string') {
         return image // Image existante
       } else if (image.url) {
@@ -1689,7 +1689,7 @@ const handleBackdropClick = (event) => {
 
 const handleImageUpload = (event) => {
   const files = Array.from(event.target.files)
-  const remainingSlots = 8 - editData.value.images.length
+  const remainingSlots = 8 - editData.value.all_images.length
   
   if (remainingSlots <= 0) {
     error.value = 'You have already reached the limit of 8 images'
@@ -1709,7 +1709,7 @@ const handleImageUpload = (event) => {
           url: null,
           isNew: true
         }
-        editData.value.images.push(imageObj)
+        editData.value.all_images.push(imageObj)
         newImages.value.push(imageObj)
       }
       reader.readAsDataURL(file)
@@ -1747,7 +1747,7 @@ const removeVideo = () => {
 }
 
 const removeImage = (index) => {
-  const imageToRemove = editData.value.images[index]
+  const imageToRemove = editData.value.all_images[index]
   
   if (typeof imageToRemove === 'string') {
     imagesToRemove.value.push(imageToRemove)
@@ -1759,12 +1759,12 @@ const removeImage = (index) => {
     }
   }
   
-  editData.value.images.splice(index, 1)
+  editData.value.all_images.splice(index, 1)
 }
 
 const moveImageUp = (index) => {
   if (index > 0) {
-    const images = editData.value.images
+    const images = editData.value.all_images
     const temp = images[index]
     images[index] = images[index - 1]
     images[index - 1] = temp
@@ -1772,7 +1772,7 @@ const moveImageUp = (index) => {
 }
 
 const moveImageDown = (index) => {
-  const images = editData.value.images
+  const images = editData.value.all_images
   if (index < images.length - 1) {
     const temp = images[index]
     images[index] = images[index + 1]
@@ -1871,7 +1871,7 @@ const uploadVideoToCloudinary = async (video) => {
 watch(() => props.product, (newProduct) => {
   if (newProduct) {
     // Convertir les images existantes en format uniforme
-    const existingImages = (newProduct.images || []).map(imageUrl => {
+    const existingImages = (newProduct.all_images || []).map(imageUrl => {
       if (typeof imageUrl === 'string') {
         return imageUrl
       }
@@ -1893,7 +1893,7 @@ watch(() => props.product, (newProduct) => {
       colors: [...(newProduct.colors || [])],
       sizes: [...(newProduct.sizes || [])],
       sizeType: newProduct.size_type || '',
-      images: existingImages,
+      all_images: existingImages,
       video: newProduct.video_url ? { url: newProduct.video_url, preview: newProduct.video_url, uploaded: true } : null,
       is_active: newProduct.is_active !== undefined ? newProduct.is_active : true,
       wholesale_price: newProduct.wholesale_price || null,

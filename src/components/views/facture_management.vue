@@ -28,14 +28,14 @@
       <div class="flex items-center text-sm text-gray-500 sm:mb-2">
         <Home class="w-4 h-4 sm:w-5 sm:h-5" />
         <span class="mx-2">/</span>
-        <span class="font-medium text-gray-700">Gestion des Factures</span>
+        <span class="font-medium text-gray-700">Invoice Management</span>
       </div>
 
       <!-- Header -->
       <div class="flex flex-col space-y-2 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-4 sm:mb-5">
         <div>
-          <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Gestion des Factures</h1>
-          <p class="text-sm sm:text-base text-gray-600">Créez et gérez vos factures en temps réel</p>
+          <h1 class="text-xl sm:text-2xl font-bold text-gray-900 mb-2">Invoice Management</h1>
+          <p class="text-sm sm:text-base text-gray-600">Create and manage your invoices in real time</p>
         </div>
         
         <div class="flex items-center gap-3">
@@ -43,15 +43,22 @@
             @click="resetForm"
             class="submit-btn"
           >
-            <RefreshCw class="w-4 h-4 mr-2" />
-            Réinitialiser
+            <RefreshCw class="w-4 h-4" />
+            Reset
           </button>
           <button 
-            @click="downloadPDF"
+            @click="downloadProforma(invoice,subtotal,total)"
             class="btn-degrade-orange"
           >
-            <Download class="w-4 h-4 mr-2" />
-            Télécharger PDF
+            <Download class="w-4 h-4" />
+            Proforma PDF
+          </button>
+          <button 
+            @click="downloadInvoice(invoice,subtotal,total)"
+            class="btn-degrade-orange"
+          >
+            <Download class="w-4 h-4" />
+            Invoice PDF
           </button>
         </div>
       </div>
@@ -63,13 +70,13 @@
           <div class="bg-white shadow-lg rounded-lg border border-gray-100 p-4 sticky top-6">
             <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center">
               <FileText class="w-5 h-5 mr-2 primary-color" />
-              Informations de la facture
+              Invoice information
             </h2>
 
             <!-- Informations générales -->
             <div class="space-y-2 mb-3">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Numéro de facture</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Invoice number</label>
                 <input 
                   v-model="invoice.number" 
                   type="text" 
@@ -79,7 +86,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Date de facture</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Invoice date</label>
                 <input 
                   v-model="invoice.date" 
                   type="date" 
@@ -88,7 +95,7 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-1">Date d'échéance</label>
+                <label class="block text-sm font-medium text-gray-700 mb-1">Due date</label>
                 <input 
                   v-model="invoice.dueDate" 
                   type="date" 
@@ -101,16 +108,16 @@
             <div class="mb-3">
               <h3 class="text-md font-semibold text-gray-900 mb-2 flex items-center">
                 <User class="w-4 h-4 mr-2 primary-color" />
-                Informations client
+                Customer information
               </h3>
               <div class="space-y-2">
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Nom du client</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Customer Name</label>
                   <input 
                     v-model="invoice.client.name" 
                     type="text" 
                     class="input-style"
-                    placeholder="Nom complet"
+                    placeholder="Full name"
                   >
                 </div>
 
@@ -125,7 +132,7 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Téléphone</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">phone number</label>
                   <input 
                     v-model="invoice.client.phone" 
                     type="tel" 
@@ -135,12 +142,12 @@
                 </div>
 
                 <div>
-                  <label class="block text-sm font-medium text-gray-700 mb-1">Adresse</label>
+                  <label class="block text-sm font-medium text-gray-700 mb-1">Address</label>
                   <textarea 
                     v-model="invoice.client.address" 
                     rows="3"
                     class="input-style"
-                    placeholder="Adresse complète"
+                    placeholder="Full address"
                   ></textarea>
                 </div>
               </div>
@@ -151,22 +158,21 @@
               <div class="flex items-center justify-between mb-4">
                 <h3 class="text-md font-semibold text-gray-900 flex items-center">
                   <ShoppingCart class="w-4 h-4 mr-2 primary-color" />
-                  Articles
+                  Items
                 </h3>
                 <button 
                   @click="addItem"
                   class="btn-degrade-orange h-10"
                 >
-                  <Plus class="w-3 h-3 mr-1" />
-                  Ajouter
+                  <Plus class="w-3 h-3 " />
+                  Add
                 </button>
               </div>
 
               <!-- Loading state for products -->
               <div v-if="loadingProducts" class="text-center py-4 text-sm primary-color">
-                Chargement des produits...
+                Loading products...
               </div>
-
               <div class="space-y-2 max-h-150  overflow-y-auto">
                 <div 
                   v-for="(item, index) in invoice.items" 
@@ -185,13 +191,13 @@
                   <div class="space-y-2">
                     <!-- Replace text input with select dropdown for products -->
                     <div>
-                      <label class="block text-xs font-medium text-gray-700 mb-1">Produit</label>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">Product</label>
                       <select 
                         v-model="item.productId"
                         @change="onProductSelect(index)"
                         class="input-style"
                       >
-                        <option value="">Sélectionner un produit</option>
+                        <option value="">Select a product</option>
                         <option 
                           v-for="product in products" 
                           :key="product.id" 
@@ -202,12 +208,12 @@
                       </select>
                     </div>
                     <div>
-                      <label class="block text-xs font-medium text-gray-700 mb-1">Numéro VIN</label>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">VIN number</label>
                       <select 
                         v-model="item.vin"
                         class="input-style"
                       >
-                        <option value="">Sélectionner un numéro VIN</option>
+                        <option value="">Select VIN number</option>
                         <option 
                           v-for="vin in selectedVInNumber(item.productId)" 
                           :key="vin" 
@@ -218,12 +224,12 @@
                       </select>
                     </div>
                     <div>
-                      <label class="block text-xs font-medium text-gray-700 mb-1">Numéro Trim</label>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">Trim number</label>
                       <select 
                         v-model="item.trim_number"
                         class="input-style"
                       >
-                        <option value="">Sélectionner un numéro Trim</option>
+                        <option value="">Select Trim number</option>
                         <option 
                           v-for="trim in selectedTrimNumber(item.productId)" 
                           :key="trim" 
@@ -234,12 +240,12 @@
                       </select>
                     </div>
                     <div>
-                      <label class="block text-xs font-medium text-gray-700 mb-1">Couleurs</label>
+                      <label class="block text-xs font-medium text-gray-700 mb-1">Colors</label>
                       <select 
                         v-model="item.color"
                         class="input-style"
                       >
-                        <option value="">Sélectionner une couleur</option>
+                        <option value="">Select a color</option>
                         <option 
                           v-for="color in selectedColors(item.productId)" 
                           :key="color" 
@@ -252,7 +258,7 @@
 
                     <div class="grid grid-cols-2 gap-1">
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Quantité</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Quantity</label>
                         <input 
                           v-model.number="item.quantity" 
                           type="number" 
@@ -263,7 +269,7 @@
 
                       <!-- Price is now editable after auto-population -->
                       <div>
-                        <label class="block text-xs font-medium text-gray-700 mb-1">Prix unitaire (FCFA)</label>
+                        <label class="block text-xs font-medium text-gray-700 mb-1">Unit price</label>
                         <input 
                           v-model.number="item.price" 
                           type="number" 
@@ -284,28 +290,14 @@
               </div>
             </div>
 
-            <!-- TVA -->
-            <div class="pt-2 mt-2 border-t-2 border-gray-200">
-              <label class="block text-sm font-medium text-gray-700 mb-1">TVA (%)</label>
-              <input 
-                v-model.number="invoice.taxRate" 
-                type="number" 
-                min="0"
-                max="100"
-                step="0.01"
-                class="input-style"
-                placeholder="18"
-              >
-            </div>
-
             <!-- Notes -->
             <div class="pt-2 mt-2">
-              <label class="block text-sm font-medium text-gray-700 mb-1"> Autres Notes / Conditions</label>
+              <label class="block text-sm font-medium text-gray-700 mb-1"> Other Notes / Conditions</label>
               <textarea 
                 v-model="invoice.notes" 
                 rows="3"
                 class="input-style text-sm"
-                placeholder="Conditions de paiement, notes supplémentaires..."
+                placeholder="Payment terms, additional notes..."
               ></textarea>
             </div>
           </div>
@@ -313,7 +305,7 @@
 
         <!-- Aperçu de la facture (2/3) -->
         <div id="invoice-pdf" class="lg:col-span-2 " style="padding-bottom: 60px">
-          <div class="bg-white shadow-2xl rounded-lg border border-gray-100 p-4 sm:p-8" id="invoice-preview">
+          <div class="bg-white shadow-2xl rounded-lg border   border-gray-100 p-4 sm:p-8" id="invoice-preview">
             <!-- En-tête de la facture -->
             <div class="flex justify-between items-start mb-5 pb-4 border-b-2 border-gray-200">
               <div>
@@ -322,7 +314,7 @@
                     <FileText class="w-5 h-5 text-white" />
                   </div>
                   <div>
-                    <h2 class="text-2xl font-bold text-gray-900">FACTURE</h2>
+                    <h2 class="text-2xl font-bold text-gray-900">INVOICE</h2>
                     <p class="text-xs text-gray-500">DAQ AUTO Marketplace</p>
                   </div>
                 </div>
@@ -335,7 +327,7 @@
                   </div>
                   <div class="text-xs text-gray-600 space-y-0">
                     <p > Date: <span class="font-bold">{{ formatDate(invoice.date) }} </span></p>
-                    <p> Échéance:  <span class="font-bold">{{ formatDate(invoice.dueDate) }}</span></p>
+                    <p> Due date:  <span class="font-bold">{{ formatDate(invoice.dueDate) }}</span></p>
                   </div>
                 </div>
               </div>
@@ -364,8 +356,8 @@
                     Buyer :
                   </div>
                   <div class="text-gray-900 space-y-1">
-                  <p class="font-medium ">{{ invoice.client.name || 'Nom du client' }}</p>
-                  <p >{{ invoice.client.address || 'Adresse du client' }}</p>
+                  <p class="font-medium ">{{ invoice.client.name || 'Customer name' }}</p>
+                  <p >{{ invoice.client.address || 'Customer address' }}</p>
                   <p>{{ invoice.client.phone || '+225 XX XX XX XX XX' }}</p>
                   <p >{{ invoice.client.email || 'email@exemple.com' }}</p>
                 </div>
@@ -409,7 +401,7 @@
                   </tr>
                   <tr v-if="invoice.items.length === 0">
                     <td colspan="4" class="py-8 text-center text-gray-400 text-sm italic">
-                      Aucun article ajouté
+                      No articles added yet.
                     </td>
                   </tr>
                 </tbody>
@@ -422,12 +414,8 @@
             <div class="flex justify-end mb-12">
               <div class="w-full max-w-sm space-y-3">
                 <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                  <span class="text-xs font-medium text-gray-600">Sous-total:</span>
+                  <span class="text-xs font-medium text-gray-600">Subtotal:</span>
                   <span class="text-xs font-semibold text-gray-900">{{ formatCurrency(subtotal) }}</span>
-                </div>
-                <div class="flex justify-between items-center py-2 border-b border-gray-200">
-                  <span class="text-xs font-medium text-gray-600">TVA ({{ invoice.taxRate }}%):</span>
-                  <span class="text-xs font-semibold text-gray-900">{{ formatCurrency(tax) }}</span>
                 </div>
                 <div class="flex justify-between items-center py-2 border-b border-gray-200">
                   <span class="text-xs font-medium text-gray-600">Shipping / Handling :</span>
@@ -504,13 +492,13 @@
             <!-- Pied de page -->
             <div class="mt-12 pt-8 border-t border-gray-200 text-center" style="page-break-inside: avoid; break-inside: avoid; margin-bottom: 20px;">
               <p class="text-xs text-gray-500">
-                Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com
+                Thank you for your trust! For any questions, please contact us at commandes@daqauto.com
               </p>
               <p class="text-xs text-gray-400 mt-2">
-                DAQ AUTO Marketplace - Votre partenaire de confiance
+                DAQ AUTO Marketplace - Your trusted partner in global vehicle sourcing.
               </p>
               <p class="text-xs primary-color font-medium mt-3">
-                Facture générée sur DaqAuto.com
+                Invoice generated on DaqAuto.com
               </p>
             </div>
           </div>
@@ -522,9 +510,6 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import jsPDF from 'jspdf'
-import html2canvas from 'html2canvas'
-import autoTable from 'jspdf-autotable'
 import { 
   Home, FileText, User, ShoppingCart, Download, RefreshCw, 
   Plus, X,
@@ -535,6 +520,9 @@ import {
 import { productsApi } from '../../services/api'
 import logo from "../../assets/favicon.jpg"
 import Navbar from '../boutiques/Navbar.vue'
+import { downloadInvoice } from '../../composables/Invoice.js'
+import { downloadProforma } from '../../composables/ProformaInvoice.js'
+import { formatCurrency, formatDate} from '../../composables/utils.js'
 
 const products = ref([])
 const selected_product_colors = ref([])
@@ -547,10 +535,9 @@ const currentBoutique = ref(null)
 
 // État de la facture
 const invoice = ref({
-  number: 'FAC-2025-001',
+  number: 'INV-2025-001',
   date: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-  taxRate: 18,
   client: {
     name: '',
     email: '',
@@ -570,7 +557,8 @@ const invoice = ref({
       price: 0
     }
   ],
-  notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
+  specs:[],
+  notes: 'Payment is due within 30 days. Please mention the invoice number when making your payment.'
 })
 
 const initializeUserData = () => {
@@ -585,14 +573,12 @@ const initializeUserData = () => {
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
     
     if (!userData) {
-      console.error('[v0] Données utilisateur manquantes')
       return false
     }
 
     const user = JSON.parse(userData)
     
     if (!user.id || !user.email) {
-      console.error('[v0] Données utilisateur invalides')
       return false
     }
 
@@ -616,7 +602,6 @@ const initializeUserData = () => {
         currentBoutique.value = user.boutiques[0]
       }
     } else {
-      console.error('[v0] Aucune boutique associée')
       return false
     }
 
@@ -637,13 +622,11 @@ onMounted(async () => {
   if (initialized) {
     await fetchProducts()
   } else {
-    console.error('[v0] Impossible de charger les produits sans authentification')
   }
 })
 
 const fetchProducts = async () => {
   if (!currentBoutique.value?.id || !currentUser.value?.id) {
-    console.error('[v0] Informations utilisateur manquantes pour charger les produits')
     return
   }
 
@@ -659,7 +642,7 @@ const fetchProducts = async () => {
     
     if (response.success) {
       products.value = response.data || []
-      console.log('[v0] Produits chargés:', products.value.length, 'produits')
+      console.log('[v0] Produits chargés:', products.value)
     } else {
       console.error('[v0] Erreur API:', response.error)
     }
@@ -690,7 +673,6 @@ const onProductSelect = (index) => {
   item.trim_number = ""
   
   if (selectedProduct) {
-    console.log(selectedProduct)
     item.price = selectedProduct.unit_price || selectedProduct.price || 0
     item.product_type = selectedProduct.category_name || ""
     item.product_name= selectedProduct.name || ""
@@ -719,14 +701,65 @@ const onProductSelect = (index) => {
               trim_numbers:selectedProduct.trim_numbers
             }
           )
-    } 
-  }
-}
+    }
 
-const getProductName = (productId) => {
-  if (!productId) return ''
-  const product = products.value.find(p => p.id === productId)
-  return product ? product.name : ''
+    if (!invoice.value.specs.some(spec => spec.id === selectedProduct.id)) {
+      if(invoice.value.items.length ===1 && invoice.value.specs.length >0){
+        invoice.value.specs=[]
+      }
+      invoice.value.specs.push(
+        {
+          id:selectedProduct.id,
+          product_name: selectedProduct.name || "N/A",
+          primary_image:selectedProduct.primary_image || 'N/A',
+          vehicle_condition: selectedProduct.vehicle_condition || 'N/A',
+          vehicle_mileage:selectedProduct.vehicle_mileage || 'N/A',
+          production_date:selectedProduct.production_date || 'N/A',
+          vehicle_year: selectedProduct.vehicle_year || 'N/A',
+          country_of_origin: selectedProduct.country_of_origin || 'N/A',
+          vehicle_brand: selectedProduct.vehicle_make || 'N/A',
+          vehicle_model: selectedProduct.vehicle_model || 'N/A',
+          drive_type:selectedProduct.drive_type || 'N/A',
+          wheelbase : selectedProduct.wheelbase || 'N/A',
+          engine_number:selectedProduct.engine_number || 'N/A',
+          engine_brand:selectedProduct.engine_brand || 'N/A',
+          power:selectedProduct.power || 'N/A',
+          engine_emissions:selectedProduct.engine_emissions || 'N/A',
+          transmission_type:selectedProduct.transmission_type || 'N/A',
+          curb_weight:selectedProduct.curb_weight || 'N/A',
+          gvw:selectedProduct.gvw || 'N/A',
+          vehicle_dimensions:selectedProduct.dimensions || 'N/A',
+          suspension_type:selectedProduct.suspension_type || 'N/A',
+          fuel_tank_capacity:selectedProduct.fuel_tank_capacity || 'N/A',
+          fuel_type:selectedProduct.fuel_type || 'N/A',
+          brake_system:selectedProduct.brake_system || 'N/A',
+          cabin_type:selectedProduct.cabin_type || 'N/A',
+          tire_size:selectedProduct.tyre_size || 'N/A',
+          payload_capacity: selectedProduct.payload_capacity || 'N/A',
+          speed:selectedProduct.speed || 'N/A',
+          engine_model:selectedProduct.engine_model || 'N/A' ,
+          hor_sepower:selectedProduct.hor_sepower || 'N/A',
+          gear_box_brand:selectedProduct.gear_box_brand || 'N/A',
+          gear_box_model:selectedProduct.gear_box_model || 'N/A',
+          chassis_dimensions:selectedProduct.chassis_dimensions || 'N/A',
+          frame_rear_suspension:selectedProduct.frame_rear_suspension || 'N/A',
+          overall_dimensions:selectedProduct.overall_dimensions || 'N/A',
+          suspension_front:selectedProduct.suspension_front || 'N/A',
+          suspension_rear:selectedProduct.suspension_rear || 'N/A',
+          axle_brand:selectedProduct.axle_brand || 'N/A',
+          axle_front:selectedProduct.axle_front || 'N/A',
+          axle_rear:selectedProduct.axle_rear || 'N/A' ,
+          axle_speed_ratio:selectedProduct.axle_speed_ratio || 'N/A',
+          air_filter:selectedProduct.air_filter || 'N/A',
+          electrics:selectedProduct.electrics || 'N/A',
+        }
+      )
+    }
+    console.log("selected specs: ",invoice.value.specs)
+    
+    
+
+  }
 }
 
 // Calculs
@@ -734,37 +767,13 @@ const subtotal = computed(() => {
   return invoice.value.items.reduce((sum, item) => sum + (item.quantity * item.price), 0)
 })
 
-const tax = computed(() => {
-  return subtotal.value * (invoice.value.taxRate / 100)
-})
-
 const total = computed(() => {
-  return subtotal.value + tax.value
+  return subtotal.value 
 })
-
-// Méthodes
-const formatCurrency = (amount) => {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0,
-    maximumFractionDigits: 0
-  }).format(amount || 0)
-}
-
-const formatDate = (dateString) => {
-  if (!dateString) return 'JJ/MM/AAAA'
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('fr-FR', {
-    day: '2-digit',
-    month: '2-digit',
-    year: 'numeric'
-  }).format(date)
-}
 
 const addItem = () => {
   invoice.value.items.push({
-    productId: '',
+      productId: '',
       product_type:'',
       product_name:"",
       trim_number:"",
@@ -774,20 +783,22 @@ const addItem = () => {
       quantity: 1,
       price: 0
   })
-  console.log("items added: ",invoice.value.items)
 }
 
 const removeItem = (index) => {
   if (invoice.value.items.length > 1) {
     invoice.value.items.splice(index, 1)
-    
+    specsToRemove = invoice.value.specs.findIndex(spec => spec.id === invoice.value.items[index]?.productId)
+    if(specsToRemove !== -1){
+      invoice.value.specs.splice(specsToRemove,1)
+    }
   }
   console.log("items removed: ",invoice.value.items)
 }
 
 const resetForm = () => {
   invoice.value = {
-    number: 'FAC-2025-' + String(Math.floor(Math.random() * 1000)).padStart(3, '0'),
+    number: 'INV-2025-' + String(Math.floor(Math.random() * 1000)).padStart(3, '0'),
     date: new Date().toISOString().split('T')[0],
     dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
     taxRate: 18,
@@ -810,617 +821,10 @@ const resetForm = () => {
         price: 0
       }
     ],
-    notes: 'Paiement à effectuer dans les 30 jours.\nMerci de mentionner le numéro de facture lors du paiement.'
+    specs:[],
+    notes: 'Payment is due within 30 days. Please mention the invoice number when making your payment.'
   }
 }
-
-const downloadPDF = () => {
-  const doc = new jsPDF()
-  
-  // Configuration
-  const pageWidth = doc.internal.pageSize.getWidth()
-  const pageHeight = doc.internal.pageSize.getHeight()
-  let yPos = 16
-  let xPos= 20
-  const margin = 20
-  
-  // En-tête
-  doc.setFillColor(255, 255, 255)
-  doc.rect(0, 0, pageWidth, 40, 'F')
-  
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(14)
-  doc.addImage(logo, 20, 12, 8, 8)
-  doc.setFont('helvetica', 'bold')
-  doc.text('FACTURE', xPos+10, yPos)
-  
-  doc.setFontSize(7)
-  doc.setFont('helvetica', 'normal')
-  doc.text('DAQ AUTO Marketplace',xPos+10, yPos+4)
-  
-  // Numéro de facture
-   doc.setFillColor(254, 121, 0)
-  doc.rect(pageWidth -50, yPos-4, 33, 5, 'F')
-  
-  doc.setTextColor(255, 255, 255)
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(12)
-  doc.text(invoice.value.number || 'FAC-XXXX-XXX', pageWidth - margin, yPos, { align: 'right' })
-
-  // Dates (sous le n°)
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(8)
-  doc.setFont('helvetica', 'bold')
-  doc.text(`Date: ${formatDate(invoice.value.date)}`, pageWidth - margin-7, yPos+4, { align: 'right' })
-  doc.text(`Échéance: ${formatDate(invoice.value.dueDate)}`, pageWidth - margin, yPos+8, { align: 'right' })
-
-    // doc.setLineWidth(200)
-  
-  yPos = 40
-  doc.setFontSize(9) 
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(0, 0, 0)
-  doc.text('Seller :', xPos, yPos)
-  
-  yPos=43
-  // Informations entreprise
-  doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.text('DAQ AUTO', xPos+8, yPos+5)
-  doc.setFontSize(7)
-  doc.setFont('helvetica', 'normal')
-  doc.text('Abidjan, Côte d\'Ivoire', xPos, yPos +10 )
-  doc.text('+225 01 53 67 60 62', xPos, yPos + 13)
-  doc.text('commandes@daqauto.com', xPos, yPos + 16)
-  doc.text('(USCC): 91310000MA1K4T123X', xPos, yPos + 19)
-  
-  // Dates
-   doc.setFontSize(9) 
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(0, 0, 0)
-  doc.text('Buyer :', pageWidth - 50, yPos-3, { align: 'left' })
-
-
-  doc.addImage(logo, 'PNG', 20, yPos, 6, 6)
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.text('DAQ AUTO', pageWidth -xPos+8, yPos+5,{ align: 'right' })
-  doc.setFontSize(7)
-  doc.setFont('helvetica', 'normal')
-  doc.text('Abidjan, Côte d\'Ivoire', pageWidth -xPos, yPos +10,{ align: 'right' } )
-  doc.text('+225 01 53 67 60 62', pageWidth -xPos, yPos + 13,{ align: 'right' })
-  doc.text('commandes@daqauto.com', pageWidth -xPos, yPos + 16,{ align: 'right' })
-  doc.text('(USCC): 91310000MA1K4T123X', pageWidth -xPos, yPos + 19,{ align: 'right' })
-
-
-  doc.setFontSize(10)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Date:', pageWidth - 70, yPos, { align: 'left' })
-  doc.setFont('helvetica', 'normal')
-  doc.text(formatDate(invoice.value.date), pageWidth - 20, yPos, { align: 'right' })
-  
-  doc.setFont('helvetica', 'bold')
-  doc.text('Échéance:', pageWidth - 70, yPos + 5, { align: 'left' })
-  doc.setFont('helvetica', 'normal')
-  doc.text(formatDate(invoice.value.dueDate), pageWidth - 20, yPos + 5, { align: 'right' })
-  
-  yPos += 30
-  
-  // Informations client
-  doc.setFillColor(254, 243, 199) // Orange clair
-  doc.rect(20, yPos, pageWidth - 40, 30, 'F')
-  
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(254, 121, 0) // Orange foncé
-  doc.text('FACTURÉ À', 25, yPos + 7)
-  
-  doc.setTextColor(0, 0, 0)
-  doc.setFontSize(10)
-  doc.text(invoice.value.client.name || 'Nom du client', 25, yPos + 13)
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(9)
-  doc.text(invoice.value.client.email || 'email@exemple.com', 25, yPos + 18)
-  doc.text(invoice.value.client.phone || '+225 XX XX XX XX XX', 25, yPos + 23)
-  
-  yPos += 40
-  
-  // Tableau des articles
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.setFillColor(243, 244, 246) // Gris clair
-  doc.rect(20, yPos, pageWidth - 40, 8, 'F')
-  
-  doc.text('DESCRIPTION', 25, yPos + 5)
-  doc.text('QTÉ', pageWidth - 100, yPos + 5, { align: 'center' })
-  doc.text('PRIX UNIT.', pageWidth - 70, yPos + 5, { align: 'right' })
-  doc.text('TOTAL', pageWidth - 25, yPos + 5, { align: 'right' })
-  
-  yPos += 12
-  
-  // Articles - Use product name from products list
-  doc.setFont('helvetica', 'normal')
-  invoice.value.items.forEach((item) => {
-    if (yPos > pageHeight - 60) {
-      doc.addPage()
-      yPos = 20
-    }
-    
-    const productName = getProductName(item.productId) || 'Article sans nom'
-    doc.text(productName, 25, yPos)
-    doc.text(String(item.quantity), pageWidth - 100, yPos, { align: 'center' })
-    doc.text(formatCurrency(item.price), pageWidth - 70, yPos, { align: 'right' })
-    doc.text(formatCurrency(item.quantity * item.price), pageWidth - 25, yPos, { align: 'right' })
-    
-    yPos += 7
-  })
-  
-  yPos += 10
-  
-  // Totaux
-  doc.setFont('helvetica', 'normal')
-  doc.text('Sous-total:', pageWidth - 80, yPos)
-  doc.text(formatCurrency(subtotal.value), pageWidth - 25, yPos, { align: 'right' })
-  
-  yPos += 7
-  doc.text(`TVA (${invoice.value.taxRate}%):`, pageWidth - 80, yPos)
-  doc.text(formatCurrency(tax.value), pageWidth - 25, yPos, { align: 'right' })
-  
-  yPos += 10
-  doc.setFillColor(254, 121, 0)
-  doc.rect(pageWidth - 90, yPos - 5, 70, 10, 'F')
-  
-  doc.setTextColor(255, 255, 255)
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(11)
-  doc.text('TOTAL:', pageWidth - 85, yPos + 2)
-  doc.text(formatCurrency(total.value), pageWidth - 30, yPos + 2, { align: 'right' })
-  
-  yPos += 20
-  
-  // Notes
-  if (invoice.value.notes) {
-    doc.setTextColor(0, 0, 0)
-    doc.setFontSize(9)
-    doc.setFont('helvetica', 'bold')
-    doc.text('NOTES / CONDITIONS', 20, yPos)
-    doc.setFont('helvetica', 'normal')
-    
-    const splitNotes = doc.splitTextToSize(invoice.value.notes, pageWidth - 40)
-    doc.text(splitNotes, 20, yPos + 5)
-    yPos += splitNotes.length * 5 + 10
-  }
-  
-  // Pied de page
-  doc.setFontSize(8)
-  doc.setTextColor(107, 114, 128)
-  doc.text('Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com', pageWidth / 2, pageHeight - 20, { align: 'center' })
-  doc.text('AliAdjamé Marketplace - Votre partenaire de confiance', pageWidth / 2, pageHeight - 15, { align: 'center' })
-  
-  doc.setTextColor(254, 121, 0)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Facture générée sur DaqAuto.com', pageWidth / 2, pageHeight - 10, { align: 'center' })
-  
-  // Téléchargement
-  doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
-}
-
-
-// pdf 2
-
-const downloadPDF2 = () => {
-  const doc = new jsPDF({ unit: 'mm', format: 'a4' })
-  const pageWidth = doc.internal.pageSize.getWidth()
-  const pageHeight = doc.internal.pageSize.getHeight()
-  const margin = 20
-  let y = 12
-
-  // Helpers pour réutilisation (dessiner l'en-tête, l'entête du tableau)
-  const drawHeader = () => {
-    // bande orange en-tête
-    doc.setFillColor(254, 121, 0)
-    doc.rect(0, 0, pageWidth, 40, 'F')
-
-    // logo
-    try {
-      if (logo) doc.addImage(logo, 'PNG', margin, 6, 18, 18)
-    } catch (e) {
-      // si logo non supporté, on ignore
-    }
-
-    // Titre et marketplace
-    doc.setTextColor(255, 255, 255)
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(22)
-    doc.text('FACTURE', margin + 22, 18)
-
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(9)
-    doc.text('DAQ AUTO Marketplace', margin + 22, 24)
-
-    // Numéro facture (à droite)
-    doc.setFontSize(11)
-    doc.setFont('helvetica', 'bold')
-    doc.text(invoice.value.number || 'FAC-XXXX-XXX', pageWidth - margin, 14, { align: 'right' })
-
-    // Dates (sous le n°)
-    doc.setFontSize(8)
-    doc.setFont('helvetica', 'normal')
-    doc.text(`Date: ${formatDate(invoice.value.date)}`, pageWidth - margin, 20, { align: 'right' })
-    doc.text(`Échéance: ${formatDate(invoice.value.dueDate)}`, pageWidth - margin, 24, { align: 'right' })
-
-    // Position suivante
-    y = 46
-  }
-
-  const drawSellerBuyer = () => {
-    // Seller (gauche)
-    const leftX = margin
-    const sellerY = y
-    // Seller block
-    doc.setFontSize(9)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(0, 0, 0)
-    doc.text('Seller :', leftX, sellerY)
-
-    // affiche logo min et nom, puis infos
-    const sellerInfoY = sellerY + 6
-    try {
-      if (logo) doc.addImage(logo, 'PNG', leftX, sellerInfoY - 4, 10, 10)
-    } catch (e) {}
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(10)
-    doc.text('DAQ AUTO', leftX + 14, sellerInfoY + 2)
-
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(8)
-    doc.text("Abidjan, Côte d'Ivoire", leftX, sellerInfoY + 8)
-    doc.text('+225 01 53 67 60 62', leftX, sellerInfoY + 12)
-    doc.text('commandes@daqauto.com', leftX, sellerInfoY + 16)
-    doc.text('(USCC): 91310000MA1K4T123X', leftX, sellerInfoY + 20)
-
-    // Buyer (droite)
-    const rightX = pageWidth - margin - 70
-    doc.setFont('helvetica', 'bold')
-    doc.text('Buyer :', rightX, sellerInfoY)
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(9)
-    doc.text(invoice.value.client.name || 'Nom du client', rightX, sellerInfoY + 6)
-    doc.setFontSize(8)
-    doc.text(invoice.value.client.address || 'Adresse du client', rightX, sellerInfoY + 10)
-    doc.text(invoice.value.client.phone || '+225 XX XX XX XX XX', rightX, sellerInfoY + 14)
-    doc.text(invoice.value.client.email || 'email@exemple.com', rightX, sellerInfoY + 18)
-
-    y = sellerInfoY + 26
-  }
-
-  const drawTableHeader = () => {
-    // Draw table header background
-    const headerHeight = 8
-    doc.setFillColor(243, 244, 246)
-    doc.rect(margin, y, pageWidth - margin * 2, headerHeight, 'F')
-
-    // Columns definition (x position)
-    // We'll set columns with fixed widths that fit an A4 landscape-ish layout in portrait.
-    // Adjust widths if needed.
-    const col = {
-      no: margin + 2,
-      product_type: margin + 12,
-      description: margin + 45,
-      trim: margin + 95,
-      vin: margin + 135,
-      stock: margin + 170,
-      color: margin + 195,
-      qty: pageWidth - margin - 52,
-      unit_price: pageWidth - margin - 32,
-      total: pageWidth - margin - 6,
-    }
-
-    doc.setFontSize(8)
-    doc.setFont('helvetica', 'bold')
-    doc.setTextColor(55, 65, 81) // gray-700-ish
-
-    doc.text('NO.', col.no, y + 5, { baseline: 'middle' })
-    doc.text('Product Type', col.product_type, y + 5, { baseline: 'middle' })
-    doc.text('Description', col.description, y + 5, { baseline: 'middle' })
-    doc.text('Trim / Vehicle Model', col.trim, y + 5, { baseline: 'middle' })
-    doc.text('VIN', col.vin, y + 5, { baseline: 'middle' })
-    doc.text('Stock Number', col.stock, y + 5, { baseline: 'middle' })
-    doc.text('Color', col.color, y + 5, { baseline: 'middle' })
-    doc.text('Quantity', col.qty, y + 5, { align: 'center', baseline: 'middle' })
-    doc.text('Unit Price', col.unit_price, y + 5, { align: 'center', baseline: 'middle' })
-    doc.text('TOTAL', col.total, y + 5, { align: 'right', baseline: 'middle' })
-
-    y += headerHeight + 4
-
-    return col
-  }
-
-  const drawFooter = () => {
-    // Footer text centered
-    doc.setFontSize(8)
-    doc.setTextColor(107, 114, 128)
-    doc.text('Merci pour votre confiance ! Pour toute question, contactez-nous à commandes@daqauto.com', pageWidth / 2, pageHeight - 28, { align: 'center' })
-    doc.text('DAQ AUTO Marketplace - Votre partenaire de confiance', pageWidth / 2, pageHeight - 22, { align: 'center' })
-    doc.setTextColor(254, 121, 0)
-    doc.setFont('helvetica', 'bold')
-    doc.text('Facture générée sur DaqAuto.com', pageWidth / 2, pageHeight - 16, { align: 'center' })
-  }
-
-  // Start drawing the invoice
-  drawHeader()
-  drawSellerBuyer()
-  let cols = drawTableHeader()
-
-  // Table rows
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(8)
-  doc.setTextColor(33, 37, 41)
-
-  invoice.value.items.forEach((item, idx) => {
-    // Si proche du bas, ajouter page et répéter header + table header
-    if (y > pageHeight - 80) {
-      doc.addPage()
-      y = 12
-      drawHeader()
-      // move to below header/seller area
-      y = 46
-      drawSellerBuyer()
-      cols = drawTableHeader()
-    }
-
-    const rowY = y
-    // Large description might need wrapping; on overflow, use splitTextToSize for description
-    const descriptionText = item.product_name || getProductName(item.productId) || 'N/A'
-    const descriptionLines = doc.splitTextToSize(descriptionText, 45) // approx width in mm
-    const lineCount = Math.max(1, descriptionLines.length)
-    const rowHeight = lineCount * 4 + 2
-
-    // NO.
-    doc.text(String(idx + 1), cols.no, rowY)
-
-    // Product Type
-    doc.text(item.product_type || 'N/A', cols.product_type, rowY)
-
-    // Description (multi-line)
-    doc.text(descriptionLines, cols.description, rowY)
-
-    // Trim / Vehicle Model
-    doc.text(item.trim_number || 'N/A', cols.trim, rowY)
-
-    // VIN
-    doc.text(item.vin || 'N/A', cols.vin, rowY)
-
-    // Stock Number
-    doc.text(item.stock_number || 'N/A', cols.stock, rowY)
-
-    // Color
-    doc.text(item.color || 'N/A', cols.color, rowY)
-
-    // Quantity (centered)
-    doc.text(String(item.quantity ?? ''), cols.qty, rowY, { align: 'center' })
-
-    // Unit Price
-    doc.text(formatCurrency(item.price ?? 0), cols.unit_price, rowY, { align: 'center' })
-
-    // Total
-    doc.text(formatCurrency((item.quantity ?? 0) * (item.price ?? 0)), cols.total, rowY, { align: 'right' })
-
-    y += rowHeight
-  })
-
-  // Si aucun article
-  if (!invoice.value.items || invoice.value.items.length === 0) {
-    doc.setFontSize(9)
-    doc.setTextColor(120, 120, 120)
-    doc.text('Aucun article ajouté', pageWidth / 2, y + 10, { align: 'center' })
-    y += 12
-  }
-
-  y += 6
-
-  // Totaux (droite)
-  const totalsX = pageWidth - margin - 2
-  doc.setFontSize(9)
-  doc.setTextColor(75, 85, 99)
-  // Sous-total
-  doc.text('Sous-total:', totalsX - 55, y)
-  doc.text(formatCurrency(subtotal.value), totalsX, y, { align: 'right' })
-  y += 7
-  // TVA
-  doc.text(`TVA (${invoice.value.taxRate}%):`, totalsX - 55, y)
-  doc.text(formatCurrency(tax.value), totalsX, y, { align: 'right' })
-  y += 7
-  // Shipping / Handling (empty for now)
-  doc.text('Shipping / Handling :', totalsX - 55, y)
-  doc.text('', totalsX, y, { align: 'right' })
-  y += 7
-  // Insurance
-  doc.text('Insurance :', totalsX - 55, y)
-  doc.text('', totalsX, y, { align: 'right' })
-  y += 7
-  // Sea Shipping
-  doc.text('Sea Shipping :', totalsX - 55, y)
-  doc.text('', totalsX, y, { align: 'right' })
-  y += 10
-
-  // Total highlight box
-  const boxW = 70
-  const boxH = 12
-  const boxX = pageWidth - margin - boxW
-  doc.setFillColor(254, 121, 0)
-  doc.rect(boxX, y - 6, boxW, boxH, 'F')
-  doc.setTextColor(255, 255, 255)
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(11)
-  doc.text('TOTAL:', boxX + 6, y + 2)
-  doc.text(formatCurrency(total.value), pageWidth - margin - 6, y + 2, { align: 'right' })
-
-  y += 22
-
-  // Bank Information box (left)
-  const bankBoxX = margin
-  const bankBoxW = pageWidth - margin * 2
-  doc.setFillColor(255, 249, 238) // light gradient-like (approx)
-  doc.roundedRect(bankBoxX, y, bankBoxW, 36, 3, 3, 'F')
-  doc.setFontSize(9)
-  doc.setTextColor(33, 37, 41)
-  doc.setFont('helvetica', 'bold')
-  doc.text('Bank Information', bankBoxX + 4, y + 7)
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(8)
-  doc.text('Beneficiary Name : DAQ AUTO CO., LTD', bankBoxX + 4, y + 12)
-  doc.text('Bank Name : Bank of China, Chongqing Branch', bankBoxX + 4, y + 16)
-  doc.text('Account Number : 123 456 7890', bankBoxX + 4, y + 20)
-  doc.text('SWIFT Code : BKCHCNBJ600', bankBoxX + 4, y + 24)
-  doc.text('Bank Address : No. 123 Jiangbei District, Chongqing, China', bankBoxX + 4, y + 28)
-
-  y += 46
-
-  // Terms & Conditions and Shipping & Packaging -- put columns if space allows
-  const leftColX = margin
-  const rightColX = pageWidth / 2 + 4
-  let termsY = y
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'bold')
-  doc.setTextColor(33, 37, 41)
-  doc.text('Terms & Conditions / 条款与条件', leftColX, termsY)
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(8)
-  termsY += 5
-
-  const terms = [
-    'Incoterm / 国际贸易术语: CIF / FOB / EXW [Specify port]',
-    'Payment Terms / 付款方式: T/T — 100% payment received before shipment.',
-    'Production Time / 生产周期: [e.g. 15–20 working days after deposit]',
-    'Estimated Delivery / 预计发货日期: [Insert / 填写]',
-    'Commercial invoice /商业发票: This is the final commercial invoice for customs and payment confirmation.'
-  ]
-  terms.forEach((t, i) => {
-    const split = doc.splitTextToSize(`${i + 1}. ${t}`, pageWidth / 2 - margin - 10)
-    doc.text(split, leftColX, termsY)
-    termsY += split.length * 4
-  })
-
-  // Notes (right column)
-  let notesY = y
-  doc.setFont('helvetica', 'bold')
-  doc.setFontSize(9)
-  doc.text('Shipping & Packaging / 运输与包装', rightColX, notesY)
-  doc.setFont('helvetica', 'normal')
-  doc.setFontSize(8)
-  notesY += 5
-  const shipping = [
-    'Mode of Transport / 运输方式: [Sea / Air / Road]',
-    'Port of Loading / 装货港: [Insert]',
-    'Port of Destination / 目的港: [Insert]',
-    'Package details: [Insert]'
-  ]
-  shipping.forEach((s) => {
-    const split = doc.splitTextToSize(`- ${s}`, pageWidth / 2 - margin - 10)
-    doc.text(split, rightColX, notesY)
-    notesY += split.length * 4
-  })
-
-  // Move y after the taller column
-  y = Math.max(termsY, notesY) + 8
-
-  // Notes / Other notes (full width)
-  if (invoice.value.notes) {
-    doc.setFont('helvetica', 'bold')
-    doc.setFontSize(9)
-    doc.text('Others Notes / Conditions', margin, y)
-    doc.setFont('helvetica', 'normal')
-    doc.setFontSize(8)
-    const noteLines = doc.splitTextToSize(invoice.value.notes, pageWidth - margin * 2)
-    doc.text(noteLines, margin, y + 6)
-    y += noteLines.length * 4 + 8
-  }
-
-  // Signature block (right)
-  const sigX = pageWidth - margin - 80
-  doc.setFontSize(9)
-  doc.setFont('helvetica', 'normal')
-  doc.text('Authorized Signature & Stamp / 授权签字与公司印章', sigX, y)
-  doc.text('Name / 姓名: [Authorized person / 授权人]', sigX, y + 6)
-  doc.text('Signature / 签名: ___________________', sigX, y + 12)
-  doc.text('Company Stamp / 公司印章: ___________________', sigX, y + 18)
-
-  // Footer final
-  drawFooter()
-
-  // Save file
-  doc.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
-}
-
-const downloadPDF3 = async () => {
-
-  // const { jsPDF } = window.jspdf
-    const invoice = document.getElementById('invoice-preview')
-
-    // Capture du design Tailwind
-    const canvas = await html2canvas(invoice, {
-      scale: 2, // améliore la qualité
-      useCORS: true,
-      backgroundColor: '#ffffff'
-    })
-
-    const imgData = canvas.toDataURL('image/png')
-    const pdf = new jsPDF('p', 'px', 'A4')
-
-    // Calcul du ratio pour un rendu propre
-    const pdfWidth = pdf.internal.pageSize.getWidth()
-    const pdfHeight = pdf.internal.pageSize.getHeight()
-    const footerMargin = 20
-
-    // Dimensions de l'image en mm
-    const imgWidth = pdfWidth
-    const imgHeight = ((canvas.height-20) * pdfWidth) / canvas.width 
-
-    let heightLeft = imgHeight
-    let yOffset = 0
-    let page = 1
-    
-
-     const addFooter = (doc, pageNumber) => {
-    const footerY = pdfHeight - 20 // marge de 10 mm du bas
-    doc.setFontSize(8)
-    doc.setTextColor(120, 120, 120)
-    // doc.text('DAQ AUTO Marketplace — commandes@daqauto.com', pdfWidth / 2, footerY, { align: 'center' })
-    doc.text(`Page ${pageNumber}`, pdfWidth - 20, footerY, { align: 'right' })
-  }
-
-    // Première page
-    pdf.addImage(imgData, 'PNG', 0, 0, imgWidth, imgHeight-20)
-    // addFooter(pdf, page)
-    heightLeft -= (pdfHeight - footerMargin)
-    yOffset = (pdfHeight - footerMargin)
-    page++
-
-   // Pages suivantes
-  while (heightLeft > 0) {
-      pdf.addPage()
-     const position = -yOffset
-      pdf.addImage(imgData, 'PNG', 0, position, imgWidth, imgHeight-20)
-      addFooter(pdf, page)
-      heightLeft -= pdfHeight
-      yOffset += pdfHeight
-      page++
-  }
-
-    pdf.save('facture.pdf')
-
-
-
-
-  // // 💾 Sauvegarde
-  // pdf.save(`Facture_${invoice.value.number || 'XXXX'}.pdf`)
-}
-
-
 </script>
 
 <style scoped>
