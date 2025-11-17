@@ -163,8 +163,8 @@ button:focus-visible {
 }
 
 .btn-gray {
-  background: #8f8f8f;
-  color: #fff;
+  background: #e6e9ed;
+  color: #374151;
 }
 .btn-gray:hover {
   background: #b7b6b6;

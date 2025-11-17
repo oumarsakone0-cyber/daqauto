@@ -52,23 +52,23 @@
         <!-- Actions mobiles optimisées -->
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <!-- Export dropdown -->
-          <div class="relative">
+          <div class="relative" ref="exportDropdownRef">
             <button 
               @click="showExportDropdown = !showExportDropdown"
               class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
             >
-              <DownloadIcon class="w-4 h-4 mr-2" />
+              <DownloadIcon class="w-4 h-4" />
               <span >Export</span>
-              <ChevronDownIcon class="w-4 h-4 ml-2" />
+              <ChevronDownIcon class="w-4 h-4 " />
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 ">
               <div role="menu">
                 <button @click="exportToPDF" class="flex items-center text-sm mb-2 btn-gray" role="menuitem" >
-                  <FileTextIcon class="w-4 h-4 mr-2 error-color" />
+                  <FileTextIcon class="w-4 h-4  error-color" />
                   Export to PDF
                 </button>
                 <button @click="exportToExcel" class="flex items-center text-sm btn-gray" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 mr-1 green-color" />
+                  <FileTextIcon class="w-4 h-4 green-color" />
                   Export to Excel
                 </button>
               </div>
@@ -85,20 +85,20 @@
                 : 'btn-gray'
             ]"
           >
-            <PlusIcon class="w-4 h-4 mr-2" />
+            <PlusIcon class="w-4 h-4" />
             <span class="hidden sm:inline">{{ canAddMoreProducts() ? 'Add produit' : 'Limit reached' }}</span>
             <span class="sm:hidden">{{ canAddMoreProducts() ? 'Add' : 'Limit' }}</span>
           </button>
 
           <!-- Premium button -->
-            <button 
+            <!-- <button 
            
               @click="handleLogout()"
               class="w-full sm:w-auto inline-flex items-center  justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-deconnexion"
             >
-            <LogoutIcon class="w-4 h-4 mr-2 text-white-500 cursor-pointer" />
+            <LogoutIcon class="w-4 h-4 text-white-500 cursor-pointer" />
               <span >Logout</span>
-            </button>
+            </button> -->
         </div>
       </div>
 
@@ -162,7 +162,7 @@
             <div class="flex-1 min-w-0">
               <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
             </div>
-            <button @click="refresh" class="w-full sm:w-auto px-4 py-2 error-background-color text-white rounded-lg hover:bg-red-700 transition-colors font-medium text-sm">
+            <button @click="refresh" class="w-full sm:w-auto px-4 py-2 error-background-color rounded-lg transition-colors font-medium text-sm">
               Try again
             </button>
           </div>
@@ -1208,6 +1208,7 @@ const searchQuery = ref('')
 const activeFilter = ref('all')
 const selectedPeriod = ref('all')
 const notification = ref({ show: false, message: '' })
+const exportDropdownRef = ref(null)
 
 // États pour la configuration du boost
 const selectedDuration = ref(1) // Durée en semaines
@@ -2237,36 +2238,36 @@ async function exportToExcel() {
   }
 }
 
-const handleLogout = async () => {
-  try {
-    await ElMessageBox.confirm(
-      'Are you sure you logout ?',
-      'Confirmation',
-      {
-        confirmButtonText: 'Yes',
-        cancelButtonText: 'Cancel',
-        type: 'warning',
-        confirmButtonColor: "#fe9700",
+// const handleLogout = async () => {
+//   try {
+//     await ElMessageBox.confirm(
+//       'Are you sure you logout ?',
+//       'Confirmation',
+//       {
+//         confirmButtonText: 'Yes',
+//         cancelButtonText: 'Cancel',
+//         type: 'warning',
+//         confirmButtonColor: "#fe9700",
 
-      }
-    )
+//       }
+//     )
 
-    localStorage.removeItem('authToken')
-    sessionStorage.removeItem('authToken')
-    localStorage.removeItem('user')
-    sessionStorage.removeItem('user')
-    localStorage.removeItem('rememberMe')
+//     localStorage.removeItem('authToken')
+//     sessionStorage.removeItem('authToken')
+//     localStorage.removeItem('user')
+//     sessionStorage.removeItem('user')
+//     localStorage.removeItem('rememberMe')
 
-    ElMessage({
-      type: 'success',
-      message: 'Logout success'
-    })
+//     ElMessage({
+//       type: 'success',
+//       message: 'Logout success'
+//     })
 
-    window.location.href = '/boutique-admin/login'
-  } catch (error) {
-    // Annulé
-  }
-}
+//     window.location.href = '/boutique-admin/login'
+//   } catch (error) {
+//     // Annulé
+//   }
+// }
 
 const handleAddProduct = async (productData) => {
   try {
@@ -2328,6 +2329,9 @@ const handleClickOutside = (event) => {
   if (!event.target.closest('.relative')) {
     showExportDropdown.value = false
     activeActionMenu.value = null
+  }
+  if (exportDropdownRef.value && !exportDropdownRef.value.contains(event.target)) {
+    showExportDropdown.value = false;
   }
 }
 
@@ -2391,11 +2395,6 @@ onUnmounted(() => {
   transition-duration: 300ms;
 }
 
-.transition-colors {
-  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 150ms;
-}
 
 .transition-transform {
   transition-property: transform;

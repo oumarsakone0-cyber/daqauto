@@ -41,23 +41,23 @@
         </div>
         
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-          <div class="relative">
+          <div class="relative" ref="exportDropdownRef">
             <button 
               @click="showExportDropdown = !showExportDropdown"
               class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
             >
-              <DownloadIcon class="w-4 h-4 mr-2" />
+              <DownloadIcon class="w-4 h-4" />
               <span>Export</span>
-              <ChevronDownIcon class="w-4 h-4 ml-2" />
+              <ChevronDownIcon class="w-4 h-4" />
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
               <div role="menu">
                 <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 mr-2 error-color" />
+                  <FileTextIcon class="w-4 h-4  error-color" />
                   Export to PDF
                 </button>
                 <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 mr-1 green-color" />
+                  <FileTextIcon class="w-4 h-4 green-color" />
                   Export to Excel
                 </button>
               </div>
@@ -68,7 +68,7 @@
             @click="loadAllData"
             class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all submit-btn"
           >
-            <RefreshIcon class="w-4 h-4 mr-2" />
+            <RefreshIcon class="w-4 h-4" />
             Refresh
           </button>
         </div>
@@ -77,7 +77,7 @@
       <!-- Loading State -->
       <div v-if="dataLoading" class="mb-6 sm:mb-8">
         <div class="bg-white rounded-lg p-6 sm:p-8 text-center shadow-lg">
-          <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-orange-500 border-t-transparent"></div>
+          <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 primary-color border-t-transparent"></div>
           <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Loading orders...</p>
         </div>
       </div>
@@ -115,7 +115,7 @@
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
                 <span class="truncate">Growth: +{{ stats.orders_growth || 0 }}%</span>
-                <span class="text-orange-600 flex-shrink-0">This month</span>
+                <span class="primary-color flex-shrink-0">This month</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300" style="width: 75%"></div>
@@ -232,11 +232,11 @@
               >
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-              <div class="w-45">
+              <div class="w-60 overflow-ellipsis">
                 <select 
                   v-model="statusFilter" 
                   @change="loadOrders" 
-                  class="input-style">
+                  class="input-style pr-2">
                   <option value="" class="px-4">All status</option>
                   <option value="en_attente">Pending</option>
                   <option value="confirmee">Confirmed</option>
@@ -257,8 +257,8 @@
                   <option value="month">This month</option>
                 </select>
               </div>
-              <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion w-30">
-                <X class="w-4 h-4 sm:hidden" />
+              <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion">
+                <X class="w-4 h-4 text-white  sm:hidden" />
                 <span class="hidden sm:inline text-xs">Clear Filters</span>
               </button>
             </div>
@@ -372,7 +372,7 @@
                   <div v-if="order.preuve_paiement" class="flex flex-col gap-1">
                     <button 
                       @click="showPaymentProof(order)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-medium transition-colors"
+                      class="inline-flex font-medium submit-btn text-x"
                       title="View payment proof"
                     >
                       <ImageIcon class="h-3 w-3" />
@@ -381,7 +381,7 @@
                     <button 
                       v-if="!order.preuve_validee && order.tobevalidate !== 'valid'"
                       @click="openValidateProofModal(order)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-medium transition-colors"
+                      class="inline-flex  btn-degrade-orange"
                       title="Validate proof"
                     >
                       <CheckCircleIcon class="h-3 w-3" />
@@ -390,16 +390,17 @@
                     <div v-else style="display: grid;">
                       <span 
                       style="margin: 0"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium"
                     >
                       <CheckCircle2Icon class="h-3 w-3" />
                       <span>Validated</span>
                     </span>
                     <br/>
+                    <span class="h-1"></span>
                     <button 
                       v-if="order.prepare !== 'valid'"
                       @click="openValidatePrepareModal(order)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-xs font-medium transition-colors"
+                      class="inline-flex btn-degrade-orange"
                       title="Validate proof"
                     >
                       <CheckCircleIcon class="h-3 w-3" />
@@ -407,8 +408,7 @@
                     </button>
                     <span 
                       v-if="order.prepare === 'valid'"
-                      style="margin: 0; background-color: orange;"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium"
                     >
                       <CheckCircle2Icon class="h-3 w-3" />
                       <span>Prepare Terminated</span>
@@ -481,6 +481,7 @@
               <select 
                 v-model="itemsPerPage" 
                 @change="handleItemsPerPageChange"
+                style="padding-left:20px;"
                 class="input-style text-xs sm:text-sm"
               >
                 <option :value="10">10</option>
@@ -532,24 +533,22 @@
         <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-blue-100 rounded-lg">
-              <ImageIcon class="h-5 w-5 text-blue-600" />
+              <ImageIcon class="h-5 w-5 green-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
               <p class="text-sm text-gray-500">Order #{{ currentProofOrder?.numero_commande }}</p>
             </div>
           </div>
-          <button @click="closePaymentProofModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-            <XIcon class="h-5 w-5 text-gray-500" />
-          </button>
+            <XIcon class="h-7 w-7 text-gray-500 cursor-pointer" @click="closePaymentProofModal"/>
         </div>
-        <div class="p-6 overflow-y-auto">
+        <div class="p-6 overflow-y-scroll max-h-[80vh]">
           <div class="bg-gray-50 rounded-xl overflow-hidden">
             <img 
               v-if="currentProofOrder?.preuve_paiement" 
               :src="currentProofOrder.preuve_paiement" 
               alt="Payment Proof"
-              class="w-full h-auto"
+              class="w-full h-auto max-h-[60vh] object-contain"
             />
           </div>
           <div class="mt-4 flex justify-end gap-3">
@@ -562,7 +561,7 @@
             <button 
               v-if="!currentProofOrder?.preuve_validee"
               @click="openValidateProofModal(currentProofOrder)"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+              class="submit-btn"
             >
               Validate Proof
             </button>
@@ -576,8 +575,8 @@
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
         <div class="px-6 py-4 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 text-green-600" />
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <CheckCircleIcon class="h-5 w-5 primary-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Validate Payment Proof</h3>
@@ -595,7 +594,7 @@
             <textarea 
               v-model="validationComment"
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              class="input-style"
               placeholder="Enter your comment here..."
             ></textarea>
           </div>
@@ -610,7 +609,7 @@
             <button 
             style="background-color: #16a34a;"
               @click="validatePaymentProof"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+              class="btn-degrade-orange"
             >
               Validate
             </button>
@@ -619,12 +618,12 @@
       </div>
     </div>
 
-    <div v-if="showValidateprepareModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
+    <div v-if="showValidateprepareModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateprepareModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
         <div class="px-6 py-4 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 text-green-600" />
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <CheckCircleIcon class="h-5 w-5 primary-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Preparation completed</h3>
@@ -642,14 +641,14 @@
             <textarea 
               v-model="validationComment"
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              class="input-style"
               placeholder="Enter your comment here..."
             ></textarea>
           </div>
 
           <div class="flex justify-end gap-3 pt-4">
             <button 
-              @click="closeValidateProofModal"
+              @click="closeValidateprepareModal"
               class="px-4 py-2 btn-gray"
             >
               Cancel
@@ -657,7 +656,7 @@
             <button 
             style="background-color: #16a34a;"
               @click="validatePreparation"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+              class="btn-degrade-orange"
             >
               Validate
             </button>
@@ -688,9 +687,8 @@
               Cancel
             </button>
             <button 
-            style="background-color: green;"
               @click="executeAction"
-              :class="['px-4 py-2 rounded-lg text-white font-medium transition-colors', getConfirmationButtonClass()]"
+              :class="['px-4 py-2 rounded-lg text-white font-medium transition-colors submit-btn', getConfirmationButtonClass()]"
             >
               {{ getConfirmationButtonText() }}
             </button>
@@ -705,14 +703,13 @@
         <div class="sticky top-0 bg-white border-b border-gray-100 px-8 py-6 rounded-t-2xl">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-4">
-              <div class="p-3 bg-gradient-to-br from-orange-500 to-orange-600 rounded-xl">
+              <div class="p-3 bg-orange rounded-xl">
                 <FileTextIcon class="h-6 w-6 text-white" />
               </div>
               <h3 class="text-2xl font-bold text-gray-900">Order Details</h3>
             </div>
-            <button @click="closeOrderModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-              <XIcon class="h-6 w-6 text-gray-500" />
-            </button>
+            
+              <XIcon class="h-7 w-7 cursor-pointer text-gray-500" @click="closeOrderModal" />
           </div>
         </div>
 
@@ -721,7 +718,7 @@
           <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-200">
             <div class="flex items-center justify-between mb-6">
               <div class="flex items-center gap-4">
-                <div class="p-4 bg-gradient-to-br from-orange-500 to-orange-600 rounded-2xl">
+                <div class="p-4 bg-orange rounded-2xl">
                   <FileCheck class="h-7 w-7 text-white" />
                 </div>
                 <div>
@@ -738,21 +735,21 @@
             <!-- Quick Stats -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <Banknote class="h-6 w-6 text-orange-600" />
+                <Banknote class="h-6 w-6 primary-color" />
                 <div>
                   <div class="text-sm text-gray-600">Total</div>
                   <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.total) }}</div>
                 </div>
               </div>
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <BoxIcon class="h-6 w-6 text-orange-600" />
+                <BoxIcon class="h-6 w-6 primary-color" />
                 <div>
                   <div class="text-sm text-gray-600">Quantity</div>
                   <div class="text-xl font-bold text-gray-900">{{ selectedOrder.quantite }}</div>
                 </div>
               </div>
               <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <Truck class="h-6 w-6 text-orange-600" />
+                <Truck class="h-6 w-6 primary-color" />
                 <div>
                   <div class="text-sm text-gray-600">Delivery</div>
                   <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</div>
@@ -766,7 +763,7 @@
             <!-- Customer Information -->
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
-                <User class="h-6 w-6 text-orange-600" />
+                <User class="h-6 w-6 primary-color" />
                 <h4 class="text-lg font-semibold text-gray-900">Customer Information</h4>
               </div>
               <div class="space-y-3">
@@ -790,7 +787,7 @@
             <!-- Delivery Information -->
             <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center gap-3 mb-4">
-                <Truck class="h-6 w-6 text-orange-600" />
+                <Truck class="h-6 w-6 primary-color" />
                 <h4 class="text-lg font-semibold text-gray-900">Delivery Information</h4>
               </div>
               <div class="space-y-3">
@@ -822,7 +819,7 @@
           <!-- Product Information -->
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <BoxIcon class="h-6 w-6 text-orange-600" />
+              <BoxIcon class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Product Ordered</h4>
             </div>
             <div class="flex items-start gap-6">
@@ -862,7 +859,7 @@
           <!--  Payment Information Section -->
           <div v-if="selectedOrder.preuve_paiement" class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <CreditCardIcon class="h-6 w-6 text-orange-600" />
+              <CreditCardIcon class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Payment Information</h4>
             </div>
             <div class="space-y-4">
@@ -872,7 +869,7 @@
               </div>
               <div class="flex items-center justify-between">
                 <span class="text-sm text-gray-600">Proof status</span>
-                <span v-if="selectedOrder.preuve_validee" class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium">
+                <span v-if="selectedOrder.preuve_validee" class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 green-color rounded-full text-xs font-medium">
                   <CheckCircle2Icon class="h-3 w-3" />
                   Validated
                 </span>
@@ -884,7 +881,7 @@
               <div class="pt-4 border-t border-gray-100">
                 <button 
                   @click="showPaymentProof(selectedOrder)"
-                  class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-medium transition-colors"
+                  class="submit-btn w-full"
                 >
                   <ImageIcon class="h-4 w-4" />
                   View Payment Proof
@@ -896,7 +893,7 @@
           <!-- Boutique Information -->
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <Building class="h-6 w-6 text-orange-600" />
+              <Building class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Store Information</h4>
             </div>
             <div class="space-y-4">
@@ -916,7 +913,7 @@
               
               <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <div v-if="selectedOrder.boutique_telephone || selectedOrder.boutique_email">
-                  <h6 class="text-sm font-semibold text-gray-700 mb-3">Contact</h6>
+                  <h6 class="text-sm font-semibold text-gray-700 mb-3">Contacts</h6>
                   <div class="space-y-2">
                     <div v-if="selectedOrder.boutique_telephone" class="flex items-center gap-2 text-sm text-gray-600">
                       <PhoneCall class="h-4 w-4 text-gray-500" />
@@ -945,19 +942,19 @@
               </div>
               
               <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-100">
-                <button v-if="selectedOrder.boutique_telephone" @click="callBoutique(selectedOrder.boutique_telephone)" class="flex items-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg transition-colors duration-200">
+                <button v-if="selectedOrder.boutique_telephone" @click="callBoutique(selectedOrder.boutique_telephone)" class="btn-degrade-orange">
                   <PhoneCall class="h-4 w-4" />
                   <span>Call</span>
                 </button>
-                <button v-if="selectedOrder.boutique_email" @click="emailBoutique(selectedOrder.boutique_email)" class="flex items-center gap-2 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg transition-colors duration-200">
+                <button v-if="selectedOrder.boutique_email" @click="emailBoutique(selectedOrder.boutique_email)" class="submit-btn">
                   <Mail class="h-4 w-4" />
                   <span>Email</span>
                 </button>
-                <button @click="notifyBoutiqueNewOrder(selectedOrder)" class="flex items-center gap-2 px-4 py-2 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg transition-colors duration-200">
+                <button @click="notifyBoutiqueNewOrder(selectedOrder)" class="btn-gray">
                   <Bell class="h-4 w-4" />
                   <span>Notify Order</span>
                 </button>
-                <button @click="generateReceiptPDF(selectedOrder)" class="flex items-center gap-2 px-4 py-2 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg transition-colors duration-200">
+                <button @click="generateReceiptPDF(selectedOrder)" class="btn-gray">
                   <FileDownIcon class="h-4 w-4" />
                   <span>PDF Receipt</span>
                 </button>
@@ -968,7 +965,7 @@
           <!-- Financial Summary -->
           <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
             <div class="flex items-center gap-3 mb-6">
-              <Banknote class="h-6 w-6 text-orange-600" />
+              <Banknote class="h-6 w-6 primary-color" />
               <h4 class="text-lg font-semibold text-gray-900">Financial Summary</h4>
             </div>
             <div class="space-y-4">
@@ -988,10 +985,10 @@
               </div>
               <div class="flex justify-between items-center py-3 border-t border-gray-100">
                 <div class="flex items-center gap-2">
-                  <Banknote class="h-6 w-6 text-gray-900" />
-                  <span class="text-lg font-semibold text-gray-900">Total</span>
+                  <Banknote class="h-6 w-6 primary-color" />
+                  <span class="text-lg font-semibold primary-color">Total</span>
                 </div>
-                <span class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.total) }}</span>
+                <span class="text-xl font-bold primary-color">{{ formatCurrency(selectedOrder.total) }}</span>
               </div>
             </div>
           </div>
@@ -1001,28 +998,28 @@
             <button 
               v-if="selectedOrder.statut === 'en_attente'" 
               @click="showConfirmModal('confirm', selectedOrder)"
-              class="px-6 py-3 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+              class="submit-btn"
             >
               Confirm Order
             </button>
             <button 
               v-if="selectedOrder.statut === 'confirmee'" 
               @click="showConfirmModal('ship', selectedOrder)"
-              class="px-6 py-3 bg-blue-600 hover:bg-blue-700 text-white rounded-lg font-medium transition-colors"
+              class="btn-gray"
             >
               Mark as Shipped
             </button>
             <button 
               v-if="selectedOrder.statut === 'en_livraison'" 
               @click="showConfirmModal('deliver', selectedOrder)"
-              class="px-6 py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg font-medium transition-colors"
+              class="btn-degrade-orange"
             >
               Mark as Delivered
             </button>
             <button 
               v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)" 
               @click="showConfirmModal('cancel', selectedOrder)"
-              class="px-6 py-3 bg-red-600 hover:bg-red-700 text-white rounded-lg font-medium transition-colors"
+              class="btn-deconnexion"
             >
               Cancel Order
             </button>
@@ -1045,7 +1042,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted } from 'vue'
 import Navbar from '../boutiques/Navbar.vue'
 import axios from 'axios'
 import jsPDF from 'jspdf'
@@ -1085,13 +1082,13 @@ import {
   Home,
   Mail,
   Bell,
-  MessageSquare,
   FileDown as FileDownIcon,
   Calculator as CalculatorIcon,
   CheckCircle,
   Image as ImageIcon,
   CheckCircle as CheckCircleIcon,
-  CreditCard as CreditCardIcon
+  CreditCard as CreditCardIcon,
+  X
 } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -1132,6 +1129,7 @@ const showValidateprepareModal = ref(false)
 const currentProofOrder = ref(null)
 const currentValidateOrder = ref(null)
 const validationComment = ref('')
+const exportDropdownRef = ref(null)
 
 // Stats
 const stats = ref({
@@ -1894,103 +1892,25 @@ const generateReceiptPDF = (order) => {
     showNotificationMessage('error', 'Error', 'Error generating receipt')
   }
 }
+const handleClickOutside = (event) => {
+  if (exportDropdownRef.value && !exportDropdownRef.value.contains(event.target)) {
+    showExportDropdown.value = false
+  }
+}
 
 // Lifecycle
 onMounted(() => {
   loadAllData()
+  document.addEventListener('click', handleClickOutside)
+})
+
+
+onUnmounted(() => {
+  document.removeEventListener('click', handleClickOutside)
 })
 </script>
 
 <style scoped>
-/* Custom Styles */
-.btn-degrade-orange {
-  background: linear-gradient(135deg, #f97316 0%, #ea580c 100%);
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.btn-degrade-orange:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(249, 115, 22, 0.3);
-}
-
-.btn-gray {
-  background-color: #f3f4f6;
-  color: #374151;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.btn-gray:hover {
-  background-color: #e5e7eb;
-}
-
-.btn-deconnexion {
-  background-color: #fee2e2;
-  color: #dc2626;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-
-.btn-deconnexion:hover {
-  background-color: #fecaca;
-}
-
-.submit-btn {
-  background: linear-gradient(135deg, #3b82f6 0%, #2563eb 100%);
-  color: white;
-  font-weight: 600;
-  transition: all 0.3s ease;
-}
-
-.submit-btn:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 10px 25px rgba(59, 130, 246, 0.3);
-}
-
-.input-style {
-  width: 100%;
-  padding: 0.5rem 1rem;
-  padding-left: 2.5rem;
-  border: 1px solid #d1d5db;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-  transition: all 0.2s;
-}
-
-.input-style:focus {
-  outline: none;
-  border-color: #f97316;
-  ring: 2px;
-  ring-color: rgba(249, 115, 22, 0.2);
-}
-
-.primary-color {
-  color: #f97316;
-}
-
-.error-color {
-  color: #dc2626;
-}
-
-.error-background-color {
-  background-color: #dc2626;
-  color: white;
-}
-
-.green-color {
-  color: #16a34a;
-}
-
-.purple-color {
-  color: #9333ea;
-}
-
 /* Animations */
 @keyframes float-slow {
   0%, 100% {

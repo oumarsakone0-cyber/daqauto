@@ -12,8 +12,8 @@
             :key="item.name"
             :href="item.href"
             @click.prevent="handleNavigation(item)"
-            class="text-sm font-medium text-gray-700 hover:text-blue-600 transition-colors"
-            :class="{ 'text-blue-600': isActive(item.href) }"
+            :class="['text-sm font-medium text-gray-700 transition-colors',
+             isActive(item.href)?'primary-color':'' ]"
           >
             {{ item.name }}
           </a>
@@ -32,35 +32,20 @@
 
           <button
             @click="toggleMenu"
-            class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-blue-600"
+            class="md:hidden inline-flex items-center justify-center p-2 rounded-md text-gray-700 hover:bg-gray-100 focus:outline-none"
             aria-label="Menu"
           >
             <svg
-              v-if="!isMenuOpen"
               class="h-6 w-6"
               fill="none"
               viewBox="0 0 24 24"
-              stroke="currentColor"
+              stroke="white"
             >
               <path
                 stroke-linecap="round"
                 stroke-linejoin="round"
                 stroke-width="2"
                 d="M4 6h16M4 12h16M4 18h16"
-              />
-            </svg>
-            <svg
-              v-else
-              class="h-6 w-6"
-              fill="none"
-              viewBox="0 0 24 24"
-              stroke="currentColor"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M6 18L18 6M6 6l12 12"
               />
             </svg>
           </button>
@@ -71,7 +56,7 @@
     <Transition name="overlay">
       <div
         v-if="isMenuOpen"
-        class="fixed inset-0 bg-black bg-opacity-50 z-40 md:hidden"
+        class="fixed inset-0 bg-black/50 bg-opacity-50 z-40 md:hidden"
         @click="closeMenu"
       />
     </Transition>
@@ -89,7 +74,7 @@
               class="p-2 rounded-md text-gray-700 hover:bg-gray-100"
               aria-label="Fermer"
             >
-              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="white">
                 <path
                   stroke-linecap="round"
                   stroke-linejoin="round"
@@ -135,6 +120,7 @@
 
 <script setup>
 import { ref, onMounted, h } from 'vue'
+import { ElMessageBox, ElMessage } from 'element-plus'
 
 // Menu state
 const isMenuOpen = ref(false)
@@ -213,11 +199,11 @@ const menuItems = [
 const handleLogout = async () => {
   try {
     await ElMessageBox.confirm(
-      'Voulez-vous vraiment vous déconnecter ?',
+      'Are you sure you logout ?',
       'Confirmation',
       {
-        confirmButtonText: 'Oui',
-        cancelButtonText: 'Annuler',
+        confirmButtonText: 'Yes',
+        cancelButtonText: 'Cancel',
         type: 'warning',
         confirmButtonColor: "#fe9700",
 
@@ -232,7 +218,7 @@ const handleLogout = async () => {
 
     ElMessage({
       type: 'success',
-      message: 'Déconnexion réussie'
+      message: 'Logout success'
     })
 
     window.location.href = '/boutique-admin/login'
@@ -280,9 +266,10 @@ const closeMenu = () => {
 }
 
 // Handle navigation
-const handleNavigation = (item) => {
+const handleNavigation = async(item) => {
+  
   if (item.href === '/logout') {
-    handleLogout()
+    await handleLogout()
   } else {
     currentPath.value = item.href
     // Navigate to the page (you can use Vue Router here)

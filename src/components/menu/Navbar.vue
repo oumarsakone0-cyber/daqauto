@@ -1,5 +1,5 @@
 <template>
-  <div class="navbar-container">
+  <div class="navbar-container" >
     <!-- Top navbar -->
     <div class="top-navbar">
       
@@ -140,7 +140,7 @@
 
             <!-- Updated language selector with MyMemory translation logic -->
             <!-- Sélecteur de langue -->
-            <div class="language-selector relative" :class="{ open: showLanguageDropdown }">
+            <div class="language-selector relative" :class="{ open: showLanguageDropdown }" ref="languageSelectorRef">
               <div class="flex items-center cursor-pointer gap-2" @click="toggleLanguageDropdown">
                 <img :src="selectedLanguage.flag" :alt="selectedLanguage.code" class="w-6 h-4" />
                 <span v-if="isTranslating">⏳ Translating...</span>
@@ -161,7 +161,7 @@
             </div>
 
             <!-- Sélecteur de devise (NOUVEAU) -->
-            <div class="currency-selector relative ml-4" :class="{ open: showCurrencyDropdown }">
+            <div class="language-selector relative ml-4" :class="{ open: showCurrencyDropdown }" ref="currencySelectorRef">
               <div class="flex items-center cursor-pointer gap-2" @click="toggleCurrencyDropdown">
                 <span>{{ selectedCurrency }}</span>
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -757,6 +757,8 @@ const selectedCurrency = ref('XOF')
 const showStats = ref(false)
 const originalTexts = new Map()
 const translationCache = new Map()
+const languageSelectorRef = ref(null)
+const currencySelectorRef = ref(null)
 
 const cacheStats = ref({
   cached: 0,
@@ -1475,6 +1477,13 @@ const handleClickOutside = (event) => {
   
   if (!event.target.closest('.all-categories')) {
     showCategoriesMenu.value = false;
+  }
+  // fermer dropdown langue si clic en dehors du conteneur
+  if (languageSelectorRef.value && !languageSelectorRef.value.contains(event.target)) {
+    showLanguageDropdown.value = false;
+  }
+  if (currencySelectorRef.value && !currencySelectorRef.value.contains(event.target)) {
+    showCurrencyDropdown.value = false;
   }
 };
 

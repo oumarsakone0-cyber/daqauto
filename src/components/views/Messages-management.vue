@@ -42,16 +42,16 @@
 
       <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Messages</h1>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Message Management</h1>
           <p class="text-sm sm:text-base text-gray-600">Suivi et réponses aux messages clients en temps réel</p>
         </div>
         
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-          <button @click="refreshMessages" class="btn-degrade-orange flex items-center justify-center gap-2 px-3 sm:px-4 py-2 text-xs sm:text-sm">
+          <button @click="refreshMessages" class="submit-btn">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            <span>Actualiser</span>
+            <span>Refresh</span>
           </button>
         </div>
       </div>
@@ -333,6 +333,7 @@
 
 <script setup lang="ts">
 import { ref, computed, nextTick } from 'vue'
+import Navbar from '../boutiques/Navbar.vue'
 
 interface Message {
   id: number
