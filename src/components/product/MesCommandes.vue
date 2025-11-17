@@ -114,7 +114,8 @@
                   <span class="summary-value">{{ formatPrice(order.total) }}</span>
                 </div>
                 <div class="summary-row deposit">
-                  <span class="summary-label">Acompte versé (30%):</span>
+                  <span class="summary-label">Acompte à versé (30%):</span>
+                  <span class="summary-label" v-if="order.tobevalidate === 'valid'">Acompte versé (30%):</span>
                   <span class="summary-value">{{ formatPrice(order.total * 0.3) }}</span>
                 </div>
               </div>
@@ -316,7 +317,7 @@
 
           <div class="order-actions">
             <button
-              v-if="order.statut === 'en_attente' && !order.preuve_paiement"
+              v-if="order.statut === 'confirmee' && !order.preuve_paiement"
               class="action-btn primary"
               @click="openPaymentProofModal(order)"
             >

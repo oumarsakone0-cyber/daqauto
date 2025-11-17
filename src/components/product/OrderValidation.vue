@@ -603,7 +603,7 @@ const contactSeller = () => {
 
 const goToOrders = () => {
   showSuccessModal.value = false
-  router.push('/mes-commandes')
+  router.push('/profile_client')
 }
 
 const getUnitPrice = () => {
