@@ -3,7 +3,7 @@
     <!-- Loading state -->
     <div v-if="loading" class="loading-container">
       <div class="loading-spinner"></div>
-      <p>Chargement du produit...</p>
+      <p>Loading produit details...</p>
     </div>
   
     <!-- Error state -->

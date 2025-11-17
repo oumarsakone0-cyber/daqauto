@@ -22,7 +22,7 @@
         <div class="price-label">Prix:</div>
         <div class="price-value primary-color">
           <span v-if="product.wholesale_price && product.wholesale_min_qty">
-            {{ formatPrice(product.wholesale_price,{showFOB:true}) }} - {{ formatPrice(product.unit_price,{showFOB:true}) }}
+            {{ formatPrice(product.wholesale_price) }} - {{ formatPrice(product.unit_price,{showFOB:true}) }}
           </span>
           <span v-else>
             {{ formatPrice(product.unit_price,{showFOB:true}) }}
@@ -58,7 +58,7 @@
       
       <div class="total-price">
         <span class="total-label">Total:</span>
-        <span class="total-value primary-color">{{ formatPrice(calculateTotal()) }}</span> ( FOB )
+        <span class="total-value primary-color">{{ formatPrice(calculateTotal(),{showFOB:true}) }}</span> ( FOB )
       </div>
       
       <div v-if="!hasVariants && currentShippingCost > 0" class="grand-total">
