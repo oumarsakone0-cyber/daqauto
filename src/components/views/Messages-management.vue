@@ -43,7 +43,7 @@
       <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
         <div>
           <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Message Management</h1>
-          <p class="text-sm sm:text-base text-gray-600">Suivi et réponses aux messages clients en temps réel</p>
+          <p class="text-sm sm:text-base text-gray-600">Real-time monitoring and response to customer messages</p>
         </div>
         
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
@@ -72,8 +72,8 @@
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Croissance: +12%</span>
-                <span class="text-orange-600 flex-shrink-0">Ce mois</span>
+                <span class="truncate">Growth: +12%</span>
+                <span class="text-orange-600 flex-shrink-0">This month</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300" style="width: 75%"></div>
@@ -91,13 +91,13 @@
                 </svg>
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Non Lus</p>
+                <p class="text-xs sm:text-sm text-gray-600">Unread</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.unread_messages }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Réduction: -8%</span>
+                <span class="truncate">Reduction: -8%</span>
                 <span class="text-yellow-600 flex-shrink-0">vs hier</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
@@ -116,14 +116,14 @@
                 </svg>
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Conversations Actives</p>
+                <p class="text-xs sm:text-sm text-gray-600">Active Conversations</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.active_conversations }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Croissance: +15%</span>
-                <span class="text-green-600 flex-shrink-0">Aujourd'hui</span>
+                <span class="truncate">Growth: +15%</span>
+                <span class="text-green-600 flex-shrink-0">Today</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 85%"></div>
@@ -141,14 +141,14 @@
                 </svg>
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Temps de Réponse Moy.</p>
+                <p class="text-xs sm:text-sm text-gray-600">Average Response Time.</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.avg_response_time }}</p>
               </div>
             </div>
             <div class="space-y-2">
               <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Amélioration: -10%</span>
-                <span class="text-purple-600 flex-shrink-0">vs hier</span>
+                <span class="truncate">Improvement: -10%</span>
+                <span class="text-purple-600 flex-shrink-0">vs yesterday</span>
               </div>
               <div class="w-full bg-gray-200 rounded-full h-2">
                 <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
@@ -189,8 +189,8 @@
               <input 
                 v-model="searchQuery"
                 type="text" 
-                class="w-full pl-10 pr-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
-                placeholder="Rechercher..."
+                class="input-style"
+                placeholder="Research..."
               >
             </div>
 
@@ -198,7 +198,7 @@
               <select 
                 v-model="boutiqueFilter" 
                 class="flex-1 px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800">
-                <option value="">Toutes boutiques</option>
+                <option value="">All Stores</option>
                 <option v-for="boutique in boutiques" :key="boutique.id" :value="boutique.id">
                   {{ boutique.name }}
                 </option>
@@ -206,11 +206,11 @@
               <select 
                 v-model="dateFilter" 
                 class="flex-1 px-2 py-1.5 bg-gray-50 border border-gray-200 rounded-lg text-xs focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800">
-                <option value="">Toutes dates</option>
-                <option value="today">Aujourd'hui</option>
-                <option value="yesterday">Hier</option>
-                <option value="week">Cette semaine</option>
-                <option value="month">Ce mois</option>
+                <option value="">All dates</option>
+                <option value="today">Today</option>
+                <option value="yesterday">Yesterday</option>
+                <option value="week">This Week</option>
+                <option value="month">This Month</option>
               </select>
             </div>
           </div>
@@ -254,8 +254,8 @@
             <svg class="w-16 h-16 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z" />
             </svg>
-            <p class="text-lg font-medium">Sélectionnez une conversation</p>
-            <p class="text-sm">Choisissez une conversation pour voir les messages</p>
+            <p class="text-lg font-medium">Select a conversation</p>
+            <p class="text-sm">Choose a conversation to view the messages</p>
           </div>
 
           <template v-else>
@@ -308,7 +308,7 @@
                   v-model="newMessage"
                   @keypress.enter="sendMessage"
                   type="text" 
-                  placeholder="Tapez votre message..."
+                  placeholder="Enter your message..."
                   class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
                 />
                 <button 
@@ -387,10 +387,10 @@ const boutiques = ref([
 
 // Filter tabs
 const filterTabs = [
-  { value: 'all', label: 'Tous' },
-  { value: 'unread', label: 'Non lus' },
-  { value: 'read', label: 'Lus' },
-  { value: 'archived', label: 'Archivés' }
+  { value: 'all', label: 'All' },
+  { value: 'unread', label: 'Unread' },
+  { value: 'read', label: 'Read' },
+  { value: 'archived', label: 'Archived' }
 ]
 
 // Mock data - conversations groupées par boutique
@@ -746,54 +746,6 @@ const getStatusDotClass = (status: string) => {
 .animate-rotate-slow { animation: rotate-slow 30s linear infinite; }
 .animate-float-small { animation: float-small 6s ease-in-out infinite; }
 
-.btn-degrade-orange {
-  background: linear-gradient(135deg, #fb923c 0%, #f97316 100%);
-  color: white;
-  font-weight: 600;
-  box-shadow: 0 4px 6px -1px rgba(251, 146, 60, 0.3);
-}
-
-.btn-degrade-orange:hover {
-  box-shadow: 0 10px 15px -3px rgba(251, 146, 60, 0.4);
-  transform: translateY(-1px);
-}
-
-.btn-gray {
-  background-color: #f3f4f6;
-  color: #374151;
-  font-weight: 500;
-}
-
-.btn-gray:hover {
-  background-color: #e5e7eb;
-}
-
-.btn-deconnexion {
-  background-color: #fee2e2;
-  color: #dc2626;
-  font-weight: 500;
-  padding: 0.5rem 1rem;
-  border-radius: 0.5rem;
-}
-
-.btn-deconnexion:hover {
-  background-color: #fecaca;
-}
-
-.input-style {
-  width: 100%;
-  padding: 0.5rem 0.75rem;
-  padding-left: 2.5rem;
-  border: 1px solid #e5e7eb;
-  border-radius: 0.5rem;
-  font-size: 0.875rem;
-}
-
-.input-style:focus {
-  outline: none;
-  border-color: #fb923c;
-  box-shadow: 0 0 0 3px rgba(251, 146, 60, 0.1);
-}
 
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
