@@ -251,7 +251,7 @@
         @close="closeOrderSuccessModal"
       />
   
-      <ChatModal 
+      <!-- <ChatModal 
         v-if="showChatModal"
         :supplier="supplier"
         :chat-messages="chatMessages"
@@ -259,7 +259,8 @@
         @close="closeChatModal"
         @send-message="sendMessage"
         @update-message="updateNewMessage"
-      />
+      /> -->
+     
       
       <!-- Notification Toast -->
       <NotificationToast 
@@ -285,6 +286,7 @@
   import { useRoute, useRouter } from 'vue-router'
   import { productsApi } from '../../services/api.js'
   
+  
   // Import des composants
   import ProductImageGallery from '../product/ProductImageGallery.vue'
 import ProductDetails from '../product/ProductDetails.vue'
@@ -304,6 +306,7 @@ import CartBadge from '../product/CartBadge.vue'
   // Router
   const route = useRoute()
   const router = useRouter()
+  
   
   // États de chargement
   const loading = ref(true)
@@ -1143,6 +1146,7 @@ import CartBadge from '../product/CartBadge.vue'
   onUnmounted(() => {
     document.body.style.overflow = 'auto'
   })
+  
   </script>
   
   <style scoped>

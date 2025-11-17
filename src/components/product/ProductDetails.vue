@@ -1,44 +1,44 @@
 <template>
   <div class="product-info">
     <div class="product-badges">
-      <span class="badge primary-color " style="background: #fff2e8;" v-if="product.status === 'Actif'">En Stock</span>
-      <span class="badge success-color" style="background: #f6ffed;" v-if="product.stock > 0">Disponible</span>
-      <span class="badge blue-color" style="background: #e6f7ff;" v-if="isNewProduct">Nouveau</span>
+      <span class="badge primary-color " style="background: #fff2e8;" v-if="product.status === 'Actif'">In Stock</span>
+      <span class="badge success-color" style="background: #f6ffed;" v-if="product.stock > 0">Available</span>
+      <span class="badge blue-color" style="background: #e6f7ff;" v-if="isNewProduct">New</span>
     </div>
     
     <h1 class="product-title">{{ product.name }}</h1>
     
-    <div class="product-rating">
+    <!-- <div class="product-rating">
       <div class="stars">
         <span v-for="i in 5" :key="i" class="star" :class="{ filled: i <= Math.floor(productRating) }">★</span>
       </div>
       <span class="rating-value">{{ productRating }}</span>
-      <span class="reviews-count">{{ product.views_count || 0 }} Vues</span>
-      <span class="orders-count">{{ product.sales_count || 0 }} Ventes</span>
-    </div>
+      <span class="reviews-count">{{ product.views_count || 0 }} Views</span>
+      <span class="orders-count">{{ product.sales_count || 0 }} Sales</span>
+    </div> -->
 
     <div class="product-price-section">
       <div class="price-range">
         <div class="price-label">Prix:</div>
         <div class="price-value primary-color">
           <span v-if="product.wholesale_price && product.wholesale_min_qty">
-            {{ formatPrice(product.wholesale_price) }} - {{ formatPrice(product.unit_price) }}
+            {{ formatPrice(product.wholesale_price,{showFOB:true}) }} - {{ formatPrice(product.unit_price,{showFOB:true}) }}
           </span>
           <span v-else>
-            {{ formatPrice(product.unit_price) }}
+            {{ formatPrice(product.unit_price,{showFOB:true}) }}
           </span>
         </div>
-        ( FOB )
+        <!-- ( FOB ) -->
       </div>
       
       <div class="price-table" v-if="product.wholesale_price && product.wholesale_min_qty">
         <div class="price-table-header">
-          <div class="price-table-cell">Quantité (pièces)</div>
+          <div class="price-table-cell">Quantity (pieces)</div>
           <div class="price-table-cell">1 - {{ product.wholesale_min_qty - 1 }}</div>
           <div class="price-table-cell">{{ product.wholesale_min_qty }}+</div>
         </div>
         <div class="price-table-row">
-          <div class="price-table-cell">Prix</div>
+          <div class="price-table-cell">Price</div>
           <div class="price-table-cell">{{ formatPrice(product.unit_price) }}</div>
           <div class="price-table-cell">{{ formatPrice(product.wholesale_price) }}</div>
         </div>
@@ -47,13 +47,13 @@
 
     <div class="order-section">
       <div class="quantity-selector">
-        <div class="quantity-label">Quantité:</div>
+        <div class="quantity-label">Quantity:</div>
         <div class="quantity-controls">
           <button class="quantity-btn" @click="$emit('decreaseQuantity')" :disabled="quantity <= 1">-</button>
           <input type="number" :value="quantity" @input="$emit('updateQuantity', parseInt($event.target.value))" min="1" :max="product.stock" class="quantity-input focus:border-ring-2 focus:ring-0">
           <button class="quantity-btn" @click="$emit('increaseQuantity')" :disabled="quantity >= product.stock">+</button>
         </div>
-        <div class="quantity-available">{{ product.stock }} pièces disponibles</div>
+        <div class="quantity-available">{{ product.stock }} available</div>
       </div>
       
       <div class="total-price">
@@ -62,24 +62,30 @@
       </div>
       
       <div v-if="!hasVariants && currentShippingCost > 0" class="grand-total">
-        <span class="grand-total-label">Total avec livraison:</span>
+        <span class="grand-total-label">Total including delivery:</span>
         <span class="grand-total-value primary-color">{{ formatPrice(calculateTotal() + currentShippingCost) }}</span>
       </div>
       
       <div class="action-buttons">
-        <button class="btn-whatsapp flex-1" @click="$emit('contactWhatsApp')">
+        <!-- <button class="btn-whatsapp flex-1" @click="$emit('contactWhatsApp')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="white">
             <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
           </svg>
-          WhatsApp
-        </button>
-        <button class="btn-degrade-orange flex-2" @click="handleOrderClick">
+          Chat now
+        </button> -->
+        <button class="btn-outline flex-1" @click="chat.isDesktopChatOpen=true">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+            Chat now
+          </button>
+        <button class="btn-degrade-orange flex-1" @click="handleOrderClick">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          Commander
+          Order now
         </button>
       </div>
     </div>
@@ -92,8 +98,10 @@
 import { computed, defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatPrice } from '../../services/formatPrice'
+import { useChatStore } from '../../stores/chat'
 
 const router = useRouter()
+const chat = useChatStore()
 
 const props = defineProps({
   product: {
@@ -251,8 +259,6 @@ const handleOrderClick = () => {
     state: orderState
   })
 }
-
-
 </script>
 
 <style scoped>
@@ -513,40 +519,6 @@ const handleOrderClick = () => {
   margin-bottom: 16px;
 }
 
-.btn-whatsapp,
-.btn-degrade-orange {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 16px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  border: none;
-}
-
-.btn-whatsapp {
-  background: #25D366;
-  color: white;
-  flex: 1;
-}
-
-.btn-whatsapp:hover {
-  background: #22c55e;
-}
-
-.btn-degrade-orange {
-  background: #fe9700;
-  color: white;
-  flex: 2;
-}
-
-.btn-degrade-orange:hover {
-  background: #e68900;
-}
 
 @media (max-width: 768px) {
   .product-info {

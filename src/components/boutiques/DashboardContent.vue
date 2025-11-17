@@ -625,7 +625,7 @@
                   <PackageIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Small Store</h3>
-                <div class="text-3xl font-bold text-blue-600 mb-1">3 000 FCFA</div>
+                <div class="text-3xl font-bold text-blue-600 mb-1">$15</div>
                 <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">15 products</div>
                 
@@ -666,7 +666,7 @@
                   <WarehouseIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Average Store</h3>
-                <div class="text-3xl font-bold text-green-500 mb-1">5 000 FCFA</div>
+                <div class="text-3xl font-bold text-green-500 mb-1">$15</div>
                 <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">50 products</div>
                 
@@ -706,7 +706,7 @@
                   <CrownIcon class="w-8 h-8 text-white" />
                 </div>
                 <h3 class="text-xl font-bold text-gray-900 mb-2">Big Store</h3>
-                <div class="text-3xl font-bold primary-color mb-1">10 000 FCFA</div>
+                <div class="text-3xl font-bold primary-color mb-1">$25</div>
                 <div class="text-sm text-gray-600 mb-4">Year Subscription</div>
                 <div class="text-lg font-semibold text-gray-900 mb-6">120 products</div>
                 
@@ -822,7 +822,7 @@
                   </ul>
                 </div>
                 <div class="text-right">
-                  <div class="text-2xl font-bold text-green-600">1 000 FCFA</div>
+                  <div class="text-2xl font-bold text-green-600">$5</div>
                   <div class="text-sm text-gray-500">By week</div>
                 </div>
               </div>
@@ -866,7 +866,7 @@
                   </ul>
                 </div>
                 <div class="text-right">
-                  <div class="text-2xl font-bold primary-color">2 500 FCFA</div>
+                  <div class="text-2xl font-bold primary-color">$12</div>
                   <div class="text-sm text-gray-500">By week</div>
                 </div>
               </div>
@@ -887,7 +887,7 @@
                       {{ selectedBoostOption === 'basic' ? 'Basic Boost ' : 'Premium Boost ' }}
                     </h4>
                     <p class="text-sm text-gray-600">
-                      {{ selectedBoostOption === 'basic' ? '1 000 FCFA By week' : '2 500 FCFA By week' }}
+                      {{ selectedBoostOption === 'basic' ? '$5 By week' : '$12 By week' }}
                     </p>
                   </div>
                 </div>
