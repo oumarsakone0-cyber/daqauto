@@ -1,14 +1,14 @@
 <template>
   <div class="profile-page">
     <div class="page-header">
-      <div class="container">
+      <div class="container" style="margin-top: 40px">
         <button class="back-btn" @click="goBack">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
-          Retour
+          Back
         </button>
-        <h1 class="page-title">Mon Profil</h1>
+        <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">My Profile</h1>
       </div>
     </div>
 
@@ -40,7 +40,7 @@
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            Mon profil
+            My Profile
           </a>
           <a 
             href="#" 
@@ -51,7 +51,7 @@
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
-            Mes favoris
+            My favorites
           </a>
           
           <a 
@@ -65,7 +65,7 @@
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            Mes commandes
+            My Orders
           </a>
         </nav>
       </div>
@@ -85,7 +85,7 @@
                 </svg>
               </div>
               <div class="stat-info">
-                <p class="stat-label">Nombre de commandes</p>
+                <p class="stat-label">Number of Orders</p>
                 <p class="stat-value">{{ stats.orders }}</p>
               </div>
             </div>
@@ -97,7 +97,7 @@
                 </svg>
               </div>
               <div class="stat-info">
-                <p class="stat-label">Favoris</p>
+                <p class="stat-label">Favorites</p>
                 <p class="stat-value">{{ stats.favorites }}</p>
               </div>
             </div>
@@ -106,27 +106,27 @@
           <!-- User Info Card -->
           <div class="section-card">
             <div class="section-header">
-              <h2 class="section-title">Informations personnelles</h2>
+              <h2 class="section-title">Personal information</h2>
               <button 
                 v-if="!isEditing" 
-                class="edit-btn" 
+                class="btn-degrade-orange" 
                 @click="isEditing = true"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7"></path>
                   <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z"></path>
                 </svg>
-                Modifier
+                Edit
               </button>
               {{currentUser}}
             </div>
 
             <form @submit.prevent="saveProfile" class="form-grid">
               <div class="form-group">
-                <label class="form-label">Nom</label>
+                <label class="form-label">Full name</label>
                 <input 
                   type="text" 
-                  class="form-input" 
+                  class="input-style" 
                   v-model="profile.full_name"
                   :readonly="!isEditing"
                 >
@@ -136,20 +136,20 @@
                 <label class="form-label">Email</label>
                 <input 
                   type="email" 
-                  class="form-input" 
+                  class="input-style" 
                   v-model="profile.email"
                   :readonly="!isEditing"
                 >
               </div>
 
               <div class="form-group">
-                <label class="form-label">Pays</label>
+                <label class="form-label">Country</label>
                 <input 
                   type="text" 
-                  class="form-input" 
+                  class="input-style" 
                   v-model="profile.pays"
                   :readonly="!isEditing"
-                  placeholder="Entrez votre pays"
+                  placeholder="Enter your Country"
                 >
               </div>
 
@@ -157,35 +157,35 @@
                 <label class="form-label">Contact</label>
                 <input 
                   type="text" 
-                  class="form-input" 
+                  class="input-style" 
                   v-model="profile.contact"
                   :readonly="!isEditing"
-                  placeholder="Entrez votre contact"
+                  placeholder="Enter your contact"
                 >
               </div>
 
               <div class="form-group full-width">
-                <label class="form-label">Adresse</label>
+                <label class="form-label">Address</label>
                 <textarea 
-                  class="form-textarea" 
+                  class="input-style" 
                   v-model="profile.adresse"
                   :readonly="!isEditing"
-                  placeholder="Entrez votre adresse complète"
+                  placeholder="Enter your full address"
                   rows="3"
                 ></textarea>
               </div>
 
               <div v-if="isEditing" class="form-actions full-width">
-                <button type="submit" class="save-btn">
+                <button type="submit" class="btn-degrade-orange">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                   </svg>
-                  Enregistrer les modifications
+                  Save changes
                 </button>
-                <button type="button" class="cancel-btn" @click="cancelEdit">
-                  Annuler
+                <button type="button" class="btn-gray" @click="cancelEdit">
+                  Cancel
                 </button>
               </div>
             </form>
@@ -195,12 +195,12 @@
         <!-- Favorites Tab -->
         <div v-if="activeTab === 'favorites'" class="tab-content">
           <div class="section-card">
-            <h2 class="section-title">Mes favoris</h2>
+            <h2 class="section-title">My favorites</h2>
             <div v-if="favorites.length === 0" class="empty-state">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2">
                 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
               </svg>
-              <p>Vous n'avez pas encore d'articles en favoris</p>
+              <p>You don't have any items in your favorites yet.</p>
             </div>
             <div v-else class="favorites-list">
               <div v-for="item in userFavorites" :key="item.favorite_id" class="favorite-item">
@@ -227,24 +227,24 @@
         <div v-if="activeTab === 'orders'" class="tab-content">
             <Commandes/>
           <div class="section-card">
-            <h2 class="section-title">Mes commandes</h2>
+            <h2 class="section-title">My Orders</h2>
             <div v-if="orders.length === 0" class="empty-state">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2">
                 <circle cx="9" cy="21" r="1"></circle>
                 <circle cx="20" cy="21" r="1"></circle>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
               </svg>
-              <p>Vous n'avez pas encore passé de commande</p>
+              <p>You have not yet placed an order</p>
             </div>
             <div v-else class="orders-list">
               <div v-for="order in orders" :key="order.id" class="order-item">
                 <div class="order-header">
-                  <span class="order-number">Commande #{{ order.numero }}</span>
-                  <span class="order-status" :class="order.statut">{{ order.statut }}</span>
+                  <span class="order-number">Order #{{ order.numero }}</span>
+                  <span class="order-status" :class="order.statut.toLowerCase()">{{ order.statut }}</span>
                 </div>
                 <div class="order-details">
                   <p>{{ order.product }}</p>
-                  <p>Quantité: {{ order.quantity }}</p>
+                  <p>Quantity: {{ order.quantity }}</p>
                 </div>
                 <div class="order-footer">
                   <span class="order-date">{{ order.date }}</span>
@@ -274,6 +274,11 @@ const currentUser = ref(null)
  const router = useRouter()
 
 const userFavorites = ref([]);
+const status = ref([
+  "deliverd",
+  "pending",
+  "canceled"
+])
 
 const profile = ref({
   id: 1,
@@ -311,7 +316,7 @@ const orders = ref([
   {
     id: 1,
     numero: 'CMD-001',
-    statut: 'Livré',
+    statut: 'Delivered',
     product: 'Produit A',
     quantity: 2,
     total: 89000,
@@ -320,7 +325,16 @@ const orders = ref([
   {
     id: 2,
     numero: 'CMD-002',
-    statut: 'En cours',
+    statut: 'Pending',
+    product: 'Produit B',
+    quantity: 1,
+    total: 45000,
+    date: '20 Nov 2024'
+  },
+  {
+    id: 2,
+    numero: 'CMD-002',
+    statut: 'Canceled',
     product: 'Produit B',
     quantity: 1,
     total: 45000,
@@ -375,11 +389,11 @@ const removeFavorite = async (idProduit) => {
     // Si le produit est déjà un favori, demander confirmation
     if (isFavorite.value) {
       await ElMessageBox.confirm(
-        'Êtes-vous sûr de vouloir retirer ce produit de vos favoris ?',
+        'Are you sure you want to remove this product from your favorites?',
         'Confirmation',
         {
-          confirmButtonText: 'Confirmer',
-          cancelButtonText: 'Annuler',
+          confirmButtonText: 'Confirm',
+          cancelButtonText: 'Cancel',
           type: 'warning',
         }
       );
@@ -397,14 +411,14 @@ const removeFavorite = async (idProduit) => {
     if (result.success) {
       ElMessage({
         type: isFavorite.value ? 'success' : 'info',
-        message: isFavorite.value ? 'Produit ajouté aux favoris.' : 'Produit retiré des favoris.',
+        message: isFavorite.value ? 'Product added to favorites.' : 'Product removed from favorites.',
       });
 
       fetchFavorites(); // Mettre à jour la liste des favoris
     } else {
       // Revenir en arrière si l'API renvoie une erreur
       isFavorite.value = !isFavorite.value;
-      ElMessage({ type: 'error', message: result.error || 'Impossible de mettre à jour les favoris.' });
+      ElMessage({ type: 'error', message: result.error || 'Unable to update favorites.' });
     }
 
   } catch (error) {
@@ -412,7 +426,7 @@ const removeFavorite = async (idProduit) => {
     if (error !== 'cancel') {
       console.error('Erreur toggleFavorite:', error);
       isFavorite.value = !isFavorite.value;
-      ElMessage({ type: 'error', message: 'Une erreur est survenue lors de la mise à jour.' });
+      ElMessage({ type: 'error', message: 'An error occurred during the update.' });
     }
   }
 };
@@ -464,6 +478,7 @@ onMounted(async () => {
 }
 
 .container {
+  display: flex;
   max-width: 1400px;
   margin: 0 auto;
   padding: 0 16px;
@@ -550,7 +565,7 @@ onMounted(async () => {
 }
 
 .user-email {
-  font-size: 12px;
+  font-size: 14px;
   color: rgba(255, 255, 255, 0.85);
   margin: 0;
   word-break: break-word;
@@ -678,6 +693,7 @@ onMounted(async () => {
   font-weight: 600;
   color: #333;
   margin: 0;
+  margin-bottom: 20px;
 }
 
 .edit-btn {
@@ -721,32 +737,12 @@ onMounted(async () => {
   margin-bottom: 8px;
 }
 
-.form-input,
-.form-textarea {
-  padding: 10px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  font-size: 14px;
-  font-family: inherit;
-  transition: all 0.3s ease;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: #fe9700;
-  box-shadow: 0 0 0 2px rgba(254, 151, 0, 0.1);
-}
-
-.form-input[readonly] {
+.input-style[readonly] {
   background: #f5f5f5;
   color: #666;
   cursor: not-allowed;
 }
 
-.form-textarea {
-  resize: vertical;
-}
 
 .form-actions {
   display: flex;
@@ -754,42 +750,6 @@ onMounted(async () => {
   margin-top: 20px;
   padding-top: 20px;
   border-top: 1px solid #e8e8e8;
-}
-
-.save-btn,
-.cancel-btn {
-  flex: 1;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.save-btn {
-  background: #fe9700;
-  color: #fff;
-}
-
-.save-btn:hover {
-  background: #e68900;
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.3);
-}
-
-.cancel-btn {
-  background: #f5f5f5;
-  color: #666;
-}
-
-.cancel-btn:hover {
-  background: #e8e8e8;
 }
 
 .empty-state {
@@ -838,6 +798,7 @@ onMounted(async () => {
 
 .favorite-info {
   flex: 1;
+  padding-left: 20px;
 }
 
 .favorite-name {
@@ -915,17 +876,17 @@ onMounted(async () => {
   text-transform: capitalize;
 }
 
-.order-status.Livré {
+.order-status.delivered {
   background: #f6ffed;
   color: #52c41a;
 }
 
-.order-status.En_cours{
+.order-status.pending{
   background: #e6f7ff;
-  color: #1890ff;
+  color: #fe9700;
 }
 
-.order-status.Annulée {
+.order-status.canceled {
   background: #fff1f0;
   color: #ff4d4f;
 }
