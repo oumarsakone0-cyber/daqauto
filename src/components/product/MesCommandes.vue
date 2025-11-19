@@ -114,14 +114,13 @@
                   <span class="summary-value">{{ formatPrice(order.total) }}</span>
                 </div>
                 <div class="summary-row deposit">
-                  <span class="summary-label">Acompte à versé (30%):</span>
-                  <span class="summary-label" v-if="order.tobevalidate === 'valid'">Acompte versé (30%):</span>
+                  <span class="summary-label">{{ order.tobevalidate === 'valid' ? 'Acompte versé (30%):' : 'Acompte à verser (30%):' }}</span>
                   <span class="summary-value">{{ formatPrice(order.total * 0.3) }}</span>
                 </div>
               </div>
             </div>
 
-            <!-- New Payment Validation Status Section -->
+            <!-- Payment Validation Status Section -->
             <div v-if="order.preuve_paiement" class="payment-validation-section">
               <div class="validation-header">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -179,7 +178,99 @@
               </div>
             </div>
 
-            <!-- New Production Progress Section -->
+            <!-- Added Payment Progress Section for tracking multiple payments -->
+            <div v-if="order.tobevalidate === 'valid'" class="payment-progress-section">
+              <div class="payment-progress-header">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
+                  <line x1="1" y1="10" x2="23" y2="10"></line>
+                </svg>
+                <h4>Progression du paiement</h4>
+              </div>
+
+              <div class="payment-progress-content">
+                <div class="progress-info">
+                  <div class="progress-stats">
+                    <div class="stat-item">
+                      <span class="stat-label">Total commande:</span>
+                      <span class="stat-value">{{ formatPrice(calculatePaymentStatus(order).total) }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Montant payé:</span>
+                      <span class="stat-value success">{{ formatPrice(calculatePaymentStatus(order).totalPaid) }}</span>
+                    </div>
+                    <div class="stat-item">
+                      <span class="stat-label">Reste à payer:</span>
+                      <span class="stat-value warning">{{ formatPrice(calculatePaymentStatus(order).remaining) }}</span>
+                    </div>
+                  </div>
+
+                  <div class="progress-bar-container">
+                    <div class="progress-bar-fill" :style="{ width: calculatePaymentStatus(order).percentage + '%' }"></div>
+                  </div>
+                  <p class="progress-percentage">{{ calculatePaymentStatus(order).percentage.toFixed(1) }}% payé</p>
+                </div>
+
+                <!-- CHANGE: Use order.paiements instead of order.additional_payments -->
+                <div v-if="order.paiements && order.paiements.length > 0" class="payments-history">
+                  <h5>Historique des paiements</h5>
+                  <div class="payment-item initial">
+                    <div class="payment-icon">
+                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                    </div>
+                    <div class="payment-details">
+                      <span class="payment-label">Acompte initial (30%)</span>
+                      <span class="payment-amount">{{ formatPrice(calculatePaymentStatus(order).firstPayment) }}</span>
+                      <span class="payment-date">{{ formatDate(order.date_paiement) }}</span>
+                    </div>
+                  </div>
+                  {{  order.paiements }}
+                  <!-- CHANGE: Display additional payments from order.paiements array -->
+                  <div v-for="(payment, index) in order.paiements" :key="payment.id" class="payment-item">
+                    <div class="payment-icon">
+                      <svg v-if="payment.valide === 'valid'" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <svg v-else width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#faad14" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <polyline points="12 6 12 12 16 14"></polyline>
+                      </svg>
+                    </div>
+                    <div class="payment-details">
+                      <span class="payment-label">Paiement supplémentaire #{{ index + 1 }}</span>
+                      <span class="payment-amount">{{ formatPrice(payment.montant) }}</span>
+                      <span class="payment-date">{{ formatDate(payment.date_paiement) }}</span>
+                      <span v-if="payment.valide === 'pending' || !payment.valide" class="payment-status pending">En attente</span>
+                      <span v-else-if="payment.valide === 'valid'" class="payment-status validated">Validé</span>
+                      <span v-else class="payment-status pending">En attente</span>
+                      <div v-if="payment.commentaire_admin" class="payment-comment">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                          <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+                        </svg>
+                        <span>{{ payment.commentaire_admin }}</span>
+                      </div>
+                      <button
+                        v-if="payment.preuve_paiement"
+                        style="width: 180px; background-color: #fe7900;"
+                        class="action-btn success"
+                        @click="viewPaymentProof(payment)"
+                      >
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                          <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        Voir la preuve
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Production Progress Section -->
+            <!-- CHANGE> Check if prepare_date exists to show ready for delivery or in preparation -->
             <div v-if="order.tobevalidate === 'valid' && order.statut !== 'livree' && order.statut !== 'annule'" class="production-section">
               <div class="production-header">
                 <div class="header-left">
@@ -188,18 +279,53 @@
                     <line x1="8" y1="21" x2="16" y2="21"></line>
                     <line x1="12" y1="17" x2="12" y2="21"></line>
                   </svg>
-                  <h4>Préparation de votre commande</h4>
+                  <!-- CHANGE> Display different title based on prepare_date -->
+                  <h4>{{ order.prepare_date ? 'Prêt pour livraison' : 'Préparation de votre commande' }}</h4>
                 </div>
-                <span class="production-badge">En cours</span>
+                <!-- CHANGE> Display different badge based on prepare_date -->
+                <span v-if="!order.prepare_date" class="production-badge">En cours</span>
+                <span v-else class="production-badge ready">Prêt</span>
               </div>
 
               <div class="production-content">
-                <div class="production-message">
+                <!-- CHANGE> Show different messages based on prepare_date and payment status -->
+                <div v-if="!order.prepare_date" class="production-message">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                   </svg>
                   <p>La préparation de votre produit a démarré ! Notre équipe travaille activement sur votre commande.</p>
+                </div>
+
+                <!-- CHANGE> Show ready for delivery message when prepare_date exists -->
+                <div v-else>
+                  <!-- CHANGE> If payment is complete (100%), show delivery confirmation message -->
+                  <div v-if="calculatePaymentStatus(order).percentage >= 100" class="production-message success">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                      <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                      <polyline points="22 4 12 14.01 9 11.01"></polyline>
+                    </svg>
+                    <div>
+                      <p><strong>Félicitations !</strong> Votre commande est prête pour livraison. Veuillez consulter votre email pour plus d'informations sur la livraison.</p>
+                      <button class="confirm-address-btn" @click="confirmDeliveryAddress(order)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                          <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                          <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        Confirmer l'adresse de livraison
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- CHANGE> If payment is not complete, show urgent payment message -->
+                  <div v-else class="production-message urgent">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#faad14" stroke-width="2">
+                      <circle cx="12" cy="12" r="10"></circle>
+                      <line x1="12" y1="8" x2="12" y2="12"></line>
+                      <line x1="12" y1="16" x2="12.01" y2="16"></line>
+                    </svg>
+                    <p><strong>Attention !</strong> Votre commande est prête pour livraison mais il reste <strong>{{ formatPrice(calculatePaymentStatus(order).remaining) }}</strong> à payer. Veuillez finaliser rapidement le paiement pour que nous puissions procéder à la livraison.</p>
+                  </div>
                 </div>
 
                 <div class="timeline-info">
@@ -215,34 +341,43 @@
                     </div>
                   </div>
 
-                  <div class="timeline-line active"></div>
+                  <!-- CHANGE> Update timeline to show active state based on prepare_date -->
+                  <div :class="['timeline-line', order.prepare_date ? 'completed' : 'active']"></div>
 
                   <div class="timeline-item">
-                    <div class="timeline-icon active">
-                      <div class="pulse"></div>
+                    <div :class="['timeline-icon', order.prepare_date ? 'completed' : 'active']">
+                      <svg v-if="order.prepare_date" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="3">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                      </svg>
+                      <div v-else class="pulse"></div>
                     </div>
                     <div class="timeline-content">
                       <h5>En préparation</h5>
-                      <span>Depuis le {{ formatDate(order.updated_at) }}</span>
+                      <span>{{ order.prepare_date ? 'Terminé le ' + formatDate(order.prepare_date) : 'Depuis le ' + formatDate(order.updated_at) }}</span>
                     </div>
                   </div>
 
-                  <div class="timeline-line"></div>
+                  <!-- CHANGE> Update timeline line to show active when prepare_date exists -->
+                  <div :class="['timeline-line', order.prepare_date ? 'active' : '']"></div>
 
                   <div class="timeline-item">
-                    <div class="timeline-icon">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
+                    <!-- CHANGE> Show active icon when prepare_date exists -->
+                    <div :class="['timeline-icon', order.prepare_date ? 'active' : '']">
+                      <svg v-if="!order.prepare_date" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2">
                         <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                       </svg>
+                      <div v-else class="pulse"></div>
                     </div>
                     <div class="timeline-content">
                       <h5>Prêt pour livraison</h5>
-                      <span>Estimé: {{ getEstimatedDeliveryDate(order.updated_at) }}</span>
+                      <!-- CHANGE> Show actual prepare_date instead of estimate -->
+                      <span>{{ order.prepare_date ? formatDate(order.prepare_date) : 'Estimé: ' + getEstimatedDeliveryDate(order) }}</span>
                     </div>
                   </div>
                 </div>
 
-                <div class="countdown-section">
+                <!-- CHANGE> Only show countdown if prepare_date doesn't exist -->
+                <div v-if="!order.prepare_date" class="countdown-section">
                   <div class="countdown-header">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
                       <circle cx="12" cy="12" r="10"></circle>
@@ -253,25 +388,25 @@
 
                   <div class="countdown-display">
                     <div class="countdown-item">
-                      <span class="countdown-value">{{ getRemainingTime(order.updated_at).days }}</span>
+                      <span class="countdown-value">{{ getRemainingTime(order).days }}</span>
                       <span class="countdown-label">jours</span>
                     </div>
                     <div class="countdown-separator">:</div>
                     <div class="countdown-item">
-                      <span class="countdown-value">{{ getRemainingTime(order.updated_at).hours }}</span>
+                      <span class="countdown-value">{{ getRemainingTime(order).hours }}</span>
                       <span class="countdown-label">heures</span>
                     </div>
                     <div class="countdown-separator">:</div>
                     <div class="countdown-item">
-                      <span class="countdown-value">{{ getRemainingTime(order.updated_at).minutes }}</span>
+                      <span class="countdown-value">{{ getRemainingTime(order).minutes }}</span>
                       <span class="countdown-label">minutes</span>
                     </div>
                   </div>
 
                   <div class="progress-bar-wrapper">
                     <div class="progress-bar">
-                      <div class="progress-fill" :style="{ width: getProgressPercentage(order.updated_at) + '%' }">
-                        <span class="progress-text">{{ Math.floor(getProgressPercentage(order.updated_at)) }}%</span>
+                      <div class="progress-fill" :style="{ width: getProgressPercentage(order) + '%' }">
+                        <span class="progress-text">{{ Math.floor(getProgressPercentage(order)) }}%</span>
                       </div>
                     </div>
                     <p class="progress-label">Progression de la préparation</p>
@@ -284,7 +419,21 @@
                       <circle cx="5.5" cy="18.5" r="2.5"></circle>
                       <circle cx="18.5" cy="18.5" r="2.5"></circle>
                     </svg>
-                    <span>Livraison prévue le <strong>{{ getEstimatedDeliveryDate(order.updated_at) }}</strong> (dans max. 2 semaines)</span>
+                    <span>Livraison prévue le <strong>{{ getEstimatedDeliveryDate(order) }}</strong></span>
+                  </div>
+                </div>
+
+                <!-- CHANGE> Show delivery date when prepare_date exists -->
+                <div v-else class="countdown-section ready">
+                  <div class="delivery-ready-info">
+                    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                      <rect x="1" y="3" width="15" height="13"></rect>
+                      <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                      <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                      <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                    <h5>Votre commande est prête !</h5>
+                    <p>Date de préparation finalisée : <strong>{{ formatDate(order.prepare_date) }}</strong></p>
                   </div>
                 </div>
               </div>
@@ -326,7 +475,7 @@
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              Ajouter preuve de paiement
+              Ajouter une preuve de paiement
             </button>
 
             <button
@@ -339,6 +488,20 @@
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
               Voir la preuve
+            </button>
+
+            <!-- Added button to add additional payments after initial payment is validated -->
+            <button
+              v-if="order.tobevalidate === 'valid' && calculatePaymentStatus(order).remaining > 0"
+              class="action-btn primary"
+              @click="openAdditionalPaymentModal(order)"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                <polyline points="17 8 12 3 7 8"></polyline>
+                <line x1="12" y1="3" x2="12" y2="15"></line>
+              </svg>
+              Ajouter un paiement
             </button>
 
             <button
@@ -446,6 +609,107 @@
       </div>
     </div>
 
+    <!-- Added Modal for Additional Payment -->
+    <div v-if="showAdditionalPaymentModal" class="modal-overlay" @click="closeAdditionalPaymentModal">
+      <div class="modal-content" @click.stop>
+        <button class="modal-close" @click="closeAdditionalPaymentModal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <line x1="18" y1="6" x2="6" y2="18"></line>
+            <line x1="6" y1="6" x2="18" y2="18"></line>
+          </svg>
+        </button>
+
+        <div class="modal-header">
+          <h2 class="modal-title">Ajouter un paiement supplémentaire</h2>
+          <p class="modal-subtitle">Commande #{{ selectedOrder?.numero_commande }}</p>
+        </div>
+
+        <div class="payment-info-box">
+          <div class="info-row">
+            <span class="info-label">Total commande:</span>
+            <span class="info-value">{{ formatPrice(calculatePaymentStatus(selectedOrder).total) }}</span>
+          </div>
+          <div class="info-row">
+            <span class="info-label">Déjà payé:</span>
+            <span class="info-value">{{ formatPrice(calculatePaymentStatus(selectedOrder).totalPaid) }}</span>
+          </div>
+          <div class="info-row highlight">
+            <span class="info-label">Reste à payer:</span>
+            <span class="info-value">{{ formatPrice(calculatePaymentStatus(selectedOrder).remaining) }}</span>
+          </div>
+          <p class="info-note">Vous pouvez payer tout ou partie du montant restant</p>
+        </div>
+
+        <form @submit.prevent="uploadAdditionalPayment" class="upload-form">
+          <div class="form-group">
+            <label class="form-label">Montant du paiement ($) <span class="required">*</span></label>
+            <input
+              type="number"
+              v-model="additionalPaymentAmount"
+              class="form-input"
+              placeholder="Entrez le montant"
+              :max="calculatePaymentStatus(selectedOrder).remaining"
+              min="1"
+              step="any"
+              required
+            >
+            <p class="file-hint">Maximum: {{ formatPrice(calculatePaymentStatus(selectedOrder).remaining) }}</p>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Preuve de paiement <span class="required">*</span></label>
+            <div class="file-input-wrapper">
+              <input
+                type="file"
+                ref="additionalPaymentFileInput"
+                @change="handleAdditionalPaymentFileSelect"
+                accept="image/*"
+                class="file-input"
+                required
+              >
+              <div class="file-input-display">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
+                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                  <polyline points="17 8 12 3 7 8"></polyline>
+                  <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                <span v-if="!additionalPaymentFile">Cliquez pour sélectionner un fichier</span>
+                <span v-else class="file-name">{{ additionalPaymentFile.name }}</span>
+              </div>
+            </div>
+            <p class="file-hint">Formats acceptés: JPG, PNG (Max 10MB)</p>
+
+            <div v-if="uploading" class="upload-progress">
+              <div class="progress-bar">
+                <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
+              </div>
+              <p class="progress-text">Upload en cours: {{ uploadProgress }}%</p>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <label class="form-label">Commentaire (optionnel)</label>
+            <textarea
+              v-model="additionalPaymentComment"
+              class="form-textarea"
+              placeholder="Ajoutez un commentaire sur ce paiement..."
+              rows="3"
+            ></textarea>
+          </div>
+
+          <div class="modal-actions">
+            <button type="submit" class="modal-btn primary" :disabled="uploading || !additionalPaymentFile || !additionalPaymentAmount">
+              <span v-if="!uploading">Envoyer le paiement</span>
+              <span v-else>Envoi en cours...</span>
+            </button>
+            <button type="button" class="modal-btn secondary" @click="closeAdditionalPaymentModal" :disabled="uploading">
+              Annuler
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+
     <!-- Modal Cancel Order -->
     <div v-if="showCancelModal" class="modal-overlay" @click="closeCancelModal">
       <div class="modal-content" @click.stop>
@@ -532,13 +796,20 @@ const fileInput = ref(null)
 const currentTime = ref(new Date())
 let countdownInterval = null
 
+const showAdditionalPaymentModal = ref(false)
+const additionalPaymentAmount = ref('')
+const additionalPaymentFile = ref(null)
+const additionalPaymentComment = ref('')
+const additionalPaymentFileInput = ref(null)
+
 const orderStatuses = [
   { value: 'all', label: 'Toutes' },
   { value: 'en_attente', label: 'En attente' },
   { value: 'confirmee', label: 'Confirmée' },
   { value: 'en_cours', label: 'En cours' },
   { value: 'livree', label: 'Livrée' },
-  { value: 'annule', label: 'Annulée' }
+  { value: 'annule', label: 'Annulée' },
+  { value: 'terminee', label: 'Terminée' }
 ]
 
 // Computed
@@ -572,13 +843,14 @@ const getStatusLabel = (status) => {
     'confirmee': 'Confirmée',
     'en_cours': 'En cours de livraison',
     'livree': 'Livrée',
-    'annule': 'Annulée'
+    'annule': 'Annulée',
+    'terminee': 'Terminée'
   }
   return labelMap[status] || status
 }
 
 const formatPrice = (price) => {
-  return Number(price).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' FCFA'
+  return Number(price).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $'
 }
 
 const formatDate = (dateString) => {
@@ -592,9 +864,15 @@ const formatDate = (dateString) => {
   })
 }
 
-const getRemainingTime = (updatedAt) => {
-  const updateDate = new Date(updatedAt)
-  const deliveryDate = new Date(updateDate.getTime() + (14 * 24 * 60 * 60 * 1000)) // Add 14 days
+const getRemainingTime = (order) => {
+  let deliveryDate
+  if (order.estimate_prepare) {
+    deliveryDate = new Date(order.estimate_prepare)
+  } else {
+    const updateDate = new Date(order.updated_at)
+    deliveryDate = new Date(updateDate.getTime() + (14 * 24 * 60 * 60 * 1000))
+  }
+  
   const now = currentTime.value
   const diff = deliveryDate - now
 
@@ -610,8 +888,18 @@ const getRemainingTime = (updatedAt) => {
   return { days, hours, minutes, seconds }
 }
 
-const getEstimatedDeliveryDate = (updatedAt) => {
-  const updateDate = new Date(updatedAt)
+const getEstimatedDeliveryDate = (order) => {
+  if (order.estimate_prepare) {
+    const deliveryDate = new Date(order.estimate_prepare)
+    return deliveryDate.toLocaleDateString('fr-FR', {
+      weekday: 'long',
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric'
+    })
+  }
+  // Fallback to 14 days if estimate_prepare is not available
+  const updateDate = new Date(order.updated_at)
   const deliveryDate = new Date(updateDate.getTime() + (14 * 24 * 60 * 60 * 1000))
   return deliveryDate.toLocaleDateString('fr-FR', {
     weekday: 'long',
@@ -621,9 +909,16 @@ const getEstimatedDeliveryDate = (updatedAt) => {
   })
 }
 
-const getProgressPercentage = (updatedAt) => {
-  const updateDate = new Date(updatedAt)
-  const deliveryDate = new Date(updateDate.getTime() + (14 * 24 * 60 * 60 * 1000))
+const getProgressPercentage = (order) => {
+  let deliveryDate
+  if (order.estimate_prepare) {
+    deliveryDate = new Date(order.estimate_prepare)
+  } else {
+    const updateDate = new Date(order.updated_at)
+    deliveryDate = new Date(updateDate.getTime() + (14 * 24 * 60 * 60 * 1000))
+  }
+  
+  const updateDate = new Date(order.updated_at)
   const now = currentTime.value
 
   const totalTime = deliveryDate - updateDate
@@ -634,6 +929,25 @@ const getProgressPercentage = (updatedAt) => {
   if (totalTime <= 0) return 0
 
   return Math.min(Math.floor((elapsed / totalTime) * 100), 100)
+}
+
+const calculatePaymentStatus = (order) => {
+  const total = order.total
+  const firstPayment = total * 0.3 // 30% initial payment
+  const additionalPayments = order.paiements || []
+  const totalAdditionalPaid = additionalPayments.reduce((sum, payment) => sum + parseFloat(payment.montant || 0), 0)
+  const totalPaid = (order.tobevalidate === 'valid' ? firstPayment : 0) + totalAdditionalPaid
+  const remaining = total - totalPaid
+  const percentage = (totalPaid / total) * 100
+  
+  return {
+    total,
+    firstPayment,
+    totalAdditionalPaid,
+    totalPaid,
+    remaining,
+    percentage: Math.min(percentage, 100)
+  }
 }
 
 const handleImageError = (event) => {
@@ -685,6 +999,24 @@ const closePaymentModal = () => {
   uploadProgress.value = 0
 }
 
+const openAdditionalPaymentModal = (order) => {
+  selectedOrder.value = order
+  showAdditionalPaymentModal.value = true
+  additionalPaymentAmount.value = ''
+  additionalPaymentFile.value = null
+  additionalPaymentComment.value = ''
+  uploadProgress.value = 0
+}
+
+const closeAdditionalPaymentModal = () => {
+  showAdditionalPaymentModal.value = false
+  selectedOrder.value = null
+  additionalPaymentAmount.value = ''
+  additionalPaymentFile.value = null
+  additionalPaymentComment.value = ''
+  uploadProgress.value = 0
+}
+
 const handleChatClick = async (order) => {
   const productData = {
     id: order.produit_id,
@@ -731,6 +1063,25 @@ const handleFileSelect = (event) => {
     }
 
     selectedFile.value = file
+  }
+}
+
+const handleAdditionalPaymentFileSelect = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    if (file.size > 10 * 1024 * 1024) {
+      alert('Le fichier est trop volumineux. Taille maximale: 10MB')
+      event.target.value = ''
+      return
+    }
+
+    if (!file.type.startsWith('image/')) {
+      alert('Veuillez sélectionner une image (JPG, PNG, etc.)')
+      event.target.value = ''
+      return
+    }
+
+    additionalPaymentFile.value = file
   }
 }
 
@@ -795,6 +1146,73 @@ const uploadPaymentProof = async () => {
   }
 }
 
+const uploadAdditionalPayment = async () => {
+  if (!additionalPaymentFile.value || !selectedOrder.value || !additionalPaymentAmount.value) {
+    alert('Veuillez remplir tous les champs requis')
+    return
+  }
+
+  const amount = parseFloat(additionalPaymentAmount.value)
+  const paymentStatus = calculatePaymentStatus(selectedOrder.value)
+  
+  if (amount <= 0) {
+    alert('Le montant doit être supérieur à 0')
+    return
+  }
+  
+  if (amount > paymentStatus.remaining) {
+    alert(`Le montant ne peut pas dépasser le montant restant: ${formatPrice(paymentStatus.remaining)}`)
+    return
+  }
+
+  uploading.value = true
+  try {
+    const fileName = `additional_payment_${selectedOrder.value.id}_${Date.now()}_${additionalPaymentFile.value.name.replace(/\s+/g, '_')}`
+
+    const formData = new FormData()
+    formData.append('file', additionalPaymentFile.value)
+    formData.append('upload_preset', cloudinaryConfig.uploadPreset)
+    formData.append('api_key', cloudinaryConfig.apiKey)
+    formData.append('public_id', fileName)
+
+    const uploadResponse = await axios.post(cloudinaryConfig.imageUploadUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        uploadProgress.value = percentCompleted
+      }
+    })
+
+    if (!uploadResponse.data || !uploadResponse.data.secure_url) {
+      throw new Error('Réponse Cloudinary invalide')
+    }
+
+    const cloudinaryUrl = uploadResponse.data.secure_url
+
+    const response = await ordersApi.uploadAdditionalPayment(selectedOrder.value.id, {
+      montant: amount,
+      preuve_url:cloudinaryUrl,
+      commentaire: additionalPaymentComment.value
+    })
+
+    if (response.success) {
+      alert('Paiement supplémentaire envoyé avec succès!')
+      closeAdditionalPaymentModal()
+      fetchOrders()
+    } else {
+      throw new Error(response.message || 'Erreur lors de l\'envoi')
+    }
+  } catch (error) {
+    console.error('Error uploading additional payment:', error)
+    alert('Erreur lors de l\'envoi du paiement: ' + (error.message || 'Erreur inconnue'))
+  } finally {
+    uploading.value = false
+    uploadProgress.value = 0
+  }
+}
+
 const viewPaymentProof = (order) => {
   if (order.preuve_paiement) {
     window.open(order.preuve_paiement, '_blank')
@@ -835,6 +1253,29 @@ const cancelOrder = async () => {
   }
 }
 
+const confirmDeliveryAddress = async (order) => {
+  if (!order.adresse_complete) {
+    alert('Aucune adresse de livraison trouvée')
+    return
+  }
+
+  const confirmed = confirm(
+    `Confirmer l'adresse de livraison :\n\n${order.adresse_complete}\n${order.ville ? order.ville + ', ' + order.commune : ''}\n\nCette adresse est-elle correcte ?`
+  )
+
+  if (confirmed) {
+    try {
+      // You can add an API call here to confirm the address
+      // await ordersApi.confirmDeliveryAddress(order.id)
+      alert('Adresse de livraison confirmée ! Vous recevrez bientôt votre commande.')
+    } catch (error) {
+      console.error('Error confirming address:', error)
+      alert('Erreur lors de la confirmation de l\'adresse')
+    }
+  }
+}
+
+
 const goToShop = () => {
   router.push('/')
 }
@@ -855,626 +1296,803 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-.my-orders-page {
-  min-height: 100vh;
-  background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
-  padding-bottom: 60px;
+/* Added styles for payment progress section */
+.payment-progress-section {
+  background: linear-gradient(135deg, #f8f9fa 0%, #fff 100%);
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 20px;
+  margin-bottom: 24px; /* Adjusted margin for better spacing */
 }
 
-.page-header {
-  background: linear-gradient(135deg, #fe9700 0%, #ff8c00 100%);
-  color: #fff;
-  padding: 50px 0;
-  margin-bottom: 40px;
-  box-shadow: 0 4px 20px rgba(254, 151, 0, 0.3);
+.payment-progress-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.payment-progress-header svg {
+  color: #1890ff;
+}
+
+.payment-progress-header h4 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 600;
+}
+
+.payment-progress-content {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.progress-info {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.progress-stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 12px;
+}
+
+.stat-item {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 12px;
+  background: white;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.stat-label {
+  font-size: 13px;
+  color: #666;
+}
+
+.stat-value {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+}
+
+.stat-value.success {
+  color: #52c41a;
+}
+
+.stat-value.warning {
+  color: #faad14;
+}
+
+.progress-bar-container {
+  width: 100%;
+  height: 24px;
+  background: #f0f0f0;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+}
+
+.progress-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #52c41a 0%, #73d13d 100%);
+  transition: width 0.5s ease;
+  border-radius: 12px;
+}
+
+.progress-percentage {
+  text-align: center;
+  font-size: 14px;
+  font-weight: 600;
+  color: #52c41a;
+  margin: 0;
+}
+
+.payments-history {
+  background: white;
+  padding: 16px;
+  border-radius: 8px;
+  border: 1px solid #f0f0f0;
+}
+
+.payments-history h5 {
+  margin: 0 0 12px 0;
+  font-size: 14px;
+  font-weight: 600;
+  color: #333;
+}
+
+.payment-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 12px;
+  background: #fafafa;
+  border-radius: 8px;
+  margin-bottom: 8px;
+}
+
+.payment-item:last-child {
+  margin-bottom: 0;
+}
+
+.payment-item.initial {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+}
+
+.payment-icon {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.payment-details {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.payment-label {
+  font-size: 14px;
+  font-weight: 500;
+  color: #333;
+}
+
+.payment-amount {
+  font-size: 15px;
+  font-weight: 600;
+  color: #52c41a;
+}
+
+.payment-date {
+  font-size: 12px;
+  color: #999;
+}
+
+.payment-status {
+  display: inline-block;
+  padding: 2px 8px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  width: fit-content;
+}
+
+.payment-status.pending {
+  background: #fff7e6;
+  color: #faad14;
+}
+
+.payment-status.validated {
+  background: #f6ffed;
+  color: #52c41a;
+}
+
+/* CHANGE: Add styles for payment comment */
+.payment-comment {
+  display: flex;
+  align-items: flex-start;
+  gap: 6px;
+  padding: 8px;
+  background: white;
+  border-radius: 4px;
+  margin-top: 8px;
+  font-size: 13px;
+  color: #666;
+  line-height: 1.4;
+}
+
+.payment-comment svg {
+  flex-shrink: 0;
+  margin-top: 2px;
+}
+
+/* Added styles for additional payment modal */
+.info-row.highlight {
+  background: #fff7e6;
+  padding: 8px;
+  border-radius: 6px;
+  font-weight: 600;
+}
+
+.form-input {
+  width: 100%;
+  padding: 10px 12px;
+  border: 2px solid #d9d9d9;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: all 0.3s;
+  font-family: inherit;
+}
+
+.form-input:focus {
+  outline: none;
+  border-color: #fe9700;
+  box-shadow: 0 0 0 3px rgba(254, 151, 0, 0.1);
+}
+
+.required {
+  color: #ff4d4f;
+  margin-left: 4px;
+}
+
+/* Existing styles start here - assuming they are present in the original file */
+.my-orders-page {
+  padding: 40px 0;
+  font-family: 'Poppins', sans-serif;
+  background-color: #f9f9f9;
 }
 
 .container {
-  max-width: 1400px;
+  width: 90%;
+  max-width: 1200px;
   margin: 0 auto;
-  padding: 0 20px;
+}
+
+.page-header {
+  background-color: #ffffff;
+  padding: 40px 0;
+  border-bottom: 1px solid #e0e0e0;
+  margin-bottom: 30px;
 }
 
 .page-title {
-  font-size: 36px;
+  font-size: 32px;
   font-weight: 700;
-  margin: 0 0 10px 0;
-  letter-spacing: -0.5px;
+  color: #333;
+  margin-bottom: 8px;
 }
 
 .page-subtitle {
-  font-size: 17px;
-  opacity: 0.95;
-  margin: 0;
-  font-weight: 400;
+  font-size: 16px;
+  color: #666;
+  margin-bottom: 0;
 }
 
 .filters-section {
-  background: #fff;
-  border-radius: 12px;
-  padding: 20px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+  padding: 15px;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
 }
 
 .filter-tabs {
   display: flex;
-  gap: 12px;
   flex-wrap: wrap;
+  gap: 10px;
 }
 
 .filter-tab {
+  padding: 10px 18px;
+  border: none;
+  background-color: #f0f0f0;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 14px;
+  font-weight: 500;
+  color: #666;
+  transition: background-color 0.3s, color 0.3s;
   display: flex;
   align-items: center;
-  gap: 10px;
-  padding: 12px 20px;
-  background: #f8f9fa;
-  border: 2px solid transparent;
-  border-radius: 10px;
-  color: #666;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.filter-tab:hover {
-  background: #fff7e6;
-  color: #fe9700;
-  transform: translateY(-2px);
+  gap: 5px;
 }
 
 .filter-tab.active {
-  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
-  border-color: #fe9700;
-  color: #fe9700;
-  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.2);
+  background-color: #fe9700;
+  color: #ffffff;
+  font-weight: 600;
 }
 
 .tab-badge {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  min-width: 24px;
-  height: 24px;
-  padding: 0 8px;
-  background: #fe9700;
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 12px;
-}
-
-.filter-tab.active .tab-badge {
-  background: #fff;
-  color: #fe9700;
-}
-
-.loading-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 100px 20px;
-  text-align: center;
-}
-
-.spinner {
-  width: 56px;
-  height: 56px;
-  border: 5px solid #f0f0f0;
-  border-top-color: #fe9700;
+  background-color: #ff4d4f;
+  color: white;
   border-radius: 50%;
-  animation: spin 0.8s linear infinite;
-  margin-bottom: 20px;
+  width: 20px;
+  height: 20px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.loading-state,
+.empty-state {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.loading-state .spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #fe9700;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px auto;
 }
 
 @keyframes spin {
-  to { transform: rotate(360deg); }
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
-.loading-state p {
+.loading-state p,
+.empty-state h3,
+.empty-state p {
   color: #666;
-  font-size: 17px;
-  font-weight: 500;
-}
-
-.empty-state {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 100px 20px;
-  text-align: center;
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
 }
 
 .empty-state h3 {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
+  margin-bottom: 10px;
   color: #333;
-  margin: 30px 0 10px 0;
 }
 
 .empty-state p {
-  font-size: 17px;
-  color: #666;
-  margin: 0 0 30px 0;
+  font-size: 16px;
+  margin-bottom: 30px;
 }
 
 .primary-btn {
   display: inline-flex;
   align-items: center;
-  gap: 10px;
-  padding: 14px 28px;
-  background: linear-gradient(135deg, #fe9700 0%, #ff8c00 100%);
-  color: #fff;
+  gap: 8px;
+  padding: 12px 24px;
+  background-color: #fe9700;
+  color: white;
   border: none;
-  border-radius: 10px;
+  border-radius: 8px;
   font-size: 16px;
   font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s, transform 0.2s;
+  text-decoration: none;
 }
 
 .primary-btn:hover {
-  background: linear-gradient(135deg, #ff8c00 0%, #e68900 100%);
-  transform: translateY(-3px);
-  box-shadow: 0 6px 20px rgba(254, 151, 0, 0.4);
+  background-color: #e68a00;
+  transform: translateY(-2px);
 }
 
 .orders-list {
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
 }
 
 .order-card {
-  background: #fff;
-  border-radius: 16px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  background-color: #ffffff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.07);
   overflow: hidden;
-  transition: all 0.3s ease;
-  border: 1px solid #f0f0f0;
+  padding: 25px;
+  transition: transform 0.2s ease-in-out;
 }
 
 .order-card:hover {
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.1);
-  transform: translateY(-4px);
+  transform: translateY(-5px);
 }
 
 .order-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 24px 28px;
-  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
-  border-bottom: 1px solid #e8eaed;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.order-info {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.order-number {
+.order-info h3 {
   font-size: 20px;
   font-weight: 700;
-  color: #1a1a1a;
-  margin: 0;
+  color: #333;
+  margin-bottom: 5px;
 }
 
-.order-date {
-  font-size: 14px;
-  color: #666;
-  font-weight: 500;
+.order-info .order-date {
+  font-size: 13px;
+  color: #999;
 }
 
 .order-status {
-  padding: 8px 16px;
-  border-radius: 8px;
-  font-size: 13px;
-  font-weight: 700;
+  padding: 5px 12px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.8px;
 }
 
 .order-status.pending {
-  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
-  color: #d46b08;
-  border: 1px solid #ffd591;
+  background: #fff1f0;
+  color: #ff4d4f;
 }
 
 .order-status.confirmed {
-  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
-  color: #0050b3;
-  border: 1px solid #91d5ff;
+  background: #e6fffb;
+  color: #1890ff;
 }
 
 .order-status.processing {
-  background: linear-gradient(135deg, #f0f5ff 0%, #d6e4ff 100%);
-  color: #1890ff;
-  border: 1px solid #adc6ff;
+  background: #fffbe6;
+  color: #faad14;
 }
 
 .order-status.delivered {
-  background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
-  color: #389e0d;
-  border: 1px solid #b7eb8f;
+  background: #f6ffed;
+  color: #52c41a;
 }
 
 .order-status.cancelled {
-  background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%);
-  color: #cf1322;
-  border: 1px solid #ffa39e;
+  background: #f0f0f0;
+  color: #8c8c8c;
 }
 
 .order-body {
-  padding: 28px;
+  display: flex;
+  flex-direction: column;
+  gap: 25px;
 }
 
 .product-section {
-  display: grid;
-  grid-template-columns: 1fr 320px;
-  gap: 28px;
-  padding-bottom: 28px;
-  border-bottom: 2px solid #f0f0f0;
-  margin-bottom: 24px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 30px;
 }
 
 .product-info {
+  flex: 2;
   display: flex;
   gap: 20px;
+  align-items: flex-start;
 }
 
 .product-image {
-  width: 100px;
-  height: 100px;
+  width: 90px;
+  height: 90px;
   object-fit: cover;
-  border-radius: 12px;
-  border: 2px solid #e8eaed;
+  border-radius: 8px;
   flex-shrink: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
 .product-details {
-  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .product-name {
-  font-size: 18px;
-  font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 12px 0;
-  line-height: 1.4;
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .product-meta {
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-bottom: 12px;
+  gap: 5px;
+  font-size: 13px;
+  color: #666;
 }
 
-.meta-item {
+.product-meta .meta-item {
   display: flex;
   align-items: center;
-  gap: 8px;
-  font-size: 15px;
-  color: #555;
-  font-weight: 500;
+  gap: 5px;
 }
 
 .product-seller {
   display: flex;
   align-items: center;
   gap: 8px;
-  font-size: 15px;
+  font-size: 13px;
   color: #666;
-  padding: 10px 14px;
-  background: linear-gradient(135deg, #f8f9fa 0%, #f0f2f5 100%);
-  border-radius: 8px;
-  width: fit-content;
-  font-weight: 600;
+  margin-top: 10px;
+}
+
+.product-seller svg {
+  stroke: #999;
 }
 
 .order-summary {
+  flex: 1;
+  background: #fcfcfc;
+  padding: 15px 20px;
+  border-radius: 10px;
+  border: 1px solid #f0f0f0;
   display: flex;
   flex-direction: column;
   gap: 10px;
-  padding: 20px;
-  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
-  border-radius: 12px;
-  border: 1px solid #e8eaed;
 }
 
 .summary-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  font-size: 15px;
+  font-size: 14px;
+}
+
+.summary-row.total {
+  font-weight: 700;
+  font-size: 16px;
+  color: #333;
+  margin-top: 8px;
+  padding-top: 8px;
+  border-top: 1px dashed #e0e0e0;
+}
+
+.summary-row.deposit {
+  font-size: 14px;
+  color: #666;
 }
 
 .summary-label {
   color: #666;
-  font-weight: 500;
 }
 
 .summary-value {
-  font-weight: 700;
   color: #333;
+  font-weight: 500;
 }
 
-.summary-row.total {
-  padding-top: 12px;
-  margin-top: 10px;
-  border-top: 2px solid #e8eaed;
-}
-
-.summary-row.total .summary-label {
-  font-size: 17px;
-  font-weight: 700;
-  color: #1a1a1a;
-}
-
-.summary-row.total .summary-value {
-  font-size: 20px;
-  color: #fe9700;
-}
-
-.summary-row.deposit {
-  padding: 12px;
-  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
-  border-radius: 8px;
-  margin-top: 6px;
-  border: 1px solid #ffd591;
-}
-
-.summary-row.deposit .summary-label {
-  color: #d46b08;
-  font-weight: 700;
-}
-
-.summary-row.deposit .summary-value {
-  color: #d46b08;
-  font-size: 17px;
-}
-
-/* New styles for payment validation section */
 .payment-validation-section {
-  background: linear-gradient(135deg, #f8fafb 0%, #f0f4f7 100%);
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
   border-radius: 12px;
-  padding: 24px;
+  padding: 20px;
   margin-bottom: 24px;
-  border: 1px solid #e0e6ed;
 }
 
 .validation-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 16px;
+  color: #333;
+}
+
+.validation-header svg {
+  color: #1890ff;
 }
 
 .validation-header h4 {
   margin: 0;
-  font-size: 18px;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
 }
 
 .validation-status {
   display: flex;
-  gap: 16px;
-  padding: 20px;
-  border-radius: 10px;
+  align-items: center;
+  gap: 15px;
+  padding: 15px;
+  border-radius: 8px;
 }
 
 .validation-status.validated {
-  background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
-  border: 2px solid #b7eb8f;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
 }
 
 .validation-status.pending {
-  background: linear-gradient(135deg, #fffbe6 0%, #fff1b8 100%);
-  border: 2px solid #ffe58f;
+  background: #fffbe6;
+  border: 1px solid #ffd591;
 }
 
 .status-icon {
-  width: 48px;
-  height: 48px;
-  border-radius: 50%;
+  flex-shrink: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #d9d9d9;
-  flex-shrink: 0;
 }
 
 .validation-status.validated .status-icon {
   background: #52c41a;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
 }
 
 .validation-status.pending .status-icon {
   background: #faad14;
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+}
+
+.validation-status.pending .status-icon svg {
+  stroke: white;
 }
 
 .status-content {
-  flex: 1;
+  flex-grow: 1;
 }
 
 .status-content h5 {
-  margin: 0 0 8px 0;
-  font-size: 17px;
-  font-weight: 700;
-  color: #1a1a1a;
+  font-size: 16px;
+  font-weight: 600;
+  margin-bottom: 5px;
 }
 
 .status-content p {
-  margin: 0 0 10px 0;
-  font-size: 15px;
-  color: #555;
-  line-height: 1.5;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
 }
 
 .validation-date {
-  display: inline-block;
-  font-size: 13px;
-  color: #666;
-  font-weight: 600;
-  padding: 4px 10px;
-  background: rgba(255, 255, 255, 0.7);
-  border-radius: 6px;
+  font-size: 12px;
+  color: #999;
 }
 
 .vendor-comment {
   display: flex;
-  align-items: flex-start;
-  gap: 10px;
-  margin-top: 12px;
-  padding: 12px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 8px;
-  font-size: 14px;
-  color: #333;
-  line-height: 1.5;
-  border-left: 3px solid #52c41a;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+  font-size: 13px;
+  color: #52c41a;
 }
 
-/* New styles for production progress section */
+.vendor-comment svg {
+  stroke: #52c41a;
+}
+
+/* Production Section Styles */
 .production-section {
-  background: linear-gradient(135deg, #fff 0%, #f8fafb 100%);
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
   border-radius: 12px;
-  padding: 24px;
+  padding: 25px;
   margin-bottom: 24px;
-  border: 2px solid #1890ff;
-  box-shadow: 0 4px 16px rgba(24, 144, 255, 0.1);
 }
 
 .production-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 24px;
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 1px solid #f0f0f0;
 }
 
-.header-left {
+.production-header .header-left {
   display: flex;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  color: #333;
 }
 
-.header-left h4 {
+.production-header h4 {
+  font-size: 18px;
+  font-weight: 600;
   margin: 0;
-  font-size: 19px;
-  font-weight: 700;
-  color: #1a1a1a;
 }
 
 .production-badge {
-  padding: 6px 14px;
-  background: linear-gradient(135deg, #1890ff 0%, #096dd9 100%);
-  color: #fff;
-  font-size: 13px;
-  font-weight: 700;
-  border-radius: 20px;
+  background-color: #fff0f6;
+  color: #ff4d4f;
+  padding: 4px 10px;
+  border-radius: 6px;
+  font-size: 12px;
+  font-weight: 600;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
-  animation: pulse-badge 2s ease-in-out infinite;
 }
 
-@keyframes pulse-badge {
-  0%, 100% {
-    transform: scale(1);
-    box-shadow: 0 0 0 0 rgba(24, 144, 255, 0.7);
-  }
-  50% {
-    transform: scale(1.05);
-    box-shadow: 0 0 0 6px rgba(24, 144, 255, 0);
-  }
+/* Add styles for ready badge */
+.production-badge.ready {
+  background-color: #f6ffed;
+  color: #52c41a;
 }
 
 .production-content {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 25px;
 }
 
 .production-message {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 12px;
-  padding: 16px;
-  background: linear-gradient(135deg, #f6ffed 0%, #d9f7be 100%);
-  border-radius: 10px;
-  border-left: 4px solid #52c41a;
+  background: #f6ffed;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #b7eb8f;
+}
+
+/* Add styles for success and urgent messages */
+.production-message.success {
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+}
+
+.production-message.urgent {
+  background: #fffbe6;
+  border: 1px solid #ffd591;
+}
+
+.production-message.success svg {
+  stroke: #52c41a;
+  flex-shrink: 0;
+}
+
+.production-message.urgent svg {
+  stroke: #faad14;
+  flex-shrink: 0;
 }
 
 .production-message p {
   margin: 0;
-  font-size: 15px;
+  font-size: 14px;
   color: #333;
-  line-height: 1.6;
-  font-weight: 500;
 }
 
 .timeline-info {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  padding: 20px;
-  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
-  border-radius: 10px;
+  position: relative;
+  padding-left: 20px;
 }
 
 .timeline-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
-  flex: 1;
-}
-
-.timeline-icon {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: #d9d9d9;
-  flex-shrink: 0;
+  align-items: flex-start;
+  margin-bottom: 25px;
   position: relative;
 }
 
+.timeline-icon {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+  margin-right: 15px;
+  flex-shrink: 0;
+  background-color: #e0e0e0;
+}
+
 .timeline-icon.completed {
-  background: #52c41a;
+  background-color: #52c41a;
 }
 
 .timeline-icon.active {
-  background: #1890ff;
+  background-color: #1890ff;
 }
 
 .timeline-icon.active .pulse {
-  position: absolute;
   width: 100%;
   height: 100%;
+  background-color: rgba(24, 144, 255, 0.2);
   border-radius: 50%;
-  background: #1890ff;
-  animation: pulse-icon 2s ease-in-out infinite;
+  animation: pulse 1.5s infinite ease-out;
+  position: absolute;
+  top: 0;
+  left: 0;
 }
 
-@keyframes pulse-icon {
-  0%, 100% {
-    transform: scale(1);
-    opacity: 1;
-  }
-  50% {
-    transform: scale(1.4);
-    opacity: 0;
-  }
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.5); opacity: 0; }
 }
 
 .timeline-content {
@@ -1484,515 +2102,454 @@ onUnmounted(() => {
 }
 
 .timeline-content h5 {
+  font-size: 16px;
+  font-weight: 600;
+  color: #333;
   margin: 0;
-  font-size: 15px;
-  font-weight: 700;
-  color: #1a1a1a;
 }
 
 .timeline-content span {
   font-size: 13px;
   color: #666;
-  font-weight: 500;
 }
 
 .timeline-line {
-  width: 50px;
-  height: 2px;
-  background: #d9d9d9;
-  flex-shrink: 0;
+  position: absolute;
+  top: 15px;
+  left: 15px;
+  width: 2px;
+  background-color: #e0e0e0;
+  height: calc(100% - 30px); /* Adjust height to not span past the last item */
+}
+
+/* Add styles for completed timeline line */
+.timeline-line.completed {
+  background-color: #52c41a;
 }
 
 .timeline-line.active {
-  background: linear-gradient(90deg, #1890ff 0%, #d9d9d9 100%);
+  background-color: #1890ff;
 }
 
+/* Countdown Section */
 .countdown-section {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  padding: 24px;
-  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
-  border-radius: 12px;
-  border: 2px solid #91d5ff;
+  background-color: #f8f9fa;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #e8e8e8;
+}
+
+/* Add styles for delivery ready section */
+.countdown-section.ready {
+  background-color: #f6ffed;
+  border: 1px solid #b7eb8f;
 }
 
 .countdown-header {
   display: flex;
   align-items: center;
   gap: 10px;
-  font-size: 16px;
-  font-weight: 700;
-  color: #0050b3;
+  margin-bottom: 15px;
+  color: #1890ff;
+}
+
+.countdown-header span {
+  font-size: 15px;
+  font-weight: 600;
 }
 
 .countdown-display {
   display: flex;
   justify-content: center;
   align-items: center;
-  gap: 12px;
+  gap: 10px;
+  margin-bottom: 20px;
 }
 
 .countdown-item {
   display: flex;
   flex-direction: column;
   align-items: center;
-  gap: 8px;
-  padding: 16px 24px;
-  background: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-  min-width: 80px;
+  gap: 4px;
 }
 
 .countdown-value {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1890ff;
-  line-height: 1;
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
 }
 
 .countdown-label {
-  font-size: 13px;
-  font-weight: 600;
+  font-size: 12px;
   color: #666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
 }
 
 .countdown-separator {
-  font-size: 32px;
-  font-weight: 800;
-  color: #1890ff;
+  font-size: 28px;
+  font-weight: 700;
+  color: #aaa;
 }
 
 .progress-bar-wrapper {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
+  margin-top: 20px;
+  text-align: center;
 }
 
 .progress-bar {
   width: 100%;
-  height: 32px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 16px;
+  height: 20px;
+  background-color: #e0e0e0;
+  border-radius: 10px;
   overflow: hidden;
-  box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 8px;
 }
 
-.progress-fill {
+.progress-bar .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #52c41a 0%, #73d13d 100%);
-  border-radius: 16px;
+  background-color: #1890ff;
+  border-radius: 10px;
+  transition: width 0.5s ease;
   display: flex;
   align-items: center;
-  justify-content: flex-end;
-  padding-right: 12px;
-  transition: width 0.5s ease;
-  position: relative;
-  overflow: hidden;
-}
-
-.progress-fill::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
-  animation: shimmer 2s infinite;
-}
-
-@keyframes shimmer {
-  0% {
-    transform: translateX(-100%);
-  }
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-.progress-text {
-  font-size: 14px;
-  font-weight: 800;
-  color: #fff;
-  z-index: 1;
+  justify-content: center;
+  color: white;
+  font-size: 11px;
+  font-weight: 600;
 }
 
 .progress-label {
-  margin: 0;
-  font-size: 14px;
-  color: #0050b3;
-  font-weight: 600;
-  text-align: center;
+  font-size: 13px;
+  color: #666;
 }
 
 .delivery-estimate {
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 14px;
-  background: rgba(255, 255, 255, 0.9);
-  border-radius: 8px;
+  margin-top: 25px;
+  color: #52c41a;
   font-size: 15px;
-  color: #333;
-  font-weight: 500;
-  border-left: 4px solid #52c41a;
 }
 
 .delivery-estimate strong {
-  color: #52c41a;
-  font-weight: 700;
+  font-weight: 600;
 }
 
+/* Delivery Address Styles */
 .order-delivery {
-  padding: 20px;
-  background: linear-gradient(135deg, #fafbfc 0%, #f5f7fa 100%);
-  border-radius: 10px;
-  border: 1px solid #e8eaed;
-  margin-bottom: 24px;
+  background-color: #ffffff;
+  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  padding: 25px;
+  margin-top: 24px; /* Added margin-top for spacing */
 }
 
 .delivery-info {
   display: flex;
-  gap: 14px;
-  font-size: 15px;
+  align-items: flex-start;
+  gap: 15px;
 }
 
-.delivery-info svg {
-  flex-shrink: 0;
-  margin-top: 3px;
+.delivery-info div {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
 }
 
 .delivery-info strong {
-  display: block;
-  margin-bottom: 8px;
-  color: #1a1a1a;
   font-size: 16px;
+  color: #333;
+  margin-bottom: 5px;
 }
 
 .delivery-info p {
-  margin: 0 0 6px 0;
-  color: #555;
-  line-height: 1.6;
+  font-size: 14px;
+  color: #666;
+  margin: 0;
 }
 
 .delivery-note {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   gap: 8px;
-  margin-top: 12px !important;
-  padding: 10px;
-  background: rgba(255, 255, 255, 0.8);
-  border-radius: 6px;
-  font-size: 14px;
-  color: #666;
-  font-style: italic;
+  font-size: 13px;
+  color: #999;
+  margin-top: 10px;
 }
 
+/* Order Actions Styles */
 .order-actions {
   display: flex;
-  gap: 12px;
-  padding: 20px 28px;
-  background: #fafbfc;
-  border-top: 1px solid #e8eaed;
   flex-wrap: wrap;
+  gap: 15px;
+  margin-top: 25px;
+  justify-content: flex-end; /* Align actions to the right */
 }
 
 .action-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 12px 20px;
+  padding: 10px 20px;
   border: none;
   border-radius: 8px;
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s ease;
+  text-decoration: none;
+}
+
+.action-btn svg {
+  stroke: currentColor; /* Ensure SVG color matches button text */
 }
 
 .action-btn.primary {
-  background: linear-gradient(135deg, #fe9700 0%, #ff8c00 100%);
-  color: #fff;
+  background-color: #fe9700;
+  color: white;
 }
 
 .action-btn.primary:hover {
-  background: linear-gradient(135deg, #ff8c00 0%, #e68900 100%);
+  background-color: #e68a00;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.3);
 }
 
 .action-btn.success {
-  background: linear-gradient(135deg, #52c41a 0%, #389e0d 100%);
-  color: #fff;
+  background-color: #52c41a;
+  color: white;
 }
 
 .action-btn.success:hover {
-  background: linear-gradient(135deg, #389e0d 0%, #237804 100%);
+  background-color: #389e17;
   transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(82, 196, 26, 0.3);
 }
 
 .action-btn.secondary {
-  background: #fff;
-  color: #666;
-  border: 2px solid #d9d9d9;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .action-btn.secondary:hover {
-  background: #f5f5f5;
-  border-color: #fe9700;
-  color: #fe9700;
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
 }
 
 .action-btn.danger {
-  background: #fff;
-  color: #ff4d4f;
-  border: 2px solid #ffccc7;
+  background-color: #ff4d4f;
+  color: white;
 }
 
 .action-btn.danger:hover {
-  background: #ff4d4f;
-  color: #fff;
-  border-color: #ff4d4f;
+  background-color: #e63c3e;
+  transform: translateY(-2px);
 }
 
+.action-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+/* Modal Styles */
 .modal-overlay {
   position: fixed;
   top: 0;
   left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.65);
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 20px;
-  backdrop-filter: blur(4px);
 }
 
 .modal-content {
-  background: #fff;
-  border-radius: 16px;
-  padding: 36px;
-  max-width: 540px;
-  width: 100%;
-  max-height: 90vh;
-  overflow-y: auto;
+  background: white;
+  padding: 30px;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 500px;
   position: relative;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+  animation: modal-fade-in 0.3s ease-out forwards;
+  overflow-y: auto; /* Allow scrolling if content is too long */
+  max-height: 90vh; /* Limit height to viewport */
+}
+
+@keyframes modal-fade-in {
+  from { opacity: 0; transform: scale(0.9); }
+  to { opacity: 1; transform: scale(1); }
 }
 
 .modal-close {
   position: absolute;
   top: 20px;
   right: 20px;
-  width: 36px;
-  height: 36px;
+  background: none;
   border: none;
-  background: #f5f5f5;
-  color: #999;
   cursor: pointer;
-  transition: all 0.3s ease;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
+  color: #999;
+  transition: color 0.3s;
 }
 
 .modal-close:hover {
-  background: #ff4d4f;
-  color: #fff;
-  transform: rotate(90deg);
+  color: #333;
 }
 
 .modal-header {
-  margin-bottom: 28px;
+  text-align: center;
+  margin-bottom: 25px;
 }
 
 .modal-title {
-  font-size: 26px;
+  font-size: 24px;
   font-weight: 700;
-  color: #1a1a1a;
-  margin: 0 0 10px 0;
+  color: #333;
+  margin-bottom: 8px;
 }
 
-.modal-subtitle {
+.modal-subtitle,
+.modal-message {
   font-size: 15px;
   color: #666;
-  margin: 0;
-  font-weight: 500;
-}
-
-.modal-icon {
-  display: flex;
-  justify-content: center;
-  margin-bottom: 24px;
-}
-
-.modal-icon.warning {
-  background: linear-gradient(135deg, #fff1f0 0%, #ffccc7 100%);
-  width: 90px;
-  height: 90px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-  border: 3px solid #ffa39e;
+  margin-bottom: 0;
 }
 
 .modal-message {
-  font-size: 16px;
-  color: #555;
-  text-align: center;
-  line-height: 1.7;
-  margin: 0 0 28px 0;
+  margin-top: 15px;
 }
 
 .payment-info-box {
-  padding: 20px;
-  background: linear-gradient(135deg, #fff7e6 0%, #ffe7ba 100%);
-  border: 2px solid #ffd591;
-  border-radius: 10px;
-  margin-bottom: 28px;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  margin-bottom: 20px;
+  border: 1px solid #e8e8e8;
 }
 
 .info-row {
   display: flex;
   justify-content: space-between;
-  align-items: center;
-  margin-bottom: 10px;
+  margin-bottom: 8px;
+  font-size: 14px;
 }
 
 .info-label {
-  font-size: 15px;
   color: #666;
-  font-weight: 600;
 }
 
 .info-value {
-  font-size: 22px;
-  font-weight: 800;
-  color: #d46b08;
+  color: #333;
+  font-weight: 600;
 }
 
 .info-note {
-  margin: 0;
-  font-size: 14px;
-  color: #ad6800;
-  line-height: 1.6;
-  font-weight: 500;
+  font-size: 13px;
+  color: #999;
+  margin-top: 10px;
+  text-align: center;
 }
 
-.upload-form,
-.cancel-form {
+.upload-form {
   display: flex;
   flex-direction: column;
-  gap: 24px;
+  gap: 20px;
 }
 
 .form-group {
-  display: flex;
-  flex-direction: column;
+  text-align: left;
 }
 
 .form-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1a1a1a;
-  margin-bottom: 10px;
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #333;
+  font-size: 14px;
 }
 
 .file-input-wrapper {
   position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  border: 2px dashed #d9d9d9;
+  border-radius: 8px;
+  background-color: #fefefe;
+  transition: all 0.3s;
+}
+
+.file-input-wrapper:hover {
+  border-color: #fe9700;
 }
 
 .file-input {
   position: absolute;
+  top: 0;
+  left: 0;
   width: 100%;
   height: 100%;
   opacity: 0;
   cursor: pointer;
-  z-index: 2;
 }
 
 .file-input-display {
+  padding: 15px 20px;
   display: flex;
-  flex-direction: column;
   align-items: center;
-  justify-content: center;
-  gap: 10px;
-  padding: 40px 20px;
-  border: 3px dashed #d9d9d9;
-  border-radius: 10px;
-  background: #fafafa;
-  transition: all 0.3s ease;
-  cursor: pointer;
-}
-
-.file-input-wrapper:hover .file-input-display {
-  border-color: #fe9700;
-  background: #fff7e6;
-}
-
-.file-name {
-  font-weight: 700;
-  color: #fe9700;
+  gap: 12px;
+  color: #666;
   font-size: 15px;
 }
 
-.file-hint {
-  margin: 10px 0 0 0;
-  font-size: 13px;
-  color: #999;
+.file-input-display span {
   font-weight: 500;
 }
 
+.file-name {
+  color: #fe9700;
+}
+
+.file-hint {
+  font-size: 12px;
+  color: #999;
+  margin-top: 8px;
+}
+
 .upload-progress {
-  margin-top: 20px;
-  padding: 16px;
-  background: #f5f5f5;
-  border-radius: 10px;
+  margin-top: 10px;
 }
 
 .progress-bar {
   width: 100%;
-  height: 10px;
-  background: #e8e8e8;
-  border-radius: 5px;
+  height: 12px;
+  background-color: #e0e0e0;
+  border-radius: 6px;
   overflow: hidden;
-  margin-bottom: 10px;
+  margin-bottom: 5px;
 }
 
 .progress-fill {
   height: 100%;
-  background: linear-gradient(90deg, #fe9700 0%, #ff8c00 100%);
-  transition: width 0.3s ease;
-  border-radius: 5px;
+  background-color: #fe9700;
+  border-radius: 6px;
+  transition: width 0.4s ease-in-out;
 }
 
 .progress-text {
-  margin: 0;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
-  text-align: center;
-  font-weight: 600;
 }
 
 .form-textarea {
-  padding: 12px 14px;
+  width: 100%;
+  padding: 10px 12px;
   border: 2px solid #d9d9d9;
   border-radius: 8px;
   font-size: 15px;
+  transition: all 0.3s;
   font-family: inherit;
   resize: vertical;
-  transition: all 0.3s ease;
-  line-height: 1.6;
 }
 
 .form-textarea:focus {
@@ -2003,112 +2560,97 @@ onUnmounted(() => {
 
 .modal-actions {
   display: flex;
-  gap: 14px;
-  margin-top: 10px;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 30px;
 }
 
 .modal-btn {
-  flex: 1;
-  padding: 14px 28px;
+  padding: 12px 24px;
   border: none;
-  border-radius: 10px;
-  font-size: 16px;
-  font-weight: 700;
+  border-radius: 8px;
+  font-size: 15px;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s ease;
+  transition: background-color 0.3s, transform 0.2s;
+  text-decoration: none;
 }
 
 .modal-btn.primary {
-  background: linear-gradient(135deg, #fe9700 0%, #ff8c00 100%);
-  color: #fff;
+  background-color: #fe9700;
+  color: white;
 }
 
-.modal-btn.primary:hover:not(:disabled) {
-  background: linear-gradient(135deg, #ff8c00 0%, #e68900 100%);
+.modal-btn.primary:hover {
+  background-color: #e68a00;
   transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(254, 151, 0, 0.4);
-}
-
-.modal-btn.primary:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.modal-btn.danger {
-  background: linear-gradient(135deg, #ff4d4f 0%, #cf1322 100%);
-  color: #fff;
-}
-
-.modal-btn.danger:hover:not(:disabled) {
-  background: linear-gradient(135deg, #cf1322 0%, #a8071a 100%);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 20px rgba(255, 77, 79, 0.4);
-}
-
-.modal-btn.danger:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 .modal-btn.secondary {
-  background: #f5f5f5;
-  color: #666;
-  border: 2px solid #d9d9d9;
+  background-color: #f0f0f0;
+  color: #333;
 }
 
 .modal-btn.secondary:hover {
-  background: #e8e8e8;
-  border-color: #bfbfbf;
+  background-color: #e0e0e0;
+  transform: translateY(-2px);
 }
 
-@media (max-width: 1024px) {
-  .product-section {
-    grid-template-columns: 1fr;
-  }
-
-  .timeline-info {
-    flex-direction: column;
-    gap: 16px;
-  }
-
-  .timeline-line {
-    width: 2px;
-    height: 30px;
-    margin-left: 19px;
-  }
+.modal-btn.danger {
+  background-color: #ff4d4f;
+  color: white;
 }
 
-@media (max-width: 768px) {
-  .page-title {
-    font-size: 28px;
-  }
+.modal-btn.danger:hover {
+  background-color: #e63c3e;
+  transform: translateY(-2px);
+}
 
-  .order-actions {
-    flex-direction: column;
-  }
+.modal-btn:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
 
-  .action-btn {
-    width: 100%;
-    justify-content: center;
-  }
+.modal-icon {
+  text-align: center;
+  margin-bottom: 20px;
+}
 
-  .filter-tabs {
-    overflow-x: auto;
-    flex-wrap: nowrap;
-    padding-bottom: 10px;
-  }
+.modal-icon.warning svg {
+  color: #ff4d4f;
+}
 
-  .filter-tab {
-    white-space: nowrap;
-  }
+.cancel-form {
+  margin-top: 20px;
+}
 
-  .countdown-item {
-    min-width: 70px;
-    padding: 12px 16px;
-  }
+.cancel-form .form-group {
+  margin-bottom: 20px;
+}
 
-  .countdown-value {
-    font-size: 26px;
-  }
+/* Add styles for delivery ready section */
+.delivery-ready-info {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+}
+
+.delivery-ready-info svg {
+  stroke: #52c41a;
+}
+
+.delivery-ready-info h5 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #52c41a;
+  margin: 0;
+}
+
+.delivery-ready-info p {
+  font-size: 15px;
+  color: #333;
+  margin: 0;
 }
 </style>

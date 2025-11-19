@@ -371,13 +371,13 @@
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
                   <div v-if="order.preuve_paiement" class="flex flex-col gap-1">
                     <button 
-                      @click="showPaymentProof(order)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-medium transition-colors"
-                      title="View payment proof"
-                    >
-                      <ImageIcon class="h-3 w-3" />
-                      <span>View Proof</span>
-                    </button>
+                        @click="showPaymentProof(order)"
+                        class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-medium transition-colors"
+                        title="View all payments"
+                      >
+                        <ImageIcon class="h-3 w-3" />
+                        <span>View Proof</span>
+                      </button>
                     <button 
                       v-if="!order.preuve_validee && order.tobevalidate !== 'valid'"
                       @click="openValidateProofModal(order)"
@@ -413,6 +413,25 @@
                       <CheckCircle2Icon class="h-3 w-3" />
                       <span>Prepare Terminated</span>
                     </span>
+
+                    <button 
+                      v-if="order.delivered !== 'valid' && order.prepare === 'valid'"
+                      @click="openValidateDeliveredModal(order)"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-xs font-medium transition-colors"
+                      title="Validate proof"
+                    >
+                      <CheckCircleIcon class="h-3 w-3" />
+                      <span>Delivered </span>
+                    </button>
+                    <span 
+                      v-if="order.delivered === 'valid'"
+                      style="margin: 0; background-color: orange;"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium"
+                    >
+                      <CheckCircle2Icon class="h-3 w-3" />
+                      <span>delivered to customer</span>
+                    </span>
+
                     </div>
                     
                   </div>
@@ -600,6 +619,18 @@
             ></textarea>
           </div>
 
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Estimated delivery date <span class="text-red-500">*</span>
+            </label>
+            <input 
+              type="date"
+              v-model="estimatedDeliveryDate"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              required
+            />
+          </div>
+
           <div class="flex justify-end gap-3 pt-4">
             <button 
               @click="closeValidateProofModal"
@@ -610,6 +641,53 @@
             <button 
             style="background-color: #16a34a;"
               @click="validatePaymentProof"
+              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Validate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div v-if="showValidateProofModal2" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-green-100 rounded-lg">
+              <CheckCircleIcon class="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Validate Payment Proof</h3>
+              <p class="text-sm text-gray-500">Order #{{ currentValidatePayment?.montant }} $</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <p class="text-gray-600">Are you sure you want to validate this payment proof?</p>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Add a comment (optional)
+            </label>
+            <textarea 
+              v-model="validationComment"
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              placeholder="Enter your comment here..."
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
+            <button 
+              @click="showValidateProofModal2 = false"
+              class="px-4 py-2 btn-gray"
+            >
+              Cancel
+            </button>
+            <button 
+            style="background-color: #16a34a;"
+              @click="validatePaymentProof2"
               class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
             >
               Validate
@@ -665,6 +743,221 @@
         </div>
       </div>
     </div>
+    
+    <div v-if="showValidatedeliveredModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-green-100 rounded-lg">
+              <CheckCircleIcon class="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Delivered completed</h3>
+              <p class="text-sm text-gray-500">Order #{{ currentValidateOrder?.numero_commande }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <p class="text-gray-600">Are you sure you want to terminate the preparation?</p>
+          
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">
+              Add a comment (optional)
+            </label>
+            <textarea 
+              v-model="validationComment"
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              placeholder="Enter your comment here..."
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
+            <button 
+              @click="showValidatedeliveredModal = false"
+              class="px-4 py-2 btn-gray"
+            >
+              Cancel
+            </button>
+            <button 
+            style="background-color: #16a34a;"
+              @click="validateDelivered"
+              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
+            >
+              Validate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Payment Proof Modal showing all payments with stats -->
+<div v-if="showPaymentProofModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closePaymentProofModal">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden" @click.stop>
+    <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <div class="flex items-center gap-3">
+        <div class="p-2 bg-blue-100 rounded-lg">
+          <ImageIcon class="h-5 w-5 text-blue-600" />
+        </div>
+        <div>
+          <h3 class="text-lg font-bold text-gray-900">Payment History</h3>
+          <p class="text-sm text-gray-500">Order #{{ currentProofOrder?.numero_commande }}</p>
+        </div>
+      </div>
+      <button @click="closePaymentProofModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+        <XIcon class="h-5 w-5 text-gray-500" />
+      </button>
+    </div>
+    
+    <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+      <!-- Payment Statistics -->
+      <div class="grid grid-cols-3 gap-4 mb-6">
+        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
+          <div class="text-sm text-blue-600 font-medium mb-1">Total Order</div>
+          <div class="text-2xl font-bold text-blue-900">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
+        </div>
+        <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+          <div class="text-sm text-green-600 font-medium mb-1">Total Paid</div>
+          <div class="text-2xl font-bold text-green-900">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
+        </div>
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
+          <div class="text-sm text-orange-600 font-medium mb-1">Remaining</div>
+          <div class="text-2xl font-bold text-orange-900">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
+        </div>
+      </div>
+
+      <!-- Payment List -->
+      <div class="space-y-4">
+        <!-- Initial Payment -->
+        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
+                <CreditCardIcon class="h-6 w-6 text-blue-600" />
+              </div>
+              <div>
+                <div class="font-semibold text-gray-900">Initial Payment (30%)</div>
+                <div class="text-sm text-gray-500">{{ formatDate(currentProofOrder?.date_paiement) }}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xl font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * 0.3) }}</div>
+              <span v-if="currentProofOrder?.estimate_prepare" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium mt-1">
+                <CheckCircle2Icon class="h-3 w-3" />
+                Validated
+              </span>
+              <span v-else class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium mt-1">
+                <Clock class="h-3 w-3" />
+                Pending
+              </span>
+            </div>
+          </div>
+          <button 
+            @click="viewProofImage(currentProofOrder?.preuve_paiement)"
+            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-medium transition-colors"
+          >
+            <ImageIcon class="h-4 w-4" />
+            View Proof
+          </button>
+        </div>
+
+        <!-- Additional Payments -->
+        <div v-if="currentProofOrder?.paiements_additionnels && currentProofOrder.paiements_additionnels  .length > 0" 
+             v-for="(payment, index) in currentProofOrder.paiements_additionnels" 
+             :key="payment.id || index"
+             class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+          <div class="flex items-start justify-between mb-3">
+            <div class="flex items-center gap-3">
+              <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
+                <CreditCardIcon class="h-6 w-6 text-purple-600" />
+              </div>
+              <div>
+                <div class="font-semibold text-gray-900">Additional Payment #{{ index + 1 }}</div>
+                <div class="text-sm text-gray-500">{{ formatDate(payment.date_paiement) }}</div>
+                <div v-if="payment.commentaire" class="text-sm text-gray-600 mt-1">{{ payment.commentaire }}</div>
+              </div>
+            </div>
+            <div class="text-right">
+              <div class="text-xl font-bold text-gray-900">{{ formatCurrency(payment.montant) }}</div>
+              <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium mt-1">
+                <CheckCircle2Icon class="h-3 w-3" />
+                Validated
+              </span>
+              <span v-else class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium mt-1">
+                <Clock class="h-3 w-3" />
+                Pending
+              </span>
+            </div>
+          </div>
+          <div style="display: flex; gap: 10px;">
+            <button 
+              @click="viewProofImage(payment.preuve_url)"
+              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg font-medium transition-colors"
+            >
+              <ImageIcon class="h-4 w-4" />
+              View Proof
+            </button>
+            <button 
+            style="background-color: green; color: white;"
+                      v-if="payment.valide !== 'valid'"
+                      @click="openValidateProofModal2(payment)"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-medium transition-colors"
+                      title="Validate proof"
+                    >
+                      <CheckCircleIcon class="h-3 w-3" />
+                      <span>Validate</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- No additional payments message -->
+        <div v-if="!currentProofOrder?.paiements || currentProofOrder.paiements.length === 0" 
+             class="text-center py-8 text-gray-500">
+          <p>No additional payments yet</p>
+        </div>
+      </div>
+
+      <div class="mt-6 flex justify-end">
+        <button 
+          @click="closePaymentProofModal"
+          class="px-4 py-2 btn-gray"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal for viewing individual proof images -->
+<div v-if="showProofImageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeProofImageModal">
+  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden" @click.stop>
+    <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+      <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
+      <button @click="closeProofImageModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
+        <XIcon class="h-5 w-5 text-gray-500" />
+      </button>
+    </div>
+    <div class="p-6">
+      <div class="bg-gray-50 rounded-xl overflow-hidden">
+        <img 
+          v-if="currentProofImage" 
+          :src="currentProofImage" 
+          alt="Payment Proof"
+          class="w-full h-auto"
+        />
+      </div>
+      <div class="mt-4 flex justify-end">
+        <button 
+          @click="closeProofImageModal"
+          class="px-4 py-2 btn-gray"
+        >
+          Close
+        </button>
+      </div>
+    </div>
+  </div>
+</div>
 
     <!-- Confirmation Modal -->
     <div v-if="showConfirmationModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeConfirmModal">
@@ -864,6 +1157,21 @@
             <div class="flex items-center gap-3 mb-6">
               <CreditCardIcon class="h-6 w-6 text-orange-600" />
               <h4 class="text-lg font-semibold text-gray-900">Payment Information</h4>
+            </div>
+            <!-- Payment Statistics -->
+            <div class="grid grid-cols-3 gap-4 mb-6">
+              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
+                <div class="text-xs text-blue-600 font-medium mb-1">Total Order</div>
+                <div class="text-lg font-bold text-blue-900">{{ formatCurrency(selectedOrder.total) }}</div>
+              </div>
+              <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
+                <div class="text-xs text-green-600 font-medium mb-1">Total Paid</div>
+                <div class="text-lg font-bold text-green-900">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
+              </div>
+              <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
+                <div class="text-xs text-orange-600 font-medium mb-1">Remaining</div>
+                <div class="text-lg font-bold text-orange-900">{{ formatCurrency(calculateRemaining(selectedOrder)) }}</div>
+              </div>
             </div>
             <div class="space-y-4">
               <div class="flex items-center justify-between">
@@ -1101,6 +1409,7 @@ const API_BASE_URL = 'https://sastock.com/api_adjame'
 
 // Reactive data
 const dataLoading = ref(true)
+const estimatedDeliveryDate = ref('')
 const orders = ref([])
 const selectedOrder = ref(null)
 const showOrderModal = ref(false)
@@ -1128,10 +1437,15 @@ const notificationMessage = ref('')
 //  Payment proof modals
 const showPaymentProofModal = ref(false)
 const showValidateProofModal = ref(false)
+const showValidateProofModal2 = ref(false)
 const showValidateprepareModal = ref(false)
+const showValidatedeliveredModal = ref(false)
 const currentProofOrder = ref(null)
 const currentValidateOrder = ref(null)
+const currentValidatePayment = ref(null)
 const validationComment = ref('')
+const showProofImageModal = ref(false)
+const currentProofImage = ref(null)
 
 // Stats
 const stats = ref({
@@ -1170,6 +1484,37 @@ const filterCounts = computed(() => {
     'annulee': orders.value.filter(order => order.statut === 'annulee').length
   }
 })
+
+const calculateTotalPaid = (order) => {
+  if (!order) return 0;
+
+  // Paiement initial 30%
+  let total = order.total * 0.3;
+
+  // Paiements additionnels filtrés
+  if (order.paiements_additionnels && order.paiements_additionnels.length > 0) {
+    total += order.paiements_additionnels
+      .filter(payment => payment.valide === 'valid') // 👈 filtre ici
+      .reduce((sum, payment) => sum + parseFloat(payment.montant || 0), 0);
+  }
+
+  return total;
+};
+
+const calculateRemaining = (order) => {
+  if (!order) return 0
+  return order.total - calculateTotalPaid(order)
+}
+
+const showPaymentProof = (order) => {
+  currentProofOrder.value = order
+  showPaymentProofModal.value = true
+}
+
+const closePaymentProofModal = () => {
+  showPaymentProofModal.value = false
+  currentProofOrder.value = null
+}
 
 const filteredOrders = computed(() => {
   let filtered = [...orders.value]
@@ -1300,15 +1645,14 @@ const getVisiblePages = () => {
 }
 
 //  Payment proof methods
-const showPaymentProof = (order) => {
-  currentProofOrder.value = order
-  showPaymentProofModal.value = true
-  showOrderModal.value = false
+const viewProofImage = (imageUrl) => {
+  currentProofImage.value = imageUrl
+  showProofImageModal.value = true
 }
 
-const closePaymentProofModal = () => {
-  showPaymentProofModal.value = false
-  currentProofOrder.value = null
+const closeProofImageModal = () => {
+  showProofImageModal.value = false
+  currentProofImage.value = null
 }
 
 const openValidateProofModal = (order) => {
@@ -1318,10 +1662,25 @@ const openValidateProofModal = (order) => {
   showPaymentProofModal.value = false
 }
 
+const openValidateProofModal2 = (payment) => {
+  console.log('Opening validate proof modal for payment:', payment)
+  currentValidatePayment.value = payment
+  validationComment.value = ''
+  showValidateProofModal2.value = true
+  showPaymentProofModal.value = false
+}
+
 const openValidatePrepareModal = (order) => {
   currentValidateOrder.value = order
   validationComment.value = ''
   showValidateprepareModal.value = true
+  showPaymentProofModal.value = false
+}
+
+const openValidateDeliveredModal = (order) => {
+  currentValidateOrder.value = order
+  validationComment.value = ''
+  showValidatedeliveredModal.value = true
   showPaymentProofModal.value = false
 }
 
@@ -1335,16 +1694,22 @@ const closeValidateprepareModal = () => {
   showValidateprepareModal.value = false
   currentValidateOrder.value = null
   validationComment.value = ''
+  estimatedDeliveryDate.value = ''
 }
 
 const validatePaymentProof = async () => {
+  if (!estimatedDeliveryDate.value) {
+    showNotificationMessage('error', 'Error', 'Please enter an estimated delivery date')
+    return
+  }
   if (!currentValidateOrder.value) return
 
   try {
     const response = await axios.put(
       `${API_BASE_URL}/commandes.php?action=validate_proof&id=${currentValidateOrder.value.id}`,
       {
-        commentaire: validationComment.value
+        commentaire: validationComment.value,
+        date_livraison_estimee: estimatedDeliveryDate.value
       }
     )
     
@@ -1365,6 +1730,31 @@ const validatePaymentProof = async () => {
       }
       
       closeValidateProofModal()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
+    }
+  } catch (error) {
+    console.error('Error validating proof:', error)
+    showNotificationMessage('error', 'Error', 'Error validating payment proof')
+  }
+}
+
+const validatePaymentProof2 = async () => {
+  if (!currentValidatePayment.value) return
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/commandes.php?action=validate_other_proof&id=${currentValidatePayment.value.id}`,
+      {
+        commentaire_admin: validationComment.value
+      }
+    )
+    
+    if (response.data.success) {
+      showNotificationMessage('success', 'Proof Validated', 'Payment proof has been successfully validated.')
+      
+      showValidateProofModal2.value = false
+      loadAllData()
     } else {
       showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
     }
@@ -1402,6 +1792,32 @@ const validatePreparation = async () => {
       }
       
       closeValidateprepareModal()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
+    }
+  } catch (error) {
+    console.error('Error validating proof:', error)
+    showNotificationMessage('error', 'Error', 'Error validating payment proof')
+  }
+}
+
+const validateDelivered = async () => {
+  if (!currentValidateOrder.value) return
+
+  try {
+    const response = await axios.put(
+      `${API_BASE_URL}/commandes.php?action=validate_delivered&id=${currentValidateOrder.value.id}`,
+      {
+        commentaire_delivered: validationComment.value
+      }
+    )
+    
+    if (response.data.success) {
+      showNotificationMessage('success', 'Delivered Validated', 'The order has been successfully delivered..')
+      
+      
+      showValidatedeliveredModal.value = false
+      loadAllData()
     } else {
       showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
     }
