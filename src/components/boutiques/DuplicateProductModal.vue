@@ -639,7 +639,6 @@
                 <div>
                   <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
                     Tire Size
-                    {{ productData.tyre_size }}
                   </label>
                   <input
                     id="tyre_size"
@@ -652,7 +651,7 @@
 
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor2" class="block text-sm font-medium text-gray-700 mb-2">
-                   Other Spécification (WYSIWYG)
+                   Product Associated Terms (WYSIWYG)
                   </label>
                   <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
@@ -862,39 +861,46 @@
               <div v-if="productData.images.length > 0" class="mt-6">
                 <h4 class="text-sm font-medium text-gray-700 mb-3">Selected images</h4>
                 <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-                  <div 
-                    v-for="(image, index) in productData.images" 
-                    :key="index"
-                    class="relative group"
-                  >
-                    <img 
-                      :src="image.preview" 
-                      :alt="`Image ${index + 1}`"
-                      class="w-full h-24 sm:h-32 object-cover rounded-lg border border-gray-200"
+                 <div 
+                      v-for="(image, index) in productData.images" 
+                      :key="index"
+                      class="relative group"
                     >
-                    
-                    <div v-if="image.uploading" class="absolute inset-0 bg-black/50 flex items-center justify-center rounded-lg">
-                      <div class="text-white text-sm font-medium">{{ image.uploadProgress }}%</div>
+                      <img 
+                        :src="image.preview" 
+                        :alt="`Image ${index + 1}`"
+                        class="w-full h-24 sm:h-32 object-cover rounded-lg border border-gray-200"
+                      >
+
+                      <!-- Supprimer -->
+                      <button
+                      style="background-color: red;"
+                        type="button"
+                        @click="removeImage(index)"
+                        class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-md p-1"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+
+                      <!-- Set Main -->
+                      <button
+                      style="background-color: gray; font-size: 10px"
+                        v-if="index !== 0"
+                        @click="setMainImage(index)"
+                        class="absolute bottom-2 right-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-md group-hover:opacity-100 transition"
+                      >
+                        Set Main
+                      </button>
+
+                      <!-- Indicateur Main -->
+                      <div 
+                        v-if="index === 0"
+                        class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md "
+                      >
+                        Main
+                      </div>
                     </div>
-                    
-                    <div v-if="image.uploaded && image.url" class="absolute top-2 right-2 bg-green-500 text-white rounded-full w-6 h-6 flex items-center justify-center">
-                      <CheckIcon class="h-4 w-4" />
-                    </div>
-                    
-                    <button
-                      type="button"
-                      @click="removeImage(index)"
-                      class="absolute -top-2 -right-2 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                    >
-                      <XIcon class="w-4 h-4" />
-                    </button>
-                    <div 
-                      v-if="index === 0"
-                      class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md "
-                    >
-                      Main
-                    </div>
-                  </div>
+
                 </div>
               </div>
             </div>
@@ -1057,7 +1063,7 @@
                     <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Tire Size</div>
-                      <div class="spec-value">{{ productData.type_size || 'N/A' }}</div>
+                      <div class="spec-value">{{ productData.tyre_size || 'N/A' }}</div>
                     </div>
                     <!-- vérifié -->
                     <div class="spec-row">
@@ -1088,10 +1094,10 @@
                       <div class="spec-value">{{ productData.engine_number || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name"> VIN number / chassis number</div>
+                      <div class="spec-name"> VIN number / chassis number </div>
                       <div class="spec-value">
-                        <ul v-if="productData.vin && productData.vin.length">
-                          <li v-for="vin in productData.vin" :key="vin.id">
+                        <ul v-if="productData.vin_numbers && productData.vin_numbers.length">
+                          <li v-for="vin in productData.vin_numbers" :key="vin">
                             {{ vin }}
                           </li>
                         </ul>
@@ -1497,6 +1503,18 @@ const canSubmit = computed(() => {
            productData.unit_price !== '' && 
            Number(productData.unit_price) > 0)
 })
+
+const setMainImage = (index) => {
+  if (index === 0) return; // déjà l'image principale
+
+  const selected = productData.images[index]
+
+  // Retirer l'image de sa position
+  productData.images.splice(index, 1)
+
+  // La mettre en première position
+  productData.images.unshift(selected)
+}
 
 const getCategoryName = (id) => {
   const category = categories.value.find(cat => cat.id === id)
