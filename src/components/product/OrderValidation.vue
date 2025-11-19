@@ -6,9 +6,9 @@
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <polyline points="15,18 9,12 15,6"></polyline>
           </svg>
-          Retour
+          Back
         </button>
-        <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">Validation de la commande</h1>
+        <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">Order confirmation</h1>
       </div>
     </div>
 
@@ -16,7 +16,7 @@
       <div class="validation-grid">
         <div class="left-column">
           <div class="section-card product-summary">
-            <h2 class="section-title">Résumé du produit</h2>
+            <h2 class="section-title">Product summary</h2>
             <div class="product-info">
               <img :src="product.primary_image || product.image" :alt="product.name" class="product-image">
               <div class="product-details">
@@ -27,43 +27,43 @@
                   <span v-if="product.vehicle_year">{{ product.vehicle_year }}</span>
                 </div>
                 <div class="product-price">
-                  <span class="price-label">Prix unitaire:</span>
-                  <span class="price-value">{{ formatPrice(getUnitPrice()) }}</span>
+                  <span class="price-label">Unit price:</span>
+                  <span class="price-value">{{ formatPrice(getUnitPrice(),{showFOB:true}) }}</span>
                 </div>
                 <div v-if="product.wholesale_price && product.wholesale_min_qty && quantity >= product.wholesale_min_qty" class="wholesale-info">
                   <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
-                  <span>Prix de gros appliqué (≥{{ product.wholesale_min_qty }} pcs)</span>
+                  <span>Wholesale price applied (≥{{ product.wholesale_min_qty }} pcs)</span>
                 </div>
                 <div class="product-quantity">
-                  <span class="quantity-label">Quantité:</span>
+                  <span class="quantity-label">Quantity:</span>
                   <div class="quantity-controls">
                     <button @click="decreaseQuantity" :disabled="quantity <= 1">-</button>
-                    <input type="number" v-model.number="quantity" min="1" @input="validateQuantity">
+                    <input type="number" v-model.number="quantity" min="1" @input="validateQuantity" class="quantity-input focus:border-ring-2 focus:ring-0">
                     <button @click="increaseQuantity">+</button>
                   </div>
                 </div>
                 <div v-if="product.stock" class="stock-info">
-                  <span>{{ product.stock }} pièces disponibles</span>
+                  <span>{{ product.stock }} parts available</span>
                 </div>
               </div>
             </div>
           </div>
 
           <div class="section-card shipping-section">
-            <h2 class="section-title">Options de livraison</h2>
+            <h2 class="section-title">Delivery options</h2>
             
             <div class="own-provider-option">
               <label class="checkbox-label">
                 <input 
                   type="checkbox" 
                   v-model="hasOwnProvider"
-                  class="checkbox-input"
+                  class="checkbox-style"
                 >
-                <span class="checkbox-text">J'ai un fournisseur pour la livraison</span>
+                <span class="checkbox-text">I have a supplier for the delivery</span>
               </label>
-              <p class="checkbox-hint">Si vous cochez cette option, les frais de livraison seront supprimés</p>
+              <p class="checkbox-hint">If you select this option, the delivery charges will be waived.</p>
             </div>
 
             <div v-if="!hasOwnProvider">
@@ -82,50 +82,50 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              <span>Vous utiliserez votre propre fournisseur de livraison</span>
+              <span>You will use your own delivery provider</span>
             </div>
           </div>
 
           <div class="section-card order-summary">
-            <h2 class="section-title">Récapitulatif de la commande</h2>
+            <h2 class="section-title">Order summary</h2>
             
             <div class="summary-row">
-              <span class="summary-label">Sous-total ({{ quantity }} article{{ quantity > 1 ? 's' : '' }})</span>
+              <span class="summary-label">Subtotal ({{ quantity }} article{{ quantity > 1 ? 's' : '' }})</span>
               <span class="summary-value">{{ formatPrice(subtotal) }}</span>
             </div>
 
             <div v-if="!hasOwnProvider" class="summary-row">
-              <span class="summary-label">Frais de livraison</span>
+              <span class="summary-label">Delivery costs</span>
               <span class="summary-value" :class="{ 'free-shipping': shippingCost === 0 }">
                 {{ shippingCost === 0 ? 'Gratuit' : formatPrice(shippingCost) }}
               </span>
             </div>
 
             <div v-if="!hasOwnProvider" class="summary-row">
-              <span class="summary-label">Autres frais</span>
+              <span class="summary-label">Other fees</span>
               <span class="summary-value">{{ formatPrice(otherFees) }}</span>
             </div>
 
             <div class="summary-divider"></div>
 
             <div class="summary-row total-row">
-              <span class="summary-label">Total</span>
-              <span class="summary-value total-value">{{ formatPrice(totalAmount) }}</span>
+              <span class="primary-color text-2xl font-bold">Total</span>
+              <span class="primary-color text-2xl font-bold">{{ formatPrice(totalAmount) }}</span>
             </div>
 
             <div class="deposit-info">
               <div class="deposit-row">
-                <span class="deposit-label">Acompte à payer (30%)</span>
+                <span class="deposit-label">Deposit to be paid (30%)</span>
                 <span class="deposit-value">{{ formatPrice(depositAmount) }}</span>
               </div>
-              <p class="deposit-note">Vous devez payer 30% du montant total pour confirmer votre commande</p>
+              <p class="deposit-note">You must pay 30% of the total amount to confirm your order</p>
             </div>
 
             <div class="bank-info">
-              <h3 class="bank-title">Informations bancaires</h3>
+              <h3 class="bank-title">Bank information</h3>
               <div class="bank-details">
                 <div class="bank-row">
-                  <span class="bank-label">Banque:</span>
+                  <span class="bank-label">Bank:</span>
                   <span class="bank-value copy-value" @click="copyToClipboard('SGCI (Société Générale)')">
                     SGCI (Société Générale)
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -135,11 +135,11 @@
                   </span>
                 </div>
                 <div class="bank-row">
-                  <span class="bank-label">Titulaire:</span>
+                  <span class="bank-label">Holder:</span>
                   <span class="bank-value">MARKETPLACE CI</span>
                 </div>
                 <div class="bank-row">
-                  <span class="bank-label">Numéro de compte:</span>
+                  <span class="bank-label">Account number:</span>
                   <span class="bank-value copy-value" @click="copyToClipboard('CI93 CI 01 234 567890123456')">
                     CI93 CI 01 234 567890123456
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -165,7 +165,7 @@
                   <line x1="12" y1="16" x2="12" y2="12"></line>
                   <line x1="12" y1="8" x2="12.01" y2="8"></line>
                 </svg>
-                Effectuez le paiement de l'acompte puis ajoutez les preuves de paiement depuis votre espace "Mes commandes"
+                Make the deposit payment and then add the proof of payment from your "My Orders" section.
               </p>
             </div>
 
@@ -174,14 +174,14 @@
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                   <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
                 </svg>
-                <span>Paiement sécurisé</span>
+                <span>Secure payment</span>
               </div>
               <div class="badge">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                   <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                   <polyline points="22 4 12 14.01 9 11.01"></polyline>
                 </svg>
-                <span>Protection acheteur</span>
+                <span>Buyer protection</span>
               </div>
             </div>
           </div>
@@ -189,25 +189,25 @@
 
         <div class="right-column">
           <div class="section-card user-info-form">
-            <h2 class="section-title">Informations de livraison</h2>
+            <h2 class="section-title">Delivery information</h2>
             
             <form @submit.prevent="submitOrder">
               <div class="form-grid">
                 <div class="form-group">
-                  <label class="form-label">Nom</label>
+                  <label class="form-label">Last Name</label>
                   <input 
                     type="text" 
-                    class="form-input" 
+                    class="input-style" 
                     :value="user.nom" 
                     readonly
                   >
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">Prénom</label>
+                  <label class="form-label">First name</label>
                   <input 
                     type="text" 
-                    class="form-input" 
+                    class="input-style" 
                     :value="user.prenom" 
                     readonly
                   >
@@ -217,50 +217,50 @@
                   <label class="form-label">Email</label>
                   <input 
                     type="text" 
-                    class="form-input" 
+                    class="input-style" 
                     :value="user.contact" 
                     readonly
                   >
                 </div>
 
                 <div class="form-group full-width">
-                  <label class="form-label">Pays</label>
+                  <label class="form-label">Country</label>
                   <input 
                     type="text" 
-                    class="form-input" 
+                    class="input-style" 
                     :value="user.pays" 
                     readonly
                   >
                 </div>
 
                 <div class="form-group full-width">
-                  <label class="form-label required">Ville</label>
+                  <label class="form-label required">City</label>
                   <input 
                     type="text" 
-                    class="form-input" 
+                    class="input-style" 
                     v-model="orderForm.ville"
-                    placeholder="Entrez votre ville"
+                    placeholder="Enter your city"
                     required
                   >
                 </div>
 
                 <div class="form-group full-width">
-                  <label class="form-label required">Adresse complète</label>
+                  <label class="form-label required">Full address</label>
                   <textarea 
-                    class="form-textarea" 
+                    class="input-style" 
                     v-model="orderForm.adresse"
-                    placeholder="Entrez votre adresse de livraison complète"
+                    placeholder="Enter your full delivery address"
                     rows="3"
                     required
                   ></textarea>
                 </div>
 
                 <div class="form-group full-width">
-                  <label class="form-label">Instructions de livraison (optionnel)</label>
+                  <label class="form-label">Delivery instructions (optional)</label>
                   <textarea 
-                    class="form-textarea" 
+                    class="input-style" 
                     v-model="orderForm.instructions"
-                    placeholder="Ajoutez des instructions spéciales pour la livraison"
+                    placeholder="Add special delivery instructions"
                     rows="2"
                   ></textarea>
                 </div>
@@ -268,7 +268,7 @@
 
               <button 
                 type="submit"
-                class="submit-order-btn" 
+                class="btn-degrade-orange mt-6 w-full" 
                 :disabled="!canSubmitOrder"
               >
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -276,7 +276,7 @@
                   <circle cx="20" cy="21" r="1"></circle>
                   <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
                 </svg>
-                Confirmer la commande
+                Confirm the order
               </button>
             </form>
           </div>
@@ -300,22 +300,22 @@
           </svg>
         </div>
         
-        <h2 class="modal-title success-title">Commande validée</h2>
+        <h2 class="modal-title">Order confirmed</h2>
         <p class="modal-message">
-          Votre commande a été enregistrée avec succès ! 
-          Veuillez effectuer le paiement de l'acompte de <strong>{{ formatPrice(depositAmount) }}</strong> 
-          et ajouter les preuves depuis votre espace "Mes commandes".
+          Your order has been successfully registered ! 
+          Please make the deposit payment of <strong>{{ formatPrice(depositAmount) }}</strong> 
+          and add the proofs from your "My Orders" area.
         </p>
         
         <div class="modal-actions">
-          <button class="modal-btn primary" @click="contactSeller">
+          <button class="flex-1 btn-degrade-orange text-xs" @click="contactSeller">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
-            Communiquez avec le vendeur
+            Communicate with the Seller
           </button>
-          <button class="modal-btn secondary" @click="goToOrders">
-            Voir mes commandes
+          <button class="flex-1 btn-gray text-xs" @click="goToOrders">
+            View my orders
           </button>
         </div>
       </div>
@@ -337,18 +337,18 @@
           </svg>
         </div>
         
-        <h2 class="modal-title">Connexion requise</h2>
+        <h2 class="modal-title">Login required</h2>
         <p class="modal-message">
-          Vous devez être connecté pour passer une commande. 
-          Veuillez vous connecter ou créer un compte pour continuer.
+          You must be logged in to place an order.
+          Please log in or create an account to continue.
         </p>
         
         <div class="modal-actions">
-          <button class="modal-btn primary" @click="redirectToLogin">
-            Se connecter
+          <button class="flex-1 btn-degrade-orange" @click="redirectToLogin">
+            Login
           </button>
-          <button class="modal-btn secondary" @click="closeLoginModal">
-            Annuler
+          <button class="flex-1 btn-gray" @click="closeLoginModal">
+            Cancel
           </button>
         </div>
       </div>
@@ -478,7 +478,7 @@ const updateVille = (ville) => {
 
 const copyToClipboard = (text) => {
   navigator.clipboard.writeText(text).then(() => {
-    alert('Copié dans le presse-papiers!')
+    alert('Copied to clipboard!')
   }).catch(err => {
     console.error('Erreur lors de la copie:', err)
   })
@@ -493,7 +493,7 @@ const submitOrder = async () => {
   }
 
   if (!canSubmitOrder.value) {
-    alert('Veuillez remplir tous les champs obligatoires')
+    alert('Please fill in all required fields.')
     return
   }
 
@@ -597,7 +597,7 @@ const closeSuccessModal = () => {
 
 const contactSeller = () => {
   console.log('[v0] Contact seller')
-  alert('Fonctionnalité de messagerie à venir')
+  alert('Messaging functionality coming soon')
   showSuccessModal.value = false
 }
 
@@ -831,7 +831,7 @@ onMounted(() => {
   width: 32px;
   height: 32px;
   border: none;
-  background: #f5f5f5;
+  background: white;
   color: #333;
   font-size: 18px;
   cursor: pointer;
@@ -846,6 +846,30 @@ onMounted(() => {
 .quantity-controls button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
+}
+.quantity-input {
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  appearance: none;
+  width: auto;
+  height: 50px;
+  border: 1px solid #d9d9d9;
+  color: #333;
+  border-left: none;
+  border-right: none;
+  text-align: center;
+  font-size: 18px;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.quantity-input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
 }
 
 .quantity-controls input {
@@ -884,31 +908,10 @@ onMounted(() => {
   color: #ff4d4f;
 }
 
-.form-input,
-.form-textarea {
-  padding: 10px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  font-size: 14px;
-  transition: all 0.3s ease;
-}
-
-.form-input:focus,
-.form-textarea:focus {
-  outline: none;
-  border-color: #fe9700;
-  box-shadow: 0 0 0 2px rgba(254, 151, 0, 0.1);
-}
-
-.form-input[readonly] {
+.input-style[readonly] {
   background: #f5f5f5;
   color: #666;
   cursor: not-allowed;
-}
-
-.form-textarea {
-  resize: vertical;
-  font-family: inherit;
 }
 
 .summary-row {
@@ -950,36 +953,12 @@ onMounted(() => {
   color: #333;
 }
 
-.total-value {
-  font-size: 24px;
-  color: #fe9700 !important;
-}
-
-.submit-order-btn {
-  width: 100%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-  padding: 14px 24px;
-  background: #fe9700;
-  color: #fff;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  margin-top: 24px;
-}
-
-.submit-order-btn:hover:not(:disabled) {
-  background: #e68900;
+.btn-degrade-orange:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(254, 151, 0, 0.3);
 }
 
-.submit-order-btn:disabled {
+.btn-degrade-orange:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
@@ -1120,13 +1099,6 @@ onMounted(() => {
   font-size: 15px;
   font-weight: 500;
   color: #333;
-}
-
-.checkbox-input {
-  width: 18px;
-  height: 18px;
-  cursor: pointer;
-  accent-color: #fe9700;
 }
 
 .checkbox-text {

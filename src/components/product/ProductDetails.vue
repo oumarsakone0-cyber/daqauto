@@ -443,7 +443,7 @@ const handleOrderClick = () => {
 }
 
 .quantity-btn {
-  width: auto;
+  width: 50px;
   height: 50px;
   font-size: 26px;
   border: 1px solid #d9d9d9;
@@ -453,6 +453,10 @@ const handleOrderClick = () => {
   justify-content: center;
   cursor: pointer;
   transition: all 0.3s ease;
+}
+.quantity-btn:hover:not(:disabled) {
+  background: #fe9700;
+  color: #fff;
 }
 
 .quantity-btn:first-child {
