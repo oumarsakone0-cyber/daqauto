@@ -841,33 +841,31 @@
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden" @click.stop>
     <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
       <div class="flex items-center gap-3">
-        <div class="p-2 bg-blue-100 rounded-lg">
-          <ImageIcon class="h-5 w-5 text-blue-600" />
+        <div class="p-2 bg-green-100 rounded-lg">
+          <ImageIcon class="h-5 w-5 green-color" />
         </div>
         <div>
           <h3 class="text-lg font-bold text-gray-900">Payment History</h3>
           <p class="text-sm text-gray-500">Order #{{ currentProofOrder?.numero_commande }}</p>
         </div>
       </div>
-      <button @click="closePaymentProofModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-        <XIcon class="h-5 w-5 text-gray-500" />
-      </button>
+        <XIcon class="h-7 w-7 text-gray-500 cursor-pointer" @click="closePaymentProofModal" />
     </div>
     
     <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
       <!-- Payment Statistics -->
       <div class="grid grid-cols-3 gap-4 mb-6">
-        <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-          <div class="text-sm text-blue-600 font-medium mb-1">Total Order</div>
-          <div class="text-2xl font-bold text-blue-900">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
+        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
+          <div class="text-sm primary-color font-medium mb-1">Total Order</div>
+          <div class="text-2xl font-bold primary-color">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
         </div>
         <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-          <div class="text-sm text-green-600 font-medium mb-1">Total Paid</div>
-          <div class="text-2xl font-bold text-green-900">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
+          <div class="text-sm green-color font-medium mb-1">Total Paid</div>
+          <div class="text-2xl font-bold green-color">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
         </div>
-        <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-          <div class="text-sm text-orange-600 font-medium mb-1">Remaining</div>
-          <div class="text-2xl font-bold text-orange-900">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
+        <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 border border-red-200">
+          <div class="text-sm error-color font-medium mb-1">Remaining</div>
+          <div class="text-2xl font-bold error-color">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
         </div>
       </div>
 
@@ -877,8 +875,8 @@
         <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
           <div class="flex items-start justify-between mb-3">
             <div class="flex items-center gap-3">
-              <div class="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
-                <CreditCardIcon class="h-6 w-6 text-blue-600" />
+              <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
+                <CreditCardIcon class="h-6 w-6 primary-color" />
               </div>
               <div>
                 <div class="font-semibold text-gray-900">Initial Payment (30%)</div>
@@ -887,7 +885,7 @@
             </div>
             <div class="text-right">
               <div class="text-xl font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * 0.3) }}</div>
-              <span v-if="currentProofOrder?.estimate_prepare" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium mt-1">
+              <span v-if="currentProofOrder?.estimate_prepare" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium mt-1">
                 <CheckCircle2Icon class="h-3 w-3" />
                 Validated
               </span>
@@ -899,7 +897,7 @@
           </div>
           <button 
             @click="viewProofImage(currentProofOrder?.preuve_paiement)"
-            class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg font-medium transition-colors"
+            class="w-full submit-btn"
           >
             <ImageIcon class="h-4 w-4" />
             View Proof
@@ -914,7 +912,7 @@
           <div class="flex items-start justify-between mb-3">
             <div class="flex items-center gap-3">
               <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                <CreditCardIcon class="h-6 w-6 text-purple-600" />
+                <CreditCardIcon class="h-6 w-6 purple-color" />
               </div>
               <div>
                 <div class="font-semibold text-gray-900">Additional Payment #{{ index + 1 }}</div>
@@ -924,7 +922,7 @@
             </div>
             <div class="text-right">
               <div class="text-xl font-bold text-gray-900">{{ formatCurrency(payment.montant) }}</div>
-              <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs font-medium mt-1">
+              <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium mt-1">
                 <CheckCircle2Icon class="h-3 w-3" />
                 Validated
               </span>
@@ -937,7 +935,7 @@
           <div style="display: flex; gap: 10px;">
             <button 
               @click="viewProofImage(payment.preuve_url)"
-              class="w-full inline-flex items-center justify-center gap-2 px-4 py-2 bg-purple-50 hover:bg-purple-100 text-purple-700 rounded-lg font-medium transition-colors"
+              class="w-full submit-btn"
             >
               <ImageIcon class="h-4 w-4" />
               View Proof
@@ -946,7 +944,7 @@
             style="background-color: green; color: white;"
                       v-if="payment.valide !== 'valid'"
                       @click="openValidateProofModal2(payment)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-50 hover:bg-green-100 text-green-700 rounded-lg text-xs font-medium transition-colors"
+                      class="inline-flex btn-degrade-orange"
                       title="Validate proof"
                     >
                       <CheckCircleIcon class="h-3 w-3" />
@@ -979,17 +977,15 @@
   <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden" @click.stop>
     <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
       <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
-      <button @click="closeProofImageModal" class="p-2 hover:bg-gray-100 rounded-lg transition-colors">
-        <XIcon class="h-5 w-5 text-gray-500" />
-      </button>
+        <XIcon class="h-5 w-5 text-gray-500 cursor-pointer" @click="closeProofImageModal" />
     </div>
     <div class="p-6">
-      <div class="bg-gray-50 rounded-xl overflow-hidden">
+      <div class="bg-gray-50 rounded-xl overflow-scroll">
         <img 
           v-if="currentProofImage" 
           :src="currentProofImage" 
           alt="Payment Proof"
-          class="w-full h-auto"
+          class="w-full h-auto object-contain max-h-[60vh]"
         />
       </div>
       <div class="mt-4 flex justify-end">
@@ -1203,17 +1199,17 @@
             </div>
             <!-- Payment Statistics -->
             <div class="grid grid-cols-3 gap-4 mb-6">
-              <div class="bg-gradient-to-br from-blue-50 to-blue-100 rounded-xl p-4 border border-blue-200">
-                <div class="text-xs text-blue-600 font-medium mb-1">Total Order</div>
-                <div class="text-lg font-bold text-blue-900">{{ formatCurrency(selectedOrder.total) }}</div>
+              <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
+                <div class="text-xs primary-color font-medium mb-1">Total Order</div>
+                <div class="text-lg font-bold primary-color">{{ formatCurrency(selectedOrder.total) }}</div>
               </div>
               <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-                <div class="text-xs text-green-600 font-medium mb-1">Total Paid</div>
-                <div class="text-lg font-bold text-green-900">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
+                <div class="text-xs gree-color font-medium mb-1">Total Paid</div>
+                <div class="text-lg font-bold green-color">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
               </div>
               <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-                <div class="text-xs text-orange-600 font-medium mb-1">Remaining</div>
-                <div class="text-lg font-bold text-orange-900">{{ formatCurrency(calculateRemaining(selectedOrder)) }}</div>
+                <div class="text-xs error-color font-medium mb-1">Remaining</div>
+                <div class="text-lg font-bold error-color">{{ formatCurrency(calculateRemaining(selectedOrder)) }}</div>
               </div>
             </div>
             <div class="space-y-4">
@@ -1479,12 +1475,14 @@ const notificationMessage = ref('')
 
 //  Payment proof modals
 const showPaymentProofModal = ref(false)
+const showProofImageModal = ref(false)
 const showValidateProofModal = ref(false)
 const showValidateProofModal2 = ref(false)
 const showValidateprepareModal = ref(false)
 const showValidatedeliveredModal = ref(false)
 const currentProofOrder = ref(null)
 const currentValidateOrder = ref(null)
+const currentProofImage = ref(null)
 const currentValidatePayment = ref(null)
 const validationComment = ref('')
 
@@ -1549,7 +1547,9 @@ const calculateRemaining = (order) => {
 
 const showPaymentProof = (order) => {
   currentProofOrder.value = order
+  showOrderModal.value = false
   showPaymentProofModal.value = true
+
 }
 
 const closePaymentProofModal = () => {
