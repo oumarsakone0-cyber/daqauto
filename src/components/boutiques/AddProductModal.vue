@@ -498,7 +498,7 @@
                     >
                   </div>
                 </div>
-
+                  <!--  Payment Information Section 
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
                    Other specifications (WYSIWYG)
@@ -532,7 +532,7 @@
                     </div>
                   </div>
                 </div>
-
+-->
               </div>
             </div>
           </div>
@@ -834,10 +834,10 @@
                     placeholder="Ex: 315/80R22.5"
                   >
                 </div>
-
+                <!--  Payment Information Section         -->
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor2" class="block text-sm font-medium text-gray-700 mb-2">
-                   Other Description (WYSIWYG)
+                   Other Spécifications (WYSIWYG)
                   </label>
                   <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
@@ -868,7 +868,7 @@
                     </div>
                   </div>
                 </div>
-
+        
               </div>
             </div>
           </div>
