@@ -368,11 +368,11 @@
                 </td>
                 
                 <!--  Added payment proof column -->
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+                <td class="px-2 sm:px-4 py-2 sm:py-2 whitespace-nowrap">
                   <div v-if="order.preuve_paiement" class="flex flex-col gap-1">
                     <button 
                       @click="showPaymentProof(order)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-blue-50 hover:bg-blue-100 text-blue-700 rounded-lg text-xs font-medium transition-colors"
+                      class="submit-btn h-7 text-xs"
                       title="View payment proof"
                     >
                       <ImageIcon class="h-3 w-3" />
@@ -381,7 +381,7 @@
                     <button 
                       v-if="!order.preuve_validee && order.tobevalidate !== 'valid'"
                       @click="openValidateProofModal(order)"
-                      class="inline-flex  btn-degrade-orange"
+                      class="btn-degrade-orange h-7 text-xs"
                       title="Validate proof"
                     >
                       <CheckCircleIcon class="h-3 w-3" />
@@ -400,7 +400,7 @@
                     <button 
                       v-if="order.prepare !== 'valid'"
                       @click="openValidatePrepareModal(order)"
-                      class="inline-flex btn-degrade-orange"
+                      class="btn-degrade-orange h-7 text-xs"
                       title="Validate proof"
                     >
                       <CheckCircleIcon class="h-3 w-3" />
@@ -408,7 +408,7 @@
                     </button>
                     <span 
                       v-if="order.prepare === 'valid'"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium mb-1"
                     >
                       <CheckCircle2Icon class="h-3 w-3" />
                       <span>Prepare Terminated</span>
@@ -417,7 +417,7 @@
                     <button 
                       v-if="order.delivered !== 'valid' && order.prepare === 'valid'"
                       @click="openValidateDeliveredModal(order)"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-orange-50 hover:bg-orange-100 text-orange-700 rounded-lg text-xs font-medium transition-colors"
+                      class="btn-degrade-orange h-7 text-xs "
                       title="Validate proof"
                     >
                       <CheckCircleIcon class="h-3 w-3" />
@@ -425,8 +425,7 @@
                     </button>
                     <span 
                       v-if="order.delivered === 'valid'"
-                      style="margin: 0; background-color: orange;"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 text-green-800 rounded-lg text-xs font-medium"
+                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium"
                     >
                       <CheckCircle2Icon class="h-3 w-3" />
                       <span>delivered to customer</span>
@@ -435,7 +434,7 @@
                     </div>
                     
                   </div>
-                  <span v-else class="text-xs text-gray-400">No proof</span>
+                  <span v-else class="flex text-xs text-gray-400 items-center justify-center">No Proof</span>
                 </td>
                 
                 <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
@@ -1010,7 +1009,7 @@
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
         <div class="p-6">
           <div class="flex items-center mb-4">
-            <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4', getConfirmationIconClass()]">
+            <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4 ', getConfirmationIconClass()]">
               <CheckCircle class="h-6 w-6" />
             </div>
             <div>
@@ -1028,7 +1027,7 @@
             </button>
             <button 
               @click="executeAction"
-              :class="['px-4 py-2 rounded-lg text-white font-medium transition-colors submit-btn', getConfirmationButtonClass()]"
+              :class="['px-4 py-2 rounded-lg font-medium transition-colors', getConfirmationButtonClass()]"
             >
               {{ getConfirmationButtonText() }}
             </button>
@@ -1938,20 +1937,20 @@ const getConfirmationMessage = () => {
 
 const getConfirmationIconClass = () => {
   switch (confirmationAction.value) {
-    case 'confirm': return 'bg-green-100 text-green-600'
-    case 'ship': return 'bg-blue-100 text-blue-600'
+    case 'confirm': return 'bg-orange-100 primary-color'
+    case 'ship': return 'bg-orange-100 primary-color'
     case 'deliver': return 'bg-purple-100 text-purple-600'
-    case 'cancel': return 'bg-red-100 text-red-600'
+    case 'cancel': return 'bg-red-100 error-color'
     default: return 'bg-gray-100 text-gray-600'
   }
 }
 
 const getConfirmationButtonClass = () => {
   switch (confirmationAction.value) {
-    case 'confirm': return 'bg-green-600 hover:bg-green-700'
-    case 'ship': return 'bg-blue-600 hover:bg-blue-700'
-    case 'deliver': return 'bg-purple-600 hover:bg-purple-700'
-    case 'cancel': return 'bg-red-600 hover:bg-red-700'
+    case 'confirm': return 'btn-degrade-orange'
+    case 'ship': return 'btn-degrade-orange'
+    case 'deliver': return 'btn-degrade-orange'
+    case 'cancel': return 'btn-deconnexion'
     default: return 'bg-gray-600 hover:bg-gray-700'
   }
 }
