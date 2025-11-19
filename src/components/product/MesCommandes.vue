@@ -2,8 +2,8 @@
   <div class="my-orders-page">
     <div class="page-header">
       <div class="container">
-        <h1 class="page-title">Mes commandes</h1>
-        <p class="page-subtitle">Suivez l'état de vos commandes et ajoutez vos preuves de paiement</p>
+        <h1 class="page-title">My Orders</h1>
+        <p class="page-subtitle">Track the status of your orders and add your proof of payment.</p>
       </div>
     </div>
 
@@ -14,7 +14,7 @@
           <button
             v-for="status in orderStatuses"
             :key="status.value"
-            :class="['filter-tab', { active: selectedStatus === status.value }]"
+            :class="['filter-tab ', { active: selectedStatus === status.value }]"
             @click="selectedStatus = status.value"
           >
             <span class="tab-label">{{ status.label }}</span>
@@ -28,25 +28,25 @@
       <!-- Loading State -->
       <div v-if="loading" class="loading-state">
         <div class="spinner"></div>
-        <p>Chargement de vos commandes...</p>
+        <p>Loading orders...</p>
       </div>
 
       <!-- Empty State -->
       <div v-else-if="filteredOrders.length === 0" class="empty-state">
-        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#d9d9d9" stroke-width="1">
+        <svg width="120" height="120" viewBox="0 0 24 24" fill="none" stroke="#d9d9d9" stroke-width="1" class="inline-flex itmns-center justify-center">
           <circle cx="9" cy="21" r="1"></circle>
           <circle cx="20" cy="21" r="1"></circle>
           <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
         </svg>
-        <h3>Aucune commande trouvée</h3>
-        <p>{{ selectedStatus === 'all' ? 'Vous n\'avez pas encore passé de commande' : 'Aucune commande avec ce statut' }}</p>
+        <h3>No order found</h3>
+        <p>{{ selectedStatus === 'all' ? 'You have not yet placed an order' : 'No orders with this status' }}</p>
         <button class="primary-btn" @click="goToShop">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
             <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
           </svg>
-          Découvrir nos produits
+          Discover our products
         </button>
       </div>
 
@@ -55,7 +55,7 @@
         <div v-for="order in filteredOrders" :key="order.id" class="order-card">
           <div class="order-header">
             <div class="order-info">
-              <h3 class="order-number">Commande #{{ order.numero_commande }}</h3>
+              <h3 class="order-number">Order #{{ order.numero_commande }}</h3>
               <span class="order-date">{{ formatDate(order.created_at) }}</span>
             </div>
             <span :class="['order-status', getStatusClass(order.statut)]">
@@ -80,14 +80,14 @@
                         <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                         <line x1="1" y1="10" x2="23" y2="10"></line>
                       </svg>
-                      Quantité: {{ order.quantite }}
+                      Quantity: {{ order.quantite }}
                     </span>
-                    <span class="meta-item">
-                      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <span class="meta-item primary-color font-bold">
+                      <!-- <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <line x1="12" y1="1" x2="12" y2="23"></line>
                         <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
-                      </svg>
-                      Prix: {{ formatPrice(order.produit_prix) }}
+                      </svg> -->
+                      Prix: {{ formatPrice(order.produit_prix, {showFOB:true}) }}
                     </span>
                   </div>
                   <div class="product-seller">
@@ -102,11 +102,11 @@
 
               <div class="order-summary">
                 <div class="summary-row">
-                  <span class="summary-label">Sous-total:</span>
+                  <span class="summary-label">Sub total:</span>
                   <span class="summary-value">{{ formatPrice(order.sous_total) }}</span>
                 </div>
                 <div v-if="order.frais_livraison > 0" class="summary-row">
-                  <span class="summary-label">Livraison:</span>
+                  <span class="summary-label">Delivery:</span>
                   <span class="summary-value">{{ formatPrice(order.frais_livraison) }}</span>
                 </div>
                 <div class="summary-row total">
@@ -114,7 +114,7 @@
                   <span class="summary-value">{{ formatPrice(order.total) }}</span>
                 </div>
                 <div class="summary-row deposit">
-                  <span class="summary-label">{{ order.tobevalidate === 'valid' ? 'Acompte versé (30%):' : 'Acompte à verser (30%):' }}</span>
+                  <span class="summary-label">{{ order.tobevalidate === 'valid' ? 'Deposit paid (30%):' : 'Deposit to be paid (30%):' }}</span>
                   <span class="summary-value">{{ formatPrice(order.total * 0.3) }}</span>
                 </div>
               </div>
@@ -123,23 +123,23 @@
             <!-- Payment Validation Status Section -->
             <div v-if="order.preuve_paiement" class="payment-validation-section">
               <div class="validation-header">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
                   <rect x="2" y="7" width="20" height="14" rx="2" ry="2"></rect>
                   <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"></path>
                 </svg>
-                <h4>Statut du paiement</h4>
+                <h4>Payment status</h4>
               </div>
 
               <div v-if="order.tobevalidate === 'valid'" class="validation-status validated">
                 <div class="status-icon">
-                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="3">
+                  <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
                     <polyline points="20 6 9 17 4 12"></polyline>
                   </svg>
                 </div>
                 <div class="status-content">
-                  <h5>Preuve de paiement validée</h5>
-                  <p>Votre preuve de paiement a été vérifiée et approuvée par le vendeur</p>
-                  <span class="validation-date">Validé le {{ formatDate(order.date_paiement) }}</span>
+                  <h5>Proof of payment validated</h5>
+                  <p>Your proof of payment has been verified and approved by the seller.</p>
+                  <span class="validation-date">Validated on {{ formatDate(order.date_paiement) }}</span>
                   <div v-if="order.commentaire_paiement" class="vendor-comment">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                       <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -157,9 +157,9 @@
                   </svg>
                 </div>
                 <div class="status-content">
-                  <h5>En attente de validation</h5>
-                  <p>Votre preuve de paiement est en cours de vérification par le vendeur</p>
-                  <span class="validation-date">Envoyé le {{ formatDate(order.date_paiement) }}</span>
+                  <h5>Pending validation</h5>
+                  <p>Your proof of payment is being verified by the seller.</p>
+                  <span class="validation-date">Sent on{{ formatDate(order.date_paiement) }}</span>
                 </div>
               </div>
 
@@ -172,8 +172,8 @@
                   </svg>
                 </div>
                 <div class="status-content">
-                  <h5>Preuve envoyée</h5>
-                  <p>Votre preuve de paiement attend la validation du vendeur</p>
+                  <h5>Proof sent</h5>
+                  <p>Your proof of payment is awaiting validation from the seller.</p>
                 </div>
               </div>
             </div>
@@ -185,22 +185,22 @@
                   <rect x="1" y="4" width="22" height="16" rx="2" ry="2"></rect>
                   <line x1="1" y1="10" x2="23" y2="10"></line>
                 </svg>
-                <h4>Progression du paiement</h4>
+                <h4>Payment progress</h4>
               </div>
 
               <div class="payment-progress-content">
                 <div class="progress-info">
                   <div class="progress-stats">
                     <div class="stat-item">
-                      <span class="stat-label">Total commande:</span>
+                      <span class="stat-label">Total order:</span>
                       <span class="stat-value">{{ formatPrice(calculatePaymentStatus(order).total) }}</span>
                     </div>
                     <div class="stat-item">
-                      <span class="stat-label">Montant payé:</span>
+                      <span class="stat-label">Amount paid:</span>
                       <span class="stat-value success">{{ formatPrice(calculatePaymentStatus(order).totalPaid) }}</span>
                     </div>
                     <div class="stat-item">
-                      <span class="stat-label">Reste à payer:</span>
+                      <span class="stat-label">Payment is still due:</span>
                       <span class="stat-value warning">{{ formatPrice(calculatePaymentStatus(order).remaining) }}</span>
                     </div>
                   </div>
@@ -208,12 +208,12 @@
                   <div class="progress-bar-container">
                     <div class="progress-bar-fill" :style="{ width: calculatePaymentStatus(order).percentage + '%' }"></div>
                   </div>
-                  <p class="progress-percentage">{{ calculatePaymentStatus(order).percentage.toFixed(1) }}% payé</p>
+                  <p class="progress-percentage">{{ calculatePaymentStatus(order).percentage.toFixed(1) }}% paid</p>
                 </div>
 
                 <!-- CHANGE: Use order.paiements instead of order.additional_payments -->
                 <div v-if="order.paiements && order.paiements.length > 0" class="payments-history">
-                  <h5>Historique des paiements</h5>
+                  <h5>Payment history</h5>
                   <div class="payment-item initial">
                     <div class="payment-icon">
                       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
@@ -221,12 +221,11 @@
                       </svg>
                     </div>
                     <div class="payment-details">
-                      <span class="payment-label">Acompte initial (30%)</span>
+                      <span class="payment-label">Initial deposit (30%)</span>
                       <span class="payment-amount">{{ formatPrice(calculatePaymentStatus(order).firstPayment) }}</span>
                       <span class="payment-date">{{ formatDate(order.date_paiement) }}</span>
                     </div>
                   </div>
-                  {{  order.paiements }}
                   <!-- CHANGE: Display additional payments from order.paiements array -->
                   <div v-for="(payment, index) in order.paiements" :key="payment.id" class="payment-item">
                     <div class="payment-icon">
@@ -239,12 +238,12 @@
                       </svg>
                     </div>
                     <div class="payment-details">
-                      <span class="payment-label">Paiement supplémentaire #{{ index + 1 }}</span>
+                      <span class="payment-label">Additional payment #{{ index + 1 }}</span>
                       <span class="payment-amount">{{ formatPrice(payment.montant) }}</span>
                       <span class="payment-date">{{ formatDate(payment.date_paiement) }}</span>
-                      <span v-if="payment.valide === 'pending' || !payment.valide" class="payment-status pending">En attente</span>
-                      <span v-else-if="payment.valide === 'valid'" class="payment-status validated">Validé</span>
-                      <span v-else class="payment-status pending">En attente</span>
+                      <span v-if="payment.valide === 'pending' || !payment.valide" class="payment-status pending">Pending</span>
+                      <span v-else-if="payment.valide === 'valid'" class="payment-status validated">Validated</span>
+                      <span v-else class="payment-status pending">Pending</span>
                       <div v-if="payment.commentaire_admin" class="payment-comment">
                         <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
                           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
@@ -254,14 +253,14 @@
                       <button
                         v-if="payment.preuve_paiement"
                         style="width: 180px; background-color: #fe7900;"
-                        class="action-btn success"
+                        class="btn-degrade-orange success"
                         @click="viewPaymentProof(payment)"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                           <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                           <circle cx="12" cy="12" r="3"></circle>
                         </svg>
-                        Voir la preuve
+                        See the proof
                       </button>
                     </div>
                   </div>
@@ -274,17 +273,17 @@
             <div v-if="order.tobevalidate === 'valid' && order.statut !== 'livree' && order.statut !== 'annule'" class="production-section">
               <div class="production-header">
                 <div class="header-left">
-                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
                     <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
                     <line x1="8" y1="21" x2="16" y2="21"></line>
                     <line x1="12" y1="17" x2="12" y2="21"></line>
                   </svg>
                   <!-- CHANGE> Display different title based on prepare_date -->
-                  <h4>{{ order.prepare_date ? 'Prêt pour livraison' : 'Préparation de votre commande' }}</h4>
+                  <h4>{{ order.prepare_date ? 'Ready for delivery' : 'Preparing your order' }}</h4>
                 </div>
                 <!-- CHANGE> Display different badge based on prepare_date -->
-                <span v-if="!order.prepare_date" class="production-badge">En cours</span>
-                <span v-else class="production-badge ready">Prêt</span>
+                <span v-if="!order.prepare_date" class="production-badge">In progress</span>
+                <span v-else class="production-badge ready">Ready</span>
               </div>
 
               <div class="production-content">
@@ -294,25 +293,25 @@
                     <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                     <polyline points="22 4 12 14.01 9 11.01"></polyline>
                   </svg>
-                  <p>La préparation de votre produit a démarré ! Notre équipe travaille activement sur votre commande.</p>
+                  <p>Your product preparation has begun! Our team is actively working on your order.</p>
                 </div>
 
                 <!-- CHANGE> Show ready for delivery message when prepare_date exists -->
                 <div v-else>
                   <!-- CHANGE> If payment is complete (100%), show delivery confirmation message -->
-                  <div v-if="calculatePaymentStatus(order).percentage >= 100" class="production-message success">
+                  <div v-if="calculatePaymentStatus(order).percentage >= 100" class="production-message ">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                       <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
                       <polyline points="22 4 12 14.01 9 11.01"></polyline>
                     </svg>
                     <div>
-                      <p><strong>Félicitations !</strong> Votre commande est prête pour livraison. Veuillez consulter votre email pour plus d'informations sur la livraison.</p>
-                      <button class="confirm-address-btn" @click="confirmDeliveryAddress(order)">
-                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                      <p><strong>Congratulations !</strong> Your order is ready for delivery. Please check your email for more delivery information.</p>
+                      <button class="submit-btn mt-2" @click="confirmDeliveryAddress(order)">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#ffffff" stroke-width="2">
                           <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
                           <circle cx="12" cy="10" r="3"></circle>
                         </svg>
-                        Confirmer l'adresse de livraison
+                        Confirm the delivery address
                       </button>
                     </div>
                   </div>
@@ -324,7 +323,7 @@
                       <line x1="12" y1="8" x2="12" y2="12"></line>
                       <line x1="12" y1="16" x2="12.01" y2="16"></line>
                     </svg>
-                    <p><strong>Attention !</strong> Votre commande est prête pour livraison mais il reste <strong>{{ formatPrice(calculatePaymentStatus(order).remaining) }}</strong> à payer. Veuillez finaliser rapidement le paiement pour que nous puissions procéder à la livraison.</p>
+                    <p><strong>Attention !</strong>Your order is ready for delivery, but there is still some left. <strong>{{ formatPrice(calculatePaymentStatus(order).remaining) }}</strong> payment is due. Please complete payment promptly so we can proceed with delivery.</p>
                   </div>
                 </div>
 
@@ -336,7 +335,7 @@
                       </svg>
                     </div>
                     <div class="timeline-content">
-                      <h5>Paiement validé</h5>
+                      <h5>Payment confirmed</h5>
                       <span>{{ formatDate(order.date_paiement) }}</span>
                     </div>
                   </div>
@@ -352,8 +351,8 @@
                       <div v-else class="pulse"></div>
                     </div>
                     <div class="timeline-content">
-                      <h5>En préparation</h5>
-                      <span>{{ order.prepare_date ? 'Terminé le ' + formatDate(order.prepare_date) : 'Depuis le ' + formatDate(order.updated_at) }}</span>
+                      <h5>In preparation</h5>
+                      <span>{{ order.prepare_date ? 'Finished ' + formatDate(order.prepare_date) : 'Since the ' + formatDate(order.updated_at) }}</span>
                     </div>
                   </div>
 
@@ -369,9 +368,9 @@
                       <div v-else class="pulse"></div>
                     </div>
                     <div class="timeline-content">
-                      <h5>Prêt pour livraison</h5>
+                      <h5>Ready for delivery</h5>
                       <!-- CHANGE> Show actual prepare_date instead of estimate -->
-                      <span>{{ order.prepare_date ? formatDate(order.prepare_date) : 'Estimé: ' + getEstimatedDeliveryDate(order) }}</span>
+                      <span>{{ order.prepare_date ? formatDate(order.prepare_date) : 'Estimated: ' + getEstimatedDeliveryDate(order) }}</span>
                     </div>
                   </div>
                 </div>
@@ -379,22 +378,22 @@
                 <!-- CHANGE> Only show countdown if prepare_date doesn't exist -->
                 <div v-if="!order.prepare_date" class="countdown-section">
                   <div class="countdown-header">
-                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="10"></circle>
                       <polyline points="12 6 12 12 16 14"></polyline>
                     </svg>
-                    <span>Temps restant avant la livraison</span>
+                    <span>Time remaining before delivery</span>
                   </div>
 
                   <div class="countdown-display">
                     <div class="countdown-item">
                       <span class="countdown-value">{{ getRemainingTime(order).days }}</span>
-                      <span class="countdown-label">jours</span>
+                      <span class="countdown-label">days</span>
                     </div>
                     <div class="countdown-separator">:</div>
                     <div class="countdown-item">
                       <span class="countdown-value">{{ getRemainingTime(order).hours }}</span>
-                      <span class="countdown-label">heures</span>
+                      <span class="countdown-label">hours</span>
                     </div>
                     <div class="countdown-separator">:</div>
                     <div class="countdown-item">
@@ -409,7 +408,7 @@
                         <span class="progress-text">{{ Math.floor(getProgressPercentage(order)) }}%</span>
                       </div>
                     </div>
-                    <p class="progress-label">Progression de la préparation</p>
+                    <p class="progress-label">Progress of the preparation</p>
                   </div>
 
                   <div class="delivery-estimate">
@@ -419,7 +418,7 @@
                       <circle cx="5.5" cy="18.5" r="2.5"></circle>
                       <circle cx="18.5" cy="18.5" r="2.5"></circle>
                     </svg>
-                    <span>Livraison prévue le <strong>{{ getEstimatedDeliveryDate(order) }}</strong></span>
+                    <span>Delivery expected on <strong>{{ getEstimatedDeliveryDate(order) }}</strong></span>
                   </div>
                 </div>
 
@@ -432,8 +431,8 @@
                       <circle cx="5.5" cy="18.5" r="2.5"></circle>
                       <circle cx="18.5" cy="18.5" r="2.5"></circle>
                     </svg>
-                    <h5>Votre commande est prête !</h5>
-                    <p>Date de préparation finalisée : <strong>{{ formatDate(order.prepare_date) }}</strong></p>
+                    <h5>  Your order is ready !</h5>
+                    <p>Finalized preparation date : <strong>{{ formatDate(order.prepare_date) }}</strong></p>
                   </div>
                 </div>
               </div>
@@ -446,7 +445,7 @@
                   <circle cx="12" cy="10" r="3"></circle>
                 </svg>
                 <div>
-                  <strong>Adresse de livraison:</strong>
+                  <strong>Delivery address:</strong>
                   <p>{{ order.adresse_complete }}</p>
                   <p v-if="order.ville">{{ order.ville }}, {{ order.commune }}</p>
                   <p v-if="order.instructions_livraison" class="delivery-note">
@@ -467,7 +466,7 @@
           <div class="order-actions">
             <button
               v-if="order.statut === 'confirmee' && !order.preuve_paiement"
-              class="action-btn primary"
+              class="btn-degrade-orange"
               @click="openPaymentProofModal(order)"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -475,25 +474,25 @@
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              Ajouter une preuve de paiement
+              Add proof of payment
             </button>
 
             <button
               v-if="order.preuve_paiement"
-              class="action-btn success"
+              class="submit-btn"
               @click="viewPaymentProof(order)"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
                 <circle cx="12" cy="12" r="3"></circle>
               </svg>
-              Voir la preuve
+              See the proof
             </button>
 
             <!-- Added button to add additional payments after initial payment is validated -->
             <button
               v-if="order.tobevalidate === 'valid' && calculatePaymentStatus(order).remaining > 0"
-              class="action-btn primary"
+              class="btn-degrade-orange"
               @click="openAdditionalPaymentModal(order)"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -501,22 +500,22 @@
                 <polyline points="17 8 12 3 7 8"></polyline>
                 <line x1="12" y1="3" x2="12" y2="15"></line>
               </svg>
-              Ajouter un paiement
+              Add a payment
             </button>
 
             <button
-              class="action-btn secondary"
+              class="btn-gray"
               @click="handleChatClick(order)"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
               </svg>
-              Contacter le vendeur
+              Contact the seller
             </button>
 
             <button
               v-if="order.statut === 'en_attente' && !order.preuve_paiement"
-              class="action-btn danger"
+              class="btn-deconnexion"
               @click="openCancelModal(order)"
             >
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -524,7 +523,7 @@
                 <line x1="15" y1="9" x2="9" y2="15"></line>
                 <line x1="9" y1="9" x2="15" y2="15"></line>
               </svg>
-              Annuler
+              Cancel
             </button>
           </div>
         </div>
@@ -542,21 +541,21 @@
         </button>
 
         <div class="modal-header">
-          <h2 class="modal-title">Ajouter une preuve de paiement</h2>
-          <p class="modal-subtitle">Commande #{{ selectedOrder?.numero_commande }}</p>
+          <h2 class="modal-title">Add proof of payment</h2>
+          <p class="modal-subtitle">Order #{{ selectedOrder?.numero_commande }}</p>
         </div>
 
         <div class="payment-info-box">
           <div class="info-row">
-            <span class="info-label">Montant à payer (acompte):</span>
+            <span class="info-label">Amount to pay (deposit):</span>
             <span class="info-value">{{ formatPrice(selectedOrder?.total * 0.3) }}</span>
           </div>
-          <p class="info-note">Veuillez télécharger une capture d'écran ou photo de votre preuve de paiement</p>
+          <p class="info-note">Please upload a screenshot or photo of your proof of payment.</p>
         </div>
 
         <form @submit.prevent="uploadPaymentProof" class="upload-form">
           <div class="form-group">
-            <label class="form-label">Sélectionner un fichier</label>
+            <label class="form-label">Select a file</label>
             <div class="file-input-wrapper">
               <input
                 type="file"
@@ -572,37 +571,37 @@
                   <polyline points="17 8 12 3 7 8"></polyline>
                   <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                <span v-if="!selectedFile">Cliquez pour sélectionner un fichier</span>
+                <span v-if="!selectedFile">Click to select a file</span>
                 <span v-else class="file-name">{{ selectedFile.name }}</span>
               </div>
             </div>
-            <p class="file-hint">Formats acceptés: JPG, PNG (Max 10MB)</p>
+            <p class="file-hint">Accepted formats: JPG, PNG (Max 10MB)</p>
 
             <div v-if="uploading" class="upload-progress">
               <div class="progress-bar">
                 <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
               </div>
-              <p class="progress-text">Upload en cours: {{ uploadProgress }}%</p>
+              <p class="progress-text">Upload in progress: {{ uploadProgress }}%</p>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Commentaire (optionnel)</label>
+            <label class="form-label">Comment (optional)</label>
             <textarea
               v-model="paymentComment"
-              class="form-textarea"
-              placeholder="Ajoutez un commentaire sur votre paiement..."
+              class="input-style"
+              placeholder="Add a comment about this payment..."
               rows="3"
             ></textarea>
           </div>
 
           <div class="modal-actions">
             <button type="submit" class="modal-btn primary" :disabled="uploading || !selectedFile">
-              <span v-if="!uploading">Envoyer la preuve</span>
-              <span v-else>Envoi en cours...</span>
+              <span v-if="!uploading">Send proof</span>
+              <span v-else>Shipment in progress...</span>
             </button>
             <button type="button" class="modal-btn secondary" @click="closePaymentModal" :disabled="uploading">
-              Annuler
+              Cancel
             </button>
           </div>
         </form>
@@ -620,34 +619,34 @@
         </button>
 
         <div class="modal-header">
-          <h2 class="modal-title">Ajouter un paiement supplémentaire</h2>
-          <p class="modal-subtitle">Commande #{{ selectedOrder?.numero_commande }}</p>
+          <h2 class="modal-title">Add an additional payment</h2>
+          <p class="modal-subtitle">Order #{{ selectedOrder?.numero_commande }}</p>
         </div>
 
         <div class="payment-info-box">
           <div class="info-row">
-            <span class="info-label">Total commande:</span>
+            <span class="info-label">Total order:</span>
             <span class="info-value">{{ formatPrice(calculatePaymentStatus(selectedOrder).total) }}</span>
           </div>
           <div class="info-row">
-            <span class="info-label">Déjà payé:</span>
+            <span class="info-label">Already paid:</span>
             <span class="info-value">{{ formatPrice(calculatePaymentStatus(selectedOrder).totalPaid) }}</span>
           </div>
           <div class="info-row highlight">
-            <span class="info-label">Reste à payer:</span>
+            <span class="info-label">Payment is still due:</span>
             <span class="info-value">{{ formatPrice(calculatePaymentStatus(selectedOrder).remaining) }}</span>
           </div>
-          <p class="info-note">Vous pouvez payer tout ou partie du montant restant</p>
+          <p class="info-note">You can pay all or part of the remaining amount</p>
         </div>
 
         <form @submit.prevent="uploadAdditionalPayment" class="upload-form">
           <div class="form-group">
-            <label class="form-label">Montant du paiement ($) <span class="required">*</span></label>
+            <label class="form-label">Payment amount <span class="required">*</span></label>
             <input
               type="number"
               v-model="additionalPaymentAmount"
-              class="form-input"
-              placeholder="Entrez le montant"
+              class="input-style"
+              placeholder="Enter the amount"
               :max="calculatePaymentStatus(selectedOrder).remaining"
               min="1"
               step="any"
@@ -657,7 +656,7 @@
           </div>
 
           <div class="form-group">
-            <label class="form-label">Preuve de paiement <span class="required">*</span></label>
+            <label class="form-label">Proof of payment <span class="required">*</span></label>
             <div class="file-input-wrapper">
               <input
                 type="file"
@@ -673,37 +672,37 @@
                   <polyline points="17 8 12 3 7 8"></polyline>
                   <line x1="12" y1="3" x2="12" y2="15"></line>
                 </svg>
-                <span v-if="!additionalPaymentFile">Cliquez pour sélectionner un fichier</span>
+                <span v-if="!additionalPaymentFile">Click to select a file</span>
                 <span v-else class="file-name">{{ additionalPaymentFile.name }}</span>
               </div>
             </div>
-            <p class="file-hint">Formats acceptés: JPG, PNG (Max 10MB)</p>
+            <p class="file-hint">Accepted formats: JPG, PNG (Max 10MB)</p>
 
             <div v-if="uploading" class="upload-progress">
               <div class="progress-bar">
                 <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
               </div>
-              <p class="progress-text">Upload en cours: {{ uploadProgress }}%</p>
+              <p class="progress-text">Upload in progress:{{ uploadProgress }}%</p>
             </div>
           </div>
 
           <div class="form-group">
-            <label class="form-label">Commentaire (optionnel)</label>
+            <label class="form-label">Comment (optional)</label>
             <textarea
               v-model="additionalPaymentComment"
-              class="form-textarea"
-              placeholder="Ajoutez un commentaire sur ce paiement..."
+              class="input-style"
+              placeholder="Add a comment about this payment..."
               rows="3"
             ></textarea>
           </div>
 
           <div class="modal-actions">
-            <button type="submit" class="modal-btn primary" :disabled="uploading || !additionalPaymentFile || !additionalPaymentAmount">
-              <span v-if="!uploading">Envoyer le paiement</span>
-              <span v-else>Envoi en cours...</span>
+            <button type="submit" class="btn-degrade-orange flex-1" :disabled="uploading || !additionalPaymentFile || !additionalPaymentAmount">
+              <span v-if="!uploading">Send payment</span>
+              <span v-else>Shipment in progress...</span>
             </button>
-            <button type="button" class="modal-btn secondary" @click="closeAdditionalPaymentModal" :disabled="uploading">
-              Annuler
+            <button type="button" class="btn-gray flex-1" @click="closeAdditionalPaymentModal" :disabled="uploading">
+              Cancel
             </button>
           </div>
         </form>
@@ -728,18 +727,18 @@
           </svg>
         </div>
 
-        <h2 class="modal-title">Annuler la commande</h2>
+        <h2 class="modal-title">Cancel the order</h2>
         <p class="modal-message">
-          Êtes-vous sûr de vouloir annuler la commande #{{ selectedOrder?.numero_commande }} ?
-          Cette action est irréversible.
+          Are you sure you want to cancel the order #{{ selectedOrder?.numero_commande }}?
+          This action is irreversible.
         </p>
 
         <form @submit.prevent="cancelOrder" class="cancel-form">
           <div class="form-group">
-            <label class="form-label">Raison de l'annulation</label>
+            <label class="form-label">Reason for cancellation</label>
             <textarea
               v-model="cancelReason"
-              class="form-textarea"
+              class="input-style"
               placeholder="Expliquez pourquoi vous souhaitez annuler cette commande..."
               rows="4"
               required
@@ -748,11 +747,11 @@
 
           <div class="modal-actions">
             <button type="submit" class="modal-btn danger" :disabled="cancelling">
-              <span v-if="!cancelling">Confirmer l'annulation</span>
-              <span v-else>Annulation en cours...</span>
+              <span v-if="!cancelling">Confirm the cancellation</span>
+              <span v-else>Cancellation in progress...</span>
             </button>
             <button type="button" class="modal-btn secondary" @click="closeCancelModal">
-              Retour
+              Back
             </button>
           </div>
         </form>
@@ -767,6 +766,7 @@ import { useRouter } from 'vue-router'
 import { ordersApi } from '../../services/api.js'
 import axios from 'axios'
 import { useChatStore } from '../../stores/chat'
+import {formatPrice} from "../../services/formatPrice"
 
 const router = useRouter()
 const chatStore = useChatStore()
@@ -803,13 +803,13 @@ const additionalPaymentComment = ref('')
 const additionalPaymentFileInput = ref(null)
 
 const orderStatuses = [
-  { value: 'all', label: 'Toutes' },
-  { value: 'en_attente', label: 'En attente' },
-  { value: 'confirmee', label: 'Confirmée' },
-  { value: 'en_cours', label: 'En cours' },
-  { value: 'livree', label: 'Livrée' },
-  { value: 'annule', label: 'Annulée' },
-  { value: 'terminee', label: 'Terminée' }
+  { value: 'all', label: 'All' },
+  { value: 'en_attente', label: 'Pending' },
+  { value: 'confirmee', label: 'Confirmed' },
+  { value: 'en_cours', label: 'In Progress' },
+  { value: 'livree', label: 'Delivered' },
+  { value: 'annule', label: 'Cancelled' },
+  { value: 'terminee', label: 'Finished' }
 ]
 
 // Computed
@@ -839,19 +839,19 @@ const getStatusClass = (status) => {
 
 const getStatusLabel = (status) => {
   const labelMap = {
-    'en_attente': 'En attente',
-    'confirmee': 'Confirmée',
-    'en_cours': 'En cours de livraison',
-    'livree': 'Livrée',
-    'annule': 'Annulée',
-    'terminee': 'Terminée'
+    'en_attente': 'Pending',
+    'confirmee': 'Confirmed',
+    'en_cours': 'In the process of delivery',
+    'livree': 'Delivered',
+    'annule': 'Cancelled',
+    'terminee': 'Finished'
   }
   return labelMap[status] || status
 }
 
-const formatPrice = (price) => {
-  return Number(price).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $'
-}
+// const formatPrice = (price) => {
+//   return Number(price).toLocaleString('fr-FR', { minimumFractionDigits: 0 }) + ' $'
+// }
 
 const formatDate = (dateString) => {
   const date = new Date(dateString)
@@ -972,6 +972,7 @@ const fetchOrders = async () => {
 
     if (response.success) {
       orders.value = response.data || []
+      console.log(orders.value)
     } else {
       orders.value = []
     }
@@ -1051,13 +1052,13 @@ const handleFileSelect = (event) => {
   const file = event.target.files[0]
   if (file) {
     if (file.size > 10 * 1024 * 1024) {
-      alert('Le fichier est trop volumineux. Taille maximale: 10MB')
+      alert('The file is too large. Maximum size: 10MB')
       event.target.value = ''
       return
     }
 
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image (JPG, PNG, etc.)')
+      alert('Please select an image (JPG, PNG, etc.)')
       event.target.value = ''
       return
     }
@@ -1070,13 +1071,13 @@ const handleAdditionalPaymentFileSelect = (event) => {
   const file = event.target.files[0]
   if (file) {
     if (file.size > 10 * 1024 * 1024) {
-      alert('Le fichier est trop volumineux. Taille maximale: 10MB')
+      alert('The file is too large. Maximum size: 10MB')
       event.target.value = ''
       return
     }
 
     if (!file.type.startsWith('image/')) {
-      alert('Veuillez sélectionner une image (JPG, PNG, etc.)')
+      alert('Please select an image (JPG, PNG, etc.)')
       event.target.value = ''
       return
     }
@@ -1131,7 +1132,7 @@ const uploadPaymentProof = async () => {
     })
 
     if (response.success) {
-      alert('Preuve de paiement envoyée avec succès!')
+      alert('Proof of payment successfully sent!')
       closePaymentModal()
       fetchOrders()
     } else {
@@ -1139,7 +1140,7 @@ const uploadPaymentProof = async () => {
     }
   } catch (error) {
     console.error('Error uploading payment proof:', error)
-    alert('Erreur lors de l\'envoi de la preuve de paiement: ' + (error.message || 'Erreur inconnue'))
+    alert('Error sending proof of payment: ' + (error.message || 'Erreur inconnue'))
   } finally {
     uploading.value = false
     uploadProgress.value = 0
@@ -1148,7 +1149,7 @@ const uploadPaymentProof = async () => {
 
 const uploadAdditionalPayment = async () => {
   if (!additionalPaymentFile.value || !selectedOrder.value || !additionalPaymentAmount.value) {
-    alert('Veuillez remplir tous les champs requis')
+    alert('Please fill in all required fields')
     return
   }
 
@@ -1156,12 +1157,12 @@ const uploadAdditionalPayment = async () => {
   const paymentStatus = calculatePaymentStatus(selectedOrder.value)
   
   if (amount <= 0) {
-    alert('Le montant doit être supérieur à 0')
+    alert('The amount must be greater than 0')
     return
   }
   
   if (amount > paymentStatus.remaining) {
-    alert(`Le montant ne peut pas dépasser le montant restant: ${formatPrice(paymentStatus.remaining)}`)
+    alert(`The amount cannot exceed the remaining amount: ${formatPrice(paymentStatus.remaining)}`)
     return
   }
 
@@ -1198,7 +1199,7 @@ const uploadAdditionalPayment = async () => {
     })
 
     if (response.success) {
-      alert('Paiement supplémentaire envoyé avec succès!')
+      alert('Additional payment successfully sent!')
       closeAdditionalPaymentModal()
       fetchOrders()
     } else {
@@ -1206,7 +1207,7 @@ const uploadAdditionalPayment = async () => {
     }
   } catch (error) {
     console.error('Error uploading additional payment:', error)
-    alert('Erreur lors de l\'envoi du paiement: ' + (error.message || 'Erreur inconnue'))
+    alert('Error sending payment: ' + (error.message || 'Erreur inconnue'))
   } finally {
     uploading.value = false
     uploadProgress.value = 0
@@ -1239,7 +1240,7 @@ const cancelOrder = async () => {
     const response = await ordersApi.cancelOrder(selectedOrder.value.id, cancelReason.value)
 
     if (response.success) {
-      alert('Commande annulée avec succès')
+      alert('Order successfully cancelled')
       closeCancelModal()
       fetchOrders()
     } else {
@@ -1247,7 +1248,7 @@ const cancelOrder = async () => {
     }
   } catch (error) {
     console.error('Error cancelling order:', error)
-    alert('Erreur lors de l\'annulation de la commande')
+    alert('Error canceling order')
   } finally {
     cancelling.value = false
   }
@@ -1255,22 +1256,22 @@ const cancelOrder = async () => {
 
 const confirmDeliveryAddress = async (order) => {
   if (!order.adresse_complete) {
-    alert('Aucune adresse de livraison trouvée')
+    alert('No delivery address found')
     return
   }
 
   const confirmed = confirm(
-    `Confirmer l'adresse de livraison :\n\n${order.adresse_complete}\n${order.ville ? order.ville + ', ' + order.commune : ''}\n\nCette adresse est-elle correcte ?`
+    `Confirm the delivery address:\n\n${order.adresse_complete}\n${order.ville ? order.ville + ', ' + order.commune : ''}\n\nIs this address correct? ?`
   )
 
   if (confirmed) {
     try {
       // You can add an API call here to confirm the address
       // await ordersApi.confirmDeliveryAddress(order.id)
-      alert('Adresse de livraison confirmée ! Vous recevrez bientôt votre commande.')
+      alert('Delivery address confirmed! You will receive your order soon.')
     } catch (error) {
       console.error('Error confirming address:', error)
-      alert('Erreur lors de la confirmation de l\'adresse')
+      alert('Error confirming address')
     }
   }
 }
@@ -1314,7 +1315,7 @@ onUnmounted(() => {
 }
 
 .payment-progress-header svg {
-  color: #1890ff;
+  color: #fe7900;
 }
 
 .payment-progress-header h4 {
@@ -1362,9 +1363,9 @@ onUnmounted(() => {
   color: #333;
 }
 
-.stat-value.success {
+/* .stat-value.success {
   color: #52c41a;
-}
+} */
 
 .stat-value.warning {
   color: #faad14;
@@ -1581,7 +1582,7 @@ onUnmounted(() => {
   padding: 10px 18px;
   border: none;
   background-color: #f0f0f0;
-  border-radius: 8px;
+  border-radius: 50px;
   cursor: pointer;
   font-size: 14px;
   font-weight: 500;
@@ -1725,27 +1726,27 @@ onUnmounted(() => {
 
 .order-status.pending {
   background: #fff1f0;
-  color: #ff4d4f;
+  color: #fe9700;
 }
 
 .order-status.confirmed {
-  background: #e6fffb;
-  color: #1890ff;
+  background: #e2f9f4;
+  color: #10B981;
 }
 
 .order-status.processing {
-  background: #fffbe6;
-  color: #faad14;
+  background: #f6f2e0;
+  color: #f7af20;
 }
 
 .order-status.delivered {
-  background: #f6ffed;
+  background: #def5e4;
   color: #52c41a;
 }
 
 .order-status.cancelled {
-  background: #f0f0f0;
-  color: #8c8c8c;
+  background: #f9e1e1;
+  color: #ec0202;
 }
 
 .order-body {
@@ -1871,10 +1872,6 @@ onUnmounted(() => {
   color: #333;
 }
 
-.validation-header svg {
-  color: #1890ff;
-}
-
 .validation-header h4 {
   margin: 0;
   font-size: 16px;
@@ -1907,7 +1904,8 @@ onUnmounted(() => {
 }
 
 .validation-status.validated .status-icon {
-  background: #52c41a;
+  border: 2px solid #52c41a ;
+  color:#52c41a;
   width: 40px;
   height: 40px;
   border-radius: 50%;
@@ -1932,6 +1930,7 @@ onUnmounted(() => {
   font-size: 16px;
   font-weight: 600;
   margin-bottom: 5px;
+  color:#333
 }
 
 .status-content p {
@@ -2151,7 +2150,7 @@ onUnmounted(() => {
   align-items: center;
   gap: 10px;
   margin-bottom: 15px;
-  color: #1890ff;
+  color: #fe7900;
 }
 
 .countdown-header span {
@@ -2208,7 +2207,7 @@ onUnmounted(() => {
 
 .progress-bar .progress-fill {
   height: 100%;
-  background-color: #1890ff;
+  background-color: #fe9700;
   border-radius: 10px;
   transition: width 0.5s ease;
   display: flex;
@@ -2288,65 +2287,53 @@ onUnmounted(() => {
   justify-content: flex-end; /* Align actions to the right */
 }
 
-.action-btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 10px 20px;
-  border: none;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-  text-decoration: none;
-}
 
-.action-btn svg {
+
+.btn-degrade-orange svg {
   stroke: currentColor; /* Ensure SVG color matches button text */
 }
 
-.action-btn.primary {
+.btn-degrade-orange.primary {
   background-color: #fe9700;
   color: white;
 }
 
-.action-btn.primary:hover {
+.btn-degrade-orange.primary:hover {
   background-color: #e68a00;
   transform: translateY(-2px);
 }
 
-.action-btn.success {
+.btn-degrade-orange.success {
   background-color: #52c41a;
   color: white;
 }
 
-.action-btn.success:hover {
+.btn-degrade-orange.success:hover {
   background-color: #389e17;
   transform: translateY(-2px);
 }
 
-.action-btn.secondary {
+.btn-degrade-orange.secondary {
   background-color: #f0f0f0;
   color: #333;
 }
 
-.action-btn.secondary:hover {
+.btn-degrade-orange.secondary:hover {
   background-color: #e0e0e0;
   transform: translateY(-2px);
 }
 
-.action-btn.danger {
+.btn-degrade-orange.danger {
   background-color: #ff4d4f;
   color: white;
 }
 
-.action-btn.danger:hover {
+.btn-degrade-orange.danger:hover {
   background-color: #e63c3e;
   transform: translateY(-2px);
 }
 
-.action-btn:disabled {
+.btn-degrade-orange:disabled {
   opacity: 0.6;
   cursor: not-allowed;
 }
@@ -2540,23 +2527,6 @@ onUnmounted(() => {
 .progress-text {
   font-size: 12px;
   color: #666;
-}
-
-.form-textarea {
-  width: 100%;
-  padding: 10px 12px;
-  border: 2px solid #d9d9d9;
-  border-radius: 8px;
-  font-size: 15px;
-  transition: all 0.3s;
-  font-family: inherit;
-  resize: vertical;
-}
-
-.form-textarea:focus {
-  outline: none;
-  border-color: #fe9700;
-  box-shadow: 0 0 0 3px rgba(254, 151, 0, 0.1);
 }
 
 .modal-actions {

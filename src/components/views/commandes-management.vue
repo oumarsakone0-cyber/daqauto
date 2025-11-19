@@ -624,7 +624,7 @@
             <input 
               type="date"
               v-model="estimatedDeliveryDate"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+              class="input-style"
               required
             />
           </div>
@@ -671,7 +671,7 @@
             <textarea 
               v-model="validationComment"
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              class="input-style"
               placeholder="Enter your comment here..."
             ></textarea>
           </div>
@@ -718,7 +718,7 @@
             <textarea 
               v-model="validationComment"
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+              class="input-style"
               placeholder="Enter your comment here..."
             ></textarea>
           </div>
