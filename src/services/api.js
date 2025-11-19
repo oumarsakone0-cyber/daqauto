@@ -1051,6 +1051,30 @@ export const ordersApi = {
     }
   },
 
+    /**
+   * Ajouter une preuve de paiement à une commande
+   * @param {number} orderId - ID de la commande
+   * @param {FormData} formData - Données du formulaire avec le fichier
+   * @returns {Promise} Résultat de l'upload
+   */
+  async uploadAdditionalPayment(orderId, formData) {
+    try {
+      const response = await apiClient.post("/products.php", formData, {
+        params: {
+          action: "add_new_payment",
+          commande_id: orderId,
+          data: formData
+        },
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      })
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de l'envoi de la preuve de paiement") // Utilisation de productsApi.handleError pour la cohérence
+    }
+  },
+
   /**
    * Annuler une commande
    * @param {number} orderId - ID de la commande

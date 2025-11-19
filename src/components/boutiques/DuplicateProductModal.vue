@@ -249,6 +249,7 @@
                 <div>
                   <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
                     Vehicle condition <span class="error-color">*</span>
+                    
                   </label>
                   <select
                     id="vehicle_condition"
@@ -265,6 +266,7 @@
                 <div>
                   <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
                     Vehicle model <span class="error-color">*</span>
+                    {{ productData.vehicle_model }} h
                   </label>
                   <select
                     id="vehicle_model"
@@ -296,6 +298,7 @@
                 <div>
                   <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                     Transmission type<span class="error-color">*</span>
+                    {{ productData.drive_type }}
                   </label>
                   <select
                     id="drive_type"
@@ -303,13 +306,13 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Select a Transmission type</option>
-                    <option value="4x2">4X2</option>
-                    <option value="6x2">6X2</option>
-                    <option value="6x4">6X4</option>
-                    <option value="6x6">6X6</option>
-                    <option value="8x4">8X4</option>
-                    <option value="8x6">8X6</option>
-                    <option value="8x8">8X8</option>
+                    <option value="4X2">4X2</option>
+                    <option value="6X2">6X2</option>
+                    <option value="6X4">6X4</option>
+                    <option value="6X6">6X6</option>
+                    <option value="8X4">8X4</option>
+                    <option value="8X6">8X6</option>
+                    <option value="8X8">8X8</option>
                   </select>
                 </div>
                 <div>
@@ -442,7 +445,7 @@
                     >
                   </div>
                 </div>
-
+                <!-- verifié 
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
                    Other specifications (WYSIWYG)
@@ -476,6 +479,7 @@
                     </div>
                   </div>
                 </div>
+                -->
 
               </div>
             </div>
@@ -504,8 +508,8 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Select a Transmission type</option>
-                    <option value="Automatic">Automatic</option>
-                    <option value="Manual">Manual</option>
+                    <option value="automatic">Automatic</option>
+                    <option value="manual">Manual</option>
                   </select>
                 </div>
 
@@ -519,10 +523,10 @@
                     class="text-sm sm:text-base input-style"
                   >
                     <option value="">Select a brand</option>
-                    <option value="Weichai">Weichai</option>
-                    <option value="Yuchai">Yuchai</option>
-                    <option value="Sinotruck">Sinotruck</option>
-                    <option value="Man">MAN</option>
+                    <option value="weichai">Weichai</option>
+                    <option value="yuchai">Yuchai</option>
+                    <option value="sinotruck">Sinotruck</option>
+                    <option value="man">MAN</option>
                   </select>
                 </div>
                 <div>
@@ -567,6 +571,7 @@
                 <div>
                   <label for="trim_number" class="block text-sm font-medium text-gray-700 mb-2">
                     Vehicle Model (Trim)
+                    
                   </label>
                   <input
                     id="trim_number"
@@ -634,10 +639,11 @@
                 <div>
                   <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
                     Tire Size
+                    {{ productData.tyre_size }}
                   </label>
                   <input
                     id="tyre_size"
-                    v-model="productData.type_size"
+                    v-model="productData.tyre_size"
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 315/80R22.5"
@@ -646,7 +652,7 @@
 
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor2" class="block text-sm font-medium text-gray-700 mb-2">
-                   Other Description (WYSIWYG)
+                   Other Spécification (WYSIWYG)
                   </label>
                   <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
@@ -1264,8 +1270,6 @@ const loadingMessage = ref('')
 const error = ref(null)
 const wysiwygEditor = ref(null)
 const wysiwygEditor2 = ref(null)
-const singleVin = ref('')
-const singleTrim = ref('')
 
 // États pour les catégories API
 const categories = ref([])
@@ -1320,16 +1324,22 @@ const productData = reactive({
   video: null,
   videoUrl: '',
   is_active: true,
-  vehicle_condition: props,
+  vehicle_condition: props.dataduplicate.vehicle_condition
+  ? props.dataduplicate.vehicle_condition.charAt(0).toUpperCase() +
+    props.dataduplicate.vehicle_condition.slice(1).toLowerCase()
+  : '',
   vehicle_brand_id: props.dataduplicate.vehicle_brand_id || '',
+  vehicle_brand_name: props.dataduplicate.vehicle_make || '',
   vehicle_model_id: props.dataduplicate.vehicle_model_id || '',
+  vehicle_model_name: props.dataduplicate.vehicle_model || '',
   drive_type: props.dataduplicate.drive_type || '',
   vehicle_year: props.dataduplicate.vehicle_year || '',
   fuel_type: props.dataduplicate.fuel_type || '',
   transmission_type: props.dataduplicate.transmission_type || '',
   engine_brand: props.dataduplicate.engine_brand || '',
-  trim_numbers: props.dataduplicate.trim_numbers || [],
-  vin: props.dataduplicate.vin || [],
+  trim_numbers: props.dataduplicate.trim_numbers || [0],
+  vin: props.dataduplicate.vin || [0],
+  vin_numbers: props.dataduplicate.vin_numbers || [0],
   engine_number: props.dataduplicate.engine_number || '',
   power: props.dataduplicate.power || '',
   engine_emissions: props.dataduplicate.engine_emissions || '',
@@ -1347,8 +1357,65 @@ const productData = reactive({
   dimensions_width: props.dataduplicate.dimensions_width || null,
   dimensions_height: props.dataduplicate.dimensions_height || null,
   curb_weight: props.dataduplicate.curb_weight || null,
+  tyre_size: props.dataduplicate.tyre_size || '',
   fuel_tank_capacity: props.dataduplicate.fuel_tank_capacity || null,
 })
+
+const singleTrim = ref(productData.trim_numbers[0] || '');
+const singleVin = ref(productData.vin_numbers[0] || '');
+
+watch(singleTrim, (newVal) => {
+  productData.trim_numbers = newVal ? [newVal] : []
+});
+
+watch(singleVin, (newVal) => {
+  productData.vin_numbers = newVal ? [newVal] : []
+});
+
+if (props.dataduplicate.dimensions) {
+  const dims = props.dataduplicate.dimensions.split('x').map(Number)
+  productData.dimensions_length = dims[0] || null
+  productData.dimensions_width = dims[1] || null
+  productData.dimensions_height = dims[2] || null
+}
+
+watch(
+  () => [productData.dimensions_length, productData.dimensions_width, productData.dimensions_height],
+  ([l, w, h]) => {
+    if (l != null && w != null && h != null) {
+      productData.dimensions = `${l}x${w}x${h}`
+    } else {
+      productData.dimensions = ''
+    }
+  }
+)
+
+const availableModels = computed(() => {
+ const  models = brands.value.find(cat => cat.id === productData.vehicle_brand_id)
+ return models ? models.models || [] : []
+})
+
+watch(
+  [() => productData.vehicle_brand_name, () => brands.value],
+  ([newName, newBrands]) => {
+    if (newName && newBrands.length > 0) {
+      const match = newBrands.find(b => b.name === newName);
+      if (match) productData.vehicle_brand_id = match.id;
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  [() => productData.vehicle_model_name, () => availableModels.value],
+  ([newName, models]) => {
+    if (newName && models.length > 0) {
+      const match = models.find(m => m.name === newName)
+      if (match) productData.vehicle_model_id = match.id
+    }
+  },
+  { immediate: true }
+)
 
 
 const availableSubcategories = computed(() => {
@@ -1382,11 +1449,6 @@ const availableSubSubSubcategories = computed(() => {
 })
 
 // Les types de models en focntion de la marque
-const availableModels = computed(() => {
- const  models = brands.value.find(cat => cat.id === productData.vehicle_brand_id)
- 
-  return models ? models.models || [] : []
-})
 
 const availableFuelType = computed(() => {
   const  modelsObject = availableModels.value 
@@ -1846,7 +1908,9 @@ const prepareDataForSubmission = () => {
     vehicle_condition: productData.vehicle_condition,
     vehicle_make:getBrandName( productData.vehicle_brand_id),
     vehicle_model:getModelName( productData.vehicle_model_id) ,
-    drive_type: productData.drive_type,
+    drive_type: props.dataduplicate.drive_type
+    ? props.dataduplicate.drive_type.toLowerCase()
+    : '',
     vehicle_year: productData.vehicle_year,
     fuel_type: productData.fuel_type,
     transmission_type: productData.transmission_type,
