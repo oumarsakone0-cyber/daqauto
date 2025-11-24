@@ -767,12 +767,14 @@
                   <input
                     id="axle_speed_ratio"
                     v-model="productData.axle_speed_ratio"
+                    @input="inputValidator(productData.axle_speed_ratio)"
                     type="number"
                     min="0"
                     step="0.001"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 4.266"
                   >
+                  <p v-if="errors.message" class="text-xs text-red-600">{{ errors.message }}</p>
                 </div>
 
                 <div>
@@ -881,6 +883,8 @@
                   <input
                     id="unit_price"
                     v-model.number="productData.unit_price"
+                    @input="inputValidator(productData.unit_price)"
+                    title="Enter a number"
                     type="number"
                     min="0"
                     step="1"
@@ -888,6 +892,7 @@
                     class="text-sm sm:text-base input-style"
                     placeholder="15000"
                   >
+                  <p v-if="errors.message" class="text-xs text-red-600 ml-5">{{ errors.message }}</p>
                 </div>
 
                 <div>
@@ -1481,6 +1486,9 @@ const brands = ref([])
 const brandsLoading = ref(false)
 const brandsError = ref(null)
 
+// errors
+const errors = reactive({})
+
 // Configuration Cloudinary
 const cloudinaryConfig = {
   cloudName: 'daaavha4z',
@@ -1567,9 +1575,6 @@ const productData = reactive({
   electrics:''
 })
 
-
-
-
 const availableSubcategories = computed(() => {
   const category = categories.value.find(cat => cat.id === productData.category_id)
   return category ? category.subcategories || [] : []
@@ -1639,18 +1644,26 @@ const canProceedToNextStep = computed(() => {
       // && productData.dimensions_length && productData.fuel_tank_capacity 
       // && productData.curb_weight && productData.cabin_type && productData.payload_capacity
       // && productData.gvw && productData.production_date && productData.wheelbase
+      // && productData.frame_rear_suspension && productData.speed && productData.chassis_dimensions
     )
     case 2:
       getProductName();
-      return true
+
+      return !!(productData.engine_brand && productData.gearbox_brand 
+      // && productData.engine_number && productData.gearbox_model 
+      // && productData.power && productData.transmission_type 
+      // && productData.engine_emissions && productData.vehicle_mileage 
+      // && productData.axle_brand && productData.suspension_type && productData.axle_front
+      // && productData.axle_rear && productData.suspension_front && productData.suspension_rear
+      // && productData.axle_speed_ratio && productData.brake_system && productData.tire_size
+      // && productData.air_filter && productData.electrics
+      // && productData.vin.length && productData.trim_numbers.length
+    )
     case 3:
-      const hasValidPrice = productData.unit_price !== null && 
-                           productData.unit_price !== '' && 
-                           productData.unit_price !== undefined
       
-      return hasValidPrice && !!productData.disponibility
+      return !!(productData.unit_price && productData.disponibility)
     case 4:
-      return true
+      return !! productData.colors.length
     case 5:
       return true
     default:
@@ -1673,6 +1686,63 @@ productData.vehicle_year = computed(() => {
   const m = s.match(/^(\d{4})-/) // capture les 4 premiers chiffres avant le premier '-'
   return m ? Number(m[1]) : null
 })
+
+const isNumeric =(value) =>{
+  if (value === null || value === undefined || value === '') return false
+  if (typeof value === 'number') return Number.isFinite(value)
+  const s = String(value).trim().replace(/\s+/g, '').replace(',', '.')
+  return /^-?\d+(\.\d+)?$/.test(s)
+}
+
+// const inputValidator = computed(()=>{
+//     errors.unit_price = isNumeric(productData.unit_price) ? '' : 'Please enter a number'
+// })
+
+
+const curbWeightValidators = ()=> {
+  errors.message = isNumeric(productData.curb_weight) ? '' : 'Please enter a number value for Curb Weight'
+
+}
+const inputValidator = (data)=> {
+  errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+}
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
+// const inputValidator = (data)=> {
+//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
+
+// }
 
 const getCategoryName = (id) => {
   const category = categories.value.find(cat => cat.id === id)
@@ -1782,9 +1852,7 @@ const formatHeading = (event) => {
   }
 }
 
-const updateDetailedDescription = () => {
-  productData.description = wysiwygEditor.value.innerHTML
-}
+
 const updateOtherDescription = () => {
   productData.description_plus = wysiwygEditor2.value.innerHTML
 }

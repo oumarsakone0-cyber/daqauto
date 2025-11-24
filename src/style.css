@@ -152,14 +152,19 @@ button:focus-visible {
 
 .btn-degrade-orange {
   background: linear-gradient(90deg, #fe7900, #ff5a01);
-  color: white;
- 
+  color: white; 
 }
 .btn-degrade-orange:hover {
   background: linear-gradient(90deg, #ff5a01, #fe7900);
   color: white;
   border-color: #ff5a01;
   opacity: 0.8;
+}
+.btn-degrade-orange:disabled {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+  border-color: #ff5a01;
+  opacity: 0.5;
 }
 
 .btn-gray {
@@ -170,6 +175,11 @@ button:focus-visible {
   background: #b7b6b6;
   border-color: #b7b6b6;
 }
+.btn-gray:disabled {
+  background: #b7b6b6;
+  border-color: #b7b6b6;
+  opacity: 0.5;
+}
 
 .btn-deconnexion{
   background: #ec0202;
@@ -178,6 +188,11 @@ button:focus-visible {
   .btn-deconnexion:hover{
   background:#ff0000;
   border-color:#ff0000;
+  }
+  .btn-deconnexion:disabled{
+  background:#ff0000;
+  border-color:#ff0000;
+  opacity: 0.5;
   }
 
   /* .btn-outline ,
@@ -192,6 +207,12 @@ button:focus-visible {
   .btn-outline:hover{
     color: white;
     background-color: #fe7900;
+  
+  }
+  .btn-outline:disabled{
+    color: white;
+    background-color: #fe7900;
+    opacity: 0.5;
   
   }
 .btn-outline{
@@ -212,6 +233,12 @@ button:focus-visible {
     background-color: white;
     border: 1px solid #fe7900;
   }
+  .btn-outline-with-background:disabled{
+    color: #fe7900;
+    background-color: white;
+    border: 1px solid #fe7900;
+    opacity: 0.5;
+  }
   .submit-btn{
   background:#10B981 ;
   color: white;
@@ -219,6 +246,10 @@ button:focus-visible {
   .submit-btn:hover{
     background-color: #039e6a;
     opacity: 0.8;
+  }
+  .submit-btn:disabled{
+    background-color: #039e6a;
+    opacity: 0.5;
   }
 
   .btn-whatsapp{
@@ -245,6 +276,12 @@ button:focus-visible {
   background: #f8f7f7;
   color: #fe7900;
   border-color: white;
+}
+.btn-premium-style:disabled{
+  background: #f8f7f7;
+  color: #fe7900;
+  border-color: white;
+  opacity: 0.5;
 }
 
 /* Les styles de bordures */
