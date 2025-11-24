@@ -1,7 +1,7 @@
 <template>
   <div 
     class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
-    @click="handleBackdropClick"
+    
   >
     <div 
       class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
@@ -311,10 +311,9 @@
                   <input
                     id="fuel_tank_capacity"
                     v-model="productData.fuel_tank_capacity"
-                    type="number"
-                    min="0"
+                    type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 400"
+                    placeholder="Ex: 600L aluminum alloy fuel tank"
                   >
                 </div>
                 <div>
@@ -350,7 +349,7 @@
                 </div>
                 <div>
                   <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
-                    Curb weight (T) <span class="error-color">*</span>
+                    Curb weight (Kg) <span class="error-color">*</span>
                   </label>
                   <input
                     id="curb_weight"
@@ -358,21 +357,20 @@
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 10000"
+                    placeholder="Ex: 8000"
                   >
                 </div>
                 
                 <div>
                   <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                    Wheelbase <span class="error-color">*</span>
+                    Wheelbases(mm) <span class="error-color">*</span>
                   </label>
                   <input
                     id="wheelbase"
                     v-model="productData.wheelbase"
-                    type="number"
-                    min="0"
+                    type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 3800"
+                    placeholder="Ex: 3175+1400"
                   >
                 </div>
                 <div>
@@ -385,7 +383,7 @@
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 15000"
+                    placeholder="Ex: 32000"
                   >
                 </div>
                 <div>
@@ -395,10 +393,9 @@
                   <input
                     id="speed"
                     v-model="productData.speed"
-                    type="number"
-                    min="0"
+                    type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 150"
+                    placeholder="Ex: 58 ~ 72/90"
                   >
                 </div>
                 <div>
@@ -408,10 +405,10 @@
                   <input
                     id="gvw"
                     v-model="productData.gvw"
-                    type="number"
+                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 25000"
+                    placeholder="Ex: 40000"
                   >
                 </div>
                 
@@ -427,9 +424,6 @@
                     placeholder="Ex: Short cabin, Long cabin"
                   >
                 </div>
-                
-
-                
                 <div>
                   <label for="chassis_dimensions" class="block text-sm font-medium text-gray-700 mb-2">
                     Chassis Dimensions (mm) <span class="error-color">*</span>
@@ -437,10 +431,9 @@
                   <input
                     id="chassis_dimensions"
                     v-model="productData.chassis_dimensions"
-                    type="number"
-                    min="0"
+                    type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 40"
+                    placeholder="Ex: 850x300 (8+5)"
                   >
                 </div>
                 <div>
@@ -453,10 +446,10 @@
                     type="number"
                     min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 10"
+                    placeholder="Ex: 725"
                   >
                 </div>
-                <div>
+                <!-- <div>
                   <label for="overall_dimensions" class="block text-sm font-medium text-gray-700 mb-2">
                     Overall Dimensions(mm) <span class="error-color">*</span>
                   </label>
@@ -468,11 +461,11 @@
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 400"
                   >
-                </div>
+                </div> -->
 
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Dimensions (L x l x H) (m) <span class="error-color">*</span>
+                    Overall Dimensions LxlxH (mm) <span class="error-color">*</span>
                   </label>
                   <div class="grid grid-cols-3 gap-2">
                     <input
@@ -575,7 +568,7 @@
                     v-model="productData.gearbox_brand"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Gearbox brand"
+                    placeholder="Ex: FAST"
                   >
                 </div>
                 <div >
@@ -584,10 +577,10 @@
                   </label>
                   <input
                     id="vehicle_model"
-                    v-model="productData.engine_model"
+                    v-model="productData.engine_number"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Engine model"
+                    placeholder="Ex: WP12.430E201"
                   >
                 </div>
                 <div >
@@ -599,10 +592,10 @@
                     v-model="productData.gearbox_model"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Gearbox model"
+                    placeholder="Ex: 12JSD200T-B"
                   >
                 </div>
-                <div >
+                <!-- <div >
                   <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
                     Engine Number
                   </label>
@@ -612,6 +605,19 @@
                     type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: FHEGEJGE776JH8"
+                  >
+                </div> -->
+                <div>
+                  <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
+                    Horse Power (HP) 
+                  </label>
+                  <input
+                    id="power"
+                    v-model="productData.power"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 430"
                   >
                 </div>
                 <div>
@@ -629,19 +635,7 @@
                   </select>
                 </div>
                 
-                <div>
-                  <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Power (ch/kW)
-                  </label>
-                  <input
-                    id="power"
-                    v-model="productData.power"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 400"
-                  >
-                </div>
+                
                 <div>
                   <label for="engine_emissions" class="block text-sm font-medium text-gray-700 mb-2">
                     Emission Standards
@@ -663,11 +657,9 @@
                     v-model="singleVin"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Enter VIN or Chassis number"
+                    placeholder="Ex: 1HGCM82633A123456"
                   >
                 </div>
-                
-
                 <div>
                   <label for="trim_number" class="block text-sm font-medium text-gray-700 mb-2">
                     Vehicle Model (Trim)
@@ -677,7 +669,7 @@
                     v-model="singleTrim"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Enter vehicle model trim"
+                    placeholder="Ex: SX4255JV324"
                   >
                 </div>
                 <div >
@@ -691,7 +683,7 @@
                     min="0"
                     max="200000"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 150000"
+                    placeholder="Ex: 200"
                   >
                   <p class="text-xs text-gray-500 mt-1">Between 0 and 200,000 km</p>
                 </div>
@@ -704,7 +696,7 @@
                     v-model="productData.axle_brand"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Axle brand"
+                    placeholder="Ex: HANDE"
                   >
                 </div>
 
@@ -729,7 +721,7 @@
                     v-model="productData.axle_front"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Front axle"
+                    placeholder="Ex: 7.5 T front axle HD technology"
                   >
                 </div>
                 <div>
@@ -741,7 +733,7 @@
                     v-model="productData.suspension_front"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Front suspension"
+                    placeholder="Ex: Front and rear multi-plate springs"
                   >
                 </div>
                  <div>
@@ -753,7 +745,7 @@
                     v-model="productData.axle_rear"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Rear axle"
+                    placeholder="Ex: 16T HD Double-stage Bridge"
                   >
                 </div>
                 <div>
@@ -765,13 +757,9 @@
                     v-model="productData.suspension_rear"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Rear suspension"
+                    placeholder="Ex: Front and rear multi-plate springs"
                   >
                 </div>
-
-                
-               
-               
                 <div>
                   <label for="axle_speed_ratio" class="block text-sm font-medium text-gray-700 mb-2">
                     Speed ratio
@@ -779,9 +767,11 @@
                   <input
                     id="axle_speed_ratio"
                     v-model="productData.axle_speed_ratio"
-                    type="text"
+                    type="number"
+                    min="0"
+                    step="0.001"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Speed ratio"
+                    placeholder="Ex: 4.266"
                   >
                 </div>
 
@@ -800,14 +790,14 @@
 
                 <div>
                   <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
-                    Tire Size
+                    Tires
                   </label>
                   <input
                     id="tyre_size"
                     v-model="productData.tire_size"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 315/80R22.5"
+                    placeholder="Ex: 12.00R20mixed pattern"
                   >
                 </div>
                 <div>
@@ -819,7 +809,7 @@
                     v-model="productData.air_filter"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 315/80R22.5"
+                    placeholder="Ex: Ordinary side-mounted air filter"
                   >
                 </div>
                 <div>
@@ -831,13 +821,13 @@
                     v-model="productData.electrics"
                     type="text"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 315/80R22.5"
+                    placeholder="Ex: 165Ah maintenance free battery"
                   >
                 </div>
                 <!--  Payment Information Section         -->
                 <div class="sm:col-span-2">
                   <label for="wysiwygEditor2" class="block text-sm font-medium text-gray-700 mb-2">
-                   Product Associated Terms (WYSIWYG)
+                   Other Terms associated with the product (WYSIWYG)
                   </label>
                   <div >
                     <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
@@ -851,10 +841,10 @@
                         <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
                         <div class="w-px h-6 bg-gray-300 mx-1"></div>
                         <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
-                          <option value="">Titre</option>
-                          <option value="h1">Titre 1</option>
-                          <option value="h2">Titre 2</option>
-                          <option value="h3">Titre 3</option>
+                          <option value="">Title</option>
+                          <option value="h1">Title 1</option>
+                          <option value="h2">Title 2</option>
+                          <option value="h3">Title 3</option>
                         </select>
                       </div>
                       <div 
@@ -863,7 +853,7 @@
                         @input="updateOtherDescription"
                         class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
                         style="white-space: pre-wrap;"
-                        placeholder="Décrivez votre produit en détail..."
+                        placeholder="Provide other terms associated with your product for the search..."
                       ></div>
                     </div>
                   </div>
@@ -916,7 +906,7 @@
                 </div>
               </div>
 
-              <div class="mt-6">
+              <!-- <div class="mt-6">
                 
                 
                 <div v-if="productData.hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
@@ -947,7 +937,7 @@
                     >
                   </div>
                 </div>
-              </div>
+              </div> -->
             </div>
           </div>
 
@@ -1170,15 +1160,15 @@
                   <div class="space-y-2">
                     <p><span class="font-medium text-gray-700">Product name:</span> <span class="text-gray-900">{{ productData.name || 'Non défini' }}</span></p>
                     <p><span class="font-medium text-gray-700">Category:</span> <span class="text-gray-900">{{ getCategoryName(productData.category_id) || 'Non définie' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Unit price (FOB):</span> <span class="text-gray-900">{{ productData.unit_price ? productData.unit_price  : 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Initial Stock:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Wholesale price:</span> <span class="text-gray-900">{{ productData.wholesale_price || 'Non défini' }}</span></p>
-                    <p><span class="font-medium text-gray-700">Minimum quantity:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Unit price (FOB):</span> <span class="text-gray-900">{{ productData.unit_price ? formatPrice(productData.unit_price)  : 'Non défini' }}</span></p>
+                    <!-- <p><span class="font-medium text-gray-700">Initial Stock:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p> -->
+                    <!-- <p><span class="font-medium text-gray-700">Wholesale price:</span> <span class="text-gray-900">{{ productData.wholesale_price || 'Non défini' }}</span></p> -->
+                    <!-- <p><span class="font-medium text-gray-700">Minimum quantity:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p> -->
                   </div>
                   <div class="space-y-2">
                     <p><span class="font-medium text-gray-700">Product availability:</span> <span class="text-gray-900">{{ productData.disponibility }}</span></p>
                     <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
-                    <p><span class="font-medium text-gray-700">Unit:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
+                    <!-- <p><span class="font-medium text-gray-700">Unit:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p> -->
                     <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
                     <p><span class="font-medium text-gray-700">Video:</span> <span class="text-gray-900">{{ productData.video ? 'Oui' : 'Non' }}</span></p>
                   </div>
@@ -1188,75 +1178,79 @@
 
               <div class="specifications-table two-columns">
                   <div class="spec-group">
-                    <h3 class="spec-group-title">General Information</h3>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Vehicle Condition</div>
-                      <div class="spec-value">{{ productData.vehicle_condition || 'N/A'}}</div>
-                    </div>
-                    <!-- verifié -->
+                    <h3 class="spec-group-title">Overviews</h3>
                     <div class="spec-row">
                       <div class="spec-name">Vehicle Brand</div>
                       <div class="spec-value">{{getBrandName( productData.vehicle_brand_id) || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Vehicle Model</div>
                       <div class="spec-value">{{getModelName( productData.vehicle_model_id) || 'N/A' }}</div>
                     </div>
-                    <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Transmission Type</div>
-                      <div class="spec-value">  {{ productData.drive_type || 'N/A'}}</div>
+                      <div class="spec-name">Vehicle Condition</div>
+                      <div class="spec-value">{{ productData.vehicle_condition || 'N/A'}}</div>
                     </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
+                     <div class="spec-row">
                       <div class="spec-name">Year</div>
                       <div class="spec-value">{{ productData.vehicle_year || 'N/A'}}</div>
                     </div>
-                    <!-- verifié -->
+                     <div class="spec-row">
+                      <div class="spec-name">Production date</div>
+                      <div class="spec-value">{{ productData.production_date || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Country of origin</div>
+                      <div class="spec-value">{{ productData.country_of_origin || 'N/A' }}</div>
+                    </div>
                     <div class="spec-row">
                       <div class="spec-name">Fuel type</div>
                       <div class="spec-value">{{ productData.fuel_type || 'N/A' }}</div>
                     </div>
-                    <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Transmission type</div>
-                      <div class="spec-value">{{ productData.transmission_type || 'N/A' }}</div>
-                    </div>
-                    <!-- verifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Engine brand</div>
-                      <div class="spec-value">{{ productData.engine_brand || 'N/A' }}</div>
+                      <div class="spec-name">Fuel Tank Capacity (L)</div>
+                      <div class="spec-value">{{ productData.fuel_tank_capacity || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Engine Power (ch/kW)</div>
-                      <div class="spec-value">{{ productData.power || 'N/A' }}</div>
+                      <div class="spec-name">Transmission Type</div>
+                      <div class="spec-value">  {{ productData.drive_type || 'N/A'}}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Engine Emissions (g/km)</div>
-                      <div class="spec-value">{{ productData.engine_emissions || 'N/A' }}</div>
-                    </div>
-                    <!-- vérifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Mileage (km)</div>
-                      <div class="spec-value">{{ productData.vehicle_mileage || 'N/A' }}</div>
+                      <div class="spec-name">Curb Weight (kg)</div>
+                      <div class="spec-value">{{ productData.curb_weight || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Brake System</div>
-                      <div class="spec-value">{{ productData.brake_system || 'N/A' }}</div>
+                      <div class="spec-name">Payload Capacity (kg)</div>
+                      <div class="spec-value">{{ productData.payload_capacity || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Tire Size</div>
-                      <div class="spec-value">{{ productData.tire_size || 'N/A' }}</div>
+                      <div class="spec-name">GVW - Gross Vehicle Weight (kg)</div>
+                      <div class="spec-value">{{ productData.gvw || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
+                     <div class="spec-row">
+                      <div class="spec-name">Wheelbasess(mm)</div>
+                      <div class="spec-value">{{ productData.wheelbase || 'N/A' }}</div>
+                    </div>
+                     <div class="spec-row">
+                      <div class="spec-name">Economic speed / Maximum speed (km/h)</div>
+                      <div class="spec-value">{{ productData.speed || 'N/A' }}</div>
+                    </div>
                     <div class="spec-row">
-                      <div class="spec-name">Dimensions (L x l x H) (m)</div>
+                      <div class="spec-name">Cabin Type</div>
+                      <div class="spec-value">{{ productData.cabin_type || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Chassis Dimensions (mm)</div>
+                      <div class="spec-value">{{ productData.chassis_dimensions || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Frame rear suspension (mm)</div>
+                      <div class="spec-value">{{ productData.frame_rear_suspension || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Overall Dimensions LxlxH (mm)</div>
                       <div class="spec-value">{{ `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}` }}</div>
                     </div>
-                    <!-- verifié -->
                     <div class="spec-row overflow-x-auto items-center">
                       <div class="spec-name">Colors</div>
                       <div v-for="color in productData.colors" :key="color.hex_value" >
@@ -1273,14 +1267,37 @@
                     
                   </div>
                   <div class="spec-group">
-                    <h3 class="spec-group-title">Technical details</h3>
-                    <!-- verifié -->
+                    <h3 class="spec-group-title">Technical Specifications</h3>
+                     <div class="spec-row">
+                      <div class="spec-name">Engine brand</div>
+                      <div class="spec-value">{{ productData.engine_brand || 'N/A' }}</div>
+                    </div>
                     <div class="spec-row">
-                      <div class="spec-name">Engine number</div>
+                      <div class="spec-name">Engine Model</div>
                       <div class="spec-value">{{ productData.engine_number || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name"> VIN number / chassis number</div>
+                      <div class="spec-name">Horse Power (HP) </div>
+                      <div class="spec-value">{{ productData.power || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Emission Standards</div>
+                      <div class="spec-value">{{ productData.engine_emissions || 'N/A' }}</div>
+                    </div>
+                     <div class="spec-row">
+                      <div class="spec-name">Gearbox Brand</div>
+                      <div class="spec-value">{{ productData.gearbox_brand || 'N/A' }}</div>
+                    </div>
+                     <div class="spec-row">
+                      <div class="spec-name">Gearbox Model</div>
+                      <div class="spec-value">{{ productData.gearbox_model || 'N/A' }}</div>
+                    </div>
+                     <div class="spec-row">
+                      <div class="spec-name">Gearbox Type</div>
+                      <div class="spec-value">{{ productData.transmission_type || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">VIN Number / Chassis Number</div>
                       <div class="spec-value">
                         <ul v-if="productData.vin && productData.vin.length">
                           <li v-for="vin in productData.vin" :key="vin.id">
@@ -1290,9 +1307,8 @@
                         <span v-else>N/A</span>
                       </div>
                     </div>
-                    <!-- TODO: parcourir la liste des numéros de moteur -->
                     <div class="spec-row">
-                      <div class="spec-name">Trim number</div>
+                      <div class="spec-name">Vehicle Model (Trim)</div>
                       <div class="spec-value">
                         <ul v-if="productData.trim_numbers && productData.trim_numbers.length">
                           <li v-for="trim in productData.trim_numbers" :key="trim.id">
@@ -1302,51 +1318,55 @@
                         <span v-else>N/A</span>
                       </div>
                     </div>
-                    <!-- verifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Production date</div>
-                      <div class="spec-value">{{ productData.production_date || 'N/A' }}</div>
+                      <div class="spec-name">Mileage (km)</div>
+                      <div class="spec-value">{{ productData.vehicle_mileage || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Country of origin</div>
-                      <div class="spec-value">{{ productData.country_of_origin || 'N/A' }}</div>
+                      <div class="spec-name">Axle Brand</div>
+                      <div class="spec-value">{{ productData.axle_brand || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Wheelbase</div>
-                      <div class="spec-value">{{ productData.wheelbase || 'N/A' }}</div>
+                      <div class="spec-name">Front axle</div>
+                      <div class="spec-value">{{ productData.axle_front || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">GVW - Gross Vehicle Weight (kg)</div>
-                      <div class="spec-value">{{ productData.gvw || 'N/A' }}</div>
+                      <div class="spec-name">Rear axle</div>
+                      <div class="spec-value">{{ productData.axle_rear || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Payload Capacity (kg)</div>
-                      <div class="spec-value">{{ productData.payload_capacity || 'N/A' }}</div>
+                      <div class="spec-name">Speed ratio</div>
+                      <div class="spec-value">{{ productData.axle_speed_ratio || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
-                    <div class="spec-row">
-                      <div class="spec-name">Cabin Type</div>
-                      <div class="spec-value">{{ productData.cabin_type || 'N/A' }}</div>
-                    </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
                       <div class="spec-name">Suspension Type</div>
                       <div class="spec-value">{{ productData.suspension_type || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Curb Weight (Tonnes)</div>
-                      <div class="spec-value">{{ productData.curb_weight || 'N/A' }}</div>
+                      <div class="spec-name">Front Suspension</div>
+                      <div class="spec-value">{{ productData.suspension_front || 'N/A' }}</div>
                     </div>
-                    <!-- vérifié -->
                     <div class="spec-row">
-                      <div class="spec-name">Fuel Tank Capacity (L)</div>
-                      <div class="spec-value">{{ productData.fuel_tank_capacity || 'N/A' }}</div>
+                      <div class="spec-name">Rear Suspension</div>
+                      <div class="spec-value">{{ productData.suspension_rear || 'N/A' }}</div>
                     </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Brake System</div>
+                      <div class="spec-value">{{ productData.brake_system || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Tires</div>
+                      <div class="spec-value">{{ productData.tire_size || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Air filter</div>
+                      <div class="spec-value">{{ productData.air_filter || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Electrics</div>
+                      <div class="spec-value">{{ productData.electrics || 'N/A' }}</div>
+                    </div>
+                    
                   </div>
                 </div>
             </div>
@@ -1418,6 +1438,7 @@
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import axios from 'axios'
 import { categoriesApi , brandsApi } from '../../services/api'
+import {formatPrice} from '../../services/formatPrice'
 import { 
   Plus as PlusIcon,
   X as XIcon,
@@ -1532,12 +1553,10 @@ const productData = reactive({
   curb_weight: null,
   fuel_tank_capacity: null,
   speed:'',
-  engine_model:'',
   gearbox_brand:'',
   gearbox_model:'',
   chassis_dimensions:'',
   frame_rear_suspension:'',
-  overall_dimensions:'',
   suspension_rear:'',
   suspension_front:'',
   axle_brand:'',
@@ -1614,12 +1633,12 @@ const canProceedToNextStep = computed(() => {
       return !!(productData.category_id && productData.subcategory_id)
     case 1:
       return !!(productData.vehicle_condition && productData.vehicle_brand_id 
-      && productData.vehicle_model_id && productData.drive_type 
-      && productData.fuel_type && productData.country_of_origin 
-      && productData.dimensions_height && productData.dimensions_width 
-      && productData.dimensions_length && productData.fuel_tank_capacity 
-      && productData.curb_weight && productData.cabin_type && productData.payload_capacity
-      && productData.gvw && productData.production_date && productData.wheelbase
+      // && productData.vehicle_model_id && productData.drive_type 
+      // && productData.fuel_type && productData.country_of_origin 
+      // && productData.dimensions_height && productData.dimensions_width 
+      // && productData.dimensions_length && productData.fuel_tank_capacity 
+      // && productData.curb_weight && productData.cabin_type && productData.payload_capacity
+      // && productData.gvw && productData.production_date && productData.wheelbase
     )
     case 2:
       getProductName();
@@ -1646,6 +1665,13 @@ const canSubmit = computed(() => {
            productData.unit_price !== null && 
            productData.unit_price !== '' && 
            Number(productData.unit_price) > 0)
+})
+
+
+productData.vehicle_year = computed(() => {
+  const s = String(productData.production_date || '').trim()
+  const m = s.match(/^(\d{4})-/) // capture les 4 premiers chiffres avant le premier '-'
+  return m ? Number(m[1]) : null
 })
 
 const getCategoryName = (id) => {
@@ -2084,12 +2110,10 @@ const prepareDataForSubmission = () => {
     ? `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}`
     : null,
     speed: productData.speed,
-    engine_model:productData.engine_model,
     gearbox_brand : productData.gearbox_brand,
     gearbox_model: productData.gearbox_model,
     chassis_dimensions : productData.chassis_dimensions,
     frame_rear_suspension : productData.frame_rear_suspension,
-    overall_dimensions : productData.overall_dimensions,
     suspension_rear : productData.suspension_rear,
     suspension_front : productData.suspension_front,
     axle_brand : productData.axle_brand,
