@@ -619,13 +619,12 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">
-              Estimated delivery date <span class="text-red-500">*</span>
+              Estimated delivery date (optional)
             </label>
             <input 
               type="date"
               v-model="estimatedDeliveryDate"
               class="input-style"
-              required
             />
           </div>
 
@@ -637,11 +636,10 @@
               Cancel
             </button>
             <button 
-            style="background-color: #16a34a;"
               @click="validatePaymentProof"
               class="btn-degrade-orange"
             >
-              Validate
+              Confirm
             </button>
           </div>
         </div>
@@ -879,12 +877,12 @@
                 <CreditCardIcon class="h-6 w-6 primary-color" />
               </div>
               <div>
-                <div class="font-semibold text-gray-900">Initial Payment (30%)</div>
+                <div class="font-semibold text-gray-900">Initial Payment</div>
                 <div class="text-sm text-gray-500">{{ formatDate(currentProofOrder?.date_paiement) }}</div>
               </div>
             </div>
             <div class="text-right">
-              <div class="text-xl font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * 0.3) }}</div>
+              <!-- <div class="text-xl font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * 0.3) }}</div> -->
               <span v-if="currentProofOrder?.estimate_prepare" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium mt-1">
                 <CheckCircle2Icon class="h-3 w-3" />
                 Validated
@@ -902,6 +900,16 @@
             <ImageIcon class="h-4 w-4" />
             View Proof
           </button>
+          <!-- <button 
+            style="background-color: green; color: white;"
+                      v-if="payment.valide !== 'valid'"
+                      @click="openValidateProofModal2(payment)"
+                      class="inline-flex btn-degrade-orange"
+                      title="Validate proof"
+                    >
+                      <CheckCircleIcon class="h-3 w-3" />
+                      <span>Validate</span>
+            </button> -->
         </div>
 
         <!-- Additional Payments -->
@@ -1345,6 +1353,28 @@
 
           <!-- Order Actions -->
           <div class="flex flex-wrap gap-4 justify-end pt-6 border-t border-gray-100">
+            <router-link :to="{ 
+                path: '/dashboard-admin/factures',
+                query: { orderId: selectedOrder.id },
+              }"
+              @click="saveOrderToSession(selectedOrder)"
+              >
+              <button 
+              v-if="selectedOrder.statut === 'en_attente'" 
+                class="flex-1 btn-gray"
+              >
+                <!-- utilisation directe du composant importé -->
+                <FileTextIcon class="w-4 h-4 " />
+                Proforma invoice
+              </button>
+            </router-link>
+            <button 
+              v-if="selectedOrder.statut === 'en_attente'" 
+              @click="showConfirmModal('edit', selectedOrder)"
+              class="submit-btn"
+            >
+              Edit Order
+            </button>
             <button 
               v-if="selectedOrder.statut === 'en_attente'" 
               @click="showConfirmModal('confirm', selectedOrder)"
@@ -1739,10 +1769,10 @@ const closeValidateprepareModal = () => {
 }
 
 const validatePaymentProof = async () => {
-  if (!estimatedDeliveryDate.value) {
-    showNotificationMessage('error', 'Error', 'Please enter an estimated delivery date')
-    return
-  }
+  // if (!estimatedDeliveryDate.value) {
+  //   showNotificationMessage('error', 'Error', 'Please enter an estimated delivery date')
+  //   return
+  // }
   if (!currentValidateOrder.value) return
 
   try {
@@ -1900,6 +1930,10 @@ const loadAllData = async () => {
   } finally {
     dataLoading.value = false
   }
+}
+
+const saveOrderToSession = (order) => {
+  sessionStorage.setItem('selectedOrder', JSON.stringify(order))
 }
 
 // Confirmation Modal Methods
@@ -2215,9 +2249,9 @@ const getStatusLabel = (status) => {
     'confirmee': 'Confirmed',
     'en_livraison': 'In Delivery',
     'livree': 'Delivered',
-    'annulee': 'Cancelled'
+    'annule': 'Cancelled'
   }
-  return labels[status] || status
+  return labels[status] || status || "Other"
 }
 
 const getStatusClass = (status) => {
@@ -2226,7 +2260,7 @@ const getStatusClass = (status) => {
     'confirmee': 'bg-green-100 text-green-800',
     'en_livraison': 'bg-blue-100 text-blue-800',
     'livree': 'bg-purple-100 text-purple-800',
-    'annulee': 'bg-red-100 text-red-800'
+    'annule': 'bg-red-100 text-red-800'
   }
   return classes[status] || 'bg-gray-100 text-gray-800'
 }
@@ -2237,7 +2271,7 @@ const getStatusIcon = (status) => {
     'confirmee': CheckCircle2Icon,
     'en_livraison': Truck,
     'livree': CheckCircle,
-    'annulee': XIcon
+    'annule': XIcon
   }
   return icons[status] || Clock
 }

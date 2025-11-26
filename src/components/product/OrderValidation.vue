@@ -303,20 +303,20 @@
         <h2 class="modal-title">Order confirmed</h2>
         <p class="modal-message">
           Your order has been successfully registered ! 
-          Please make the deposit payment of <strong>{{ formatPrice(depositAmount) }}</strong> 
-          and add the proofs from your "My Orders" area.
+          Please make the deposit payment according to the contract and add the proofs from your "My Orders" area.
         </p>
         
         <div class="modal-actions">
+          <button class="flex-1 btn-gray text-xs" @click="goToOrders">
+            View my orders
+          </button>
           <button class="flex-1 btn-degrade-orange text-xs" @click="contactSeller">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
             </svg>
             Communicate with the Seller
           </button>
-          <button class="flex-1 btn-gray text-xs" @click="goToOrders">
-            View my orders
-          </button>
+          
         </div>
       </div>
     </div>
@@ -953,7 +953,7 @@ onMounted(() => {
   color: #333;
 }
 
-.btn-degrade-orange:hover:not(:disabled) {
+/* .btn-degrade-orange:hover:not(:disabled) {
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(254, 151, 0, 0.3);
 }
@@ -962,7 +962,7 @@ onMounted(() => {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-}
+} */
 
 .security-badges {
   display: flex;

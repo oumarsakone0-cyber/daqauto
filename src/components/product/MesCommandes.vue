@@ -5,6 +5,7 @@
         <h1 class="page-title">My Orders</h1>
         <p class="page-subtitle">Track the status of your orders and add your proof of payment.</p>
       </div>
+      
     </div>
 
     <div class="container">
@@ -58,9 +59,19 @@
               <h3 class="order-number">Order #{{ order.numero_commande }}</h3>
               <span class="order-date">{{ formatDate(order.created_at) }}</span>
             </div>
-            <span :class="['order-status', getStatusClass(order.statut)]">
-              {{ getStatusLabel(order.statut) }}
-            </span>
+            <div class="items-center justify-center">
+              <span :class="['order-status ', getStatusClass(order.statut)]">
+                {{ getStatusLabel(order.statut) }}
+              </span>
+              <button 
+              v-if="order.statut==='confirmee'"
+              @click="downloadContract(order.numero_commande)"
+              class="btn-degrade-orange mt-2 text-xs"
+            >
+              <Download class="w-4 h-4" />
+              download contract
+            </button>
+            </div>
           </div>
 
           <div class="order-body">
@@ -114,8 +125,9 @@
                   <span class="summary-value">{{ formatPrice(order.total) }}</span>
                 </div>
                 <div class="summary-row deposit">
-                  <span class="summary-label">{{ order.tobevalidate === 'valid' ? 'Deposit paid (30%):' : 'Deposit to be paid (30%):' }}</span>
-                  <span class="summary-value">{{ formatPrice(order.total * 0.3) }}</span>
+                  <span class="summary-label">{{ order.tobevalidate === 'valid' ? 'Deposit paid' : 'Pay the deposit according to the contract' }}</span>
+                  <span v-if="order.tobevalidate === 'valid'"
+                  class="summary-value">{{ formatPrice(calculatePaymentStatus(order).firstPayment) }}</span>
                 </div>
               </div>
             </div>
@@ -221,7 +233,7 @@
                       </svg>
                     </div>
                     <div class="payment-details">
-                      <span class="payment-label">Initial deposit (30%)</span>
+                      <span class="payment-label">Initial deposit</span>
                       <span class="payment-amount">{{ formatPrice(calculatePaymentStatus(order).firstPayment) }}</span>
                       <span class="payment-date">{{ formatDate(order.date_paiement) }}</span>
                     </div>
@@ -253,7 +265,7 @@
                       <button
                         v-if="payment.preuve_paiement"
                         style="width: 180px; background-color: #fe7900;"
-                        class="btn-degrade-orange success"
+                        class="btn-degrade-orange"
                         @click="viewPaymentProof(payment)"
                       >
                         <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -376,7 +388,7 @@
                 </div>
 
                 <!-- CHANGE> Only show countdown if prepare_date doesn't exist -->
-                <div v-if="!order.prepare_date" class="countdown-section">
+                <div v-if="!order.prepare_date && order.estimate_prepare" class="countdown-section">
                   <div class="countdown-header">
                     <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <circle cx="12" cy="12" r="10"></circle>
@@ -423,7 +435,7 @@
                 </div>
 
                 <!-- CHANGE> Show delivery date when prepare_date exists -->
-                <div v-else class="countdown-section ready">
+                <div v-if="order.prepare_date" class="countdown-section ready">
                   <div class="delivery-ready-info">
                     <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                       <rect x="1" y="3" width="15" height="13"></rect>
@@ -465,6 +477,28 @@
 
           <div class="order-actions">
             <button
+              class="btn-gray"
+              @click="handleChatClick(order)"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+              </svg>
+              Contact the seller
+            </button>
+
+            <button
+              v-if="order.statut === 'en_attente' && !order.preuve_paiement"
+              class="btn-deconnexion"
+              @click="openCancelModal(order)"
+            >
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="12" cy="12" r="10"></circle>
+                <line x1="15" y1="9" x2="9" y2="15"></line>
+                <line x1="9" y1="9" x2="15" y2="15"></line>
+              </svg>
+              Cancel
+            </button>
+            <button
               v-if="order.statut === 'confirmee' && !order.preuve_paiement"
               class="btn-degrade-orange"
               @click="openPaymentProofModal(order)"
@@ -503,28 +537,7 @@
               Add a payment
             </button>
 
-            <button
-              class="btn-gray"
-              @click="handleChatClick(order)"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-              </svg>
-              Contact the seller
-            </button>
-
-            <button
-              v-if="order.statut === 'en_attente' && !order.preuve_paiement"
-              class="btn-deconnexion"
-              @click="openCancelModal(order)"
-            >
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="12" cy="12" r="10"></circle>
-                <line x1="15" y1="9" x2="9" y2="15"></line>
-                <line x1="9" y1="9" x2="15" y2="15"></line>
-              </svg>
-              Cancel
-            </button>
+            
           </div>
         </div>
       </div>
@@ -548,12 +561,26 @@
         <div class="payment-info-box">
           <div class="info-row">
             <span class="info-label">Amount to pay (deposit):</span>
-            <span class="info-value">{{ formatPrice(selectedOrder?.total * 0.3) }}</span>
+            <!-- <span class="info-value">{{ formatPrice(selectedOrder?.total * 0.3) }}</span> -->
           </div>
           <p class="info-note">Please upload a screenshot or photo of your proof of payment.</p>
         </div>
 
         <form @submit.prevent="uploadPaymentProof" class="upload-form">
+          <div class="form-group">
+            <label class="form-label">Payment amount <span class="required">*</span></label>
+            <input
+              type="number"
+              v-model="depositPaymentAmount"
+              class="input-style"
+              placeholder="Enter the amount"
+              :max="calculatePaymentStatus(selectedOrder).remaining"
+              min="1"
+              step="any"
+              required
+            >
+            <p class="file-hint">Pay the deposit according to the contract</p>
+          </div>
           <div class="form-group">
             <label class="form-label">Select a file</label>
             <div class="file-input-wrapper">
@@ -596,12 +623,13 @@
           </div>
 
           <div class="modal-actions">
-            <button type="submit" class="modal-btn primary" :disabled="uploading || !selectedFile">
+            
+            <button type="button" class="btn-gray flex-1" @click="closePaymentModal" :disabled="uploading">
+              Cancel
+            </button>
+            <button type="submit" class="btn-degrade-orange flex-1" :disabled="uploading || !selectedFile || !depositPaymentAmount">
               <span v-if="!uploading">Send proof</span>
               <span v-else>Shipment in progress...</span>
-            </button>
-            <button type="button" class="modal-btn secondary" @click="closePaymentModal" :disabled="uploading">
-              Cancel
             </button>
           </div>
         </form>
@@ -697,13 +725,14 @@
           </div>
 
           <div class="modal-actions">
+            <button type="button" class="btn-gray flex-1" @click="closeAdditionalPaymentModal" :disabled="uploading">
+              Cancel
+            </button>
             <button type="submit" class="btn-degrade-orange flex-1" :disabled="uploading || !additionalPaymentFile || !additionalPaymentAmount">
               <span v-if="!uploading">Send payment</span>
               <span v-else>Shipment in progress...</span>
             </button>
-            <button type="button" class="btn-gray flex-1" @click="closeAdditionalPaymentModal" :disabled="uploading">
-              Cancel
-            </button>
+            
           </div>
         </form>
       </div>
@@ -735,24 +764,26 @@
 
         <form @submit.prevent="cancelOrder" class="cancel-form">
           <div class="form-group">
-            <label class="form-label">Reason for cancellation</label>
+            <label class="form-label">Reason for cancellation <span v-if="!selectedOrder.paiements.length">(Optional)</span></label>
             <textarea
               v-model="cancelReason"
               class="input-style"
-              placeholder="Expliquez pourquoi vous souhaitez annuler cette commande..."
+              title="Please complete this field"
+              placeholder="Explain why you wish to cancel this order..."
               rows="4"
-              required
+              :required="selectedOrder.paiements.length"
             ></textarea>
           </div>
 
           <div class="modal-actions">
-            <button type="submit" class="modal-btn danger" :disabled="cancelling">
+            <button type="button" class="btn-gray flex-1" @click="closeCancelModal">
+              Back
+            </button>
+            <button type="submit" class="btn-deconnexion flex-1" :disabled="cancelling">
               <span v-if="!cancelling">Confirm the cancellation</span>
               <span v-else>Cancellation in progress...</span>
             </button>
-            <button type="button" class="modal-btn secondary" @click="closeCancelModal">
-              Back
-            </button>
+            
           </div>
         </form>
       </div>
@@ -767,6 +798,7 @@ import { ordersApi } from '../../services/api.js'
 import axios from 'axios'
 import { useChatStore } from '../../stores/chat'
 import {formatPrice} from "../../services/formatPrice"
+import { Download } from 'lucide-vue-next'
 
 const router = useRouter()
 const chatStore = useChatStore()
@@ -797,6 +829,7 @@ const currentTime = ref(new Date())
 let countdownInterval = null
 
 const showAdditionalPaymentModal = ref(false)
+const depositPaymentAmount = ref('')
 const additionalPaymentAmount = ref('')
 const additionalPaymentFile = ref(null)
 const additionalPaymentComment = ref('')
@@ -817,6 +850,7 @@ const filteredOrders = computed(() => {
   if (selectedStatus.value === 'all') {
     return orders.value
   }
+  console.log("orders:", orders.value)
   return orders.value.filter(order => order.statut === selectedStatus.value)
 })
 
@@ -847,6 +881,11 @@ const getStatusLabel = (status) => {
     'terminee': 'Finished'
   }
   return labelMap[status] || status
+}
+
+const downloadContract =(orderNumber)=>{
+  console.log("Contract:",orderNumber)
+  alert("order Number: " + orderNumber)
 }
 
 // const formatPrice = (price) => {
@@ -1120,7 +1159,7 @@ const uploadToCloudinary = async (file) => {
 }
 
 const uploadPaymentProof = async () => {
-  if (!selectedFile.value || !selectedOrder.value) return
+  if (!selectedFile.value || !selectedOrder.value || !depositPaymentAmount.value) return
 
   uploading.value = true
   try {
@@ -1222,6 +1261,7 @@ const viewPaymentProof = (order) => {
 
 const openCancelModal = (order) => {
   selectedOrder.value = order
+  console.log("cancelletion",selectedOrder.value.paiements)
   showCancelModal.value = true
   cancelReason.value = ''
 }
@@ -1233,7 +1273,7 @@ const closeCancelModal = () => {
 }
 
 const cancelOrder = async () => {
-  if (!cancelReason.value.trim() || !selectedOrder.value) return
+  // if (!cancelReason.value.trim() || !selectedOrder.value) return
 
   cancelling.value = true
   try {
@@ -1244,7 +1284,7 @@ const cancelOrder = async () => {
       closeCancelModal()
       fetchOrders()
     } else {
-      throw new Error(response.message || 'Erreur lors de l\'annulation')
+      throw new Error(response.message || 'Error canceling order')
     }
   } catch (error) {
     console.error('Error cancelling order:', error)
@@ -2287,56 +2327,6 @@ onUnmounted(() => {
   justify-content: flex-end; /* Align actions to the right */
 }
 
-
-
-.btn-degrade-orange svg {
-  stroke: currentColor; /* Ensure SVG color matches button text */
-}
-
-.btn-degrade-orange.primary {
-  background-color: #fe9700;
-  color: white;
-}
-
-.btn-degrade-orange.primary:hover {
-  background-color: #e68a00;
-  transform: translateY(-2px);
-}
-
-.btn-degrade-orange.success {
-  background-color: #52c41a;
-  color: white;
-}
-
-.btn-degrade-orange.success:hover {
-  background-color: #389e17;
-  transform: translateY(-2px);
-}
-
-.btn-degrade-orange.secondary {
-  background-color: #f0f0f0;
-  color: #333;
-}
-
-.btn-degrade-orange.secondary:hover {
-  background-color: #e0e0e0;
-  transform: translateY(-2px);
-}
-
-.btn-degrade-orange.danger {
-  background-color: #ff4d4f;
-  color: white;
-}
-
-.btn-degrade-orange.danger:hover {
-  background-color: #e63c3e;
-  transform: translateY(-2px);
-}
-
-.btn-degrade-orange:disabled {
-  opacity: 0.6;
-  cursor: not-allowed;
-}
 
 /* Modal Styles */
 .modal-overlay {

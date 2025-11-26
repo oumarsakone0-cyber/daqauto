@@ -203,7 +203,7 @@
                           :key="product.id" 
                           :value="product.id"
                         >
-                          {{ product.name }}
+                          {{ product.name,console.log("id:",item.productId) }}
                         </option>
                       </select>
                     </div>
@@ -318,6 +318,9 @@
                     <p class="text-xs text-gray-500">DAQ AUTO Marketplace</p>
                   </div>
                 </div>
+                <p 
+                v-if="order"
+                class="text-xs text-gray-500">Order number: <span class="font-bold">{{ order.numero_commande }}</span></p>
               </div>
               <div class="text-left">
                 <div>
@@ -509,7 +512,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { ref, computed, onMounted, onUnmounted} from 'vue'
 import { 
   Home, FileText, User, ShoppingCart, Download, RefreshCw, 
   Plus, X,
@@ -523,8 +526,12 @@ import Navbar from '../boutiques/Navbar.vue'
 import { downloadInvoice } from '../../composables/Invoice.js'
 import { downloadProforma } from '../../composables/ProformaInvoice.js'
 import { formatCurrency, formatDate} from '../../composables/utils.js'
+import { useRoute } from 'vue-router'
+
+const route = useRoute()
 
 const products = ref([])
+const order = ref(null)
 const selected_product_colors = ref([])
 const selected_product_trim_numbers = ref([])
 const selected_product_vin_numbers = ref([])
@@ -532,6 +539,7 @@ const loadingProducts = ref(false)
 
 const currentUser = ref(null)
 const currentBoutique = ref(null)
+
 
 // État de la facture
 const invoice = ref({
@@ -623,7 +631,50 @@ onMounted(async () => {
     await fetchProducts()
   } else {
   }
+
+  const orderId = route.query.orderId
+ 
+  const orderData = sessionStorage.getItem('selectedOrder')
+  order.value = orderData ? JSON.parse(orderData) : null
+
+  if (order) {
+    // client informations
+    invoice.value.client.name = order.value.client_nom
+    invoice.value.client.address = order.value.commune
+    invoice.value.client.email = order.value.client_telephone
+
+    // product data
+    invoice.value.items[0].productId = order.value.produit_id
+    invoice.value.items[0].product_name = order.value.produit_nom
+    invoice.value.items[0].price = order.value.produit_prix_unitaire
+    invoice.value.items[0].quantity = order.value.quantite
+    total.value = order.value.total
+    onProductSelect(0)
+
+
+  } else if (orderId) {
+    // sinon charger depuis l'API
+   await loadOrderData(orderId)
+  }
+  
 })
+
+onUnmounted(() => {
+    order.value= null
+    sessionStorage.removeItem('selectedOrder')
+})
+
+const loadOrderData = async (orderId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/commandes.php?action=get&id=${orderId}`)
+    if (response.data.success) {
+      // traiter les données
+      console.log('Order loaded:', response.data)
+    }
+  } catch (error) {
+    console.error('Error loading order:', error)
+  }
+}
 
 const fetchProducts = async () => {
   if (!currentBoutique.value?.id || !currentUser.value?.id) {
@@ -667,16 +718,22 @@ const selectedTrimNumber = (id) => {
 
 const onProductSelect = (index) => {
   const item = invoice.value.items[index]
+  
   const selectedProduct = products.value.find(p => p.id === item.productId)
+  console.log("selectedProduct:", products.value)
   item.color = ""
   item.vin = ""
   item.trim_number = ""
   
   if (selectedProduct) {
+    console.log("product:",selectedProduct)
     item.price = selectedProduct.unit_price || selectedProduct.price || 0
     item.product_type = selectedProduct.category_name || ""
     item.product_name= selectedProduct.name || ""
     item.stock_number = selectedProduct.stock_number || ""
+    item.trim_number = selectedProduct.trim_numbers[0] || ""
+    item.vin = selectedProduct.vin_numbers[0] || ""
+    item.color = selectedProduct.color_names[0] || ""
 
     if (!selected_product_colors.value.some(product =>product.id === selectedProduct.id)) {
       selected_product_colors.value.push(
@@ -755,10 +812,6 @@ const onProductSelect = (index) => {
         }
       )
     }
-    console.log("selected specs: ",invoice.value.specs)
-    
-    
-
   }
 }
 
@@ -768,7 +821,7 @@ const subtotal = computed(() => {
 })
 
 const total = computed(() => {
-  return subtotal.value 
+  return order.value ? order.value.total: subtotal.value 
 })
 
 const addItem = () => {

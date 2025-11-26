@@ -10,6 +10,13 @@
         </button>
         <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">My Profile</h1>
       </div>
+      <button 
+            @click="loadAllData"
+            class="submit-btn mt-8 sm:mr-21 mr-4 h-10"
+          >
+            <RefreshIcon class="w-4 h-4" />
+            Refresh
+          </button>
     </div>
 
     <div class="container main-content">
@@ -70,27 +77,21 @@
         </nav>
       </div>
 
+
+      <!-- Loading State -->
+      <div v-if="dataLoading" class="loading-state">
+        <div class="spinner"></div>
+        <p>Loading...</p>
+      </div>
+
       <!-- Content Area -->
-      <div class="content-area">
+      <div class="content-area" v-if="!dataLoading">
         <!-- Profile Tab -->
         <div v-if="activeTab === 'profile'" class="tab-content">
           <!-- Stats Cards -->
           <div class="stats-grid">
-            <div class="stat-card">
-              <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-              </div>
-              <div class="stat-info">
-                <p class="stat-label">Number of Orders</p>
-                <p class="stat-value">{{ stats.orders }}</p>
-              </div>
-            </div>
-
-            <div class="stat-card">
+            <a href="#" @click.prevent="activeTab = 'favorites'">
+              <div class="stat-card">
               <div class="stat-icon">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
                   <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -101,6 +102,22 @@
                 <p class="stat-value">{{ stats.favorites }}</p>
               </div>
             </div>
+            </a>
+            <a href="#" @click.prevent="activeTab = 'orders'">
+              <div class="stat-card">
+              <div class="stat-icon">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
+                  <circle cx="9" cy="21" r="1"></circle>
+                  <circle cx="20" cy="21" r="1"></circle>
+                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                </svg>
+              </div>
+              <div class="stat-info">
+                <p class="stat-label">Orders</p>
+                <p class="stat-value">{{ stats.orders }}</p>
+              </div>
+            </div>
+            </a>
           </div>
 
           <!-- User Info Card -->
@@ -176,6 +193,9 @@
               </div>
 
               <div v-if="isEditing" class="form-actions full-width">
+                <button type="button" class="btn-gray" @click="cancelEdit">
+                  Cancel
+                </button>
                 <button type="submit" class="btn-degrade-orange">
                   <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"></path>
@@ -184,9 +204,7 @@
                   </svg>
                   Save changes
                 </button>
-                <button type="button" class="btn-gray" @click="cancelEdit">
-                  Cancel
-                </button>
+                
               </div>
             </form>
           </div>
@@ -208,7 +226,7 @@
                     <img :src="item.primary_image" :alt="item.name" class="favorite-image">
                     <div class="favorite-info">
                     <h3 class="favorite-name">{{ item.name }}</h3>
-                    <p class="favorite-price">{{ formatPrice(item.unit_price) }}</p>
+                    <p class="favorite-price">{{ formatPrice(item.unit_price, {showFOB:true}) }}</p>
                     </div>
                     
                 </div>
@@ -226,7 +244,7 @@
         <!-- Orders Tab -->
         <div v-if="activeTab === 'orders'" class="tab-content">
             <Commandes/>
-          <div class="section-card">
+          <!-- <div class="section-card">
             <h2 class="section-title">My Orders</h2>
             <div v-if="orders.length === 0" class="empty-state">
               <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2">
@@ -252,7 +270,7 @@
                 </div>
               </div>
             </div>
-          </div>
+          </div> -->
 
         </div>
       </div>
@@ -266,10 +284,13 @@ import Commandes from '../product/MesCommandes.vue'
 import { productsApi } from '../../services/api'
 import { useRoute, useRouter } from 'vue-router'
 import { ElMessageBox, ElMessage } from 'element-plus';
+import { RefreshCcw as RefreshIcon } from 'lucide-vue-next';
+import { formatPrice } from '../../services/formatPrice';
 
 const activeTab = ref('profile')
 const isFavorite = ref(true)
 const isEditing = ref(false)
+const dataLoading = ref(false)
 const currentUser = ref(null)
  const router = useRouter()
 
@@ -347,12 +368,6 @@ const notificationMessage = ref('')
 const notificationTitle = ref('')
 const notificationType = ref('success')
 
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-CI', {
-    style: 'currency',
-    currency: 'XOF'
-  }).format(price)
-}
 
 const saveProfile = () => {
   console.log('Profile saved:', profile.value)
@@ -446,6 +461,15 @@ const goBack = () => {
   window.history.back()
 }
 
+const loadAllData = async () => {
+  dataLoading.value = true
+  try {
+    await fetchFavorites();
+  } finally {
+    dataLoading.value = false
+  }
+}
+
 onMounted(async () => {
 
   const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
@@ -471,10 +495,14 @@ onMounted(async () => {
 }
 
 .page-header {
+  display: flex;
   background: #fff;
   border-bottom: 1px solid #e8e8e8;
   padding: 20px 0;
   margin-bottom: 24px;
+  align-items: center;
+  justify-content: center;
+
 }
 
 .container {
@@ -526,6 +554,29 @@ onMounted(async () => {
   position: sticky;
   top: 16px;
   overflow: hidden;
+}
+
+.loading-state {
+  text-align: center;
+  padding: 60px 20px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  color: #fe9700;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+.loading-state .spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #fe9700;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 15px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 /* Added user profile header styling */
