@@ -1638,26 +1638,26 @@ const canProceedToNextStep = computed(() => {
       return !!(productData.category_id && productData.subcategory_id)
     case 1:
       return !!(productData.vehicle_condition && productData.vehicle_brand_id 
-      // && productData.vehicle_model_id && productData.drive_type 
-      // && productData.fuel_type && productData.country_of_origin 
-      // && productData.dimensions_height && productData.dimensions_width 
-      // && productData.dimensions_length && productData.fuel_tank_capacity 
-      // && productData.curb_weight && productData.cabin_type && productData.payload_capacity
-      // && productData.gvw && productData.production_date && productData.wheelbase
-      // && productData.frame_rear_suspension && productData.speed && productData.chassis_dimensions
+      && productData.vehicle_model_id && productData.drive_type 
+      && productData.fuel_type && productData.country_of_origin 
+      && productData.dimensions_height && productData.dimensions_width 
+      && productData.dimensions_length && productData.fuel_tank_capacity 
+      && productData.curb_weight && productData.cabin_type && productData.payload_capacity
+      && productData.gvw && productData.production_date && productData.wheelbase
+      && productData.frame_rear_suspension && productData.speed && productData.chassis_dimensions
     )
     case 2:
       getProductName();
 
       return !!(productData.engine_brand && productData.gearbox_brand 
-      // && productData.engine_number && productData.gearbox_model 
-      // && productData.power && productData.transmission_type 
-      // && productData.engine_emissions && productData.vehicle_mileage 
-      // && productData.axle_brand && productData.suspension_type && productData.axle_front
-      // && productData.axle_rear && productData.suspension_front && productData.suspension_rear
-      // && productData.axle_speed_ratio && productData.brake_system && productData.tire_size
-      // && productData.air_filter && productData.electrics
-      // && productData.vin.length && productData.trim_numbers.length
+      && productData.engine_number && productData.gearbox_model 
+      && productData.power && productData.transmission_type 
+      && productData.engine_emissions && productData.vehicle_mileage 
+      && productData.axle_brand && productData.suspension_type && productData.axle_front
+      && productData.axle_rear && productData.suspension_front && productData.suspension_rear
+      && productData.axle_speed_ratio && productData.brake_system && productData.tire_size
+      && productData.air_filter && productData.electrics
+      && productData.vin.length && productData.trim_numbers.length
     )
     case 3:
       
