@@ -767,7 +767,6 @@
                   <input
                     id="axle_speed_ratio"
                     v-model="productData.axle_speed_ratio"
-                    @input="inputValidator(productData.axle_speed_ratio)"
                     type="number"
                     min="0"
                     step="0.001"
@@ -883,7 +882,6 @@
                   <input
                     id="unit_price"
                     v-model.number="productData.unit_price"
-                    @input="inputValidator(productData.unit_price)"
                     title="Enter a number"
                     type="number"
                     min="0"
@@ -1648,7 +1646,6 @@ const canProceedToNextStep = computed(() => {
     )
     case 2:
       getProductName();
-
       return !!(productData.engine_brand && productData.gearbox_brand 
       && productData.engine_number && productData.gearbox_model 
       && productData.power && productData.transmission_type 
@@ -1660,7 +1657,6 @@ const canProceedToNextStep = computed(() => {
       && productData.vin.length && productData.trim_numbers.length
     )
     case 3:
-      
       return !!(productData.unit_price && productData.disponibility)
     case 4:
       return !! productData.colors.length
@@ -1694,55 +1690,10 @@ const isNumeric =(value) =>{
   return /^-?\d+(\.\d+)?$/.test(s)
 }
 
-// const inputValidator = computed(()=>{
-//     errors.unit_price = isNumeric(productData.unit_price) ? '' : 'Please enter a number'
-// })
-
-
-const curbWeightValidators = ()=> {
-  errors.message = isNumeric(productData.curb_weight) ? '' : 'Please enter a number value for Curb Weight'
-
-}
 const inputValidator = (data)=> {
   errors.message = isNumeric(data) ? '' : 'Please enter a number'
 
 }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
-// const inputValidator = (data)=> {
-//   errors.message = isNumeric(data) ? '' : 'Please enter a number'
-
-// }
 
 const getCategoryName = (id) => {
   const category = categories.value.find(cat => cat.id === id)
