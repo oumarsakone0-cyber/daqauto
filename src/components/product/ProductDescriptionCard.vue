@@ -22,11 +22,11 @@
                     <h3 class="spec-group-title">Overview</h3>
                     <div class="spec-row">
                       <div class="spec-name">Conditions</div>
-                      <div class="spec-value">{{ product.vehicle_condition || 'N/A'}}</div>
+                      <div class="spec-value">{{ capitalizeFirst(product.vehicle_condition) || 'N/A'}}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Mileage</div>
-                      <div class="spec-value">{{ product.vehicle_mileage || 'N/A' }}</div>
+                      <div class="spec-value">{{formatNumber(product.vehicle_mileage)  || 'N/A' }} km </div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">VIN / Chassis NO.</div>
@@ -99,6 +99,11 @@
                       <div class="spec-name">Drive Type</div>
                       <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
                     </div>
+                    
+                    <div class="spec-row">
+                      <div class="spec-name">Cabin Type</div>
+                      <div class="spec-value">{{ product.cabin_type || 'N/A' }}</div>
+                    </div>
                     <div class="spec-row">
                       <div class="spec-name">Wheelbase (mm)</div>
                       <div class="spec-value">{{ product.wheelbase || 'N/A' }}</div>
@@ -111,22 +116,17 @@
 
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Engine</h3>
-                    
-                    <div class="spec-row">
-                      <div class="spec-name">Number</div>
-                      <div class="spec-value">{{ product.engine_number || 'N/A' }}</div>
-                    </div>
                     <div class="spec-row">
                       <div class="spec-name">Brand</div>
-                      <div class="spec-value">{{ product.engine_brand || 'N/A' }}</div>
+                      <div class="spec-value">{{ capitalizeFirst(product.engine_brand) || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Model</div>
-                      <div class="spec-value">{{ product.engine_model || 'N/A' }}</div>
+                      <div class="spec-value">{{ product.engine_number || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Horse Power</div>
-                      <div class="spec-value">{{ product.power || 'N/A' }}</div>
+                      <div class="spec-name">Horse Power (hp) </div>
+                      <div class="spec-value">{{ product.power || 'N/A' }}HP</div>
                     </div>
                    
                     <div class="spec-row">
@@ -146,23 +146,23 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">type</div>
-                      <div class="spec-value">{{ product.transmission_type || 'N/A'}}</div>
+                      <div class="spec-value">{{capitalizeFirst( product.transmission_type) || 'N/A'}}</div>
                     </div>
                   </div>
 
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Vehicle Weight</h3>
                     <div class="spec-row">
-                      <div class="spec-name">Curb Weight</div>
-                      <div class="spec-value">{{ product.curb_weight || 'N/A' }}</div>
+                      <div class="spec-name">Curb Weight (kg)</div>
+                      <div class="spec-value">{{formatNumber(product.curb_weight) || 'N/A' }} kg</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Payload Capacity</div>
-                      <div class="spec-value">{{ product.payload_capacity || 'N/A' }}</div>
+                      <div class="spec-name">Payload Capacity (kg)</div>
+                      <div class="spec-value">{{ formatNumber(product.payload_capacity) || 'N/A' }}kg</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Gross Vehicle Weight (GVW)</div>
-                      <div class="spec-value">{{ product.gvw || 'N/A' }}</div>
+                      <div class="spec-name">Gross Vehicle Weight (GVW) (kg)</div>
+                      <div class="spec-value">≤{{formatNumber( product.gvw) || 'N/A' }}kg</div>
                     </div>
                   </div>
 
@@ -177,11 +177,7 @@
                       <div class="spec-value">{{ product.frame_rear_suspension || 'N/A' }}</div>
                     </div>
                     <div class="spec-row">
-                      <div class="spec-name">Overall Dimensions(mm)</div>
-                      <div class="spec-value">{{ product.overall_dimensions || 'N/A' }}</div>
-                    </div>
-                    <div class="spec-row">
-                      <div class="spec-name">Vehicle Dimensions(LxlxH)</div>
+                      <div class="spec-name">Overall Dimensions LxlxH (mm)</div>
                       <div class="spec-value">{{ product.dimensions || 'N/A' }}</div>
                     </div>
                   </div>
@@ -223,12 +219,12 @@
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Fuel tank</h3>
                     <div class="spec-row">
-                      <div class="spec-name">Fuel Tank Capacity</div>
-                      <div class="spec-value">{{ product.fuel_tank_capacity || 'N/A' }}</div>
+                      <div class="spec-name">Fuel Tank Capacity (L)</div>
+                      <div class="spec-value">{{ product.fuel_tank_capacity || 'N/A' }}L</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Fuel Type</div>
-                      <div class="spec-value">{{ product.fuel_type || 'N/A' }}</div>
+                      <div class="spec-value">{{capitalizeFirst( product.fuel_type) || 'N/A' }}</div>
                     </div>
                   </div>
                   <div class="spec-group ">
@@ -246,13 +242,7 @@
                       <div class="spec-value">{{ product.tyre_size || 'N/A'  }}</div>
                     </div>
                   </div>
-                  <div class="spec-group ">
-                    <h3 class="spec-group-title">Cab</h3>
-                    <div class="spec-row">
-                      <div class="spec-name">Type</div>
-                      <div class="spec-value">{{ product.cabin_type || 'N/A' }}</div>
-                    </div>
-                  </div>
+                 
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Air filter</h3>
                     <div class="spec-row">
@@ -267,21 +257,21 @@
                       <div class="spec-value">{{ product.electrics || 'N/A' }}</div>
                     </div>
                   </div>
+                   <div class="spec-group ">
+                    <h3 class="spec-group-title">Cab</h3>
+                    <div class="spec-row">
+                      
+                      <div class="text-black font-medium text-sm p-2">{{ product.cab || 'N/A' }}</div>
+                    </div>
+                  </div>
                 </div>
             </div>
             <!-- Onglet Description du produit -->
             <div v-if="activeTab === 1" class="product-description">
-              <h2 class="section-title">Product Detail</h2>
+              <h2 class="section-title">Other Terms associated with the product</h2>
               
               <div class="description-content">
-                <p>{{ product.description || 'Aucune description disponible.'}}</p>
-              </div>
-              <div v-if="product.description_plus" >
-
-                <h2 class="section-title">Other Description</h2>
-                
-                <div class="description-content" v-html="product.description_plus">
-                </div>
+                <p>{{ product.description_plus || 'N/A'}}</p>
               </div>
               
             </div>
@@ -357,7 +347,8 @@
   </template>
   
   <script setup>
-  import { ref, computed, defineProps, defineEmits } from 'vue'
+  import { ref,  defineProps, defineEmits } from 'vue'
+  import {capitalizeFirst ,formatNumber} from "../../composables/utils"
   
   const props = defineProps({
     product: Object,

@@ -226,7 +226,6 @@
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                     vehicle brand <span class="error-color">*</span>
@@ -311,9 +310,10 @@
                   <input
                     id="fuel_tank_capacity"
                     v-model="productData.fuel_tank_capacity"
-                    type="text"
+                    type="number"
+                    min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 600L aluminum alloy fuel tank"
+                    placeholder="Ex: 600"
                   >
                 </div>
                 <div>
@@ -368,9 +368,10 @@
                   <input
                     id="wheelbase"
                     v-model="productData.wheelbase"
-                    type="text"
+                    type="number"
+                    min="0"
                     class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 3175+1400"
+                    placeholder="Ex: 3175"
                   >
                 </div>
                 <div>
@@ -449,20 +450,6 @@
                     placeholder="Ex: 725"
                   >
                 </div>
-                <!-- <div>
-                  <label for="overall_dimensions" class="block text-sm font-medium text-gray-700 mb-2">
-                    Overall Dimensions(mm) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="overall_dimensions"
-                    v-model="productData.overall_dimensions"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 400"
-                  >
-                </div> -->
-
                 <div class="sm:col-span-2">
                   <label class="block text-sm font-medium text-gray-700 mb-2">
                     Overall Dimensions LxlxH (mm) <span class="error-color">*</span>
@@ -491,41 +478,16 @@
                     >
                   </div>
                 </div>
-                  <!--  Payment Information Section 
-                <div class="sm:col-span-2">
-                  <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
-                   Other specifications (WYSIWYG)
+              </div>
+              <div class="w-full h-30 mb-10 mt-5">
+                  <label for="cab" class="block text-sm font-medium text-gray-700 mb-2">
+                      Cab <span class="error-color">*</span>
                   </label>
-                  <div >
-                    <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                       WYSIWYG Toolbar
-                      <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
-                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
-                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné" style="background-color: lightgray; color: black;">U</button>
-                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
-                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
-                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
-                          <option value="">Titre</option>
-                          <option value="h1">Titre 1</option>
-                          <option value="h2">Titre 2</option>
-                          <option value="h3">Titre 3</option>
-                        </select>
-                      </div>
-                      <div 
-                        ref="wysiwygEditor"
-                        contenteditable="true"
-                        @input="updateDetailedDescription"
-                        class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
-                        style="white-space: pre-wrap;"
-                        placeholder="Décrivez votre produit en détail..."
-                      ></div>
-                    </div>
-                  </div>
-                </div>
--->
+                  <textarea id="cab"
+                    v-model="productData.cab"
+                    class="text-sm sm:text-base input-style h-full w-full "
+                    placeholder="Ex: F3000 extended flat-top cab, without roof deflector, hydraulic main seat,....">  
+                  </textarea>
               </div>
             </div>
           </div>
@@ -1570,7 +1532,8 @@ const productData = reactive({
   axle_rear:'',
   axle_speed_ratio:'',
   air_filter:'',
-  electrics:''
+  electrics:'',
+  cab:''
 })
 
 const availableSubcategories = computed(() => {
@@ -1636,13 +1599,13 @@ const canProceedToNextStep = computed(() => {
       return !!(productData.category_id && productData.subcategory_id)
     case 1:
       return !!(productData.vehicle_condition && productData.vehicle_brand_id 
-      && productData.vehicle_model_id && productData.drive_type 
-      && productData.fuel_type && productData.country_of_origin 
-      && productData.dimensions_height && productData.dimensions_width 
-      && productData.dimensions_length && productData.fuel_tank_capacity 
-      && productData.curb_weight && productData.cabin_type && productData.payload_capacity
-      && productData.gvw && productData.production_date && productData.wheelbase
-      && productData.frame_rear_suspension && productData.speed && productData.chassis_dimensions
+      // && productData.vehicle_model_id && productData.drive_type 
+      // && productData.fuel_type && productData.country_of_origin 
+      // && productData.dimensions_height && productData.dimensions_width 
+      // && productData.dimensions_length && productData.fuel_tank_capacity 
+      // && productData.curb_weight && productData.cabin_type && productData.payload_capacity
+      // && productData.gvw && productData.production_date && productData.wheelbase
+      // && productData.frame_rear_suspension && productData.speed && productData.chassis_dimensions
     )
     case 2:
       getProductName();
@@ -1725,17 +1688,6 @@ const availableColors = ref([
   { name: 'Gold', value: '#FFD700' }
 ])
 
-const availableUnitTypes = ref([
-  { value: 'quantity', label: 'Quantité (unités)' },
-  { value: 'weight_t', label: 'Poids (T)' },
-  { value: 'weight_kg', label: 'Poids (kg)' },
-  { value: 'weight_g', label: 'Poids (g)' },
-  { value: 'volume_l', label: 'Volume (L)' },
-  { value: 'volume_ml', label: 'Volume (mL)' },
-  { value: 'length_m', label: 'Longueur (m)' },
-  { value: 'length_cm', label: 'Longueur (cm)' },
-  { value: 'area_m2', label: 'Surface (m²)' }
-])
 
 const availability = ref([
   { value: 'available', label: 'Available' },
@@ -2140,7 +2092,8 @@ const prepareDataForSubmission = () => {
     axle_rear : productData.axle_rear,
     axle_speed_ratio : productData.axle_speed_ratio,
     air_filter : productData.air_filter,
-    electrics : productData.electrics
+    electrics : productData.electrics,
+    cab : productData.cab
   }
   
   

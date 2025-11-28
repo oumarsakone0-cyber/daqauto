@@ -23,4 +23,7 @@ const capitalizeFirst=(str)=> {
   return s ? s[0].toUpperCase() + s.slice(1) : ''
 }
 
-export { formatDate, formatCurrency, capitalizeFirst }
+const formatNumber = (number)=> {
+  return number.toLocaleString('en-US');
+}
+export { formatDate, formatCurrency, capitalizeFirst,formatNumber }
