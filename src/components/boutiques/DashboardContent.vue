@@ -1139,7 +1139,6 @@
 import { useRouter } from 'vue-router'
 import { ref, computed, onMounted, onUnmounted, watch } from 'vue'
 import { productsApi, premiumApi, boostApi } from '../../services/api'
-import { ElMessageBox, ElMessage } from 'element-plus'
 // Dans les imports
 import Navbar from './Navbar.vue'
 import AddProductModal from './AddProductModal.vue'
@@ -1170,7 +1169,6 @@ import {
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Crown as CrownIcon,
-  LogOut as LogoutIcon,
   X as XIcon,
   Zap as ZapIcon,
   TrendingUp as TrendingUpIcon,
@@ -1435,7 +1433,6 @@ const detailedStats = computed(() => {
 
 const totalPages = computed(() => Math.ceil(filteredProducts.value.length / itemsPerPage.value))
 const paginatedProducts = computed(() => {
-  
   const start = (currentPage.value - 1) * itemsPerPage.value
   const end = start + itemsPerPage.value
   return filteredProducts.value.slice(start, end)

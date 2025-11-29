@@ -557,18 +557,6 @@
                     placeholder="Ex: 12JSD200T-B"
                   >
                 </div>
-                <!-- <div >
-                  <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Number
-                  </label>
-                  <input
-                    id="vehicle_number"
-                    v-model="productData.engine_number"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: FHEGEJGE776JH8"
-                  >
-                </div> -->
                 <div>
                   <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
                     Horse Power (HP) 
@@ -735,7 +723,6 @@
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: 4.266"
                   >
-                  <p v-if="errors.message" class="text-xs text-red-600">{{ errors.message }}</p>
                 </div>
 
                 <div>
@@ -870,39 +857,6 @@
                   </select>
                 </div>
               </div>
-
-              <!-- <div class="mt-6">
-                
-                
-                <div v-if="productData.hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <label for="wholesale_price" class="block text-sm font-medium text-gray-700 mb-2">
-                      Wholesale price
-                    </label>
-                    <input
-                      id="wholesale_price"
-                      v-model.number="productData.wholesale_price"
-                      type="number"
-                      min="0"
-                      class="text-sm sm:text-base input-style"
-                      placeholder="12000"
-                    >
-                  </div>
-                  <div>
-                    <label for="wholesale_min_qty" class="block text-sm font-medium text-gray-700 mb-2">
-                      Minimum quantity
-                    </label>
-                    <input
-                      id="wholesale_min_qty"
-                      v-model.number="productData.wholesale_min_qty"
-                      type="number"
-                      min="1"
-                      class="text-sm sm:text-base input-style"
-                      placeholder="10"
-                    >
-                  </div>
-                </div>
-              </div> -->
             </div>
           </div>
 
@@ -1028,6 +982,7 @@
                       style="background-color: gray; font-size: 10px"
                         v-if="index !== 0"
                         @click="setMainImage(index)"
+                        type="button"
                         class="absolute bottom-2 right-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-md group-hover:opacity-100 transition"
                       >
                         Set Main

@@ -234,6 +234,18 @@
                   </select>
               </div>
               <div>
+                <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Fuel Type
+                </label>
+                <input
+                    type="text"
+                    v-model="editData.fuel_type"
+                    disabled
+                    class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
+                    placeholder="Le type de carburant sera défini automatiquement"
+                  >
+              </div>
+              <div>
                 <label for="vehicle_year" class="block text-sm font-medium text-gray-700 mb-2">
                   Year
                 </label>
@@ -247,19 +259,30 @@
                   placeholder="Ex: 2020"
                 >
               </div>
-               <div>
-                <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Fuel Type
+              <div>
+                <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                  Fuel Tank Capacity (L)
                 </label>
                 <input
-                    type="text"
-                    v-model="editData.fuel_type"
-                    disabled
-                    class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
-                    placeholder="Le type de carburant sera défini automatiquement"
-                  >
+                  id="fuel_tank_capacity"
+                  v-model="editData.fuel_tank_capacity"
+                  type="number"
+                  min="0"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: 400"
+                >
               </div>
-
+              <div>
+                <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
+                  Production Date
+                </label>
+                <input
+                  id="production_date"
+                  v-model="editData.production_date"
+                  type="date"
+                  class="text-sm sm:text-base input-style"
+                >
+              </div>
               <div>
                 <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Transmission Type
@@ -280,18 +303,6 @@
                 </select>
               </div>
               <div>
-                <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
-                  Production Date
-                </label>
-                <input
-                  id="production_date"
-                  v-model="editData.production_date"
-                  type="date"
-                  class="text-sm sm:text-base input-style"
-                >
-              </div>
-
-              <div>
                 <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
                   Country of Origin
                 </label>
@@ -303,10 +314,9 @@
                   placeholder="Ex: Chine, Allemagne, Suède"
                 >
               </div>
-
               <div>
                 <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                  Wheelbase (mm)
+                  Wheelbases(mm)
                 </label>
                 <input
                   id="wheelbase"
@@ -315,47 +325,6 @@
                   min="0"
                   class="text-sm sm:text-base input-style"
                   placeholder="Ex: 3800"
-                >
-              </div>
-
-              <div>
-                <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
-                  GVW - Gross Vehicle Weight (kg)
-                </label>
-                <input
-                  id="gvw"
-                  v-model="editData.gvw"
-                  type="number"
-                  min="0"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 25000"
-                >
-              </div>
-
-              <div>
-                <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                  Payload Capacity (kg)
-                </label>
-                <input
-                  id="payload_capacity"
-                  v-model="editData.payload_capacity"
-                  type="number"
-                  min="0"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 15000"
-                >
-              </div>
-
-              <div>
-                <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Cabin Type
-                </label>
-                <input
-                  id="cabin_type"
-                  v-model="editData.cabin_type"
-                  type="text"
-                  class="text-sm sm:text-base input-style"
-                  placeholder="Ex: Cabine courte, Cabine longue"
                 >
               </div>
               <div>
@@ -371,22 +340,83 @@
                 >
               </div>
               <div>
-                <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                  Fuel Tank Capacity (L)
+                  <label for="speed" class="block text-sm font-medium text-gray-700 mb-2">
+                    Economic speed / Maximum speed (km/h)
+                  </label>
+                  <input
+                    id="speed"
+                    v-model="editData.speed"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 58 ~ 72/90"
+                  >
+                </div>
+                <div>
+                  <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
+                    Payload Capacity (kg)
+                  </label>
+                  <input
+                    id="payload_capacity"
+                    v-model="editData.payload_capacity"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 15000"
+                  >
+                </div>
+                <div>
+                <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Cabin Type
                 </label>
                 <input
-                  id="fuel_tank_capacity"
-                  v-model="editData.fuel_tank_capacity"
+                  id="cabin_type"
+                  v-model="editData.cabin_type"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: Cabine courte, Cabine longue"
+                >
+              </div>
+              <div>
+                <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
+                  GVW - Gross Vehicle Weight (kg)
+                </label>
+                <input
+                  id="gvw"
+                  v-model="editData.gvw"
                   type="number"
                   min="0"
                   class="text-sm sm:text-base input-style"
-                  placeholder="Ex: 400"
+                  placeholder="Ex: 25000"
                 >
               </div>
-
+              <div>
+                  <label for="chassis_dimensions" class="block text-sm font-medium text-gray-700 mb-2">
+                    Chassis Dimensions (mm) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="chassis_dimensions"
+                    v-model="editData.chassis_dimensions"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 850x300 (8+5)"
+                  >
+                </div>
+                <div>
+                  <label for="frame_rear_suspension" class="block text-sm font-medium text-gray-700 mb-2">
+                    Frame rear suspension (mm) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="frame_rear_suspension"
+                    v-model="editData.frame_rear_suspension"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 725"
+                  >
+                </div>
               <div class="sm:col-span-2">
                 <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Dimensions (L x l x H) in mm
+                  Overall Dimensions LxlxH (mm)
                 </label>
                 <div class="grid grid-cols-3 gap-3">
                   <input
@@ -412,44 +442,16 @@
                   >
                 </div>
               </div>
-              <div class="sm:col-span-2">
-                <div class="flex items-center mb-3">
-                 
-                  <label for="detailed-description-toggle" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                    <EditIcon class="w-4 h-4 primary-color mr-1" />
-                    Other Specifications (WYSIWYG)
-                  </label>
-                </div>
-                
-                <div >
-                  <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                      
-                    <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                      <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
-                      <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic " title="Italique" style="background-color: lightgray; color: black;">I</button>
-                      <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline " title="Souligné" style="background-color: lightgray; color: black;">U</button>
-                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                      <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
-                      <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm " title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
-                      <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                      <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
-                        <option value="">Titre</option>
-                        <option value="h1">Titre 1</option>
-                        <option value="h2">Titre 2</option>
-                        <option value="h3">Titre 3</option>
-                      </select>
-                    </div>
-                    <div 
-                      ref="wysiwygEditor"
-                      contenteditable="true"
-                      @input="updateDetailedDescription"
-                      class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
-                      style="white-space: pre-wrap;"
-                      placeholder="Décrivez votre produit en détail..."
-                    ></div>
-                  </div>
-                </div>
-              </div>
+            </div>
+            <div class="w-full h-30 mb-10 mt-5">
+                <label for="cab" class="block text-sm font-medium text-gray-700 mb-2">
+                    Cab <span class="error-color">*</span>
+                </label>
+                <textarea id="cab"
+                  v-model="editData.cab"
+                  class="text-sm sm:text-base input-style h-full w-full "
+                  placeholder="Ex: F3000 extended flat-top cab, without roof deflector, hydraulic main seat,....">  
+                </textarea>
             </div>
           </div>
 
@@ -465,22 +467,6 @@
             </div>
 
             <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
-                  
-              <div>
-                <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Gearbox
-                </label>
-                <select
-                  id="transmission_type"
-                  v-model="editData.transmission_type"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option value="">All transmissions</option>
-                  <option value="automatic">Automatic</option>
-                  <option value="manual">Manual</option>
-                </select>
-              </div>
-
               <div>
                 <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
                    Engine brand
@@ -497,9 +483,45 @@
                   <option value="man">MAN</option>
                 </select>
               </div>
-              <div>
+              <div >
+                  <label for="gearbox_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Gearbox Brand
+                  </label>
+                  <input
+                    id="gearbox_brand"
+                    v-model="editData.gearbox_brand"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: FAST"
+                  >
+                </div>
+                <div >
+                  <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine Model
+                  </label>
+                  <input
+                    id="vehicle_model"
+                    v-model="editData.engine_number"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: WP12.430E201"
+                  >
+                </div>
+                <div >
+                     <label for="gearbox_model" class="block text-sm font-medium text-gray-700 mb-2">
+                        Gearbox Model
+                      </label>
+                      <input
+                        id="gearbox_model"
+                        v-model="editData.gearbox_model"
+                        type="text"
+                        class="text-sm sm:text-base input-style"
+                        placeholder="Ex: 12JSD200T-B"
+                      >
+                </div>
+                <div>
                   <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Power (ch/kW)
+                    Horse Power (HP)
                   </label>
                   <input
                     id="power"
@@ -510,115 +532,55 @@
                     placeholder="Ex: 400"
                   >
                 </div>
+
+
+              <div>
+                <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
+                  Gearbox Type
+                </label>
+                <select
+                  id="transmission_type"
+                  v-model="editData.transmission_type"
+                  class="text-sm sm:text-base input-style"
+                >
+                  <option value="">All transmissions</option>
+                  <option value="automatic">Automatic</option>
+                  <option value="manual">Manual</option>
+                </select>
+              </div>
                 <div>
                   <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Engine Emissions (g/km)
+                    Emission Standards
                   </label>
                   <input
                     id="fuel_tank_capacity"
                     v-model="editData.engine_emissions"
-                    type="number"
-                    min="0"
+                    type="text"
                     class="text-sm sm:text-base input-style"
                     placeholder="Ex: EURO II"
                   >
                 </div>
-
-              <div class="sm:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
+              <div >
+                <label for="vin" class="block text-sm font-medium text-gray-700 mb-2">
                   Vin numbers / Num Chassis
                 </label>
-                <div class="space-y-2">
-                  <div v-if="editData.vin_numbers && editData.vin_numbers.length" class="space-y-2">
-                    <div
-                      v-for="(vin,index) in editData.vin_numbers"
-                      :key="index"
-                      class="flex gap-2 items-center"
-                    >
-                    <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
-                      <input
-                        v-model="editData.vin_numbers[index]"
-                        type="text"
-                        class="flex-1 text-sm sm:text-base input-style"
-                        placeholder="Ex: ENG123456789"
-                      />
-                      <button
-                        type="button"
-                        @click="removeVin(index)"
-                        class="px-3 py-2 btn-deconnexion"
-                        title="Supprimer ce VIN"
-                      >
-                        <XIcon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div v-else class="text-sm text-gray-500">
-                    No VIN registered.
-                  </div>
-
-                  <button
-                    type="button"
-                    @click="addVin"
-                    class="w-full submit-btn mt-2"
-                  >
-                    + Add a number
-                  </button>
-                </div>
-              </div>
-              <div class="sm:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">
-                  Vehicle model ( Trim )
-                </label>
-                <div class="space-y-2">
-                  <div v-if="editData.trim_numbers && editData.trim_numbers.length" class="space-y-2">
-                    <div
-                      v-for="(vin,index) in editData.trim_numbers"
-                      :key="index"
-                      class="flex gap-2 items-center"
-                    >
-                    <div class="font-semibold text-gray-700 items-center justify-center">{{index + 1}}</div>
-                      <input
-                        v-model="editData.trim_numbers[index]"
-                        type="text"
-                        class="flex-1 text-sm sm:text-base input-style"
-                        placeholder="Ex: ENG123456789"
-                      />
-                      <button
-                        type="button"
-                        @click="removeVehicleTrim(index)"
-                        class="px-3 py-2 btn-deconnexion"
-                        title="Supprimer ce VIN"
-                      >
-                        <XIcon class="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div v-else class="text-sm text-gray-500">
-                    No Trim Number Registered.
-                  </div>
-
-                  <button
-                    type="button"
-                    @click="addVehicleTrim"
-                    class="w-full submit-btn mt-2"
-                  >
-                    + Add a number
-                  </button>
-                </div>
-              </div>
-              <div >
-                <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
-                  engine number
-                </label>
                 <input
-                  id="vehicle_mileage"
-                  v-model="editData.engine_number"
+                  v-model="editData.vin_numbers[0]"
                   type="text"
                   class="text-sm sm:text-base input-style"
-                  placeholder="Ex: FHEGEJGE776JH8"
-                >
+                  placeholder="Ex: ENG123456789"
+                />
+              </div>
+              <div >
+                <label for="vin" class="block text-sm font-medium text-gray-700 mb-2">
+                  Vehicle Model (Trim) 
+                </label>
+                <input
+                  v-model="editData.trim_numbers[0]"
+                  type="text"
+                  class="text-sm sm:text-base input-style"
+                  placeholder="Ex: ENG123456789"
+                />
               </div>
               <div >
                 <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
@@ -636,6 +598,18 @@
                 <p class="text-xs text-gray-500 mt-1">Between 0 and 200,000 km</p>
               </div>
               <div>
+                  <label for="axle_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Axle Brand
+                  </label>
+                  <input
+                    id="axle_brand"
+                    v-model="editData.axle_brand"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: HANDE"
+                  >
+                </div>
+              <div>
                 <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
                   Suspension type
                 </label>
@@ -647,7 +621,68 @@
                   placeholder="Ex: Pneumatics, Mechanics"
                 >
               </div>
-
+              <div>
+                  <label for="axle_front" class="block text-sm font-medium text-gray-700 mb-2">
+                    Front axle
+                  </label>
+                  <input
+                    id="axle_front"
+                    v-model="editData.axle_front"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 7.5 T front axle HD technology"
+                  >
+                </div>
+                <div>
+                  <label for="suspension_front" class="block text-sm font-medium text-gray-700 mb-2">
+                    Front Suspension
+                  </label>
+                  <input
+                    id="suspension_front"
+                    v-model="editData.suspension_front"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Front and rear multi-plate springs"
+                  >
+                </div>
+                 <div>
+                  <label for="axle_rear" class="block text-sm font-medium text-gray-700 mb-2">
+                    Rear axle
+                  </label>
+                  <input
+                    id="axle_rear"
+                    v-model="editData.axle_rear"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 16T HD Double-stage Bridge"
+                  >
+                </div>
+                <div>
+                  <label for="suspension_rear" class="block text-sm font-medium text-gray-700 mb-2">
+                    Rear Suspension
+                  </label>
+                  <input
+                    id="suspension_rear"
+                    v-model="editData.suspension_rear"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Front and rear multi-plate springs"
+                  >
+                </div>
+                <div>
+                  <label for="axle_speed_ratio" class="block text-sm font-medium text-gray-700 mb-2">
+                    Speed ratio
+                  </label>
+                  <input
+                    id="axle_speed_ratio"
+                    v-model="editData.axle_speed_ratio"
+                    type="number"
+                    min="0"
+                    step="0.001"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 4.266"
+                  >
+                </div>
               <div>
                 <label for="brake_system" class="block text-sm font-medium text-gray-700 mb-2">
                   Braking system
@@ -663,7 +698,7 @@
 
               <div>
                 <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
-                  Tire sizes
+                  Tires
                 </label>
                 <input
                   id="tyre_size"
@@ -673,12 +708,36 @@
                   placeholder="Ex: 295/80R22.5"
                 >
               </div>
+              <div>
+                  <label for="air_filter" class="block text-sm font-medium text-gray-700 mb-2">
+                    Air filter
+                  </label>
+                  <input
+                    id="air_filter"
+                    v-model="editData.air_filter"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Ordinary side-mounted air filter"
+                  >
+                </div>
+                <div>
+                  <label for="electrics" class="block text-sm font-medium text-gray-700 mb-2">
+                    Electrics
+                  </label>
+                  <input
+                    id="electrics"
+                    v-model="editData.electrics"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 165Ah maintenance free battery"
+                  >
+                </div>
               <div class="sm:col-span-2">
                 <div class="flex items-center mb-3">
                  
                   <label for="wysiwygEditor2" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
                     <EditIcon class="w-4 h-4 primary-color mr-1" />
-                    Other descriptions (WYSIWYG)
+                    Other Terms associated with the product (WYSIWYG)
                   </label>
                 </div>
                 
@@ -740,7 +799,7 @@
                 >
               </div>
    
-              <div>
+              <!-- <div>
                 <label for="stock" class="block text-sm font-medium text-gray-700 mb-2">
                   Stock <span class="error-color">*</span>
                 </label>
@@ -754,7 +813,7 @@
                   class="text-sm sm:text-base input-style"
                   placeholder="50"
                 >
-              </div>
+              </div> -->
               <div>
                   <label for="available" class="block text-sm font-medium text-gray-700 mb-2">
                     Product availability
@@ -769,65 +828,6 @@
                     </option>
                   </select>
                 </div>
-  
-              <div>
-                <label for="unit_type" class="block text-sm font-medium text-gray-700 mb-2">
-                  Unit
-                </label>
-                <select
-                  id="unit_type"
-                  v-model="editData.unit_type"
-                  class="text-sm sm:text-base input-style"
-                >
-                  <option v-for="unit in availableUnitTypes" :key="unit.value" :value="unit.value">
-                    {{ unit.label }}
-                  </option>
-                </select>
-              </div>
-            </div>
-  
-            <div class="mt-6">
-              <div class="flex items-center mb-4">
-                <input 
-                  v-model="hasWholesalePrice"
-                  id="wholesale-price"
-                  type="checkbox"
-                  class="checkbox-style"
-                >
-                <label for="wholesale-price" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
-                  <ZapIcon class="w-4 h-4 primary-color mr-1" />
-                  Activate wholesale pricing
-                </label>
-              </div>
-              
-              <div v-if="hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                <div>
-                  <label for="wholesale_price" class="block text-sm font-medium text-gray-700 mb-2">
-                    Wholesale price (FOB)
-                  </label>
-                  <input
-                    id="wholesale_price"
-                    v-model.number="editData.wholesale_price"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="12000"
-                  >
-                </div>
-                <div>
-                  <label for="wholesale_min_qty" class="block text-sm font-medium text-gray-700 mb-2">
-                    Minimum quantity
-                  </label>
-                  <input
-                    id="wholesale_min_qty"
-                    v-model.number="editData.wholesale_min_qty"
-                    type="number"
-                    min="1"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="10"
-                  >
-                </div>
-              </div>
             </div>
           </div>
   
@@ -970,7 +970,26 @@
                   :alt="`Image ${index + 1}`"
                   class="w-full h-24 sm:h-32 object-cover rounded-lg border border-gray-200"
                 >
-                
+                <!-- Supprimer -->
+                      <button
+                      style="background-color: red;"
+                        type="button"
+                        @click="removeImage(index)"
+                        class="absolute top-0 right-0 text-white text-xs rounded-md p-1"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+
+                      <!-- Set Main -->
+                      <button
+                      style="background-color: orange; font-size: 10px"
+                        v-if="index !== 0"
+                        type="button"
+                        @click="setMainImages(index)"
+                        class="absolute flex bottom-2 right-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-md group-hover:opacity-100 transition"
+                      >
+                        Set Main
+                      </button>
                  
                 <div 
                   v-if="index === 0"
@@ -986,19 +1005,13 @@
                   <CheckIcon class="h-4 w-4" />
                 </div>
                 
-              <XIcon class="absolute -top-1 -right-1 w-4 h-4 error-color opacity-0 group-hover:opacity-100 transition-opacity"  @click="removeImage(index)" />
-                
-                <div class="absolute bottom-2 right-2 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
-                  
-                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-between shadow cursor-pointer" title="Déplacer vers la gauche">
-                  <ChevronLeftIcon class="w-4 h-4 text-black cursor-pointer" @click="moveImageUp(index)" />
-                </div>
-                  
-                  
-                <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow cursor-pointer" title="Déplacer vers la droite">
-
-                  <ChevronRightIcon class="w-4 h-4 text-black cursor-pointer"  @click="moveImageDown(index)" />
-                </div>
+                <div class="absolute bottom-2 left-15 flex space-x-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                  <div class="w-6 h-6 bg-white rounded-full flex items-center justify-between shadow cursor-pointer" title="Déplacer vers la gauche">
+                    <ChevronLeftIcon class="w-4 h-4 text-black cursor-pointer" @click="moveImageUp(index)" />
+                  </div>
+                  <div class="w-6 h-6 bg-white rounded-full flex items-center justify-center shadow cursor-pointer" title="Déplacer vers la droite">
+                    <ChevronRightIcon class="w-4 h-4 text-black cursor-pointer"  @click="moveImageDown(index)" />
+                  </div>
                 </div>
               </div>
             </div>
@@ -1193,8 +1206,6 @@ import {
   Check as CheckIcon,
   CheckCircle as CheckCircleIcon,
   AlertCircle as AlertCircleIcon,
-  Zap as ZapIcon,
-  Ruler as RulerIcon,
   ChevronLeft as ChevronLeftIcon,
   ChevronRight as ChevronRightIcon,
   Video as VideoIcon
@@ -1286,7 +1297,21 @@ const editData = ref({
   dimension_height: '',
   curb_weight: null,
   fuel_tank_capacity: null,
-  other_description: ''
+  other_description: '',
+  speed:'',
+  gearbox_brand:'',
+  gearbox_model:'',
+  chassis_dimensions:'',
+  frame_rear_suspension:'',
+  suspension_rear:'',
+  suspension_front:'',
+  axle_brand:'',
+  axle_front:'',
+  axle_rear:'',
+  axle_speed_ratio:'',
+  air_filter:'',
+  electrics:'',
+  cab:''
 })
 
 const hasWholesalePrice = ref(false)
@@ -1380,7 +1405,7 @@ const getColorName = (colorValue) => {
 
 const availability = ref([
   { value: 'available', label: 'Available' },
-  { value: 'unavailable', label: 'uUnavailable' },
+  { value: 'unavailable', label: 'Unavailable' },
   { value: 'on_order', label: 'On order' },
 ])
 // Méthodes
@@ -1497,6 +1522,18 @@ const updateFuelType = () => {
   editData.value.fuel_type = availableFuelType.value
 }
 
+const setMainImages = (index) => {
+  if (index === 0) return; // déjà l'image principale
+
+  const selected = editData.value.all_images[index]
+
+  // Retirer l'image de sa position
+  editData.value.all_images.splice(index, 1)
+  console.log("0",editData.value.all_images)
+  // La mettre en première position
+  editData.value.all_images.unshift(selected)
+}
+
 const availableModels = computed(() => {
  const  brand = brands.value.find(cat => cat.name === editData.value.vehicle_make)
   return brand ? brand.models || [] : []
@@ -1541,23 +1578,6 @@ function parseDimensions(dimensions) {
     width:  parts[1] ? toNum(parts[1]) : null,
     height: parts[2] ? toNum(parts[2]) : null
   }
-}
-
-// VIN
-const addVin = () => {
-  editData.value.vin_numbers.push('')
-}
-
-const removeVin = (index) => {
-  editData.value.vin_numbers.splice(index, 1)
-}
-// vehicle_trim
-const addVehicleTrim = () => {
-  editData.value.trim_numbers.push('')
-}
-
-const removeVehicleTrim = (index) => {
-  editData.value.trim_numbers.splice(index, 1)
 }
 
 const closeModal = () => {
@@ -1671,7 +1691,6 @@ const handleSubmit = async () => {
       formData.video_url = editData.value.video.url
     }
 
-    
     emit('save', formData)
     
   } catch (err) {
@@ -1763,12 +1782,13 @@ const removeImage = (index) => {
 }
 
 const moveImageUp = (index) => {
+  const images = editData.value.all_images
   if (index > 0) {
-    const images = editData.value.all_images
     const temp = images[index]
     images[index] = images[index - 1]
     images[index - 1] = temp
   }
+  editData.value.all_images = images
 }
 
 const moveImageDown = (index) => {
@@ -1778,6 +1798,7 @@ const moveImageDown = (index) => {
     images[index] = images[index + 1]
     images[index + 1] = temp
   }
+  editData.value.all_images = images
 }
 
 const uploadImageToCloudinary = async (image, index) => {
@@ -1927,6 +1948,20 @@ watch(() => props.product, (newProduct) => {
       dimensions: newProduct.dimensions || null,
       curb_weight: newProduct.curb_weight || null,
       fuel_tank_capacity: newProduct.fuel_tank_capacity || null,
+      speed: newProduct.speed,
+      gearbox_brand: newProduct.gearbox_brand,
+      gearbox_model: newProduct.gearbox_model,
+      chassis_dimensions: newProduct.chassis_dimensions,
+      frame_rear_suspension: newProduct.frame_rear_suspension,
+      suspension_rear: newProduct.suspension_rear,
+      suspension_front: newProduct.suspension_front,
+      axle_brand: newProduct.axle_brand,
+      axle_front: newProduct.axle_front,
+      axle_rear: newProduct.axle_rear,
+      axle_speed_ratio: newProduct.axle_speed_ratio,
+      air_filter: newProduct.air_filter,
+      electrics: newProduct.electrics,
+      cab: newProduct.cab
     }
 
     const { length, width, height } = parseDimensions(newProduct.dimensions)
