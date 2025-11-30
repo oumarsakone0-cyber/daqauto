@@ -24,6 +24,8 @@ const capitalizeFirst=(str)=> {
 }
 
 const formatNumber = (number)=> {
-  return number.toLocaleString('en-US');
+  if(number){
+    return number.toLocaleString('en-US');
+  }
 }
 export { formatDate, formatCurrency, capitalizeFirst,formatNumber }

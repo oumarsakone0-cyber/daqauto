@@ -26,7 +26,8 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Mileage</div>
-                      <div class="spec-value">{{formatNumber(product.vehicle_mileage)  || 'N/A' }} km </div>
+                      <div v-if="product.vehicle_mileage" class="spec-value">{{formatNumber(product.vehicle_mileage)}} km </div>
+                      <div v-else class="spec-value"> N/A</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">VIN / Chassis NO.</div>
@@ -126,7 +127,8 @@
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Horse Power (hp) </div>
-                      <div class="spec-value">{{ product.power || 'N/A' }}HP</div>
+                      <div v-if="product.power" class="spec-value">{{ product.power}}HP</div>
+                      <div v-else class="spec-value">N/A</div>
                     </div>
                    
                     <div class="spec-row">
@@ -154,15 +156,18 @@
                     <h3 class="spec-group-title">Vehicle Weight</h3>
                     <div class="spec-row">
                       <div class="spec-name">Curb Weight (kg)</div>
-                      <div class="spec-value">{{formatNumber(product.curb_weight) || 'N/A' }} kg</div>
+                      <div v-if="product.curb_weight" class="spec-value">{{formatNumber(product.curb_weight) }} kg</div>
+                      <div v-else class="spec-value">N/A</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Payload Capacity (kg)</div>
-                      <div class="spec-value">{{ formatNumber(product.payload_capacity) || 'N/A' }}kg</div>
+                      <div v-if="product.payload_capacity" class="spec-value">{{ formatNumber(product.payload_capacity) }}kg</div>
+                      <div v-else class="spec-value">N/A</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Gross Vehicle Weight (GVW) (kg)</div>
-                      <div class="spec-value">≤{{formatNumber( product.gvw) || 'N/A' }}kg</div>
+                      <div v-if="product.gvw" class="spec-value">≤{{formatNumber( product.gvw) }}kg</div>
+                      <div v-else class="spec-value">N/A</div>
                     </div>
                   </div>
 
@@ -220,7 +225,8 @@
                     <h3 class="spec-group-title">Fuel tank</h3>
                     <div class="spec-row">
                       <div class="spec-name">Fuel Tank Capacity (L)</div>
-                      <div class="spec-value">{{ product.fuel_tank_capacity || 'N/A' }}L</div>
+                      <div v-if="product.fuel_tank_capacity" class="spec-value">{{ product.fuel_tank_capacity }}L</div>
+                      <div v-else class="spec-value">N/A</div>
                     </div>
                     <div class="spec-row">
                       <div class="spec-name">Fuel Type</div>
@@ -260,8 +266,8 @@
                    <div class="spec-group ">
                     <h3 class="spec-group-title">Cab</h3>
                     <div class="spec-row">
-                      
-                      <div class="text-black font-medium text-sm p-2">{{ product.cab || 'N/A' }}</div>
+                      <div v-if="product.cab" class="text-black font-medium text-sm p-2">{{ product.cab }}</div>
+                      <div v-else class="spec-value">N/A</div>
                     </div>
                   </div>
                 </div>

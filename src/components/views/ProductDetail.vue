@@ -3,7 +3,7 @@
     <!-- Loading state -->
     <div v-if="loading" class="loading-container">
       <div class="loading-spinner"></div>
-      <p>Loading produit details...</p>
+      <p class="text-black">Loading produit details...</p>
     </div>
   
     <!-- Error state -->
@@ -277,6 +277,9 @@
         :count="cartCount"
         @click="viewCart"
       />
+    </div>
+    <div v-else>
+<h1 class="text-black">no product</h1>
     </div>
   </div>
   </template>

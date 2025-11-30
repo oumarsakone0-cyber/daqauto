@@ -92,7 +92,7 @@
              <div class="grid grid-cols-2">
                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
                  <TruckIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                 Vehicle Information
+                 Vehicle Specifications
                </h4>
                <apn class="text-gray-400">vehicle availability : 
                 <div class="inline-flex">
@@ -104,52 +104,52 @@
               </apn>
              </div>
               <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div v-if="product.vehicle_condition" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">État</div>
+                <div  class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Vehicle brand</div>
+                  <div class="font-semibold text-gray-900">{{ product.vehicle_make || 'N/A' }} </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Vehicle condition</div>
                   <div class="font-semibold text-gray-900 capitalize">
                     <span v-if="product.vehicle_condition === 'new'" class="text-green-600">New</span>
                     <span v-else-if="product.vehicle_condition === 'used'" class="text-red-600">Used</span>
                     <span v-else-if="product.vehicle_condition === 'refurbished'" class="text-orange-600">Refurbished</span>
-                    <span v-else>{{ product.vehicle_condition }}</span>
+                    <span v-else>{{ product.vehicle_condition || 'N/A'}}</span>
                   </div>
                 </div>
-                <div v-if="product.vehicle_make" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Brand</div>
-                  <div class="font-semibold text-gray-900">{{ product.vehicle_make }}</div>
-                </div>
-                <div v-if="product.vehicle_model" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Model</div>
-                  <div class="font-semibold text-gray-900">{{ product.vehicle_model }}</div>
-                </div>
-                <div v-if="product.vehicle_year" class="bg-gray-50 rounded-xl p-4">
+                <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Year</div>
-                  <div class="font-semibold text-gray-900">{{ product.vehicle_year }}</div>
+                  <div class="font-semibold text-gray-900">{{ product.vehicle_year ||"N/A" }}</div>
                 </div>
-                <div v-if="product.vehicle_mileage !== null && product.vehicle_mileage !== undefined" class="bg-gray-50 rounded-xl p-4">
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Vehicle model</div>
+                  <div class="font-semibold text-gray-900">{{ product.vehicle_model ||"N/A"}}</div>
+                </div>
+                <div  class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Mileage</div>
                   <div class="font-semibold text-gray-900">
-                    {{ formatMileage(product.vehicle_mileage) }}
+                    {{ formatMileage(product.vehicle_mileage)  ||"N/A" }}
                   </div>
                 </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Categorie</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.category_name }}
-                  </div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
+                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Production date</div>
                   <div class="font-semibold text-gray-900">
                     {{product.production_date || "N/A"}}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Categorie</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.category_name  ||"N/A"}}
+                  </div>
+                </div>
+               
+                <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Country of origin</div>
                   <div class="font-semibold text-gray-900">
                     {{product.country_of_origin || "N/A"}}
                   </div>
                 </div>
-                
                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Available colors</div>
                   <div class=" flex font-semibold text-gray-900 gaps-2">
@@ -164,6 +164,18 @@
                         </div>
                     </div>
                     <span v-else class="text-gray-500">N/A</span>
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Fuel type</div>
+                  <div class="font-semibold text-gray-900">
+                    {{capitalizeFirst(product.fuel_type) || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Fuel tank capacity (L) </div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.fuel_tank_capacity || "N/A"}}L
                   </div>
                 </div>
                 
@@ -773,6 +785,7 @@
 
 <script setup>
 import { ref, computed, watch } from 'vue'
+import {capitalizeFirst ,formatNumber} from "../../composables/utils"
 import { 
   Package as PackageIcon,
   X as XIcon,
