@@ -64,7 +64,7 @@
                 {{ getStatusLabel(order.statut) }}
               </span>
               <button 
-              v-if="order.statut==='confirmee'"
+              v-if="order.statut==='send'"
               @click="downloadContract(order.numero_commande)"
               class="btn-degrade-orange mt-2 text-xs"
             >
@@ -499,7 +499,7 @@
               Cancel
             </button>
             <button
-              v-if="order.statut === 'confirmee' && !order.preuve_paiement"
+              v-if="order.statut === 'send' && !order.preuve_paiement"
               class="btn-degrade-orange"
               @click="openPaymentProofModal(order)"
             >
@@ -839,6 +839,7 @@ const orderStatuses = [
   { value: 'all', label: 'All' },
   { value: 'en_attente', label: 'Pending' },
   { value: 'confirmee', label: 'Confirmed' },
+  { value: 'send', label: 'Contrat en attente' },
   { value: 'en_cours', label: 'In Progress' },
   { value: 'livree', label: 'Delivered' },
   { value: 'annule', label: 'Cancelled' },
@@ -864,6 +865,7 @@ const getStatusClass = (status) => {
   const statusMap = {
     'en_attente': 'pending',
     'confirmee': 'confirmed',
+    'send': 'Contrat_en_attente',
     'en_cours': 'processing',
     'livree': 'delivered',
     'annule': 'cancelled'
@@ -875,6 +877,7 @@ const getStatusLabel = (status) => {
   const labelMap = {
     'en_attente': 'Pending',
     'confirmee': 'Confirmed',
+    'send': 'Contrat en attente',
     'en_cours': 'In the process of delivery',
     'livree': 'Delivered',
     'annule': 'Cancelled',
