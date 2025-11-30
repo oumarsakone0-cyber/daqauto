@@ -1,7 +1,5 @@
 <template>
   <div class="min-h-screen bg-gray-50 relative overflow-hidden">
-    <!-- ... existing code ... -->
-    
     <!-- Background animations -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none z-0">
       <div class="absolute inset-0 bg-gradient-to-br from-gray-50 via-white to-gray-100"></div>
@@ -9,26 +7,15 @@
       <div class="absolute top-1/4 -right-20 w-80 h-80 bg-gradient-to-br from-blue-200/50 to-indigo-200/35 rounded-full blur-3xl animate-float-reverse"></div>
       <div class="absolute -bottom-20 left-1/3 w-72 h-72 bg-gradient-to-br from-purple-200/45 to-pink-200/35 rounded-full blur-3xl animate-float-diagonal"></div>
       <div class="absolute top-1/2 right-1/4 w-64 h-64 bg-gradient-to-br from-emerald-200/40 to-teal-200/30 rounded-full blur-3xl animate-float-slow-reverse"></div>
-      <div class="absolute top-1/3 left-1/4 w-3 h-3 bg-orange-400/70 rounded-full animate-pulse-slow shadow-lg"></div>
-      <div class="absolute top-2/3 right-1/4 w-2.5 h-2.5 bg-blue-400/60 rounded-full animate-pulse-delayed shadow-lg"></div>
-      <div class="absolute top-1/2 left-2/3 w-2 h-2 bg-purple-400/50 rounded-full animate-pulse-slow shadow-lg"></div>
-      <div class="absolute top-1/4 right-1/3 w-2 h-2 bg-emerald-400/50 rounded-full animate-pulse-delayed-2 shadow-lg"></div>
-      <div class="absolute top-0 left-1/4 w-px h-40 bg-gradient-to-b from-transparent via-orange-300/40 to-transparent animate-slide-down"></div>
-      <div class="absolute top-1/3 right-1/3 w-32 h-px bg-gradient-to-r from-transparent via-blue-300/35 to-transparent animate-slide-right"></div>
-      <div class="absolute bottom-1/4 left-1/2 w-px h-32 bg-gradient-to-b from-transparent via-purple-300/30 to-transparent animate-slide-up"></div>
-      <div class="absolute top-3/4 left-1/6 w-16 h-16 bg-gradient-to-br from-orange-300/30 to-yellow-300/20 rotate-45 animate-rotate-slow"></div>
-      <div class="absolute top-1/6 right-1/6 w-12 h-12 bg-gradient-to-br from-blue-300/25 to-cyan-300/20 rounded-lg animate-float-small"></div>
     </div>
 
     <!-- Container responsive -->
     <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
-      <Navbar/>
-      
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
-        <router-link to="/" class="hover:text-gray-700">
+        <a href="/" class="hover:text-gray-700">
           <HomeIcon class="w-4 h-4 sm:w-5 sm:h-5" />
-        </router-link>
+        </a>
         <span class="mx-2">/</span>
         <span class="font-medium text-gray-700 truncate">Order Management</span>
       </div>
@@ -39,34 +26,32 @@
           <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Order Management</h1>
           <p class="text-sm sm:text-base text-gray-600">Real-time order tracking and processing</p>
         </div>
-        
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
           <div class="relative" ref="exportDropdownRef">
             <button 
               @click="showExportDropdown = !showExportDropdown"
-              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium btn-degrade-orange"
+              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 transition-all"
             >
               <DownloadIcon class="w-4 h-4" />
               <span>Export</span>
               <ChevronDownIcon class="w-4 h-4" />
             </button>
-            <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
+            <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 z-50">
               <div role="menu">
-                <button @click="exportToPDF" class="flex items-center text-sm mb-2 text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
-                  <FileTextIcon class="w-4 h-4  error-color" />
+                <button @click="exportToPDF" class="flex items-center gap-2 text-sm mb-2 text-gray-700 hover:bg-gray-100 w-full px-3 py-2 rounded-lg" role="menuitem">
+                  <FileTextIcon class="w-4 h-4 text-red-500" />
                   Export to PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center text-sm text-gray-700 hover:bg-gray-100 btn-gray" role="menuitem">
-                  <FileTextIcon class="w-4 h-4 green-color" />
+                <button @click="exportToExcel" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-100 w-full px-3 py-2 rounded-lg" role="menuitem">
+                  <FileTextIcon class="w-4 h-4 text-green-500" />
                   Export to Excel
                 </button>
               </div>
             </div>
           </div>
-
           <button 
             @click="loadAllData"
-            class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium transition-all submit-btn"
+            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 transition-all"
           >
             <RefreshIcon class="w-4 h-4" />
             Refresh
@@ -77,125 +62,78 @@
       <!-- Loading State -->
       <div v-if="dataLoading" class="mb-6 sm:mb-8">
         <div class="bg-white rounded-lg p-6 sm:p-8 text-center shadow-lg">
-          <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 primary-color border-t-transparent"></div>
+          <div class="inline-block animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-4 border-orange-500 border-t-transparent"></div>
           <p class="mt-4 text-gray-600 font-medium text-sm sm:text-base">Loading orders...</p>
         </div>
       </div>
 
       <!-- Error State -->
-      <div v-if="hasError" class="mb-6 sm:mb-8">
-        <div class="bg-gradient-to-r from-red-50 to-red-100 border border-red-200 rounded-lg p-4 sm:p-6 shadow-lg">
-          <div class="flex flex-col sm:flex-row sm:items-center gap-4">
-            <div class="w-10 h-10 bg-red-100 rounded-full flex items-center justify-center flex-shrink-0">
-              <WarningIcon class="w-6 h-6 error-color" />
-            </div>
-            <div class="flex-1 min-w-0">
-              <p class="error-color font-medium text-sm sm:text-base">{{ error }}</p>
-            </div>
-            <button @click="loadAllData" class="w-full sm:w-auto px-4 py-2 error-background-color rounded-lg transition-colors font-medium text-sm">
-              Try Again
-            </button>
+      <div v-if="hasError && !dataLoading" class="mb-6 sm:mb-8">
+        <div class="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded-lg shadow-lg flex items-center gap-3">
+          <AlertCircle class="w-6 h-6 flex-shrink-0" />
+          <div>
+            <p class="font-semibold">Error loading data</p>
+            <p>{{ errorMessage }}</p>
           </div>
         </div>
       </div>
 
       <!-- Stats Cards -->
-      <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8" v-if="!dataLoading">
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-          <div class="px-4 sm:px-6 py-4 sm:py-6">
-            <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-orange-200 to-orange-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <ShoppingCartIcon class="w-5 h-5 text-black" />
+      <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4 mb-6 sm:mb-8" v-if="!dataLoading && !hasError">
+        <div 
+          v-for="stat in statsCards" 
+          :key="stat.key"
+          @click="handleFilterChange(stat.filterValue)"
+          :class="[
+            'bg-white overflow-hidden shadow-lg rounded-lg border cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02]',
+            activeFilter === stat.filterValue ? 'border-orange-400 ring-2 ring-orange-200' : 'border-gray-100'
+          ]"
+        >
+          <div class="px-3 sm:px-4 py-3 sm:py-4">
+            <div class="flex items-center mb-2">
+              <div :class="['w-8 h-8 sm:w-10 sm:h-10 rounded-lg flex items-center justify-center mr-2 sm:mr-3 flex-shrink-0', stat.bgColor]">
+                <component :is="stat.icon" class="w-4 h-4 sm:w-5 sm:h-5 text-gray-800" />
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Total Orders</p>
-                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.total_orders || 0 }}</p>
+                <p class="text-[10px] sm:text-xs text-gray-600 truncate">{{ stat.label }}</p>
+                <p class="text-lg sm:text-xl font-bold text-gray-900">{{ stat.value }}</p>
               </div>
             </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Growth: +{{ stats.orders_growth || 0 }}%</span>
-                <span class="primary-color flex-shrink-0">This month</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300" style="width: 75%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-          <div class="px-4 sm:px-6 py-4 sm:py-6">
-            <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-yellow-200 to-yellow-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <Clock class="w-5 h-5 text-black" />
-              </div>
-              <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Pending</p>
-                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.pending_orders || 0 }}</p>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Reduction: -{{ stats.pending_reduction || 0 }}%</span>
-                <span class="text-yellow-600 flex-shrink-0">vs yesterday</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-gradient-to-r from-yellow-500 to-yellow-600 h-2 rounded-full transition-all duration-300" style="width: 60%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-          <div class="px-4 sm:px-6 py-4 sm:py-6">
-            <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-green-200 to-green-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <CheckCircle2Icon class="w-5 h-5 text-black" />
-              </div>
-              <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Confirmed</p>
-                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ stats.confirmed_orders || 0 }}</p>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Growth: +{{ stats.confirmed_growth || 0 }}%</span>
-                <span class="green-color flex-shrink-0">Today</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-300" style="width: 85%"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="bg-white overflow-hidden shadow-lg rounded-lg border border-gray-100 hover:shadow-xl transition-all duration-300">
-          <div class="px-4 sm:px-6 py-4 sm:py-6">
-            <div class="flex items-center mb-3 sm:mb-4">
-              <div class="w-10 h-10 sm:w-12 sm:h-12 bg-gradient-to-br from-purple-200 to-purple-300 rounded-lg flex items-center justify-center mr-3 sm:mr-4 flex-shrink-0">
-                <BadgeEuroIcon class="w-5 h-5 text-black" />
-              </div>
-              <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Daily Income</p>
-                <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ formatCurrency(stats.daily_revenue || 0) }}</p>
-              </div>
-            </div>
-            <div class="space-y-2">
-              <div class="flex justify-between text-xs text-gray-500">
-                <span class="truncate">Growth: +{{ stats.revenue_growth || 0 }}%</span>
-                <span class="purple-color flex-shrink-0">vs yesterday</span>
-              </div>
-              <div class="w-full bg-gray-200 rounded-full h-2">
-                <div class="bg-gradient-to-r from-purple-500 to-purple-600 h-2 rounded-full transition-all duration-300" style="width: 70%"></div>
-              </div>
+            <div class="flex items-center gap-1">
+              <span :class="['text-[10px] sm:text-xs font-medium', stat.changeColor]">{{ stat.emoji }}</span>
+              <span class="text-[10px] sm:text-xs text-gray-500 truncate">{{ stat.description }}</span>
             </div>
           </div>
         </div>
       </div>
 
+      <!-- Order Lifecycle Progress -->
+      <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 border border-gray-100" v-if="!dataLoading && !hasError">
+        <h3 class="text-sm font-semibold text-gray-700 mb-4">Order Lifecycle Pipeline</h3>
+        <div class="flex flex-wrap items-center justify-between gap-2">
+          <div 
+            v-for="(stage, index) in lifecycleStages" 
+            :key="stage.key"
+            @click="handleFilterChange(stage.filterValue)"
+            :class="[
+              'flex-1 min-w-[100px] p-3 rounded-xl cursor-pointer transition-all border-2',
+              activeFilter === stage.filterValue 
+                ? 'border-orange-400 bg-orange-50' 
+                : 'border-transparent bg-gray-50 hover:bg-gray-100'
+            ]"
+          >
+            <div class="flex items-center gap-2 mb-2">
+              <span class="text-xl">{{ stage.emoji }}</span>
+              <span class="text-xs font-medium text-gray-700">{{ stage.label }}</span>
+            </div>
+            <div class="text-2xl font-bold text-gray-900">{{ stage.count }}</div>
+            <div class="text-[10px] text-gray-500">{{ stage.description }}</div>
+          </div>
+        </div>
+      </div>
+
       <!-- Main Content Card -->
-      <div class="bg-white shadow-lg rounded-lg overflow-hidden border border-gray-100" v-if="!dataLoading">
+      <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100" v-if="!dataLoading && !hasError">
         <!-- Filter Tabs -->
         <div class="px-4 sm:px-6 py-3 sm:py-4 border-b border-gray-200 bg-gray-50">
           <div class="flex flex-wrap gap-1 sm:gap-2">
@@ -204,14 +142,15 @@
               :key="tab.value"
               @click="handleFilterChange(tab.value)"
               :class="[
-                'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium',
+                'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium inline-flex items-center gap-1',
                 activeFilter === tab.value 
-                  ? 'btn-degrade-orange' 
-                  : 'btn-gray'
+                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md' 
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
               ]"
             >
-              <span class="hidden sm:inline">{{ tab.label }} ({{ filterCounts[tab.value] }})</span>
-              <span class="sm:hidden">{{ tab.label.split(' ')[0] }} ({{ filterCounts[tab.value] }})</span>
+              <span>{{ tab.emoji }}</span>
+              <span class="hidden sm:inline">{{ tab.label }}</span>
+              <span class="bg-white/20 px-1.5 py-0.5 rounded-full text-[10px]">{{ filterCounts[tab.value] }}</span>
             </button>
           </div>
         </div>
@@ -226,40 +165,33 @@
               <input 
                 v-model="searchQuery"
                 type="text" 
-                class="input-style" 
+                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm" 
                 placeholder="Search by number, customer, product..."
                 @input="handleSearch"
               >
             </div>
             <div class="flex items-center gap-2 sm:gap-3">
-              <div class="w-60 overflow-ellipsis">
-                <select 
-                  v-model="statusFilter" 
-                  @change="loadOrders" 
-                  class="input-style pr-2">
-                  <option value="" class="px-4">All status</option>
-                  <option value="en_attente">Pending</option>
-                  <option value="confirmee">Confirmed</option>
-                  <option value="en_livraison">Available for delivery</option>
-                  <option value="livree">Deliveries</option>
-                  <option value="annulee">Cancelled</option> 
-                </select>
-              </div>
-              <div class="w-45">
-                <select 
-                  v-model="dateFilter" 
-                  @change="loadOrders" 
-                  class="input-style">
-                  <option value="">All dates</option>
-                  <option value="today">Today</option>
-                  <option value="yesterday">Yesterday</option>
-                  <option value="week">This Week</option>
-                  <option value="month">This month</option>
-                </select>
-              </div>
-              <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion">
-                <X class="w-4 h-4 text-white  sm:hidden" />
-                <span class="hidden sm:inline text-xs">Clear Filters</span>
+              <select 
+                v-model="deliveryTypeFilter" 
+                @change="loadOrders" 
+                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+              >
+                <option value="">All Delivery Types</option>
+                <option value="FOB">FOB Delivery</option>
+                <option value="FOB">CIF Delivery</option>
+              </select>
+              <select 
+                v-model="dateFilter" 
+                @change="loadOrders" 
+                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+              >
+                <option value="">All dates</option>
+                <option value="today">Today</option>
+                <option value="week">This Week</option>
+                <option value="month">This month</option>
+              </select>
+              <button v-if="hasActiveFilters" @click="clearFilters" class="px-3 py-2 bg-red-500 text-white rounded-lg text-xs font-medium hover:bg-red-600 transition-colors">
+                <X class="w-4 h-4" />
               </button>
             </div>
           </div>
@@ -270,233 +202,309 @@
           <table class="min-w-full divide-y divide-gray-200">
             <thead class="bg-gray-50">
               <tr>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Image</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Order</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Customer</th>
-                <th scope="col" class="hidden md:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Product</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Delivery</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Amount</th>
-                <th scope="col" class="hidden lg:table-cell px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Payment</th>
-                <th scope="col" class="px-3 sm:px-6 py-2 sm:py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Actions</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Order</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Customer</th>
+                <th scope="col" class="hidden md:table-cell px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Product</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Delivery</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Amount</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Status</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Progress</th>
+                <th scope="col" class="px-3 sm:px-4 py-3 text-left text-xs font-semibold text-gray-600 uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="order in paginatedOrders" :key="order.id" class="hover:bg-gray-50 transition-colors">
-                <!--  Added product image column -->
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                  <div class="w-16 h-16 rounded-lg overflow-hidden shadow-sm border border-gray-200">
-                    <img 
-                      v-if="order.produit_image" 
-                      :src="order.produit_image" 
-                      :alt="order.produit_nom"
-                      class="w-full h-full object-cover"
-                      @error="handleImageError"
-                    />
-                    <div v-else class="w-full h-full bg-gray-100 flex items-center justify-center">
-                      <BoxIcon class="w-8 h-8 text-gray-400" />
+              <tr v-for="order in paginatedOrders" :key="order.id" class="hover:bg-orange-50/30 transition-colors">
+                <!-- Order Info -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
+                  <div class="flex items-center gap-3">
+                    <div class="w-12 h-12 rounded-lg overflow-hidden shadow-sm border border-gray-200 flex-shrink-0">
+                      <img 
+                        v-if="order.produit_image" 
+                        :src="order.produit_image" 
+                        :alt="order.produit_nom"
+                        class="w-full h-full object-cover"
+                      />
+                      <div v-else class="w-full h-full bg-gray-100 flex items-center justify-center">
+                        <BoxIcon class="w-6 h-6 text-gray-400" />
+                      </div>
+                    </div>
+                    <div>
+                      <div class="text-sm font-semibold text-gray-900">{{ order.numero_commande }}</div>
+                      <div class="flex items-center text-xs text-gray-500">
+                        <Calendar class="h-3 w-3 mr-1 text-orange-500" />
+                        {{ formatDate(order.date_commande || order.created_at) }}
+                      </div>
                     </div>
                   </div>
                 </td>
-                
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+
+                <!-- Customer -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
-                    <div class="text-xs sm:text-sm font-medium text-gray-900">{{ order.numero_commande }}</div>
-                    <div class="flex items-center text-xs text-gray-500">
-                      <Calendar class="h-3 w-3 mr-1 primary-color" />
-                      {{ formatDate(order.date_commande) }}
-                    </div>
-                    <div class="text-xs text-gray-400">{{ formatTime(order.date_commande) }}</div>
-                  </div>
-                </td>
-                
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                  <div class="space-y-1">
-                    <div class="flex items-center text-xs sm:text-sm font-medium text-gray-900">
-                      <User class="h-3 w-3 mr-1 primary-color" />
+                    <div class="flex items-center text-sm font-medium text-gray-900">
+                      <User class="h-3 w-3 mr-1 text-orange-500" />
                       {{ order.client_nom }}
                     </div>
                     <div class="flex items-center text-xs text-gray-500">
-                      <PhoneCall class="h-3 w-3 mr-1 primary-color" />
+                      <PhoneCall class="h-3 w-3 mr-1 text-orange-500" />
                       {{ order.client_telephone }}
                     </div>
                   </div>
                 </td>
-                
-                <td class="hidden md:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap" style="width: 150px; max-width: 150px;">
+
+                <!-- Product -->
+                <td class="hidden md:table-cell px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
-                    <div class="text-xs sm:text-sm font-medium text-gray-900 truncate" style="max-width: 140px;" :title="order.produit_nom">{{ order.produit_nom }}</div>
+                    <div class="text-sm font-medium text-gray-900 truncate max-w-[150px]" :title="order.produit_nom">{{ order.produit_nom }}</div>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
                       <span>Qty: {{ order.quantite }}</span>
-                      <span>{{ formatCurrency(order.produit_prix) }}</span>
-                    </div>
-                    <div class="flex items-center text-xs text-gray-600">
-                      <Building class="h-3 w-3 mr-1 primary-color" />
-                      <span class="truncate" style="max-width: 100px;" :title="order.boutique_name || order.boutique_nom">{{ order.boutique_name || order.boutique_nom }}</span>
+                      <span class="text-orange-600 font-medium">{{ formatCurrency(order.produit_prix) }}</span>
                     </div>
                   </div>
                 </td>
-                
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
+
+                <!-- Delivery Type -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
-                    <div class="flex items-center text-xs sm:text-sm font-medium text-gray-900">
-                      <Truck class="h-3 w-3 mr-1 primary-color" />
-                      {{ getDeliveryTypeLabel(order.type_livraison) }}
-                    </div>
+                    <span :class="[
+                      'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium',
+                      order.delivery_method === 'FOB' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                    ]">
+                      <Ship v-if="order.delivery_method === 'FOB'" class="w-3 h-3" />
+                      <Truck v-else class="w-3 h-3" />
+                      {{ order.delivery_method || 'FOB' }}
+                    </span>
                     <div class="flex items-center text-xs text-gray-500">
-                      <MapPin class="h-3 w-3 mr-1 primary-color" />
-                      {{ order.commune || order.ville }}
+                      <MapPin class="h-3 w-3 mr-1 text-orange-500" />
+                      {{ order.destination_port || order.adresse_complete || 'N/A' }}
                     </div>
                   </div>
                 </td>
-                
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-right">
+
+                <!-- Amount -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
-                    <div class="text-sm sm:text-base font-bold text-gray-900">{{ formatCurrency(order.total) }}</div>
+                    <div class="text-sm font-bold text-gray-900">{{ formatCurrency(order.total) }}</div>
                     <div class="text-xs text-gray-500">
-                      <div>Sub-total: {{ formatCurrency(order.sous_total) }}</div>
-                      <div>Delivery: {{ formatCurrency(order.frais_livraison) }}</div>
+                      <span :class="getPaymentStatusClass(order)">
+                        {{ getPaymentStatusLabel(order) }}
+                      </span>
                     </div>
                   </div>
                 </td>
-                
-                <td class="hidden lg:table-cell px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap">
-                  <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', getStatusClass(order.statut)]">
-                    <component :is="getStatusIcon(order.statut)" class="h-3 w-3" />
-                    {{ getStatusLabel(order.statut) }}
-                  </span>
-                </td>
-                
-                <!--  Added payment proof column -->
-                <td class="px-2 sm:px-4 py-2 sm:py-2 whitespace-nowrap">
-                  <div v-if="order.statut ==='confirmee'">
-                    <button 
-                      @click="openPaymentProofModal(order)"
-                      class="btn-degrade-orange h-7 text-xs mb-1"
-                      title="Add proof"
-                    >
-                      <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                      </svg>
-                      <span>Add Proof of payment</span>
-                    </button>
+
+                <!-- Status -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
+                  <div class="space-y-1">
+                    <span :class="['inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium', getStatusClass(order.statut)]">
+                      <span>{{ getStatusEmoji(order.statut) }}</span>
+                      {{ getStatusLabel(order.statut) }}
+                    </span>
+                    <div v-if="order.lifecycle_stage" class="text-[10px] text-gray-500">
+                      Stage: {{ order.lifecycle_stage }}
+                    </div>
                   </div>
-                  <div v-if="order.preuve_paiement" class="flex flex-col gap-1">
+                </td>
+
+                <!-- Progress / Lifecycle Actions -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
+                  <div class="space-y-2">
+                    <!-- Pending Stage Actions -->
+                    <div v-if="order.statut === 'en_attente' || order.statut === 'send'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-yellow-600">
+                        <Clock class="w-3 h-3" />
+                        <span>Awaiting contract/payment</span>
+                      </div>
+                      <div class="flex gap-1 flex-wrap">
+                        <button 
+                          @click="openDocumentModal(order, 'proforma')"
+                          class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-[10px] font-medium hover:bg-orange-200 transition-colors"
+                        >
+                          Send Proforma
+                        </button>
+                        <!-- Added button to upload/view payment proofs in pending stage -->
+                        <button 
+                          v-if="order.signature_method.length >=3"
+                          @click="openUploadPaymentModal(order)"
+                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                        >
+                          Add Proof 
+                        </button>
+                        <button 
+                          @click="showPaymentProof(order)"
+                          class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
+                        >
+                          View Payments
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Confirmed Stage - In Preparation -->
+                    <div v-else-if="order.statut === 'confirmee' || order.statut === 'send' && order.is_ready !== 'valid'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-blue-600">
+                        <Settings class="w-3 h-3 animate-spin" />
+                        <span>In Preparation</span>
+                      </div>
+                      <div class="flex gap-1 flex-wrap">
+                        <button 
+                          @click="showConfirmModal('ready', order)"
+                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                        >
+                          Mark Ready
+                        </button>
+                        <!-- Added button to view/add payment proofs -->
+                        <button 
+                          @click="showPaymentProof(order)"
+                          class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
+                        >
+                          View Payments
+                        </button>
+                        <button 
+                          v-if="order.signature_method.length >=3"
+                          @click="openUploadPaymentModal(order)"
+                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                        >
+                          Add Proof 
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Ready for Shipping -->
+                    <div v-else-if="order.statut === 'confirmee' || order.statut === 'send' && order.is_ready === 'valid'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-green-600">
+                        <PackageCheck class="w-3 h-3" />
+                        <span>Ready for Shipping</span>
+                      </div>
+                      <div class="flex gap-1 flex-wrap">
+                        <!-- Updated payment buttons for ready stage -->
+                        <button 
+                          @click="showPaymentProof(order)"
+                          class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
+                        >
+                          View Payments
+                        </button>
+                        <button 
+                          v-if="calculateRemaining(order) > 0"
+                          @click="openUploadPaymentModal(order)"
+                          class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px] font-medium hover:bg-yellow-200 transition-colors"
+                        >
+                          Add Payment
+                        </button>
+                        <button 
+                          v-if="calculateRemaining(order) <= 0"
+                          @click="showConfirmModal('ship', order)"
+                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                        >
+                          Start Shipping
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- In Shipping -->
+                    <div v-else-if="order.statut === 'en_livraison'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-purple-600">
+                        <Truck class="w-3 h-3" />
+                        <span>{{ order.delivery_method === 'FOB' ? 'In Transit' : 'Shipping' }}</span>
+                      </div>
+                      <div class="flex gap-1 flex-wrap">
+                        <button 
+                          v-if="order.delivery_method === 'FOB' && order.tracking_link"
+                          @click="openTrackingModal(order)"
+                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                        >
+                          🔗 Track Vessel
+                        </button>
+                        <button 
+                          @click="showConfirmModal('deliver', order)"
+                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                        >
+                          ✅ Mark Delivered
+                        </button>
+                      </div>
+                    </div>
+
+                    <!-- Delivered/Completed -->
+                    <div v-else-if="order.statut === 'livree'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-green-600">
+                        <CheckCircle2Icon class="w-3 h-3" />
+                        <span>Completed</span>
+                      </div>
+                      <span class="text-[10px] text-gray-500">{{ order.delivery_method === 'FOB' ? 'CIF Delivered' : 'FOB Transferred' }}</span>
+                    </div>
+
+                    <!-- Cancelled -->
+                    <div v-else-if="order.statut === 'annulee'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-red-600">
+                        <XCircle class="w-3 h-3" />
+                        <span>Cancelled</span>
+                      </div>
+                      <span class="text-[10px] text-gray-500">{{ order.cancellation_reason || 'No reason provided' }}</span>
+                    </div>
+                  </div>
+                </td>
+
+                <!-- Actions -->
+                <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
+                  <div class="flex items-center gap-1">
+                    <!-- View Details -->
                     <button 
+                      @click="openOrderDetails(order)"
+                      class="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      title="View Details"
+                    >
+                      <EyeIcon class="h-4 w-4" />
+                    </button>
+
+                    <!-- Confirm (for pending) -->
+                    <button 
+                      v-if="order.statut === 'en_attente' || order.statut === 'send'"
+                      @click="showConfirmModal('confirm', order)"
+                      class="p-2 rounded-lg bg-green-100 text-green-600 hover:bg-green-200 transition-colors"
+                      title="Confirm Order"
+                    >
+                      <Check class="h-4 w-4" />
+                    </button>
+
+                    <!-- Cancel (for pending and confirmed) -->
+                    <button 
+                      v-if="['en_attente', 'confirmee'].includes(order.statut)"
+                      @click="openCancelModal(order)"
+                      class="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors"
+                      title="Cancel Order"
+                    >
+                      <X class="h-4 w-4" />
+                    </button>
+
+                    <!-- Payment Proof -->
+                    <button 
+                      v-if="order.statut === 'en_attente' || order.statut === 'confirmee' || order.statut === 'send'"
                       @click="showPaymentProof(order)"
-                      class="submit-btn h-7 text-xs"
-                      title="View payment proof"
+                      class="p-2 rounded-lg bg-orange-100 text-orange-600 hover:bg-orange-200 transition-colors"
+                      title="View Payment Proof"
                     >
-                      <ImageIcon class="h-3 w-3" />
-                      <span>View Proof</span>
+                      <ImageIcon class="h-4 w-4" />
                     </button>
-                    <button 
-                      v-if="!order.preuve_validee && order.tobevalidate !== 'valid'"
-                      @click="openValidateProofModal(order)"
-                      class="btn-degrade-orange h-7 text-xs"
-                      title="Validate proof"
-                    >
-                      <CheckCircleIcon class="h-3 w-3" />
-                      <span>To be Validate</span>
-                    </button>
-                    <div v-else style="display: grid;">
-                      <span 
-                      style="margin: 0"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium"
-                    >
-                      <CheckCircle2Icon class="h-3 w-3" />
-                      <span>Validated</span>
-                    </span>
-                    <br/>
-                    <span class="h-1"></span>
-                    <button 
-                      v-if="order.prepare !== 'valid'"
-                      @click="openValidatePrepareModal(order)"
-                      class="btn-degrade-orange h-7 text-xs"
-                      title="Validate proof"
-                    >
-                      <CheckCircleIcon class="h-3 w-3" />
-                      <span>Terminate Prepare</span>
-                    </button>
-                    <span 
-                      v-if="order.prepare === 'valid'"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium mb-1"
-                    >
-                      <CheckCircle2Icon class="h-3 w-3" />
-                      <span>Prepare Terminated</span>
-                    </span>
 
+                    <!-- Vessel Tracking -->
                     <button 
-                      v-if="order.delivered !== 'valid' && order.prepare === 'valid'"
-                      @click="openValidateDeliveredModal(order)"
-                      class="btn-degrade-orange h-7 text-xs "
-                      title="Validate proof"
+                      v-if="order.delivery_method === 'FOB' && order.tracking_link"
+                      @click="openTrackingModal(order)"
+                      class="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+                      title="View Tracking Info"
                     >
-                      <CheckCircleIcon class="h-3 w-3" />
-                      <span>Delivered </span>
+                      <Anchor class="h-4 w-4" />
                     </button>
-                    <span 
-                      v-if="order.delivered === 'valid'"
-                      class="inline-flex items-center justify-center gap-1 px-2 py-1 bg-green-100 green-color rounded-lg text-xs font-medium"
-                    >
-                      <CheckCircle2Icon class="h-3 w-3" />
-                      <span>delivered to customer</span>
-                    </span>
-
-                    </div>
-                    
                   </div>
-                  <span v-else class="flex text-xs text-gray-400 items-center justify-center">No Proof</span>
                 </td>
-                
-                <td class="px-3 sm:px-6 py-3 sm:py-4 whitespace-nowrap text-xs sm:text-sm font-medium">
-                  <div class="flex items-center space-x-1 sm:space-x-2">
-                    <button 
-                      v-if="order.statut === 'en_attente'" 
-                      @click.stop="showConfirmModal('confirm', order)"
-                      class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Confirm"
-                      style="background-color: rgba(74, 222, 128, 0.1); color: rgb(22, 163, 74);"
-                    >
-                      <Check class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
-                    </button>
-                    <button 
-                      v-if="order.statut === 'confirmee'" 
-                      @click.stop="showConfirmModal('ship', order)"
-                      class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Ship"
-                      style="background-color: rgba(147, 197, 253, 0.1); color: rgb(37, 99, 235);"
-                    >
-                      <Truck class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
-                    </button>
-                    <button 
-                      v-if="order.statut === 'en_livraison'" 
-                      @click.stop="showConfirmModal('deliver', order)"
-                      class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Deliver"
-                      style="background-color: rgba(191, 144, 255, 0.1); color: rgb(99, 37, 235);"
-                    >
-                      <ArchiveIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
-                    </button>
-                    <button 
-                      v-if="['en_attente', 'confirmee'].includes(order.statut)" 
-                      @click.stop="showConfirmModal('cancel', order)"
-                      class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="Cancel"
-                      style="background-color: rgba(248, 113, 113, 0.1); color: rgb(220, 38, 38);"
-                    >
-                      <BookmarkXIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
-                    </button>
-                    <button 
-                      @click.stop="openOrderDetails(order)" 
-                      class="p-1.5 sm:p-2 rounded-lg transition-colors text-xs"
-                      title="See details"
-                      style="background-color: rgba(209, 213, 219, 0.1); color: rgb(71, 85, 105);"
-                    >
-                      <EyeIcon class="h-3 w-3 sm:h-4 sm:w-4 text-black" />
-                    </button>
+              </tr>
+
+              <!-- Empty State -->
+              <tr v-if="paginatedOrders.length === 0 && !dataLoading && !hasError">
+                <td colspan="8" class="px-6 py-12 text-center">
+                  <div class="flex flex-col items-center">
+                    <PackageX class="w-16 h-16 text-gray-300 mb-4" />
+                    <p class="text-gray-500 font-medium">No orders found</p>
+                    <p class="text-gray-400 text-sm">Try adjusting your filters</p>
                   </div>
                 </td>
               </tr>
@@ -507,21 +515,16 @@
         <!-- Pagination -->
         <div class="bg-gray-50 px-4 sm:px-6 py-3 sm:py-4 flex flex-col sm:flex-row sm:items-center sm:justify-between border-t border-gray-200 gap-3 sm:gap-0">
           <div class="flex items-center space-x-2 sm:space-x-4 text-xs sm:text-sm">
-            <span class="text-gray-700 hidden sm:inline">Items per page</span>
-            <span class="text-gray-700 sm:hidden">Per page</span>
-            <div class="w-20">
-              <select 
-                v-model="itemsPerPage" 
-                @change="handleItemsPerPageChange"
-                style="padding-left:20px;"
-                class="input-style text-xs sm:text-sm"
-              >
-                <option :value="10">10</option>
-                <option :value="25">25</option>
-                <option :value="50">50</option>
-                <option :value="100">100</option>
-              </select>
-            </div>
+            <span class="text-gray-700">Per page</span>
+            <select 
+              v-model="itemsPerPage" 
+              @change="handleItemsPerPageChange"
+              class="px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+            >
+              <option :value="10">10</option>
+              <option :value="25">25</option>
+              <option :value="50">50</option>
+            </select>
             <span class="text-gray-700">
               {{ ((currentPage - 1) * itemsPerPage) + 1 }} - {{ Math.min(currentPage * itemsPerPage, filteredOrders.length) }} of {{ filteredOrders.length }}
             </span>
@@ -530,27 +533,25 @@
             <button 
               @click="changePage(currentPage - 1)" 
               :disabled="isFirstPage"
-              class="p-2 rounded-lg btn-gray disabled:opacity-50 disabled:cursor-not-allowed"
+              class="p-2 rounded-lg bg-white border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
               <ChevronLeft class="h-4 w-4" />
             </button>
-            <div class="flex space-x-1">
-              <button 
-                v-for="page in getVisiblePages()" 
-                :key="page"
-                @click="changePage(page)"
-                :class="[
-                  'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
-                  currentPage === page ? 'btn-degrade-orange' : 'btn-gray'
-                ]"
-              >
-                {{ page }}
-              </button>
-            </div>
+            <button 
+              v-for="page in getVisiblePages()" 
+              :key="page"
+              @click="changePage(page)"
+              :class="[
+                'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
+                currentPage === page ? 'bg-orange-500 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'
+              ]"
+            >
+              {{ page }}
+            </button>
             <button 
               @click="changePage(currentPage + 1)" 
               :disabled="isLastPage"
-              class="p-2 rounded-lg btn-gray disabled:opacity-50 disabled:cursor-not-allowed"
+              class="p-2 rounded-lg bg-white border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
             >
               <ChevronRight class="h-4 w-4" />
             </button>
@@ -559,423 +560,584 @@
       </div>
     </div>
 
-    <!--  Payment Proof Modal -->
-    <div v-if="showPaymentProofModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closePaymentProofModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden" @click.stop>
-        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+    <!-- Cancel Order Modal with Reasons -->
+    <div v-if="showCancelModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeCancelModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-blue-100 rounded-lg">
-              <ImageIcon class="h-5 w-5 green-color" />
+            <div class="p-2 bg-red-100 rounded-lg">
+              <XCircle class="h-5 w-5 text-red-600" />
             </div>
             <div>
-              <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
-              <p class="text-sm text-gray-500">Order #{{ currentProofOrder?.numero_commande }}</p>
+              <h3 class="text-lg font-bold text-gray-900">Cancel Order</h3>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
-            <XIcon class="h-7 w-7 text-gray-500 cursor-pointer" @click="closePaymentProofModal"/>
         </div>
-        <div class="p-6 overflow-y-scroll max-h-[80vh]">
-          <div class="bg-gray-50 rounded-xl overflow-hidden">
-            <img 
-              v-if="currentProofOrder?.preuve_paiement" 
-              :src="currentProofOrder.preuve_paiement" 
-              alt="Payment Proof"
-              class="w-full h-auto max-h-[60vh] object-contain"
-            />
+        <div class="p-6 space-y-4">
+          <p class="text-gray-600">Please select a reason for cancellation:</p>
+          
+          <div class="space-y-2">
+            <label 
+              v-for="reason in cancellationReasons" 
+              :key="reason.value"
+              class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              :class="{ 'border-red-400 bg-red-50': selectedCancelReason === reason.value }"
+            >
+              <input 
+                type="radio" 
+                v-model="selectedCancelReason" 
+                :value="reason.value"
+                class="w-4 h-4 text-red-600 focus:ring-red-500"
+              >
+              <div>
+                <span class="text-sm font-medium text-gray-900">{{ reason.emoji }} {{ reason.label }}</span>
+                <p class="text-xs text-gray-500">{{ reason.description }}</p>
+              </div>
+            </label>
           </div>
-          <div class="mt-4 flex justify-end gap-3">
+
+          <div v-if="selectedCancelReason === 'other'">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Specify reason</label>
+            <textarea 
+              v-model="customCancelReason"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Enter the cancellation reason..."
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
             <button 
-              @click="closePaymentProofModal"
-              class="px-4 py-2 btn-gray"
+              @click="closeCancelModal"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              @click="confirmCancelOrder"
+              :disabled="!selectedCancelReason || (selectedCancelReason === 'other' && !customCancelReason)"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              Confirm Cancellation
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Proforma/Contract Document Modal -->
+    <div v-if="showDocumentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeDocumentModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <FileTextIcon class="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">{{ documentType === 'proforma' ? 'Proforma Invoice' : 'Contract' }}</h3>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
+            </div>
+          </div>
+          <button @click="closeDocumentModal" class="p-2 hover:bg-gray-100 rounded-lg">
+            <X class="h-5 w-5 text-gray-500" />
+          </button>
+        </div>
+        
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)] space-y-6">
+          <!-- Order Summary -->
+          <div class="bg-gray-50 rounded-xl p-4 border border-gray-200">
+            <h4 class="font-semibold text-gray-900 mb-3">Order Summary</h4>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-500">Customer:</span>
+                <span class="font-medium text-gray-900 ml-2">{{ selectedOrder?.client_nom }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Product:</span>
+                <span class="font-medium text-gray-900 ml-2">{{ selectedOrder?.produit_nom }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Quantity:</span>
+                <span class="font-medium text-gray-900 ml-2">{{ selectedOrder?.quantite }}</span>
+              </div>
+              <div>
+                <span class="text-gray-500">Total:</span>
+                <span class="font-bold text-orange-600 ml-2">{{ formatCurrency(selectedOrder?.total) }}</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Editable Price -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Adjust Price (if needed)</label>
+            <input 
+              type="number" 
+              v-model.number="editablePrice"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+            >
+          </div>
+
+          <!-- Payment Terms -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Payment Terms (%)</label>
+            <div class="space-y-3">
+              <div class="grid grid-cols-3 gap-4">
+                <div class="flex flex-col">
+                  <label class="text-xs text-gray-500">Deposit</label>
+                  <input 
+                    type="number" 
+                    v-model.number="paymentTerms.deposit"
+                    min="0"
+                    max="100"
+                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  >
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-xs text-gray-500">Before Shipping</label>
+                  <input 
+                    type="number" 
+                    v-model.number="paymentTerms.beforeShipping"
+                    min="0"
+                    max="100"
+                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  >
+                </div>
+                <div class="flex flex-col">
+                  <label class="text-xs text-gray-500">Against B/L</label>
+                  <input 
+                    type="number" 
+                    v-model.number="paymentTerms.againstBL"
+                    min="0"
+                    max="100"
+                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                  >
+                </div>
+              </div>
+              <p class="text-xs text-gray-500">
+                Total: {{ paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL }}% 
+                <span v-if="paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL !== 100" class="text-red-500">(Must equal 100%)</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Delivery Terms -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Method</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label 
+                class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all"
+                :class="deliveryMethod === 'FOB' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
+              >
+                <input type="radio" v-model="deliveryMethod" value="FOB" class="sr-only">
+                <Truck class="w-6 h-6 text-green-600" />
+                <div>
+                  <span class="font-medium text-gray-900">FOB</span>
+                  <p class="text-xs text-gray-500">Free On Board - Buyer takes responsibility at port</p>
+                </div>
+              </label>
+              <label 
+                class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all"
+                :class="deliveryMethod === 'FOB' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+              >
+                <input type="radio" v-model="deliveryMethod" value="CIF" class="sr-only">
+                <Ship class="w-6 h-6 text-blue-600" />
+                <div>
+                  <span class="font-medium text-gray-900">CIF</span>
+                  <p class="text-xs text-gray-500">Cost, Insurance, Freight - Delivered to destination port</p>
+                </div>
+              </label>
+            </div>
+          </div>
+
+          <!-- Destination & Loading Port -->
+          <div class="grid grid-cols-2 gap-4">
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                {{ deliveryMethod === 'FOB' ? 'Destination Port' : 'Delivery Address/Port' }}
+              </label>
+              <input 
+                type="text" 
+                v-model="destinationAddress"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                :placeholder="deliveryMethod === 'FOB' ? 'e.g., Port of Abidjan' : 'e.g., Customer warehouse address'"
+              >
+            </div>
+            <div v-if="deliveryMethod === 'FOB'">
+              <label class="block text-sm font-medium text-gray-700 mb-2">Loading Port</label>
+              <input 
+                type="text" 
+                v-model="loadingPort"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                placeholder="e.g., Tema Port"
+              >
+            </div>
+          </div>
+
+          <!-- Additional Notes -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Additional Terms & Conditions</label>
+            <textarea 
+              v-model="additionalTerms"
+              rows="4"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+              placeholder="Enter any additional terms..."
+            ></textarea>
+          </div>
+
+          <!-- Signature Method -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Signature Method</label>
+            <div class="grid grid-cols-2 gap-3">
+              <label 
+                class="flex items-center gap-3 p-3 border-2 rounded-xl cursor-pointer transition-all"
+                :class="signatureMethod === 'online' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'"
+              >
+                <input type="radio" v-model="signatureMethod" value="online" class="sr-only">
+                <Globe class="w-5 h-5 text-orange-600" />
+                <span class="text-sm font-medium">Online Signature</span>
+              </label>
+              <label 
+                class="flex items-center gap-3 p-3 border-2 rounded-xl cursor-pointer transition-all"
+                :class="signatureMethod === 'upload' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'"
+              >
+                <input type="radio" v-model="signatureMethod" value="upload" class="sr-only">
+                <Upload class="w-5 h-5 text-orange-600" />
+                <span class="text-sm font-medium">Download-Sign-Upload</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex gap-3 pt-4 border-t border-gray-100">
+            <button 
+              @click="closeDocumentModal"
+              class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              @click="generateAndSendDocument"
+              :disabled="paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL !== 100 || proformaLoading"
+              class="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              <span v-if="proformaLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+              Generate & Send to Client
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Tracking Modal for CIF -->
+    <div v-if="showTrackingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeTrackingModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <Ship class="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Vessel Tracking</h3>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
+            <div class="flex items-center gap-3 mb-3">
+              <Ship class="w-8 h-8 text-blue-600" />
+              <div>
+                <p class="font-semibold text-gray-900">{{ vesselName || 'Vessel Name' }}</p>
+                <p class="text-sm text-gray-500">IMO: {{ imoNumber || 'N/A' }}</p>
+              </div>
+            </div>
+            <div class="grid grid-cols-2 gap-4 text-sm">
+              <div>
+                <span class="text-gray-500">Origin Port:</span>
+                <p class="font-medium text-gray-900">{{ loadingPort || 'Loading Port' }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500">Destination:</span>
+                <p class="font-medium text-gray-900">{{ destinationAddress || 'Destination Port' }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500">ETD:</span>
+                <p class="font-medium text-gray-900">{{ formatDate(etd) || 'TBD' }}</p>
+              </div>
+              <div>
+                <span class="text-gray-500">ETA:</span>
+                <p class="font-medium text-gray-900">{{ formatDate(eta) || 'TBD' }}</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Tracking Link Input -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Vessel Tracking Link</label>
+            <input 
+              type="url" 
+              v-model="trackingLink"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="https://www.marinetraffic.com/..."
+            >
+          </div>
+
+          <!-- Bill of Lading Upload -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Bill of Lading (B/L)</label>
+            <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer" @click="blFileInput.click()">
+              <input type="file" @change="handleBLUpload" accept=".pdf,image/*" class="hidden" ref="blFileInput">
+              <Upload class="w-8 h-8 text-gray-400 mx-auto mb-2" />
+              <p class="text-sm text-gray-600">Click to upload B/L document</p>
+              <p class="text-xs text-gray-400">PDF or Image files</p>
+            </div>
+            <div v-if="selectedOrder?.bl_document" class="mt-2 flex items-center gap-2 text-sm text-green-600">
+              <CheckCircle2Icon class="w-4 h-4" />
+              <span>B/L uploaded</span>
+            </div>
+          </div>
+
+          <div class="flex gap-3 pt-4">
+            <button 
+              @click="closeTrackingModal"
+              class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
               Close
             </button>
             <button 
-              v-if="!currentProofOrder?.preuve_validee"
-              @click="openValidateProofModal(currentProofOrder)"
-              class="submit-btn"
+              @click="saveTrackingInfo"
+              :disabled="trackingLoading"
+              class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
-              Validate Proof
+              <span v-if="trackingLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+              Save & Share with Client
             </button>
           </div>
         </div>
       </div>
     </div>
 
-    <!--  Validate Proof Modal with comment -->
-    <div v-if="showValidateProofModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-orange-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 primary-color" />
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Validate Payment Proof</h3>
-              <p class="text-sm text-gray-500">Order #{{ currentValidateOrder?.numero_commande }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-6 space-y-4">
-          <p class="text-gray-600">Are you sure you want to validate this payment proof?</p>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Add a comment (optional)
-            </label>
-            <textarea 
-              v-model="validationComment"
-              rows="4"
-              class="input-style"
-              placeholder="Enter your comment here..."
-            ></textarea>
-          </div>
-
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Estimated delivery date (optional)
-            </label>
-            <input 
-              type="date"
-              v-model="estimatedDeliveryDate"
-              class="input-style"
-            />
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4">
-            <button 
-              @click="closeValidateProofModal"
-              class="px-4 py-2 btn-gray"
-            >
-              Cancel
-            </button>
-            <button 
-              @click="validatePaymentProof"
-              class="btn-degrade-orange"
-            >
-              Confirm
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="showValidateProofModal2" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Validate Payment Proof</h3>
-              <p class="text-sm text-gray-500">Order #{{ currentValidatePayment?.montant }} $</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-6 space-y-4">
-          <p class="text-gray-600">Are you sure you want to validate this payment proof?</p>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Add a comment (optional)
-            </label>
-            <textarea 
-              v-model="validationComment"
-              rows="4"
-              class="input-style"
-              placeholder="Enter your comment here..."
-            ></textarea>
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4">
-            <button 
-              @click="showValidateProofModal2 = false"
-              class="px-4 py-2 btn-gray"
-            >
-              Cancel
-            </button>
-            <button 
-            style="background-color: #16a34a;"
-              @click="validatePaymentProof2"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-            >
-              Validate
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="showValidateprepareModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Validate Payment Proof</h3>
-              <p class="text-sm text-gray-500">Order #{{ currentValidatePayment?.montant }} $</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-6 space-y-4">
-          <p class="text-gray-600">Are you sure you want to validate this payment proof?</p>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Add a comment (optional)
-            </label>
-            <textarea 
-              v-model="validationComment"
-              rows="4"
-              class="input-style"
-              placeholder="Enter your comment here..."
-            ></textarea>
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4">
-            <button 
-              @click="showValidateProofModal2 = false"
-              class="px-4 py-2 btn-gray"
-            >
-              Cancel
-            </button>
-            <button 
-            style="background-color: #16a34a;"
-              @click="validatePaymentProof2"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-            >
-              Validate
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="showValidateprepareModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateprepareModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-orange-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 primary-color" />
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Preparation completed</h3>
-              <p class="text-sm text-gray-500">Order #{{ currentValidateOrder?.numero_commande }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-6 space-y-4">
-          <p class="text-gray-600">Are you sure you want to terminate the preparation?</p>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Add a comment (optional)
-            </label>
-            <textarea 
-              v-model="validationComment"
-              rows="4"
-              class="input-style"
-              placeholder="Enter your comment here..."
-            ></textarea>
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4">
-            <button 
-              @click="closeValidateprepareModal"
-              class="px-4 py-2 btn-gray"
-            >
-              Cancel
-            </button>
-            <button 
-            style="background-color: #16a34a;"
-              @click="validatePreparation"
-              class="btn-degrade-orange"
-            >
-              Validate
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-    
-    <div v-if="showValidatedeliveredModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateProofModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
-          <div class="flex items-center gap-3">
-            <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircleIcon class="h-5 w-5 text-green-600" />
-            </div>
-            <div>
-              <h3 class="text-lg font-bold text-gray-900">Delivered completed</h3>
-              <p class="text-sm text-gray-500">Order #{{ currentValidateOrder?.numero_commande }}</p>
-            </div>
-          </div>
-        </div>
-        <div class="p-6 space-y-4">
-          <p class="text-gray-600">Are you sure you want to terminate the preparation?</p>
-          
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">
-              Add a comment (optional)
-            </label>
-            <textarea 
-              v-model="validationComment"
-              rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
-              placeholder="Enter your comment here..."
-            ></textarea>
-          </div>
-
-          <div class="flex justify-end gap-3 pt-4">
-            <button 
-              @click="showValidatedeliveredModal = false"
-              class="px-4 py-2 btn-gray"
-            >
-              Cancel
-            </button>
-            <button 
-            style="background-color: #16a34a;"
-              @click="validateDelivered"
-              class="px-4 py-2 bg-green-600 hover:bg-green-700 text-white rounded-lg font-medium transition-colors"
-            >
-              Validate
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
-
-    <!-- Payment Proof Modal showing all payments with stats -->
+    <!-- Payment Proof Modal -->
     <div v-if="showPaymentProofModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closePaymentProofModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-hidden" @click.stop>
         <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-green-100 rounded-lg">
-              <ImageIcon class="h-5 w-5 green-color" />
+              <CreditCard class="h-5 w-5 text-green-600" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Payment History</h3>
               <p class="text-sm text-gray-500">Order #{{ currentProofOrder?.numero_commande }}</p>
             </div>
           </div>
-            <XIcon class="h-7 w-7 text-gray-500 cursor-pointer" @click="closePaymentProofModal" />
+          <button @click="closePaymentProofModal" class="p-2 hover:bg-gray-100 rounded-lg">
+            <X class="h-5 w-5 text-gray-500" />
+          </button>
         </div>
-    
+
         <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
           <!-- Payment Statistics -->
           <div class="grid grid-cols-3 gap-4 mb-6">
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-              <div class="text-sm primary-color font-medium mb-1">Total Order</div>
-              <div class="text-2xl font-bold primary-color">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
+              <div class="text-sm text-orange-600 font-medium mb-1">Total Order</div>
+              <div class="text-2xl font-bold text-orange-700">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
             </div>
             <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-              <div class="text-sm green-color font-medium mb-1">Total Paid</div>
-              <div class="text-2xl font-bold green-color">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
+              <div class="text-sm text-green-600 font-medium mb-1">Total Paid</div>
+              <div class="text-2xl font-bold text-green-700">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
             </div>
             <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 border border-red-200">
-              <div class="text-sm error-color font-medium mb-1">Remaining</div>
-              <div class="text-2xl font-bold error-color">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
+              <div class="text-sm text-red-600 font-medium mb-1">Remaining</div>
+              <div class="text-2xl font-bold text-red-700">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
             </div>
           </div>
 
-          <!-- Payment List -->
-          <div class="space-y-4">
-            <!-- Initial Payment -->
-            <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-              <div class="flex items-start justify-between mb-3">
-                <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <CreditCardIcon class="h-6 w-6 primary-color" />
-                  </div>
-                  <div>
-                    <div class="font-semibold text-gray-900">Initial Payment</div>
-                    <div class="text-sm text-gray-500">{{ formatDate(currentProofOrder?.date_paiement) }}</div>
-                  </div>
-                </div>
-                <div class="text-right">
-                  <!-- <div class="text-xl font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * 0.3) }}</div> -->
-                  <span v-if="currentProofOrder?.estimate_prepare" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium mt-1">
-                    <CheckCircle2Icon class="h-3 w-3" />
-                    Validated
-                  </span>
-                  <span v-else class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium mt-1">
-                    <Clock class="h-3 w-3" />
-                    Pending
-                  </span>
-                </div>
-              </div>
-              <button 
-                @click="viewProofImage(currentProofOrder?.preuve_paiement)"
-                class="w-full submit-btn"
-              >
-                <ImageIcon class="h-4 w-4" />
-                View Proof
-              </button>
+          <!-- Payment Progress Bar -->
+          <div class="mb-6">
+            <div class="flex justify-between text-sm mb-2">
+              <span class="text-gray-600">Payment Progress</span>
+              <span class="font-medium text-gray-900">{{ getPaymentPercentage(currentProofOrder) }}%</span>
             </div>
+            <div class="w-full bg-gray-200 rounded-full h-3">
+              <div 
+                class="bg-gradient-to-r from-green-500 to-green-600 h-3 rounded-full transition-all duration-500"
+                :style="{ width: getPaymentPercentage(currentProofOrder) + '%' }"
+              ></div>
+            </div>
+          </div>
 
-            <!-- Additional Payments -->
-            <div v-if="currentProofOrder?.paiements_additionnels && currentProofOrder.paiements_additionnels  .length > 0" 
-                v-for="(payment, index) in currentProofOrder.paiements_additionnels" 
-                :key="payment.id || index"
-                class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
-              <div class="flex items-start justify-between mb-3">
+          <!-- Added Add Payment Button for supplier to add proof -->
+          <div class="mb-6 flex justify-end">
+            <button 
+              @click="openUploadPaymentModal(currentProofOrder)"
+              class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all"
+            >
+              <Upload class="h-4 w-4" />
+              Add Payment Proof
+            </button>
+          </div>
+
+          <!-- Payment Timeline -->
+          <div class="space-y-4">
+            <h4 class="font-semibold text-gray-900 mb-4">Payment Timeline</h4>
+            
+            <!-- Deposit Payment -->
+            <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+              <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-12 h-12 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <CreditCardIcon class="h-6 w-6 purple-color" />
+                  <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <Wallet class="h-5 w-5 text-orange-600" />
                   </div>
                   <div>
-                    <div class="font-semibold text-gray-900">Additional Payment #{{ index + 1 }}</div>
-                    <div class="text-sm text-gray-500">{{ formatDate(payment.date_paiement) }}</div>
-                    <div v-if="payment.commentaire" class="text-sm text-gray-600 mt-1">{{ payment.commentaire }}</div>
+                    <div class="font-semibold text-gray-900">Deposit Payment ({{ currentProofOrder?.payment_deposit_percent || 30 }}%)</div>
+                    <div class="text-sm text-gray-500">{{ formatDate(currentProofOrder?.date_paiement) || 'Not yet paid' }}</div>
+                    <!-- Show validation comment if exists -->
+                    <div v-if="currentProofOrder?.commentaire_validation" class="text-xs text-gray-400 mt-1 italic">
+                      "{{ currentProofOrder.commentaire_validation }}"
+                    </div>
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-xl font-bold text-gray-900">{{ formatCurrency(payment.montant) }}</div>
-                  <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium mt-1">
+                  <div class="text-lg font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * ((currentProofOrder?.payment_deposit_percent || 30) / 100)) }}</div>
+                  <span v-if="currentProofOrder?.deposit_validated === 'valid' || currentProofOrder?.tobevalidate === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
                     <CheckCircle2Icon class="h-3 w-3" />
                     Validated
                   </span>
-                  <span v-else class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium mt-1">
+                  <span v-else-if="currentProofOrder?.preuve_paiement && (currentProofOrder?.deposit_validated === 'pending' || !currentProofOrder?.deposit_validated)" class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
                     <Clock class="h-3 w-3" />
-                    Pending
+                    Pending Validation
+                  </span>
+                  <span v-else-if="currentProofOrder?.deposit_validated === 'rejected'" class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                    <XCircle class="h-3 w-3" />
+                    Rejected
+                  </span>
+                  <span v-else class="inline-flex items-center gap-1 px-2 py-1 bg-gray-100 text-gray-500 rounded-full text-xs font-medium">
+                    <Clock class="h-3 w-3" />
+                    Awaiting Proof
                   </span>
                 </div>
               </div>
-              <div style="display: flex; gap: 10px;">
+              
+              <!-- Actions for deposit payment -->
+              <div v-if="currentProofOrder?.preuve_paiement" class="mt-3 flex flex-wrap gap-2">
                 <button 
-                  @click="viewProofImage(payment.preuve_url)"
-                  class="w-full submit-btn"
+                  @click="viewProofImage(currentProofOrder.preuve_paiement)"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
                 >
                   <ImageIcon class="h-4 w-4" />
                   View Proof
                 </button>
+                <!-- Validate button -->
                 <button 
-                style="background-color: green; color: white;"
-                          v-if="payment.valide !== 'valid'"
-                          @click="openValidateProofModal2(payment)"
-                          class="inline-flex btn-degrade-orange"
-                          title="Validate proof"
-                        >
-                          <CheckCircleIcon class="h-3 w-3" />
-                          <span>Validate</span>
+                  v-if="currentProofOrder?.deposit_validated !== 'valid' && currentProofOrder?.tobevalidate !== 'valid'"
+                  @click="openValidateModal(currentProofOrder, 'deposit')"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition-colors"
+                >
+                  <Check class="h-4 w-4" />
+                  Validate
                 </button>
+                <!-- Reject button -->
+                <button 
+                  v-if="currentProofOrder?.deposit_validated !== 'valid' && currentProofOrder?.tobevalidate !== 'valid' && currentProofOrder?.deposit_validated !== 'rejected'"
+                  @click="openRejectModal(currentProofOrder, 'deposit')"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors"
+                >
+                  <XCircle class="h-4 w-4" />
+                  Reject
+                </button>
+              </div>
+              <!-- Show rejection reason if rejected -->
+              <div v-if="currentProofOrder?.deposit_validated === 'rejected' && currentProofOrder?.rejection_reason" class="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                <p class="text-sm text-red-700"><strong>Rejection reason:</strong> {{ currentProofOrder.rejection_reason }}</p>
               </div>
             </div>
 
-            <!-- No additional payments message -->
-            <div v-if="!currentProofOrder?.paiements || currentProofOrder.paiements.length === 0" 
-                class="text-center py-8 text-gray-500">
-              <p>No additional payments yet</p>
+            <!-- Additional Payments -->
+            <div 
+              v-for="(payment, index) in currentProofOrder?.paiements_additionnels" 
+              :key="payment.id || index"
+              class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm"
+            >
+              <div class="flex items-start justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
+                    <CreditCard class="h-5 w-5 text-purple-600" />
+                  </div>
+                  <div>
+                    <div class="font-semibold text-gray-900">{{ payment.description || `Additional Payment #${index + 1}` }}</div>
+                    <div class="text-sm text-gray-500">{{ formatDate(payment.date_paiement) }}</div>
+                    <div v-if="payment.commentaire" class="text-xs text-gray-400 mt-1">{{ payment.commentaire }}</div>
+                    <!-- Show admin comment if validated -->
+                    <div v-if="payment.commentaire_admin" class="text-xs text-green-600 mt-1 italic">
+                      Admin: "{{ payment.commentaire_admin }}"
+                    </div>
+                  </div>
+                </div>
+                <div class="text-right">
+                  <div class="text-lg font-bold text-gray-900">{{ formatCurrency(payment.montant) }}</div>
+                  <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                    <CheckCircle2Icon class="h-3 w-3" />
+                    Validated
+                  </span>
+                  <span v-else-if="payment.valide === 'pending' || !payment.valide" class="inline-flex items-center gap-1 px-2 py-1 bg-yellow-100 text-yellow-700 rounded-full text-xs font-medium">
+                    <Clock class="h-3 w-3" />
+                    Pending
+                  </span>
+                  <span v-else-if="payment.valide === 'rejected'" class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                    <XCircle class="h-3 w-3" />
+                    Rejected
+                  </span>
+                </div>
+              </div>
+              
+              <!-- Actions for additional payments -->
+              <div class="mt-3 flex flex-wrap gap-2">
+                <button 
+                  @click="viewProofImage(payment.preuve_url)"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                >
+                  <ImageIcon class="h-4 w-4" />
+                  View Proof
+                </button>
+                <!-- Validate button -->
+                <button 
+                  v-if="payment.valide !== 'valid'"
+                  @click="openValidateModal(payment, 'additional')"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition-colors"
+                >
+                  <Check class="h-4 w-4" />
+                  Validate
+                </button>
+                <!-- Reject button -->
+                <button 
+                  v-if="payment.valide !== 'valid' && payment.valide !== 'rejected'"
+                  @click="openRejectModal(payment, 'additional')"
+                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors"
+                >
+                  <XCircle class="h-4 w-4" />
+                  Reject
+                </button>
+              </div>
+              <!-- Show rejection reason if rejected -->
+              <div v-if="payment.valide === 'rejected' && payment.rejection_reason" class="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
+                <p class="text-sm text-red-700"><strong>Rejection reason:</strong> {{ payment.rejection_reason }}</p>
+              </div>
+            </div>
+
+            <!-- No payments message -->
+            <div v-if="!currentProofOrder?.preuve_paiement && (!currentProofOrder?.paiements_additionnels || currentProofOrder?.paiements_additionnels.length === 0)" 
+                 class="text-center py-8 text-gray-500 bg-gray-50 rounded-xl">
+              <Wallet class="w-12 h-12 text-gray-300 mx-auto mb-3" />
+              <p class="font-medium">No payment proofs yet</p>
+              <p class="text-sm">Waiting for client to upload payment proof</p>
             </div>
           </div>
 
           <div class="mt-6 flex justify-end">
             <button 
               @click="closePaymentProofModal"
-              class="px-4 py-2 btn-gray"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
               Close
             </button>
@@ -983,124 +1145,27 @@
         </div>
       </div>
     </div>
-    <div v-if="showPaymentModal" class="modal-overlay" @click="closePaymentModal">
-      <div class="modal-content" @click.stop>
-        <button class="modal-close" @click="closePaymentModal">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
 
-        <div class="modal-header">
-          <h2 class="modal-title">Add proof of payment</h2>
-          <p class="modal-subtitle">Order #{{ selectedOrder?.numero_commande }}</p>
-        </div>
-
-        <div class="payment-info-box">
-          <div class="info-row">
-            <span class="info-label">Amount to pay (deposit):</span>
-            <!-- <span class="info-value">{{ formatPrice(selectedOrder?.total * 0.3) }}</span> -->
-          </div>
-          <p class="info-note">Please upload a screenshot or photo of your proof of payment.</p>
-        </div>
-
-        <form @submit.prevent="uploadPaymentProof" class="upload-form">
-          <div class="form-group">
-            <label class="form-label">Payment amount <span class="required">*</span></label>
-            <input
-              type="number"
-              v-model="paymentAmount"
-              class="input-style"
-              placeholder="Enter the amount"
-              :max="calculatePaymentStatus(selectedOrder).remaining"
-              min="1"
-              step="any"
-              required
-            >
-            <p class="file-hint">Pay the deposit according to the contract</p>
-          </div>
-          <div class="form-group">
-            <label class="form-label">Select a file</label>
-            <div class="file-input-wrapper">
-              <input
-                type="file"
-                ref="fileInput"
-                @change="handleFileSelect"
-                accept="image/*"
-                class="file-input"
-                required
-              >
-              <div class="file-input-display">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#666" stroke-width="2">
-                  <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                  <polyline points="17 8 12 3 7 8"></polyline>
-                  <line x1="12" y1="3" x2="12" y2="15"></line>
-                </svg>
-                <span v-if="!selectedFile">Click to select a file</span>
-                <span v-else class="file-name">{{ selectedFile.name }}</span>
-              </div>
-            </div>
-            <p class="file-hint">Accepted formats: JPG, PNG (Max 10MB)</p>
-
-            <div v-if="uploading" class="upload-progress">
-              <div class="progress-bar">
-                <div class="progress-fill" :style="{ width: uploadProgress + '%' }"></div>
-              </div>
-              <p class="progress-text">Upload in progress: {{ uploadProgress }}%</p>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label class="form-label">Comment (optional)</label>
-            <textarea
-              v-model="paymentComment"
-              class="input-style"
-              placeholder="Add a comment about this payment..."
-              rows="3"
-            ></textarea>
-          </div>
-
-          <div class="modal-actions">
-            
-            <button type="button" class="btn-gray flex-1" @click="closePaymentModal" :disabled="uploading">
-              Cancel
-            </button>
-            <button type="submit" class="btn-degrade-orange flex-1" :disabled="uploading || !selectedFile || !paymentAmount">
-              <span v-if="!uploading">Send proof</span>
-              <span v-else>Shipment in progress...</span>
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-
-    <!-- Modal for viewing individual proof images -->
+    <!-- Image Viewer Modal -->
     <div v-if="showProofImageModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeProofImageModal">
-  <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden" @click.stop>
-    <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
-      <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
-        <XIcon class="h-5 w-5 text-gray-500 cursor-pointer" @click="closeProofImageModal" />
-    </div>
-    <div class="p-6">
-      <div class="bg-gray-50 rounded-xl overflow-scroll">
-        <img 
-          v-if="currentProofImage" 
-          :src="currentProofImage" 
-          alt="Payment Proof"
-          class="w-full h-auto object-contain max-h-[60vh]"
-        />
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+          <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
+          <button @click="closeProofImageModal" class="p-2 hover:bg-gray-100 rounded-lg">
+            <X class="h-5 w-5 text-gray-500" />
+          </button>
+        </div>
+        <div class="p-6">
+          <div class="bg-gray-50 rounded-xl overflow-auto max-h-[60vh]">
+            <img 
+              v-if="currentProofImage" 
+              :src="currentProofImage" 
+              alt="Payment Proof"
+              class="w-full h-auto object-contain"
+            />
+          </div>
+        </div>
       </div>
-      <div class="mt-4 flex justify-end">
-        <button 
-          @click="closeProofImageModal"
-          class="px-4 py-2 btn-gray"
-        >
-          Close
-        </button>
-      </div>
-    </div>
-  </div>
     </div>
 
     <!-- Confirmation Modal -->
@@ -1108,8 +1173,8 @@
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
         <div class="p-6">
           <div class="flex items-center mb-4">
-            <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4 ', getConfirmationIconClass()]">
-              <CheckCircle class="h-6 w-6" />
+            <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4', getConfirmationIconClass()]">
+              <component :is="getConfirmationIcon()" class="h-6 w-6" />
             </div>
             <div>
               <h3 class="text-lg font-semibold text-gray-900">{{ getConfirmationTitle() }}</h3>
@@ -1120,13 +1185,13 @@
           <div class="flex justify-end space-x-3">
             <button 
               @click="closeConfirmModal"
-              class="btn-gray"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
             >
               Cancel
             </button>
             <button 
               @click="executeAction"
-              :class="['px-4 py-2 rounded-lg font-medium transition-colors', getConfirmationButtonClass()]"
+              :class="['px-4 py-2 rounded-lg font-medium transition-colors text-white', getConfirmationButtonClass()]"
             >
               {{ getConfirmationButtonText() }}
             </button>
@@ -1135,367 +1200,267 @@
       </div>
     </div>
 
+    <!-- Ready Modal -->
+    <div v-if="showReadyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeReadyModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-blue-100 rounded-lg">
+              <Settings class="h-5 w-5 text-blue-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Mark Order as Ready</h3>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Comments</label>
+            <textarea 
+              v-model="readyComment"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="Enter any relevant comments..."
+            ></textarea>
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Inspection Notes (Optional)</label>
+            <textarea 
+              v-model="inspectionNotes"
+              rows="2"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              placeholder="e.g., Product checked, packaging intact..."
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button 
+              @click="closeReadyModal"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              @click="markOrderReady(selectedOrder.id)"
+              :disabled="readyLoading"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+               <span v-if="readyLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+              Mark Ready
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
     <!-- Order Details Modal -->
     <div v-if="showOrderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeOrderModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto" @click.stop>
-        <div class="sticky top-0 bg-white border-b border-gray-100 px-8 py-6 rounded-t-2xl">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-4">
-              <div class="p-3 bg-orange rounded-xl">
-                <FileTextIcon class="h-6 w-6 text-white" />
-              </div>
-              <h3 class="text-2xl font-bold text-gray-900">Order Details</h3>
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <FileTextIcon class="h-5 w-5 text-orange-600" />
             </div>
-            
-              <XIcon class="h-7 w-7 cursor-pointer text-gray-500" @click="closeOrderModal" />
+            <h3 class="text-lg font-bold text-gray-900">Order Details</h3>
           </div>
+          <button @click="closeOrderModal" class="p-2 hover:bg-gray-100 rounded-lg">
+            <X class="h-5 w-5 text-gray-500" />
+          </button>
         </div>
 
-        <div v-if="selectedOrder" class="p-8 space-y-8">
-          <!-- Order Summary -->
-          <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-2xl p-6 border border-orange-200">
-            <div class="flex items-center justify-between mb-6">
+        <div v-if="selectedOrder" class="p-6 space-y-6">
+          <!-- Order Header -->
+          <div class="bg-gradient-to-r from-orange-50 to-orange-100 rounded-xl p-6 border border-orange-200">
+            <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
               <div class="flex items-center gap-4">
-                <div class="p-4 bg-orange rounded-2xl">
-                  <FileCheck class="h-7 w-7 text-white" />
+                <div class="w-16 h-16 rounded-xl overflow-hidden shadow-lg border-2 border-white">
+                  <img 
+                    v-if="selectedOrder.produit_image" 
+                    :src="selectedOrder.produit_image" 
+                    :alt="selectedOrder.produit_nom"
+                    class="w-full h-full object-cover"
+                  />
+                  <div v-else class="w-full h-full bg-gray-100 flex items-center justify-center">
+                    <BoxIcon class="w-8 h-8 text-gray-400" />
+                  </div>
                 </div>
                 <div>
                   <div class="text-2xl font-bold text-gray-900">{{ selectedOrder.numero_commande }}</div>
-                  <div class="text-gray-600">{{ formatDate(selectedOrder.date_commande) }} at {{ formatTime(selectedOrder.date_commande) }}</div>
+                  <div class="text-gray-600">{{ formatDate(selectedOrder.date_commande || selectedOrder.created_at) }}</div>
                 </div>
               </div>
-              <span :class="['inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium', getStatusClass(selectedOrder.statut)]">
-                <component :is="getStatusIcon(selectedOrder.statut)" class="h-4 w-4" />
-                {{ getStatusLabel(selectedOrder.statut) }}
-              </span>
+              <div class="flex flex-wrap gap-2">
+                <span :class="['inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium', getStatusClass(selectedOrder.statut)]">
+                  <span>{{ getStatusEmoji(selectedOrder.statut) }}</span>
+                  {{ getStatusLabel(selectedOrder.statut) }}
+                </span>
+                <span :class="[
+                  'inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium',
+                  selectedOrder.delivery_method === 'FOB' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                ]">
+                  {{ selectedOrder.delivery_method === 'FOB' ? '🚢 CIF' : '🚚 FOB' }}
+                </span>
+              </div>
             </div>
-            
+
             <!-- Quick Stats -->
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
-              <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <Banknote class="h-6 w-6 primary-color" />
-                <div>
-                  <div class="text-sm text-gray-600">Total</div>
-                  <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.total) }}</div>
-                </div>
+            <div class="grid grid-cols-3 gap-4 mt-6">
+              <div class="bg-white/70 rounded-lg p-3">
+                <div class="text-sm text-gray-600">Total</div>
+                <div class="text-xl font-bold text-orange-600">{{ formatCurrency(selectedOrder.total) }}</div>
               </div>
-              <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <BoxIcon class="h-6 w-6 primary-color" />
-                <div>
-                  <div class="text-sm text-gray-600">Quantity</div>
-                  <div class="text-xl font-bold text-gray-900">{{ selectedOrder.quantite }}</div>
-                </div>
+              <div class="bg-white/70 rounded-lg p-3">
+                <div class="text-sm text-gray-600">Quantity</div>
+                <div class="text-xl font-bold text-gray-900">{{ selectedOrder.quantite }}</div>
               </div>
-              <div class="bg-white/70 rounded-xl p-4 flex items-center gap-3">
-                <Truck class="h-6 w-6 primary-color" />
-                <div>
-                  <div class="text-sm text-gray-600">Delivery</div>
-                  <div class="text-xl font-bold text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</div>
-                </div>
+              <div class="bg-white/70 rounded-lg p-3">
+                <div class="text-sm text-gray-600">Paid</div>
+                <div class="text-xl font-bold text-green-600">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
               </div>
             </div>
           </div>
 
-          <!-- Info Sections -->
-          <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
-            <!-- Customer Information -->
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-              <div class="flex items-center gap-3 mb-4">
-                <User class="h-6 w-6 primary-color" />
-                <h4 class="text-lg font-semibold text-gray-900">Customer Information</h4>
-              </div>
+          <!-- Customer & Delivery Info -->
+          <div class="grid md:grid-cols-2 gap-6">
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+              <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <User class="w-5 h-5 text-orange-500" />
+                Customer Information
+              </h4>
               <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                  <User2 class="h-4 w-4 text-gray-500" />
-                  <div>
-                    <span class="text-sm text-gray-500">Full name</span>
-                    <div class="font-medium text-gray-900">{{ selectedOrder.client_nom }}</div>
-                  </div>
+                <div class="flex items-center gap-2 text-sm">
+                  <User class="w-4 h-4 text-gray-400" />
+                  <span class="text-gray-600">Name:</span>
+                  <span class="font-medium text-gray-900">{{ selectedOrder.client_nom }}</span>
                 </div>
-                <div class="flex items-center gap-3">
-                  <PhoneCall class="h-4 w-4 text-gray-500" />
-                  <div>
-                    <span class="text-sm text-gray-500">Phone number</span>
-                    <div class="font-medium text-gray-900">{{ selectedOrder.client_telephone }}</div>
-                  </div>
+                <div class="flex items-center gap-2 text-sm">
+                  <PhoneCall class="w-4 h-4 text-gray-400" />
+                  <span class="text-gray-600">Phone:</span>
+                  <span class="font-medium text-gray-900">{{ selectedOrder.client_telephone }}</span>
+                </div>
+                <div v-if="selectedOrder.client_email" class="flex items-center gap-2 text-sm">
+                  <Mail class="w-4 h-4 text-gray-400" />
+                  <span class="text-gray-600">Email:</span>
+                  <span class="font-medium text-gray-900">{{ selectedOrder.client_email }}</span>
                 </div>
               </div>
             </div>
 
-            <!-- Delivery Information -->
-            <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-              <div class="flex items-center gap-3 mb-4">
-                <Truck class="h-6 w-6 primary-color" />
-                <h4 class="text-lg font-semibold text-gray-900">Delivery Information</h4>
-              </div>
+            <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+              <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+                <Truck class="w-5 h-5 text-orange-500" />
+                Delivery Information
+              </h4>
               <div class="space-y-3">
-                <div class="flex items-center gap-3">
-                  <Truck class="h-4 w-4 text-gray-500" />
-                  <div>
-                    <span class="text-sm text-gray-500">Delivery type</span>
-                    <div class="font-medium text-gray-900">{{ getDeliveryTypeLabel(selectedOrder.type_livraison) }}</div>
-                  </div>
+                <div class="flex items-center gap-2 text-sm">
+                  <span class="text-gray-600">Method:</span>
+                  <span class="font-medium text-gray-900">{{ selectedOrder.delivery_method || 'FOB' }}</span>
                 </div>
-                <div v-if="selectedOrder.commune" class="flex items-center gap-3">
-                  <MapPin class="h-4 w-4 text-gray-500" />
-                  <div>
-                    <span class="text-sm text-gray-500">Municipality</span>
-                    <div class="font-medium text-gray-900">{{ selectedOrder.commune }}</div>
-                  </div>
+                <div class="flex items-center gap-2 text-sm">
+                  <MapPin class="w-4 h-4 text-gray-400" />
+                  <span class="text-gray-600">Destination:</span>
+                  <span class="font-medium text-gray-900">{{ selectedOrder.destination_port || selectedOrder.adresse_complete || 'N/A' }}</span>
                 </div>
-                <div class="flex items-start gap-3">
-                  <Home class="h-4 w-4 text-gray-500 mt-1" />
-                  <div>
-                    <span class="text-sm text-gray-500">Full Address</span>
-                    <div class="font-medium text-gray-900">{{ selectedOrder.adresse_complete }}</div>
-                  </div>
+                 <div v-if="selectedOrder.loading_port" class="flex items-center gap-2 text-sm">
+                  <Anchor class="w-4 h-4 text-gray-400" />
+                  <span class="text-gray-600">Loading Port:</span>
+                  <span class="font-medium text-gray-900">{{ selectedOrder.loading_port }}</span>
                 </div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Product Information -->
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-6">
-              <BoxIcon class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Product Ordered</h4>
-            </div>
-            <div class="flex items-start gap-6">
-              <!--  Show product image in modal -->
-              <div class="w-24 h-24 rounded-xl overflow-hidden shadow-md border border-gray-200 flex-shrink-0">
-                <img 
-                  v-if="selectedOrder.produit_image" 
-                  :src="selectedOrder.produit_image" 
-                  :alt="selectedOrder.produit_nom"
-                  class="w-full h-full object-cover"
-                  @error="handleImageError"
-                />
-                <div v-else class="w-full h-full bg-gray-100 flex items-center justify-center">
-                  <BoxIcon class="h-12 w-12 text-gray-400" />
-                </div>
-              </div>
-              <div class="flex-1">
-                <h5 class="text-xl font-semibold text-gray-900 mb-3">{{ selectedOrder.produit_nom }}</h5>
-                <div class="grid grid-cols-1 md:grid-cols-3 gap-4 text-sm">
-                  <div class="flex items-center gap-2">
-                    <BoxIcon class="h-4 w-4 text-gray-500" />
-                    <span class="text-gray-600">Quantity: {{ selectedOrder.quantite }}</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <Banknote class="h-4 w-4 text-gray-500" />
-                    <span class="text-gray-600">Unit Price: {{ formatCurrency(selectedOrder.produit_prix) }}</span>
-                  </div>
-                  <div class="flex items-center gap-2">
-                    <Building class="h-4 w-4 text-gray-500" />
-                    <span class="text-gray-600">Store: {{ selectedOrder.boutique_nom }}</span>
-                  </div>
+                <div v-if="selectedOrder.tracking_link" class="flex items-center gap-2 text-sm">
+                  <ExternalLink class="w-4 h-4 text-gray-400" />
+                  <a :href="selectedOrder.tracking_link" target="_blank" class="text-blue-600 hover:underline">
+                    Track Shipment
+                  </a>
                 </div>
               </div>
             </div>
           </div>
 
-          <!--  Payment Information Section -->
-          <div v-if="selectedOrder.preuve_paiement" class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-6">
-              <CreditCardIcon class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Payment Information</h4>
-            </div>
-            <!-- Payment Statistics -->
-            <div class="grid grid-cols-3 gap-4 mb-6">
-              <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-                <div class="text-xs primary-color font-medium mb-1">Total Order</div>
-                <div class="text-lg font-bold primary-color">{{ formatCurrency(selectedOrder.total) }}</div>
-              </div>
-              <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-                <div class="text-xs gree-color font-medium mb-1">Total Paid</div>
-                <div class="text-lg font-bold green-color">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
-              </div>
-              <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-                <div class="text-xs error-color font-medium mb-1">Remaining</div>
-                <div class="text-lg font-bold error-color">{{ formatCurrency(calculateRemaining(selectedOrder)) }}</div>
-              </div>
-            </div>
-            <div class="space-y-4">
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Payment date</span>
-                <span class="font-medium text-gray-900">{{ formatDate(selectedOrder.date_paiement) }}</span>
-              </div>
-              <div class="flex items-center justify-between">
-                <span class="text-sm text-gray-600">Proof status</span>
-                <span v-if="selectedOrder.preuve_validee" class="inline-flex items-center gap-1 px-3 py-1 bg-green-100 green-color rounded-full text-xs font-medium">
-                  <CheckCircle2Icon class="h-3 w-3" />
-                  Validated
-                </span>
-                <span v-else class="inline-flex items-center gap-1 px-3 py-1 bg-yellow-100 text-yellow-800 rounded-full text-xs font-medium">
-                  <Clock class="h-3 w-3" />
-                  Pending validation
-                </span>
-              </div>
-              <div class="pt-4 border-t border-gray-100">
-                <button 
-                  @click="showPaymentProof(selectedOrder)"
-                  class="submit-btn w-full"
-                >
-                  <ImageIcon class="h-4 w-4" />
-                  View Payment Proof
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Boutique Information -->
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-6">
-              <Building class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Store Information</h4>
-            </div>
-            <div class="space-y-4">
-              <div class="flex items-center gap-4">
-                <div class="w-12 h-12 bg-gray-100 rounded-xl flex items-center justify-center">
-                  <Building class="h-6 w-6 text-gray-500" />
-                </div>
-                <div>
-                  <h5 class="text-lg font-semibold text-gray-900">{{ selectedOrder.boutique_name || selectedOrder.boutique_nom }}</h5>
-                  <div v-if="selectedOrder.boutique_statut" class="mt-1">
-                    <span :class="['px-2 py-1 text-xs rounded-full', getBoutiqueStatusClass(selectedOrder.boutique_statut)]">
-                      {{ getBoutiqueStatusLabel(selectedOrder.boutique_statut) }}
-                    </span>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div v-if="selectedOrder.boutique_telephone || selectedOrder.boutique_email">
-                  <h6 class="text-sm font-semibold text-gray-700 mb-3">Contacts</h6>
-                  <div class="space-y-2">
-                    <div v-if="selectedOrder.boutique_telephone" class="flex items-center gap-2 text-sm text-gray-600">
-                      <PhoneCall class="h-4 w-4 text-gray-500" />
-                      <span>{{ selectedOrder.boutique_telephone }}</span>
-                    </div>
-                    <div v-if="selectedOrder.boutique_email" class="flex items-center gap-2 text-sm text-gray-600">
-                      <Mail class="h-4 w-4 text-gray-500" />
-                      <span>{{ selectedOrder.boutique_email }}</span>
-                    </div>
-                  </div>
-                </div>
-                
-                <div v-if="selectedOrder.boutique_adresse || selectedOrder.boutique_commune">
-                  <h6 class="text-sm font-semibold text-gray-700 mb-3">Location</h6>
-                  <div class="space-y-2">
-                    <div v-if="selectedOrder.boutique_adresse" class="flex items-center gap-2 text-sm text-gray-600">
-                      <MapPin class="h-4 w-4 text-gray-500" />
-                      <span>{{ selectedOrder.boutique_adresse }}</span>
-                    </div>
-                    <div v-if="selectedOrder.boutique_commune" class="flex items-center gap-2 text-sm text-gray-600">
-                      <Building class="h-4 w-4 text-gray-500" />
-                      <span>{{ selectedOrder.boutique_commune }}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-              
-              <div class="flex flex-wrap gap-3 pt-4 border-t border-gray-100">
-                <button v-if="selectedOrder.boutique_telephone" @click="callBoutique(selectedOrder.boutique_telephone)" class="btn-degrade-orange">
-                  <PhoneCall class="h-4 w-4" />
-                  <span>Call</span>
-                </button>
-                <button v-if="selectedOrder.boutique_email" @click="emailBoutique(selectedOrder.boutique_email)" class="submit-btn">
-                  <Mail class="h-4 w-4" />
-                  <span>Email</span>
-                </button>
-                <button @click="notifyBoutiqueNewOrder(selectedOrder)" class="btn-gray">
-                  <Bell class="h-4 w-4" />
-                  <span>Notify Order</span>
-                </button>
-                <button @click="generateReceiptPDF(selectedOrder)" class="btn-gray">
-                  <FileDownIcon class="h-4 w-4" />
-                  <span>PDF Receipt</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Financial Summary -->
-          <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm">
-            <div class="flex items-center gap-3 mb-6">
-              <Banknote class="h-6 w-6 primary-color" />
-              <h4 class="text-lg font-semibold text-gray-900">Financial Summary</h4>
-            </div>
-            <div class="space-y-4">
-              <div class="flex justify-between items-center py-2">
-                <div class="flex items-center gap-2">
-                  <CalculatorIcon class="h-4 w-4 text-gray-500" />
-                  <span class="text-gray-600">Subtotal</span>
-                </div>
-                <span class="font-medium text-gray-900">{{ formatCurrency(selectedOrder.sous_total) }}</span>
-              </div>
-              <div class="flex justify-between items-center py-2">
-                <div class="flex items-center gap-2">
-                  <Truck class="h-4 w-4 text-gray-500" />
-                  <span class="text-gray-600">Delivery costs</span>
-                </div>
-                <span class="font-medium text-gray-900">{{ formatCurrency(selectedOrder.frais_livraison) }}</span>
-              </div>
-              <div class="flex justify-between items-center py-3 border-t border-gray-100">
-                <div class="flex items-center gap-2">
-                  <Banknote class="h-6 w-6 primary-color" />
-                  <span class="text-lg font-semibold primary-color">Total</span>
-                </div>
-                <span class="text-xl font-bold primary-color">{{ formatCurrency(selectedOrder.total) }}</span>
-              </div>
-            </div>
-          </div>
-
-          <!-- Order Actions -->
-          <div class="flex flex-wrap gap-4 justify-end pt-6 border-t border-gray-100">
-            <router-link :to="{ 
-                path: '/dashboard-admin/factures',
-                query: { orderId: selectedOrder.id },
-              }"
-              @click="saveOrderToSession(selectedOrder)"
+          <!-- Order Lifecycle Timeline -->
+          <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
+            <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
+              <Clock class="w-5 h-5 text-orange-500" />
+              Order Lifecycle
+            </h4>
+            <div class="flex items-center justify-between">
+              <div 
+                v-for="(stage, index) in orderLifecycleSteps" 
+                :key="stage.key"
+                class="flex-1 relative"
               >
-              <button 
-              v-if="selectedOrder.statut === 'en_attente'" 
-                class="flex-1 btn-gray"
-              >
-                <!-- utilisation directe du composant importé -->
-                <FileTextIcon class="w-4 h-4 " />
-                Proforma invoice
-              </button>
-            </router-link>
+                <div class="flex flex-col items-center">
+                  <div :class="[
+                    'w-10 h-10 rounded-full flex items-center justify-center text-lg z-10',
+                    isStageComplete(selectedOrder, stage.key) ? 'bg-green-500 text-white' : 
+                    isStageActive(selectedOrder, stage.key) ? 'bg-orange-500 text-white animate-pulse' : 
+                    'bg-gray-200 text-gray-500'
+                  ]">
+                    {{ stage.emoji }}
+                  </div>
+                  <div class="text-xs text-center mt-2 font-medium" :class="isStageComplete(selectedOrder, stage.key) ? 'text-green-600' : 'text-gray-500'">
+                    {{ stage.label }}
+                  </div>
+                </div>
+                <div 
+                  v-if="index < orderLifecycleSteps.length - 1"
+                  :class="[
+                    'absolute top-5 left-1/2 w-full h-0.5',
+                    isStageComplete(selectedOrder, stage.key) ? 'bg-green-500' : 'bg-gray-200'
+                  ]"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Buttons -->
+          <div class="flex flex-wrap gap-3 justify-end pt-4 border-t border-gray-100">
             <button 
-              v-if="selectedOrder.statut === 'en_attente'" 
-              @click="showConfirmModal('edit', selectedOrder)"
-              class="submit-btn"
+              v-if="selectedOrder.statut === 'en_attente'"
+              @click="openDocumentModal(selectedOrder, 'proforma')"
+              class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg font-medium hover:bg-orange-200 transition-colors inline-flex items-center gap-2"
             >
-              Edit Order
+              <FileTextIcon class="w-4 h-4" />
+              Send Proforma
             </button>
             <button 
-              v-if="selectedOrder.statut === 'en_attente'" 
+              v-if="selectedOrder.statut === 'en_attente'"
               @click="showConfirmModal('confirm', selectedOrder)"
-              class="submit-btn"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center gap-2"
             >
+              <Check class="w-4 h-4" />
               Confirm Order
             </button>
             <button 
-              v-if="selectedOrder.statut === 'confirmee'" 
+              v-if="selectedOrder.statut === 'confirmee' && !selectedOrder.is_ready"
+              @click="showConfirmModal('ready', selectedOrder)"
+              class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+            >
+              <Settings class="w-4 h-4" />
+              Mark Ready
+            </button>
+            <button 
+              v-if="selectedOrder.statut === 'confirmee' && selectedOrder.is_ready === 'valid'"
               @click="showConfirmModal('ship', selectedOrder)"
-              class="btn-gray"
+              class="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors inline-flex items-center gap-2"
             >
-              Mark as Shipped
+              <Truck class="w-4 h-4" />
+              Start Shipping
             </button>
             <button 
-              v-if="selectedOrder.statut === 'en_livraison'" 
+              v-if="selectedOrder.statut === 'en_livraison'"
               @click="showConfirmModal('deliver', selectedOrder)"
-              class="btn-degrade-orange"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center gap-2"
             >
-              Mark as Delivered
+              <CheckCircle2Icon class="w-4 h-4" />
+              Mark Delivered
             </button>
             <button 
-              v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)" 
-              @click="showConfirmModal('cancel', selectedOrder)"
-              class="btn-deconnexion"
+              v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)"
+              @click="openCancelModal(selectedOrder)"
+              class="px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors inline-flex items-center gap-2"
             >
+              <X class="w-4 h-4" />
               Cancel Order
             </button>
           </div>
@@ -1504,42 +1469,383 @@
     </div>
 
     <!-- Notification Toast -->
-    <div v-if="showNotification" :class="['fixed bottom-4 right-4 left-4 sm:left-auto z-50 text-white py-3 sm:py-4 px-4 sm:px-6 rounded-lg shadow-2xl transition-all duration-300 transform', getNotificationClass(notificationType)]">
-      <div class="flex items-center gap-2 sm:gap-3">
-        <component :is="getNotificationIcon(notificationType)" class="w-5 h-5 flex-shrink-0" />
-        <div class="flex-1 min-w-0">
-          <p class="font-semibold text-sm sm:text-base">{{ notificationTitle }}</p>
-          <p class="text-xs sm:text-sm opacity-90">{{ notificationMessage }}</p>
+    <Transition
+      enter-active-class="transform ease-out duration-300 transition"
+      enter-from-class="translate-y-2 opacity-0 sm:translate-y-0 sm:translate-x-2"
+      enter-to-class="translate-y-0 opacity-100 sm:translate-x-0"
+      leave-active-class="transition ease-in duration-100"
+      leave-from-class="opacity-100"
+      leave-to-class="opacity-0"
+    >
+      <div 
+        v-if="showNotification" 
+        :class="['fixed bottom-4 right-4 z-50 text-white py-4 px-6 rounded-xl shadow-2xl max-w-md', getNotificationClass(notificationType)]"
+      >
+        <div class="flex items-center gap-3">
+          <component :is="getNotificationIcon(notificationType)" class="w-6 h-6 flex-shrink-0" />
+          <div>
+            <p class="font-semibold">{{ notificationTitle }}</p>
+            <p class="text-sm opacity-90">{{ notificationMessage }}</p>
+          </div>
+        </div>
+      </div>
+    </Transition>
+
+    <!-- Upload Payment Proof Modal -->
+    <div v-if="showUploadPaymentModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeUploadPaymentModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <Upload class="h-5 w-5 text-orange-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Add Proof of Payment</h3>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrderForPayment?.numero_commande }}</p>
+            </div>
+          </div>
+          <button @click="closeUploadPaymentModal" class="p-2 hover:bg-gray-100 rounded-lg">
+            <X class="h-5 w-5 text-gray-500" />
+          </button>
+        </div>
+
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
+          <!-- Payment Info Box -->
+          <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 mb-6 border border-orange-200">
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <span class="text-xs text-orange-600 font-medium">Total Order</span>
+                <div class="text-lg font-bold text-gray-900">{{ formatCurrency(selectedOrderForPayment?.total || 0) }}</div>
+              </div>
+              <div>
+                <span class="text-xs text-orange-600 font-medium">Amount Due</span>
+                <div class="text-lg font-bold text-orange-700">{{ formatCurrency(getAmountDue(selectedOrderForPayment)) }}</div>
+              </div>
+              <div>
+                <span class="text-xs text-green-600 font-medium">Already Paid</span>
+                <div class="text-lg font-bold text-green-700">{{ formatCurrency(calculateTotalPaid(selectedOrderForPayment)) }}</div>
+              </div>
+              <div>
+                <span class="text-xs text-red-600 font-medium">Remaining</span>
+                <div class="text-lg font-bold text-red-700">{{ formatCurrency(calculateRemaining(selectedOrderForPayment)) }}</div>
+              </div>
+            </div>
+            <div class="mt-3">
+              <div class="flex justify-between text-xs mb-1">
+                <span class="text-gray-600">Payment Progress</span>
+                <span class="font-medium">{{ getPaymentPercentage(selectedOrderForPayment) }}%</span>
+              </div>
+              <div class="w-full bg-white rounded-full h-2">
+                <div 
+                  class="bg-gradient-to-r from-green-500 to-green-600 h-2 rounded-full transition-all duration-500"
+                  :style="{ width: getPaymentPercentage(selectedOrderForPayment) + '%' }"
+                ></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Payment Type Selection -->
+          <div class="mb-4">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Payment Type</label>
+            <div class="grid grid-cols-2 gap-2">
+              <button
+                @click="paymentType = 'deposit'"
+                :class="[
+                  'p-3 rounded-lg border-2 text-sm font-medium transition-all',
+                  paymentType === 'deposit' 
+                    ? 'border-orange-500 bg-orange-50 text-orange-700' 
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                ]"
+                :disabled="selectedOrderForPayment?.deposit_validated === 'valid'"
+              >
+                <Wallet class="w-5 h-5 mx-auto mb-1" />
+                Deposit ({{ selectedOrderForPayment?.payment_deposit_percent || 30 }}%)
+              </button>
+              <button
+                @click="paymentType = 'additional'"
+                :class="[
+                  'p-3 rounded-lg border-2 text-sm font-medium transition-all',
+                  paymentType === 'additional' 
+                    ? 'border-orange-500 bg-orange-50 text-orange-700' 
+                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                ]"
+              >
+                <CreditCard class="w-5 h-5 mx-auto mb-1" />
+                Additional Payment
+              </button>
+            </div>
+          </div>
+
+          <form @submit.prevent="submitPaymentProof" class="space-y-4">
+            <!-- Payment Amount -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Payment Amount <span class="text-red-500">*</span>
+              </label>
+              <div class="relative">
+                <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
+                <input
+                  type="number"
+                  v-model="uploadPaymentAmount"
+                  class="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  :placeholder="paymentType === 'deposit' ? 'Deposit amount' : 'Enter amount'"
+                  :max="getAmountDue(selectedOrderForPayment)"
+                  min="1"
+                  step="0.01"
+                  required
+                />
+              </div>
+              <p v-if="paymentType === 'deposit'" class="text-xs text-gray-500 mt-1">
+                Suggested: {{ formatCurrency((selectedOrderForPayment?.total || 0) * ((selectedOrderForPayment?.payment_deposit_percent || 30) / 100)) }}
+              </p>
+            </div>
+
+            <!-- File Upload -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                Proof of Payment <span class="text-red-500">*</span>
+              </label>
+              <div 
+                @click="$refs.paymentFileInput.click()"
+                @dragover.prevent="isDragging = true"
+                @dragleave="isDragging = false"
+                @drop.prevent="handleFileDrop"
+                :class="[
+                  'border-2 border-dashed rounded-xl p-6 text-center cursor-pointer transition-all',
+                  isDragging ? 'border-orange-500 bg-orange-50' : 'border-gray-300 hover:border-orange-400 hover:bg-orange-50/50'
+                ]"
+              >
+                <input
+                  type="file"
+                  ref="paymentFileInput"
+                  @change="handlePaymentFileSelect"
+                  accept="image/*,.pdf"
+                  class="hidden"
+                />
+                <div v-if="!uploadPaymentFile">
+                  <Upload class="w-10 h-10 mx-auto text-gray-400 mb-2" />
+                  <p class="text-sm text-gray-600">Click or drag & drop to upload</p>
+                  <p class="text-xs text-gray-400 mt-1">JPG, PNG or PDF (Max 10MB)</p>
+                </div>
+                <div v-else class="flex items-center justify-center gap-3">
+                  <FileText class="w-8 h-8 text-orange-500" />
+                  <div class="text-left">
+                    <p class="text-sm font-medium text-gray-900">{{ uploadPaymentFile.name }}</p>
+                    <p class="text-xs text-gray-500">{{ formatFileSize(uploadPaymentFile.size) }}</p>
+                  </div>
+                  <button 
+                    type="button"
+                    @click.stop="uploadPaymentFile = null"
+                    class="p-1 hover:bg-red-100 rounded-full"
+                  >
+                    <X class="w-4 h-4 text-red-500" />
+                  </button>
+                </div>
+              </div>
+
+              <!-- Upload Progress -->
+              <div v-if="uploadingPayment" class="mt-3">
+                <div class="flex justify-between text-xs mb-1">
+                  <span class="text-gray-600">Uploading...</span>
+                  <span class="font-medium text-orange-600">{{ uploadPaymentProgress }}%</span>
+                </div>
+                <div class="w-full bg-gray-200 rounded-full h-2">
+                  <div 
+                    class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300"
+                    :style="{ width: uploadPaymentProgress + '%' }"
+                  ></div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Comment -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Comment (Optional)</label>
+              <textarea
+                v-model="uploadPaymentComment"
+                rows="3"
+                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                placeholder="Add a note about this payment..."
+              ></textarea>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex gap-3 pt-4">
+              <button 
+                type="button"
+                @click="closeUploadPaymentModal"
+                class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                :disabled="uploadingPayment"
+              >
+                Cancel
+              </button>
+              <button 
+                type="submit"
+                class="flex-1 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                :disabled="uploadingPayment || !uploadPaymentFile || !uploadPaymentAmount"
+              >
+                <Loader2 v-if="uploadingPayment" class="w-4 h-4 animate-spin" />
+                <span>{{ uploadingPayment ? 'Uploading...' : 'Submit Proof' }}</span>
+              </button>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-    
-    
+
+    <!-- Validate Payment Modal -->
+    <div v-if="showValidateModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-green-100 rounded-lg">
+              <CheckCircle2Icon class="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Validate Payment</h3>
+              <p class="text-sm text-gray-500">Order #{{ currentValidateItem?.numero_commande }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <!-- Comment Input -->
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Admin Comment (Optional)</label>
+            <textarea
+              v-model="validationComment"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              placeholder="Enter any notes for the client..."
+            ></textarea>
+          </div>
+
+          <!-- Estimated Delivery Date Input (for deposit validation) -->
+          <div v-if="validatePaymentType === 'deposit'">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Delivery Date</label>
+            <input
+              type="date"
+              v-model="estimatedDeliveryDate"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
+            <button
+              @click="closeValidateModal"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              @click="confirmValidatePayment"
+              :disabled="validateLoading"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Loader2 v-if="validateLoading" class="w-4 h-4 animate-spin" />
+              Validate
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Reject Payment Modal -->
+    <div v-if="showRejectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeRejectModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-red-100 rounded-lg">
+              <XCircle class="h-5 w-5 text-red-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Reject Payment</h3>
+              <p class="text-sm text-gray-500">Order #{{ currentRejectItem?.numero_commande }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <p class="text-gray-600">Please select a reason for rejection:</p>
+          
+          <div class="space-y-2">
+            <label 
+              v-for="reason in rejectionReasons" 
+              :key="reason.value"
+              class="flex items-center gap-3 p-3 border border-gray-200 rounded-lg cursor-pointer hover:bg-gray-50 transition-colors"
+              :class="{ 'border-red-400 bg-red-50': selectedRejectionReason === reason.value }"
+            >
+              <input 
+                type="radio" 
+                v-model="selectedRejectionReason" 
+                :value="reason.value"
+                class="w-4 h-4 text-red-600 focus:ring-red-500"
+              >
+              <div>
+                <span class="text-sm font-medium text-gray-900">{{ reason.label }}</span>
+                <p v-if="reason.description" class="text-xs text-gray-500">{{ reason.description }}</p>
+              </div>
+            </label>
+          </div>
+
+          <div v-if="selectedRejectionReason === 'other'">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Specify reason</label>
+            <textarea 
+              v-model="customRejectionReason"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Enter the rejection reason..."
+            ></textarea>
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Admin Comment (Optional)</label>
+            <textarea
+              v-model="rejectionComment"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              placeholder="Enter any notes for the client..."
+            ></textarea>
+          </div>
+
+          <div class="flex justify-end gap-3 pt-4">
+            <button 
+              @click="closeRejectModal"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button 
+              @click="confirmRejectPayment"
+              :disabled="!selectedRejectionReason || (selectedRejectionReason === 'other' && !customRejectionReason) || rejectLoading"
+              class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+            >
+              <Loader2 v-if="rejectLoading" class="w-4 h-4 animate-spin" />
+              Reject Payment
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
   </div>
 </template>
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
-import Navbar from '../boutiques/Navbar.vue'
 import axios from 'axios'
 import jsPDF from 'jspdf'
+import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
-import { useRouter } from 'vue-router'
-
-// Icons
-import { 
+import {
   Home as HomeIcon,
   Download as DownloadIcon,
   ChevronDown as ChevronDownIcon,
   FileText as FileTextIcon,
   ShoppingCart as ShoppingCartIcon,
   Eye as EyeIcon,
-  X as XIcon,
   RefreshCcw as RefreshIcon,
-  AlertCircle as WarningIcon,
   Clock,
   CheckCircle2 as CheckCircle2Icon,
-  BadgeDollarSign as BadgeEuroIcon,
+  DollarSign,
   Search,
   Calendar,
   User,
@@ -1548,58 +1854,60 @@ import {
   Truck,
   MapPin,
   Check,
-  Archive as ArchiveIcon,
-  BookmarkX as BookmarkXIcon,
   ChevronLeft,
   ChevronRight,
-  FileCheck,
-  Banknote,
   Box as BoxIcon,
-  User2,
-  Home,
   Mail,
-  Bell,
-  FileDown as FileDownIcon,
-  Calculator as CalculatorIcon,
-  CheckCircle,
+  X,
   Image as ImageIcon,
-  CheckCircle as CheckCircleIcon,
-  CreditCard as CreditCardIcon,
-  X
+  CreditCard,
+  XCircle,
+  PackageCheck,
+  Settings,
+  Ship,
+  Globe,
+  Upload,
+  ExternalLink,
+  Wallet,
+  PackageX,
+  CheckCircle,
+  AlertCircle,
+  Bell,
+  Anchor,
+  Loader2, // Added for loading indicator in submit button
+  FileText // Added for file icon in upload modal
 } from 'lucide-vue-next'
 
-const router = useRouter()
-
-// API Base URL
 const API_BASE_URL = 'https://sastock.com/api_adjame'
 
 // Reactive data
-const dataLoading = ref(true)
-const estimatedDeliveryDate = ref('')
+const dataLoading = ref(false)
 const orders = ref([])
-
-const selectedOrder = ref(null)
-const showPaymentModal = ref(false)
-const selectedFile = ref(null)
-const paymentComment = ref('')
-const uploadProgress = ref(0)
-const paymentAmount = ref('')
-const uploading = ref(false)
-
-
+const stats = ref({
+  total_orders: 0,
+  pending_orders: 0,
+  confirmed_orders: 0,
+  ready_orders: 0,
+  shipping_orders: 0,
+  completed_orders: 0,
+  cancelled_orders: 0,
+  daily_revenue: 0
+})
+const selectedOrder = ref(null) // Used for Order Details modal, Cancel modal, Confirmation modal, Ready modal
+const selectedOrderForPayment = ref(null) // Used for Upload Payment Modal
 const showOrderModal = ref(false)
 const showConfirmationModal = ref(false)
 const confirmationAction = ref(null)
+const showExportDropdown = ref(false)
+const exportDropdownRef = ref(null)
 const hasError = ref(false)
-const error = ref('')
+const errorMessage = ref('')
 
-// Search and filters
+// Filters
 const searchQuery = ref('')
-const statusFilter = ref('')
 const dateFilter = ref('')
-const sortBy = ref('date_desc')
-
-// Pagination
+const deliveryTypeFilter = ref('')
+const activeFilter = ref('all')
 const currentPage = ref(1)
 const itemsPerPage = ref(10)
 
@@ -1609,124 +1917,240 @@ const notificationType = ref('success')
 const notificationTitle = ref('')
 const notificationMessage = ref('')
 
-//  Payment proof modals
+// Cancel Modal
+const showCancelModal = ref(false)
+const selectedCancelReason = ref('')
+const customCancelReason = ref('')
+
+// Document Modal (Proforma)
+const showDocumentModal = ref(false)
+const documentType = ref('proforma')
+const editablePrice = ref(0)
+const paymentTerms = ref({ deposit: 30, beforeShipping: 40, againstBL: 30 })
+const deliveryMethod = ref('FOB')
+const destinationAddress = ref('')
+const loadingPort = ref('')
+const additionalTerms = ref('')
+const signatureMethod = ref('upload')
+const proformaLoading = ref(false)
+
+// Tracking Modal
+const showTrackingModal = ref(false)
+const trackingLink = ref('')
+const vesselName = ref('')
+const imoNumber = ref('')
+const etd = ref('')
+const eta = ref('')
+const blFileInput = ref(null)
+const blFile = ref(null)
+const trackingLoading = ref(false)
+
+// Payment Modal
 const showPaymentProofModal = ref(false)
 const showProofImageModal = ref(false)
-const showValidateProofModal = ref(false)
-const showValidateProofModal2 = ref(false)
-const showValidateprepareModal = ref(false)
-const showValidatedeliveredModal = ref(false)
 const currentProofOrder = ref(null)
-const currentValidateOrder = ref(null)
 const currentProofImage = ref(null)
-const currentValidatePayment = ref(null)
-const validationComment = ref('')
 
-// Stats
-const stats = ref({
-  total_orders: 0,
-  pending_orders: 0,
-  confirmed_orders: 0,
-  daily_revenue: 0,
-  orders_growth: 0,
-  pending_reduction: 0,
-  confirmed_growth: 0,
-  revenue_growth: 0
-})
+// Validate Payment Modal state
+const showValidateModal = ref(false)
+const currentValidateItem = ref(null)
+const validatePaymentType = ref('deposit') // 'deposit' or 'additional'
+const estimatedDeliveryDate = ref('')
+const validationComment = ref('') // Undeclared -> Added
+const validateLoading = ref(false)
 
-const filterTabs = [
-  { value: 'all', label: 'All' },
-  { value: 'en_attente', label: 'Pending' },
-  { value: 'confirmee', label: 'Confirmed' },
-  { value: 'en_livraison', label: 'Available for delivery' },
-  { value: 'livree', label: 'Deliveries' },
-  { value: 'annulee', label: 'Cancelled' }
+// Reject Payment Modal state
+const showRejectModal = ref(false)
+const currentRejectItem = ref(null)
+const rejectPaymentType = ref('deposit')
+const selectedRejectionReason = ref('')
+const customRejectionReason = ref('')
+const rejectionComment = ref('')
+const rejectLoading = ref(false)
+
+// Ready Modal state
+const showReadyModal = ref(false) // Undeclared -> Added
+const readyComment = ref('') // Undeclared -> Added
+const inspectionNotes = ref('') // Undeclared -> Added
+const readyLoading = ref(false) // Undeclared -> Added
+
+// Upload Payment Modal state
+const showUploadPaymentModal = ref(false) // Undeclared -> Added
+const uploadPaymentFile = ref(null) // Undeclared -> Added
+const uploadPaymentAmount = ref('') // Undeclared -> Added
+const uploadingPayment = ref(false) // Undeclared -> Added
+const uploadPaymentProgress = ref(0) // Undeclared -> Added
+const paymentType = ref('deposit') // Undeclared -> Added
+const uploadPaymentComment = ref('') // Undeclared -> Added
+const isDragging = ref(false) // Undeclared -> Added
+
+
+// Cancellation reasons
+const cancellationReasons = [
+  { value: 'payment_default', emoji: '💰', label: 'Payment Default', description: 'Customer failed to pay within agreed timeframe' },
+  { value: 'customer_request', emoji: '🙋', label: 'Customer Request', description: 'Customer requested cancellation' },
+  { value: 'out_of_stock', emoji: '📦', label: 'Out of Stock', description: 'Product no longer available' },
+  { value: 'pricing_issue', emoji: '💵', label: 'Pricing Issue', description: 'Unable to agree on price' },
+  { value: 'shipping_issue', emoji: '🚚', label: 'Shipping Issue', description: 'Unable to deliver to destination' },
+  { value: 'other', emoji: '📝', label: 'Other', description: 'Specify your own reason' }
 ]
 
-const activeFilter = ref('all')
-const showExportDropdown = ref(false)
+// Rejection reasons for payment
+const rejectionReasons = [
+  { value: 'unclear_image', label: 'Image is unclear or unreadable' },
+  { value: 'wrong_amount', label: 'Amount does not match' },
+  { value: 'wrong_recipient', label: 'Wrong recipient/account' },
+  { value: 'fake_document', label: 'Document appears to be falsified' },
+  { value: 'incomplete_info', label: 'Missing or incomplete information' },
+  { value: 'expired', label: 'Payment proof expired' },
+  { value: 'other', label: 'Other reason' }
+]
 
-// Computed
-const filterCounts = computed(() => {
-  if (!orders.value) return { all: 0, en_attente: 0, confirmee: 0, en_livraison: 0, livree: 0, annulee: 0 }
+// Filter tabs
+const filterTabs = [
+  { value: 'all', label: 'All Orders', emoji: '📋' },
+  { value: 'en_attente', label: 'Pending', emoji: '⏳' },
+  { value: 'send', label: 'Contrat Send', emoji: '⏳' },
+  { value: 'confirmee', label: 'Confirmed', emoji: '✅' },
+  { value: 'ready', label: 'Ready', emoji: '⚙️' },
+  { value: 'en_livraison', label: 'Shipping', emoji: '🚚' },
+  { value: 'livree', label: 'Completed', emoji: '🎉' },
+  { value: 'annulee', label: 'Cancelled', emoji: '❌' }
+]
 
-  return {
-    'all': orders.value.length,
-    'en_attente': orders.value.filter(order => order.statut === 'en_attente').length,
-    'confirmee': orders.value.filter(order => order.statut === 'confirmee').length,
-    'en_livraison': orders.value.filter(order => order.statut === 'en_livraison').length,
-    'livree': orders.value.filter(order => order.statut === 'livree').length,
-    'annulee': orders.value.filter(order => order.statut === 'annulee').length
+// Lifecycle stages for pipeline view
+const lifecycleStages = computed(() => [
+  { key: 'pending', filterValue: 'en_attente', label: 'Pending', emoji: '⏳', count: stats.value.pending_orders, description: 'Awaiting action' },
+  { key: 'pending', filterValue: 'send', label: 'Contrat Send', emoji: '⏳', count: stats.value.pending_orders, description: 'Awaiting action' },
+  { key: 'confirmed', filterValue: 'confirmee', label: 'Confirmed', emoji: '✅', count: stats.value.confirmed_orders - stats.value.ready_orders, description: 'In preparation' },
+  { key: 'ready', filterValue: 'ready', label: 'Ready', emoji: '⚙️', count: stats.value.ready_orders, description: 'Ready for shipping' },
+  { key: 'shipping', filterValue: 'en_livraison', label: 'Shipping', emoji: '🚚', count: stats.value.shipping_orders, description: 'In transit' },
+  { key: 'completed', filterValue: 'livree', label: 'Completed', emoji: '🎉', count: stats.value.completed_orders, description: 'Delivered' }
+])
+
+// Order lifecycle steps for detail view
+const orderLifecycleSteps = [
+  { key: 'created', label: 'Created', emoji: '📝' },
+  { key: 'confirmed', label: 'Confirmed', emoji: '✅' },
+  { key: 'ready', label: 'Ready', emoji: '⚙️' },
+  { key: 'shipping', label: 'Shipping', emoji: '🚚' },
+  { key: 'delivered', label: 'Delivered', emoji: '🎉' }
+]
+
+// Stats cards using API stats
+const statsCards = computed(() => [
+  { 
+    key: 'total', 
+    filterValue: 'all',
+    label: 'Total Orders', 
+    value: stats.value.total_orders, 
+    icon: ShoppingCartIcon, 
+    bgColor: 'bg-gradient-to-br from-orange-200 to-orange-300',
+    emoji: '📊',
+    changeColor: 'text-orange-600',
+    description: 'All time'
+  },
+  { 
+    key: 'pending', 
+    filterValue: 'en_attente',
+    label: 'Pending', 
+    value: stats.value.pending_orders, 
+    icon: Clock, 
+    bgColor: 'bg-gradient-to-br from-yellow-200 to-yellow-300',
+    emoji: '⏳',
+    changeColor: 'text-yellow-600',
+    description: 'Awaiting action'
+  },
+  { 
+    key: 'confirmed', 
+    filterValue: 'confirmee',
+    label: 'Confirmed', 
+    value: stats.value.confirmed_orders, 
+    icon: CheckCircle2Icon, 
+    bgColor: 'bg-gradient-to-br from-green-200 to-green-300',
+    emoji: '✅',
+    changeColor: 'text-green-600',
+    description: 'Processing'
+  },
+  { 
+    key: 'ready', 
+    filterValue: 'ready',
+    label: 'Ready', 
+    value: stats.value.ready_orders, 
+    icon: PackageCheck, 
+    bgColor: 'bg-gradient-to-br from-blue-200 to-blue-300',
+    emoji: '⚙️',
+    changeColor: 'text-blue-600',
+    description: 'For shipping'
+  },
+  { 
+    key: 'shipping', 
+    filterValue: 'en_livraison',
+    label: 'Shipping', 
+    value: stats.value.shipping_orders, 
+    icon: Truck, 
+    bgColor: 'bg-gradient-to-br from-purple-200 to-purple-300',
+    emoji: '🚚',
+    changeColor: 'text-purple-600',
+    description: 'In transit'
+  },
+  { 
+    key: 'completed', 
+    filterValue: 'livree',
+    label: 'Completed', 
+    value: stats.value.completed_orders, 
+    icon: CheckCircle, 
+    bgColor: 'bg-gradient-to-br from-emerald-200 to-emerald-300',
+    emoji: '🎉',
+    changeColor: 'text-emerald-600',
+    description: 'Delivered'
   }
-})
+])
 
-const calculateTotalPaid = (order) => {
-  if (!order) return 0;
-
-  // Paiement initial 30%
-  let total = order.total * 0.3;
-
-  // Paiements additionnels filtrés
-  if (order.paiements_additionnels && order.paiements_additionnels.length > 0) {
-    total += order.paiements_additionnels
-      .filter(payment => payment.valide === 'valid') // 👈 filtre ici
-      .reduce((sum, payment) => sum + parseFloat(payment.montant || 0), 0);
-  }
-
-  return total;
-};
-
-const calculateRemaining = (order) => {
-  if (!order) return 0
-  return order.total - calculateTotalPaid(order)
-}
-
-const showPaymentProof = (order) => {
-  currentProofOrder.value = order
-  showOrderModal.value = false
-  showPaymentProofModal.value = true
-
-}
-
-const closePaymentProofModal = () => {
-  showPaymentProofModal.value = false
-  currentProofOrder.value = null
-}
+const filterCounts = computed(() => ({
+  all: orders.value.length,
+  en_attente: orders.value.filter(o => o.statut === 'en_attente').length,
+  confirmee: orders.value.filter(o => o.statut === 'confirmee').length,
+  ready: orders.value.filter(o => o.statut === 'confirmee' && o.is_ready === 'valid').length,
+  en_livraison: orders.value.filter(o => o.statut === 'en_livraison').length,
+  livree: orders.value.filter(o => o.statut === 'livree').length,
+  annulee: orders.value.filter(o => o.statut === 'annulee').length
+}))
 
 const filteredOrders = computed(() => {
   let filtered = [...orders.value]
 
   if (searchQuery.value) {
     const query = searchQuery.value.toLowerCase()
-    filtered = filtered.filter(order => 
-      order.numero_commande.toLowerCase().includes(query) ||
-      order.client_nom.toLowerCase().includes(query) ||
-      order.client_telephone.includes(query) ||
-      order.produit_nom.toLowerCase().includes(query) ||
-      (order.boutique_nom && order.boutique_nom.toLowerCase().includes(query))
+    filtered = filtered.filter(order =>
+      order.numero_commande?.toLowerCase().includes(query) ||
+      order.client_nom?.toLowerCase().includes(query) ||
+      order.produit_nom?.toLowerCase().includes(query)
     )
   }
 
-  if (statusFilter.value) {
-    filtered = filtered.filter(order => order.statut === statusFilter.value)
-  } else if (activeFilter.value !== 'all') {
-    filtered = filtered.filter(order => order.statut === activeFilter.value)
+  if (activeFilter.value !== 'all') {
+    if (activeFilter.value === 'ready') {
+      filtered = filtered.filter(o => o.statut === 'confirmee' && o.is_ready === 'valid')
+    } else if (activeFilter.value === 'confirmee') {
+      filtered = filtered.filter(o => o.statut === 'confirmee')
+    } else {
+      filtered = filtered.filter(o => o.statut === activeFilter.value)
+    }
+  }
+
+  if (deliveryTypeFilter.value) {
+    filtered = filtered.filter(o => o.delivery_method === deliveryTypeFilter.value)
   }
 
   if (dateFilter.value) {
     const now = new Date()
     const today = new Date(now.getFullYear(), now.getMonth(), now.getDate())
-    
     filtered = filtered.filter(order => {
-      const orderDate = new Date(order.date_commande)
-      
+      const orderDate = new Date(order.date_commande || order.created_at)
       switch (dateFilter.value) {
         case 'today':
           return orderDate >= today
-        case 'yesterday':
-          const yesterday = new Date(today)
-          yesterday.setDate(yesterday.getDate() - 1)
-          return orderDate >= yesterday && orderDate < today
         case 'week':
           const weekAgo = new Date(today)
           weekAgo.setDate(weekAgo.getDate() - 7)
@@ -1741,44 +2165,22 @@ const filteredOrders = computed(() => {
     })
   }
 
-  filtered.sort((a, b) => {
-    switch (sortBy.value) {
-      case 'date_desc':
-        return new Date(b.date_commande) - new Date(a.date_commande)
-      case 'date_asc':
-        return new Date(a.date_commande) - new Date(b.date_commande)
-      case 'amount_desc':
-        return b.total - a.total
-      case 'amount_asc':
-        return a.total - b.total
-      default:
-        return 0
-    }
-  })
-
-  return filtered
+  return filtered.sort((a, b) => new Date(b.date_commande || b.created_at) - new Date(a.date_commande || a.created_at))
 })
 
 const paginatedOrders = computed(() => {
   const start = (currentPage.value - 1) * itemsPerPage.value
-  const end = start + itemsPerPage.value
-  return filteredOrders.value.slice(start, end)
+  return filteredOrders.value.slice(start, start + itemsPerPage.value)
 })
 
-const totalPages = computed(() => {
-  return Math.ceil(filteredOrders.value.length / itemsPerPage.value)
-})
-
-const hasActiveFilters = computed(() => {
-  return searchQuery.value || statusFilter.value || dateFilter.value || sortBy.value !== 'date_desc'
-})
-
+const totalPages = computed(() => Math.ceil(filteredOrders.value.length / itemsPerPage.value))
+const hasActiveFilters = computed(() => searchQuery.value || dateFilter.value || deliveryTypeFilter.value || activeFilter.value !== 'all')
 const isFirstPage = computed(() => currentPage.value <= 1)
 const isLastPage = computed(() => currentPage.value >= totalPages.value)
 
 // Methods
-const handleFilterChange = (filterValue) => {
-  activeFilter.value = filterValue
+const handleFilterChange = (value) => {
+  activeFilter.value = value
   currentPage.value = 1
 }
 
@@ -1792,9 +2194,9 @@ const handleSearch = () => {
 
 const clearFilters = () => {
   searchQuery.value = ''
-  statusFilter.value = ''
   dateFilter.value = ''
-  sortBy.value = 'date_desc'
+  deliveryTypeFilter.value = ''
+  activeFilter.value = 'all'
   currentPage.value = 1
 }
 
@@ -1809,311 +2211,194 @@ const getVisiblePages = () => {
   const maxVisible = 5
   let start = Math.max(1, currentPage.value - Math.floor(maxVisible / 2))
   let end = Math.min(totalPages.value, start + maxVisible - 1)
-  
   if (end - start + 1 < maxVisible) {
     start = Math.max(1, end - maxVisible + 1)
   }
-  
   for (let i = start; i <= end; i++) {
     pages.push(i)
   }
-  
   return pages
 }
 
-//  Payment proof methods
-const openPaymentProofModal = (order) => {
-  selectedOrder.value = order
-  showPaymentModal.value = true
-  selectedFile.value = null
-  paymentComment.value = ''
-  uploadProgress.value = 0
+// Format helpers
+const formatCurrency = (value) => {
+  return new Intl.NumberFormat('en-US', {
+    style: 'currency',
+    currency: 'USD',
+    minimumFractionDigits: 0
+  }).format(value || 0)
 }
 
-const closePaymentModal = () => {
-  showPaymentModal.value = false
-  selectedOrder.value = null
-  selectedFile.value = null
-  paymentComment.value = ''
-  uploadProgress.value = 0
+const formatDate = (dateString) => {
+  if (!dateString) return 'N/A'
+  return new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric'
+  }).format(new Date(dateString))
 }
 
-const calculatePaymentStatus = (order) => {
-  const total = order.total
-  const firstPayment = total * 0.3 // 30% initial payment
-  const additionalPayments = order.paiements || []
-  const totalAdditionalPaid = additionalPayments.reduce((sum, payment) => sum + parseFloat(payment.montant || 0), 0)
-  const totalPaid = (order.tobevalidate === 'valid' ? firstPayment : 0) + totalAdditionalPaid
-  const remaining = total - totalPaid
-  const percentage = (totalPaid / total) * 100
+// Format file size
+const formatFileSize = (bytes, decimals = 2) => {
+  if (bytes === 0) return '0 Bytes'
+  const k = 1024
+  const dm = decimals < 0 ? 0 : decimals
+  const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
+  const i = Math.floor(Math.log(bytes) / Math.log(k))
+  return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + ' ' + sizes[i]
+}
+
+// Status helpers
+const getStatusLabel = (status) => ({
+  en_attente: 'Pending',
+  send: 'Contrat Send',
+  confirmee: 'Confirmed',
+  en_livraison: 'Shipping',
+  livree: 'Delivered',
+  annulee: 'Cancelled'
+}[status] || status)
+
+const getStatusEmoji = (status) => ({
+  en_attente: '⏳',
+  send: '⏳',
+  confirmee: '✅',
+  en_livraison: '🚚',
+  livree: '🎉',
+  annulee: '❌'
+}[status] || '📋')
+
+const getStatusClass = (status) => ({
+  en_attente: 'bg-yellow-100 text-yellow-800',
+  confirmee: 'bg-green-100 text-green-800',
+  en_livraison: 'bg-purple-100 text-purple-800',
+  livree: 'bg-emerald-100 text-emerald-800',
+  annulee: 'bg-red-100 text-red-800'
+}[status] || 'bg-gray-100 text-gray-800')
+
+const calculateTotalPaid = (order) => {
+  if (!order) return 0
+  let total = 0
   
-  return {
-    total,
-    firstPayment,
-    totalAdditionalPaid,
-    totalPaid,
-    remaining,
-    percentage: Math.min(percentage, 100)
+  // Check if deposit is validated
+  if (order.deposit_validated === 'valid' || order.tobevalidate === 'valid') {
+    const depositPercent = order.payment_deposit_percent || 30
+    total += order.total * (depositPercent / 100)
   }
-}
-const handleFileSelect = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    if (file.size > 10 * 1024 * 1024) {
-      alert('The file is too large. Maximum size: 10MB')
-      event.target.value = ''
-      return
-    }
-
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image (JPG, PNG, etc.)')
-      event.target.value = ''
-      return
-    }
-
-    selectedFile.value = file
+  
+  // Add additional payments
+  if (order.paiements_additionnels?.length) {
+    total += order.paiements_additionnels
+      .filter(p => p.valide === 'valid')
+      .reduce((sum, p) => sum + parseFloat(p.montant || 0), 0)
   }
+  
+  return total
 }
 
-const uploadPaymentProof = async () => {
-  if (!selectedFile.value || !selectedOrder.value || !paymentAmount.value) return
-
-  uploading.value = true
-  try {
-    
-    // const cloudinaryUrl = await uploadToCloudinary(selectedFile.value)
-
-    // const response = await ordersApi.uploadPaymentProof(selectedOrder.value.id, {
-    //   payment_proof_url:cloudinaryUrl,
-    //   comment: paymentComment.value
-    // })
-
-    // if (response.success) {
-      alert('Proof of payment successfully sent!'+ "\nAmount:"+ paymentAmount.value + "\nFile name: "+ selectedFile.value.name+ "\nComment: "+ paymentComment.value??paymentComment.value)
-      closePaymentModal()
-      // fetchOrders()
-    // } else {
-    //   throw new Error(response.message || 'Erreur lors de l\'envoi')
-    // }
-  } catch (error) {
-    console.error('Error uploading payment proof:', error)
-    alert('Error sending proof of payment: ' + (error.message || 'Erreur inconnue'))
-  } finally {
-    uploading.value = false
-    uploadProgress.value = 0
-  }
+const calculateRemaining = (order) => {
+  if (!order) return 0
+  return order.total - calculateTotalPaid(order)
 }
 
-
-const viewProofImage = (imageUrl) => {
-  currentProofImage.value = imageUrl
-  showProofImageModal.value = true
+const getPaymentPercentage = (order) => {
+  if (!order || !order.total) return 0
+  return Math.min(100, Math.round((calculateTotalPaid(order) / order.total) * 100))
 }
 
-const closeProofImageModal = () => {
-  showProofImageModal.value = false
-  currentProofImage.value = null
+const getPaymentStatusLabel = (order) => {
+  const percentage = getPaymentPercentage(order)
+  if (percentage === 0) return 'No payment'
+  if (percentage < 100) return `${percentage}% paid`
+  return 'Fully paid'
 }
 
-const openValidateProofModal = (order) => {
-  currentValidateOrder.value = order
-  validationComment.value = ''
-  showValidateProofModal.value = true
-  showPaymentProofModal.value = false
+const getPaymentStatusClass = (order) => {
+  const percentage = getPaymentPercentage(order)
+  if (percentage === 0) return 'text-red-600'
+  if (percentage < 100) return 'text-yellow-600'
+  return 'text-green-600'
 }
 
-const openValidateProofModal2 = (payment) => {
-  console.log('Opening validate proof modal for payment:', payment)
-  currentValidatePayment.value = payment
-  validationComment.value = ''
-  showValidateProofModal2.value = true
-  showPaymentProofModal.value = false
+// Get Amount Due for Upload Payment Modal
+const getAmountDue = (order) => {
+  if (!order) return 0
+  const totalPaid = calculateTotalPaid(order)
+  return Math.max(0, order.total - totalPaid)
 }
 
-const openValidatePrepareModal = (order) => {
-  currentValidateOrder.value = order
-  validationComment.value = ''
-  showValidateprepareModal.value = true
-  showPaymentProofModal.value = false
+// Lifecycle stage helpers
+const isStageComplete = (order, stage) => {
+  const stages = ['created', 'confirmed', 'ready', 'shipping', 'delivered']
+  const currentStageIndex = getCurrentStageIndex(order)
+  const stageIndex = stages.indexOf(stage)
+  return stageIndex < currentStageIndex
 }
 
-const openValidateDeliveredModal = (order) => {
-  currentValidateOrder.value = order
-  validationComment.value = ''
-  showValidatedeliveredModal.value = true
-  showPaymentProofModal.value = false
+const isStageActive = (order, stage) => {
+  const stages = ['created', 'confirmed', 'ready', 'shipping', 'delivered']
+  return stages.indexOf(stage) === getCurrentStageIndex(order)
 }
 
-const closeValidateProofModal = () => {
-  showValidateProofModal.value = false
-  currentValidateOrder.value = null
-  validationComment.value = ''
+const getCurrentStageIndex = (order) => {
+  if (!order) return 0
+  if (order.statut === 'livree') return 5
+  if (order.statut === 'en_livraison') return 3
+  if (order.statut === 'confirmee' && order.is_ready === 'valid') return 2
+  if (order.statut === 'confirmee') return 1
+  return 0
 }
 
-const closeValidateprepareModal = () => {
-  showValidateprepareModal.value = false
-  currentValidateOrder.value = null
-  validationComment.value = ''
-  estimatedDeliveryDate.value = ''
-}
+// =============================================
+// =============================================
 
-const validatePaymentProof = async () => {
-  // if (!estimatedDeliveryDate.value) {
-  //   showNotificationMessage('error', 'Error', 'Please enter an estimated delivery date')
-  //   return
-  // }
-  if (!currentValidateOrder.value) return
-
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/commandes.php?action=validate_proof&id=${currentValidateOrder.value.id}`,
-      {
-        commentaire: validationComment.value,
-        date_livraison_estimee: estimatedDeliveryDate.value
-      }
-    )
-    
-    if (response.data.success) {
-      showNotificationMessage('success', 'Proof Validated', 'Payment proof has been successfully validated.')
-      
-      // Update order in list
-      const orderIndex = orders.value.findIndex(o => o.id === currentValidateOrder.value.id)
-      if (orderIndex !== -1) {
-        orders.value[orderIndex].preuve_validee = true
-        orders.value[orderIndex].commentaire_validation = validationComment.value
-      }
-      
-      // Update selected order if open
-      if (selectedOrder.value && selectedOrder.value.id === currentValidateOrder.value.id) {
-        selectedOrder.value.preuve_validee = true
-        selectedOrder.value.commentaire_validation = validationComment.value
-      }
-      
-      closeValidateProofModal()
-    } else {
-      showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
-    }
-  } catch (error) {
-    console.error('Error validating proof:', error)
-    showNotificationMessage('error', 'Error', 'Error validating payment proof')
-  }
-}
-
-const validatePaymentProof2 = async () => {
-  if (!currentValidatePayment.value) return
-
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/commandes.php?action=validate_other_proof&id=${currentValidatePayment.value.id}`,
-      {
-        commentaire_admin: validationComment.value
-      }
-    )
-    
-    if (response.data.success) {
-      showNotificationMessage('success', 'Proof Validated', 'Payment proof has been successfully validated.')
-      
-      showValidateProofModal2.value = false
-      loadAllData()
-    } else {
-      showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
-    }
-  } catch (error) {
-    console.error('Error validating proof:', error)
-    showNotificationMessage('error', 'Error', 'Error validating payment proof')
-  }
-}
-
-const validatePreparation = async () => {
-  if (!currentValidateOrder.value) return
-
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/commandes.php?action=validate_prepare&id=${currentValidateOrder.value.id}`,
-      {
-        commentaire: validationComment.value
-      }
-    )
-    
-    if (response.data.success) {
-      showNotificationMessage('success', 'Prepare Validated', 'Payment proof has been successfully validated.')
-      
-      // Update order in list
-      loadAllData()
-      
-      closeValidateprepareModal()
-    } else {
-      showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
-    }
-  } catch (error) {
-    console.error('Error validating proof:', error)
-    showNotificationMessage('error', 'Error', 'Error validating payment proof')
-  }
-}
-
-const validateDelivered = async () => {
-  if (!currentValidateOrder.value) return
-
-  try {
-    const response = await axios.put(
-      `${API_BASE_URL}/commandes.php?action=validate_delivered&id=${currentValidateOrder.value.id}`,
-      {
-        commentaire_delivered: validationComment.value
-      }
-    )
-    
-    if (response.data.success) {
-      showNotificationMessage('success', 'Delivered Validated', 'The order has been successfully delivered..')
-      
-      
-      showValidatedeliveredModal.value = false
-      loadAllData()
-    } else {
-      showNotificationMessage('error', 'Error', response.data.error || 'Error validating proof')
-    }
-  } catch (error) {
-    console.error('Error validating proof:', error)
-    showNotificationMessage('error', 'Error', 'Error validating payment proof')
-  }
-}
-
-const handleImageError = (event) => {
-  event.target.src = '/placeholder.svg?height=64&width=64'
-}
-
-// API Methods
+// Load stats from API
 const loadStats = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/commandes.php?action=stats&_=${Date.now()}`)
-    
+    const response = await axios.get(`${API_BASE_URL}/commandes_api_v2.php?action=stats&_=${Date.now()}`)
     if (response.data.success) {
       stats.value = response.data.data
+    } else {
+      throw new Error(response.data.error || 'Failed to load stats')
     }
   } catch (error) {
     console.error('Error loading stats:', error)
+    hasError.value = true
+    errorMessage.value = error.message || 'Failed to load order statistics.'
   }
 }
 
+// Load orders from API
 const loadOrders = async () => {
   try {
-    const response = await axios.get(`${API_BASE_URL}/commandes.php?action=list&_=${Date.now()}`)
+    const params = new URLSearchParams()
+    params.append('action', 'list')
+    if (activeFilter.value !== 'all') {
+      params.append('statut', activeFilter.value === 'ready' ? 'confirmee' : activeFilter.value)
+    }
+    if (deliveryTypeFilter.value) {
+      params.append('delivery_method', deliveryTypeFilter.value)
+    }
+    params.append('_', Date.now())
     
+    const response = await axios.get(`${API_BASE_URL}/commandes_api_v2.php?${params.toString()}`)
     if (response.data.success) {
       orders.value = response.data.data
       hasError.value = false
     } else {
-      hasError.value = true
-      error.value = response.data.error || 'Error loading orders'
+      throw new Error(response.data.error || 'Failed to load orders')
     }
-  } catch (err) {
-    console.error('Error loading orders:', err)
+  } catch (error) {
+    console.error('Error loading orders:', error)
     hasError.value = true
-    error.value = 'Connection error. Please try again.'
+    errorMessage.value = error.message || 'Connection error. Please try again.'
   }
 }
 
+// Load all data
 const loadAllData = async () => {
   dataLoading.value = true
+  hasError.value = false // Reset error before loading
+  errorMessage.value = ''
   try {
     await Promise.all([loadStats(), loadOrders()])
   } finally {
@@ -2121,103 +2406,10 @@ const loadAllData = async () => {
   }
 }
 
-const saveOrderToSession = (order) => {
-  sessionStorage.setItem('selectedOrder', JSON.stringify(order))
-}
-
-// Confirmation Modal Methods
-const showConfirmModal = (action, order) => {
-  confirmationAction.value = action
-  selectedOrder.value = order
-  showConfirmationModal.value = true
-  showOrderModal.value = false
-}
-
-const closeConfirmModal = () => {
-  showConfirmationModal.value = false
-  confirmationAction.value = null
-}
-
-const getConfirmationTitle = () => {
-  switch (confirmationAction.value) {
-    case 'confirm': return 'Confirm Order'
-    case 'ship': return 'Ship Order'
-    case 'deliver': return 'Deliver Order'
-    case 'cancel': return 'Cancel Order'
-    default: return ''
-  }
-}
-
-const getConfirmationMessage = () => {
-  switch (confirmationAction.value) {
-    case 'confirm': return 'Are you sure you want to confirm this order?'
-    case 'ship': return 'Are you sure you want to mark this order as shipped?'
-    case 'deliver': return 'Are you sure you want to mark this order as delivered?'
-    case 'cancel': return 'Are you sure you want to cancel this order? This action is irreversible.'
-    default: return ''
-  }
-}
-
-const getConfirmationIconClass = () => {
-  switch (confirmationAction.value) {
-    case 'confirm': return 'bg-orange-100 primary-color'
-    case 'ship': return 'bg-orange-100 primary-color'
-    case 'deliver': return 'bg-purple-100 text-purple-600'
-    case 'cancel': return 'bg-red-100 error-color'
-    default: return 'bg-gray-100 text-gray-600'
-  }
-}
-
-const getConfirmationButtonClass = () => {
-  switch (confirmationAction.value) {
-    case 'confirm': return 'btn-degrade-orange'
-    case 'ship': return 'btn-degrade-orange'
-    case 'deliver': return 'btn-degrade-orange'
-    case 'cancel': return 'btn-deconnexion'
-    default: return 'bg-gray-600 hover:bg-gray-700'
-  }
-}
-
-const getConfirmationButtonText = () => {
-  switch (confirmationAction.value) {
-    case 'confirm': return 'Confirm'
-    case 'ship': return 'Ship'
-    case 'deliver': return 'Deliver'
-    case 'cancel': return 'Cancel Order'
-    default: return 'Confirm'
-  }
-}
-
-const executeAction = async () => {
-  if (!selectedOrder.value || !confirmationAction.value) return
-
-  try {
-    switch (confirmationAction.value) {
-      case 'confirm':
-        await confirmOrder(selectedOrder.value.id)
-        break
-      case 'ship':
-        await markAsShipped(selectedOrder.value.id)
-        break
-      case 'deliver':
-        await markAsDelivered(selectedOrder.value.id)
-        break
-      case 'cancel':
-        await cancelOrder(selectedOrder.value.id)
-        break
-    }
-    
-    closeConfirmModal()
-  } catch (error) {
-    showNotificationMessage('error', 'Error', 'Error updating order')
-  }
-}
-
-// Order Actions
+// Confirm order API call
 const confirmOrder = async (orderId) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes.php?action=confirm&id=${orderId}&_=${Date.now()}`)
-    
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=confirm&id=${orderId}`)
     if (response.data.success) {
       showNotificationMessage('success', 'Order Confirmed', 'Order has been successfully confirmed.')
       await loadAllData()
@@ -2229,41 +2421,34 @@ const confirmOrder = async (orderId) => {
   }
 }
 
-const confirmPaiement = async (orderId, commentaire) => {
+// Mark order as ready API call
+const markOrderReady = async (orderId) => {
+  readyLoading.value = true
   try {
-    const payload = {
-      id: orderId,
-      commentaire: commentaire
-    }
-
-    const response = await axios.put(
-      `${API_BASE_URL}/commandes.php?action=confirm&_=${Date.now()}`,
-      payload,
-      {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      }
-    )
-
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=mark_ready&id=${orderId}`, {
+      commentaire: readyComment.value,
+      inspection_notes: inspectionNotes.value
+    })
     if (response.data.success) {
-      showNotificationMessage('success', 'Paiement confirmé', 'Le paiement a été confirmé avec succès.')
+      showNotificationMessage('success', 'Order Ready', 'Order is now ready for shipping.')
+      showReadyModal.value = false
       await loadAllData()
     } else {
-      showNotificationMessage('error', 'Erreur', response.data.error || 'Erreur lors de la confirmation du paiement.')
+      showNotificationMessage('error', 'Error', response.data.error || 'Error marking order ready')
     }
   } catch (error) {
-    console.error(error)
-    showNotificationMessage('error', 'Erreur', 'Une erreur est survenue lors de la confirmation.')
+    showNotificationMessage('error', 'Error', 'Error marking order ready')
+  } finally {
+    readyLoading.value = false
   }
 }
 
-const markAsShipped = async (orderId) => {
+// Start shipping API call
+const startShipping = async (orderId) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes.php?action=ship&id=${orderId}&_=${Date.now()}`)
-    
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=ship&id=${orderId}`)
     if (response.data.success) {
-      showNotificationMessage('success', 'Order Shipped', 'Order has been marked as shipped.')
+      showNotificationMessage('success', 'Shipping Started', 'Order is now in shipping.')
       await loadAllData()
     } else {
       showNotificationMessage('error', 'Error', response.data.error || 'Error shipping order')
@@ -2273,10 +2458,10 @@ const markAsShipped = async (orderId) => {
   }
 }
 
-const markAsDelivered = async (orderId) => {
+// Mark as delivered API call
+const markDelivered = async (orderId) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes.php?action=deliver&id=${orderId}&_=${Date.now()}`)
-    
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=deliver&id=${orderId}`)
     if (response.data.success) {
       showNotificationMessage('success', 'Order Delivered', 'Order has been marked as delivered.')
       await loadAllData()
@@ -2288,12 +2473,15 @@ const markAsDelivered = async (orderId) => {
   }
 }
 
-const cancelOrder = async (orderId) => {
+// Cancel order API call
+const cancelOrderAPI = async (orderId, reason, details) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes.php?action=cancel&id=${orderId}&_=${Date.now()}`)
-    
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=cancel&id=${orderId}`, {
+      motif_annulation: reason,
+      details_annulation: details
+    })
     if (response.data.success) {
-      showNotificationMessage('success', 'Order Cancelled', 'Order has been successfully cancelled.')
+      showNotificationMessage('info', 'Order Cancelled', 'Order has been cancelled.')
       await loadAllData()
     } else {
       showNotificationMessage('error', 'Error', response.data.error || 'Error cancelling order')
@@ -2303,34 +2491,699 @@ const cancelOrder = async (orderId) => {
   }
 }
 
-// UI Methods
+// Validate deposit payment API call
+const validateDepositPayment = async (orderId) => {
+  validateLoading.value = true
+  try {
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=validate_proof&id=${orderId}`, {
+      commentaire: validationComment.value,
+      estimated_delivery_date: estimatedDeliveryDate.value // Add estimated delivery date
+    })
+    if (response.data.success) {
+      showNotificationMessage('success', 'Payment Validated', 'Deposit payment has been validated.')
+      await loadAllData()
+      closePaymentProofModal()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error validating payment')
+    }
+  } catch (error) {
+    showNotificationMessage('error', 'Error', 'Error validating payment')
+  } finally {
+    validateLoading.value = false
+  }
+}
+
+// Validate additional payment API call
+const validateAdditionalPayment = async (paymentId) => {
+  validateLoading.value = true
+  try {
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=validate_other_proof&id=${paymentId}`, {
+      commentaire_admin: validationComment.value
+    })
+    if (response.data.success) {
+      showNotificationMessage('success', 'Payment Validated', 'Payment has been validated.')
+      await loadAllData()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error validating payment')
+    }
+  } catch (error) {
+    showNotificationMessage('error', 'Error', 'Error validating payment')
+  } finally {
+    validateLoading.value = false
+  }
+}
+
+// Reject payment API call
+const rejectPaymentAPI = async (itemId, type, reason, details) => {
+  rejectLoading.value = true
+  try {
+    let response
+    if (type === 'deposit') {
+      response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=reject_deposit&id=${itemId}`, {
+        motif_rejet: reason,
+        commentaire: details
+      })
+    } else { // additional payment
+      response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=reject_payment&id=${itemId}`, {
+        motif_rejet: reason,
+        commentaire: details
+      })
+    }
+
+    if (response.data.success) {
+      showNotificationMessage('info', 'Payment Rejected', 'Payment has been rejected.')
+      await loadAllData()
+    } else {
+      throw new Error(response.data.error || 'Error rejecting payment')
+    }
+  } catch (error) {
+    showNotificationMessage('error', 'Error', error.message || 'Error rejecting payment')
+  } finally {
+    rejectLoading.value = false
+  }
+}
+
+
+// Create proforma API call
+const createProforma = async () => {
+  if (paymentTerms.value.deposit + paymentTerms.value.beforeShipping + paymentTerms.value.againstBL !== 100) {
+    showNotificationMessage('error', 'Error', 'Payment terms must equal 100%')
+    return
+  }
+  
+  proformaLoading.value = true
+  try {
+    const response = await axios.post(`${API_BASE_URL}/commandes_api_v2.php?action=create_proforma`, {
+      commande_id: selectedOrder.value.id,
+      prix_ajuste: editablePrice.value,
+      payment_deposit_percent: paymentTerms.value.deposit,
+      payment_before_shipping_percent: paymentTerms.value.beforeShipping,
+      payment_against_bl_percent: paymentTerms.value.againstBL,
+      delivery_method: deliveryMethod.value,
+      loading_port: loadingPort.value,
+      destination_port: destinationAddress.value,
+      termes_additionnels: additionalTerms.value,
+      signature_method: signatureMethod.value
+    })
+    if (response.data.success) {
+      showNotificationMessage('success', 'Proforma Created', 'Proforma invoice has been created and sent to client.')
+      closeDocumentModal()
+      await loadAllData()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error creating proforma')
+    }
+  } catch (error) {
+    showNotificationMessage('error', 'Error', 'Error creating proforma')
+  } finally {
+    proformaLoading.value = false
+  }
+}
+
+// Upload Bill of Lading API call
+const uploadBillOfLading = async () => {
+  if (!blFile.value || !selectedOrder.value) return
+  
+  trackingLoading.value = true
+  try {
+    const formData = new FormData()
+    formData.append('file', blFile.value)
+    formData.append('order_id', selectedOrder.value.id)
+    
+    // Assuming your API endpoint handles file uploads and returns a URL
+    const uploadResponse = await axios.post(`${API_BASE_URL}/upload_bl.php`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' }
+    })
+    
+    if (uploadResponse.data.success) {
+      const blUrl = uploadResponse.data.url // URL of the uploaded file
+      const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=upload_bl&id=${selectedOrder.value.id}`, {
+        bl_document_url: blUrl,
+        bl_number: `BL-${Date.now()}` // Or get from API if provided
+      })
+      
+      if (response.data.success) {
+        showNotificationMessage('success', 'B/L Uploaded', 'Bill of Lading has been uploaded.')
+        await loadAllData()
+      } else {
+        showNotificationMessage('error', 'Error', response.data.error || 'Error updating order with B/L info')
+      }
+    } else {
+      showNotificationMessage('error', 'Error', uploadResponse.data.error || 'Error uploading file')
+    }
+  } catch (error) {
+    console.error('Error uploading B/L:', error)
+    showNotificationMessage('error', 'Error', 'Error uploading B/L')
+  } finally {
+    trackingLoading.value = false
+  }
+}
+
+// Update vessel tracking API call
+const updateVesselTracking = async () => {
+  if (!selectedOrder.value) return
+  
+  trackingLoading.value = true
+  try {
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=update_tracking&id=${selectedOrder.value.id}`, {
+      vessel_name: vesselName.value,
+      imo_number: imoNumber.value,
+      tracking_link: trackingLink.value,
+      etd: etd.value,
+      eta: eta.value
+    })
+    
+    if (response.data.success) {
+      showNotificationMessage('success', 'Tracking Updated', 'Vessel tracking information has been updated.')
+      closeTrackingModal()
+      await loadAllData()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error updating tracking')
+    }
+  } catch (error) {
+    showNotificationMessage('error', 'Error', 'Error updating tracking')
+  } finally {
+    trackingLoading.value = false
+  }
+}
+
+// Submit Payment Proof for Upload Payment Modal
+const submitPaymentProof = async () => {
+  if (!uploadPaymentFile.value || !selectedOrderForPayment.value || !uploadPaymentAmount.value) {
+    showNotificationMessage('error', 'Validation Error', 'Please fill in all required fields.')
+    return
+  }
+
+  uploadingPayment.value = true
+  uploadPaymentProgress.value = 0
+
+  try {
+    // Simulate upload progress
+    const progressInterval = setInterval(() => {
+      if (uploadPaymentProgress.value < 90) {
+        uploadPaymentProgress.value += 10
+      }
+    }, 200)
+
+    // Upload file to Cloudinary or your storage
+    let proofUrl = ''
+    try {
+      proofUrl = await uploadToCloudinary(uploadPaymentFile.value)
+    } catch (uploadError) {
+      // If Cloudinary fails, convert to base64 as fallback
+      proofUrl = await new Promise((resolve) => {
+        const reader = new FileReader()
+        reader.onloadend = () => resolve(reader.result)
+        reader.readAsDataURL(uploadPaymentFile.value)
+      })
+    }
+
+    clearInterval(progressInterval)
+    uploadPaymentProgress.value = 95
+
+    // Call API based on payment type
+    let response
+    if (paymentType.value === 'deposit') {
+      response = await axios.post(
+        `${API_BASE_URL}/commandes_api_v2.php?action=add_payment_proof`,
+        {
+          commande_id: selectedOrderForPayment.value.id,
+          preuve_url: proofUrl,
+          montant: parseFloat(uploadPaymentAmount.value),
+          commentaire: uploadPaymentComment.value
+        }
+      )
+    } else {
+      response = await axios.post(
+        `${API_BASE_URL}/commandes_api_v2.php?action=add_new_payment`,
+        {
+          commande_id: selectedOrderForPayment.value.id,
+          preuve_url: proofUrl,
+          montant: parseFloat(uploadPaymentAmount.value),
+          commentaire: uploadPaymentComment.value,
+          description: `Additional payment - ${formatDate(new Date())}`
+        }
+      )
+    }
+
+    if (response.data.success) {
+      showNotificationMessage('success', 'Payment Proof Uploaded', 'The proof of payment has been successfully uploaded.')
+      closeUploadPaymentModal()
+      await loadAllData()
+    } else {
+      throw new Error(response.data.error || 'Error uploading payment proof')
+    }
+  } catch (error) {
+    console.error('Error uploading payment proof:', error)
+    showNotificationMessage('error', 'Upload Failed', error.message || 'Error uploading payment proof')
+  } finally {
+    uploadingPayment.value = false
+    uploadPaymentProgress.value = 0
+  }
+}
+
+// Get order history API call
+const getOrderHistory = async (orderId) => {
+  try {
+    const response = await axios.get(`${API_BASE_URL}/commandes_api_v2.php?action=get_history&commande_id=${orderId}`)
+    if (response.data.success) {
+      return response.data.data
+    }
+    return []
+  } catch (error) {
+    console.error('Error fetching order history:', error)
+    return []
+  }
+}
+
+// =============================================
+// Modal handlers
+// =============================================
+
 const openOrderDetails = (order) => {
-  selectedOrder.value = order
+  selectedOrder.value = { ...order } // Clone to prevent direct modification
   showOrderModal.value = true
 }
 
 const closeOrderModal = () => {
   showOrderModal.value = false
+  selectedOrder.value = null
 }
 
-// Export Methods
+const openCancelModal = (order) => {
+  selectedOrder.value = { ...order }
+  selectedCancelReason.value = ''
+  customCancelReason.value = ''
+  showCancelModal.value = true
+  showOrderModal.value = false // Close details modal if open
+}
+
+const closeCancelModal = () => {
+  showCancelModal.value = false
+  selectedOrder.value = null
+}
+
+const openDocumentModal = (order, type) => {
+  selectedOrder.value = { ...order }
+  documentType.value = type
+  editablePrice.value = order.total
+  deliveryMethod.value = order.delivery_method || 'FOB'
+  destinationAddress.value = order.destination_port || order.adresse_complete || ''
+  loadingPort.value = order.loading_port || ''
+  paymentTerms.value = {
+    deposit: order.payment_deposit_percent || 30,
+    beforeShipping: order.payment_before_shipping_percent || 40,
+    againstBL: order.payment_against_bl_percent || 30
+  }
+  showDocumentModal.value = true
+  showOrderModal.value = false // Close details modal if open
+}
+
+const closeDocumentModal = () => {
+  showDocumentModal.value = false
+  selectedOrder.value = null
+}
+
+const openTrackingModal = (order) => {
+  selectedOrder.value = { ...order }
+  trackingLink.value = order.tracking_link || ''
+  vesselName.value = order.vessel_name || ''
+  imoNumber.value = order.imo_number || ''
+  etd.value = order.etd || ''
+  eta.value = order.eta || ''
+  showTrackingModal.value = true
+  showOrderModal.value = false // Close details modal if open
+}
+
+const closeTrackingModal = () => {
+  showTrackingModal.value = false
+  selectedOrder.value = null
+}
+
+const openPaymentProofModal = (order) => {
+  currentProofOrder.value = { ...order }
+  validationComment.value = ''
+  showPaymentProofModal.value = true
+}
+
+const closePaymentProofModal = () => {
+  showPaymentProofModal.value = false
+  currentProofOrder.value = null
+}
+
+const showPaymentProof = (order) => {
+  currentProofOrder.value = order
+  showPaymentProofModal.value = true
+}
+
+const viewProofImage = (url) => {
+  currentProofImage.value = url
+  showProofImageModal.value = true
+}
+
+const closeProofImageModal = () => {
+  showProofImageModal.value = false
+  currentProofImage.value = null
+}
+
+const openReadyModal = (order) => {
+  selectedOrder.value = { ...order }
+  readyComment.value = ''
+  inspectionNotes.value = ''
+  showReadyModal.value = true
+  showOrderModal.value = false // Close details modal if open
+}
+
+const closeReadyModal = () => {
+  showReadyModal.value = false
+  selectedOrder.value = null
+}
+
+// Upload Payment Modal handlers
+const openUploadPaymentModal = (order) => {
+  selectedOrderForPayment.value = { ...order }
+  uploadPaymentFile.value = null
+  uploadPaymentAmount.value = ''
+  uploadPaymentComment.value = ''
+  uploadingPayment.value = false
+  uploadPaymentProgress.value = 0
+  paymentType.value = order.deposit_validated === 'valid' ? 'additional' : 'deposit'
+  isDragging.value = false
+  showUploadPaymentModal.value = true
+  showOrderModal.value = false // Close details modal if open
+}
+
+const closeUploadPaymentModal = () => {
+  showUploadPaymentModal.value = false
+  selectedOrderForPayment.value = null
+  uploadPaymentFile.value = null
+  uploadPaymentAmount.value = ''
+  uploadPaymentComment.value = ''
+}
+
+const handlePaymentFileSelect = (event) => {
+  const files = event.target.files
+  if (files.length > 0) {
+    handleFile(files[0])
+  }
+}
+
+const handleFileDrop = (event) => {
+  isDragging.value = false
+  const files = event.dataTransfer.files
+  if (files.length > 0) {
+    handleFile(files[0])
+  }
+}
+
+const handleFile = (file) => {
+  const maxSize = 10 * 1024 * 1024 // 10MB
+  if (file.size > maxSize) {
+    showNotificationMessage('error', 'File Too Large', 'Maximum file size is 10MB.')
+    return
+  }
+  if (!file.type.startsWith('image/') && file.type !== 'application/pdf') {
+    showNotificationMessage('error', 'Invalid file type', 'Please upload an image or PDF')
+    return
+  }
+  uploadPaymentFile.value = file
+}
+
+// Confirmation modal
+const showConfirmModal = (action, order) => {
+  confirmationAction.value = action
+  selectedOrder.value = { ...order } // Clone to prevent direct modification
+  
+  if (action === 'ready') {
+    openReadyModal(order)
+    return
+  }
+  
+  showConfirmationModal.value = true
+  showOrderModal.value = false // Close details modal if open
+}
+
+const closeConfirmModal = () => {
+  showConfirmationModal.value = false
+  confirmationAction.value = null
+  selectedOrder.value = null
+}
+
+const getConfirmationTitle = () => ({
+  confirm: 'Confirm Order',
+  ready: 'Mark as Ready',
+  ship: 'Start Shipping',
+  deliver: 'Mark as Delivered',
+  cancel: 'Cancel Order'
+}[confirmationAction.value] || '')
+
+const getConfirmationMessage = () => ({
+  confirm: 'Are you sure you want to confirm this order? The client has provided payment proof.',
+  ready: 'Mark this order as ready for shipping? Preparation is complete.',
+  ship: 'Start the shipping process? Ensure all payments are received.',
+  deliver: 'Mark this order as delivered? This will complete the order lifecycle.',
+  cancel: 'Are you sure you want to cancel this order?'
+}[confirmationAction.value] || '')
+
+const getConfirmationIconClass = () => ({
+  confirm: 'bg-green-100 text-green-600',
+  ready: 'bg-blue-100 text-blue-600',
+  ship: 'bg-purple-100 text-purple-600',
+  deliver: 'bg-emerald-100 text-emerald-600',
+  cancel: 'bg-red-100 text-red-600'
+}[confirmationAction.value] || 'bg-gray-100 text-gray-600')
+
+const getConfirmationIcon = () => ({
+  confirm: Check,
+  ready: Settings,
+  ship: Truck,
+  deliver: CheckCircle2Icon,
+  cancel: X
+}[confirmationAction.value] || Check)
+
+const getConfirmationButtonClass = () => ({
+  confirm: 'bg-green-600 hover:bg-green-700',
+  ready: 'bg-blue-600 hover:bg-blue-700',
+  ship: 'bg-purple-600 hover:bg-purple-700',
+  deliver: 'bg-emerald-600 hover:bg-emerald-700',
+  cancel: 'bg-red-600 hover:bg-red-700'
+}[confirmationAction.value] || 'bg-gray-600')
+
+const getConfirmationButtonText = () => ({
+  confirm: 'Confirm',
+  ready: 'Mark Ready',
+  ship: 'Start Shipping',
+  deliver: 'Mark Delivered',
+  cancel: 'Cancel Order'
+}[confirmationAction.value] || 'Confirm')
+
+const executeAction = async () => {
+  if (!selectedOrder.value) return
+  
+  switch (confirmationAction.value) {
+    case 'confirm':
+      await confirmOrder(selectedOrder.value.id)
+      break
+    case 'ship':
+      await startShipping(selectedOrder.value.id)
+      break
+    case 'deliver':
+      await markDelivered(selectedOrder.value.id)
+      break
+  }
+
+  closeConfirmModal()
+}
+
+const confirmCancelOrder = async () => {
+  if (!selectedOrder.value || !selectedCancelReason.value) return
+
+  const reason = selectedCancelReason.value === 'other' 
+    ? customCancelReason.value 
+    : cancellationReasons.find(r => r.value === selectedCancelReason.value)?.label
+
+  await cancelOrderAPI(selectedOrder.value.id, selectedCancelReason.value, reason)
+  closeCancelModal()
+}
+
+const generateAndSendDocument = async () => {
+  await createProforma()
+}
+
+const saveTrackingInfo = async () => {
+  await updateVesselTracking()
+}
+
+const handleBLUpload = (event) => {
+  const file = event.target.files[0]
+  if (file) {
+    blFile.value = file
+  }
+}
+
+// Validate payment modal handlers
+const openValidateModal = (item, type) => {
+  currentValidateItem.value = item
+  validatePaymentType.value = type
+  validationComment.value = '' // Clear comment
+  estimatedDeliveryDate.value = '' // Clear date
+  showValidateModal.value = true
+}
+
+const closeValidateModal = () => {
+  showValidateModal.value = false
+  currentValidateItem.value = null
+  validationComment.value = ''
+  estimatedDeliveryDate.value = ''
+}
+
+const confirmValidatePayment = async () => {
+  if (!currentValidateItem.value) return
+  
+  validateLoading.value = true
+  try {
+    let response
+    
+    if (validatePaymentType.value === 'deposit') {
+      // Validate deposit - this will also confirm the order and move to preparation
+      response = await axios.put(
+        `${API_BASE_URL}/commandes_api_v2.php?action=validate_proof&id=${currentValidateItem.value.id}`,
+        {
+          commentaire: validationComment.value,
+          date_livraison_estimee: estimatedDeliveryDate.value
+        }
+      )
+    } else {
+      // Validate additional payment
+      response = await axios.put(
+        `${API_BASE_URL}/commandes_api_v2.php?action=validate_other_proof&id=${currentValidateItem.value.id}`,
+        {
+          commentaire_admin: validationComment.value
+        }
+      )
+    }
+    
+    if (response.data.success) {
+      const message = validatePaymentType.value === 'deposit' 
+        ? 'Deposit validated! Order is now in preparation.'
+        : 'Payment validated successfully.'
+      showNotificationMessage('success', 'Payment Validated', message)
+      closeValidateModal()
+      closePaymentProofModal()
+      await loadAllData()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error validating payment')
+    }
+  } catch (error) {
+    console.error('Error validating payment:', error)
+    showNotificationMessage('error', 'Error', 'Error validating payment')
+  } finally {
+    validateLoading.value = false
+  }
+}
+
+// Reject payment modal handlers
+const openRejectModal = (item, type) => {
+  currentRejectItem.value = item
+  rejectPaymentType.value = type
+  selectedRejectionReason.value = ''
+  customRejectionReason.value = ''
+  rejectionComment.value = ''
+  showRejectModal.value = true
+}
+
+const closeRejectModal = () => {
+  showRejectModal.value = false
+  currentRejectItem.value = null
+  selectedRejectionReason.value = ''
+  customRejectionReason.value = ''
+  rejectionComment.value = ''
+}
+
+const confirmRejectPayment = async () => {
+  if (!currentRejectItem.value || !selectedRejectionReason.value) return
+  if (selectedRejectionReason.value === 'other' && !customRejectionReason.value) return
+  
+  const reason = selectedRejectionReason.value === 'other'
+    ? customRejectionReason.value
+    : rejectionReasons.find(r => r.value === selectedRejectionReason.value)?.label
+  
+  rejectLoading.value = true
+  try {
+    let response
+    
+    if (rejectPaymentType.value === 'deposit') {
+      response = await axios.put(
+        `${API_BASE_URL}/commandes_api_v2.php?action=reject_deposit&id=${currentRejectItem.value.id}`,
+        {
+          motif_rejet: reason,
+          commentaire: rejectionComment.value
+        }
+      )
+    } else {
+      response = await axios.put(
+        `${API_BASE_URL}/commandes_api_v2.php?action=reject_payment&id=${currentRejectItem.value.id}`,
+        {
+          motif_rejet: reason,
+          commentaire: rejectionComment.value
+        }
+      )
+    }
+    
+    if (response.data.success) {
+      showNotificationMessage('info', 'Payment Rejected', 'The payment has been rejected. Client will be notified.')
+      closeRejectModal()
+      closePaymentProofModal()
+      await loadAllData()
+    } else {
+      showNotificationMessage('error', 'Error', response.data.error || 'Error rejecting payment')
+    }
+  } catch (error) {
+    console.error('Error rejecting payment:', error)
+    showNotificationMessage('error', 'Error', 'Error rejecting payment')
+  } finally {
+    rejectLoading.value = false
+  }
+}
+
+// Notification
+const showNotificationMessage = (type, title, message) => {
+  notificationType.value = type
+  notificationTitle.value = title
+  notificationMessage.value = message
+  showNotification.value = true
+  setTimeout(() => { showNotification.value = false }, 4000)
+}
+
+const getNotificationClass = (type) => ({
+  success: 'bg-gradient-to-r from-green-500 to-green-600',
+  error: 'bg-gradient-to-r from-red-500 to-red-600',
+  info: 'bg-gradient-to-r from-blue-500 to-blue-600',
+  warning: 'bg-gradient-to-r from-yellow-500 to-yellow-600'
+}[type] || 'bg-gray-600')
+
+const getNotificationIcon = (type) => ({
+  success: CheckCircle,
+  error: XCircle,
+  info: Bell,
+  warning: AlertCircle
+}[type] || Bell)
+
+// Export functions
 const exportToPDF = () => {
   try {
-    showNotificationMessage('info', 'Export PDF', 'Generating PDF file...')
     showExportDropdown.value = false
+    showNotificationMessage('info', 'Export PDF', 'Generating PDF file...')
     
     const doc = new jsPDF()
-    
     doc.setFontSize(20)
     doc.text('Order Management', 14, 22)
-    
     doc.setFontSize(10)
     doc.text(`Generated: ${new Date().toLocaleString()}`, 14, 30)
     doc.text(`Total Orders: ${filteredOrders.value.length}`, 14, 36)
     
     const tableData = filteredOrders.value.map(order => [
       order.numero_commande,
-      formatDate(order.date_commande),
+      formatDate(order.date_commande || order.created_at),
       order.client_nom,
       order.produit_nom,
       formatCurrency(order.total),
@@ -2342,16 +3195,8 @@ const exportToPDF = () => {
       head: [['Order #', 'Date', 'Customer', 'Product', 'Total', 'Status']],
       body: tableData,
       theme: 'grid',
-      headStyles: { fillColor: [249, 115, 22] },
-      styles: { fontSize: 8 },
-      columnStyles: {
-        0: { cellWidth: 30 },
-        1: { cellWidth: 25 },
-        2: { cellWidth: 30 },
-        3: { cellWidth: 40 },
-        4: { cellWidth: 25 },
-        5: { cellWidth: 25 }
-      }
+      headStyles: { fillColor: [249, 115, 22] }, // Orange color
+      styles: { fontSize: 8 }
     })
     
     doc.save(`orders_${Date.now()}.pdf`)
@@ -2364,38 +3209,24 @@ const exportToPDF = () => {
 
 const exportToExcel = () => {
   try {
-    showNotificationMessage('info', 'Export Excel', 'Generating Excel file...')
     showExportDropdown.value = false
+    showNotificationMessage('info', 'Export Excel', 'Generating Excel file...')
     
     const excelData = filteredOrders.value.map(order => ({
       'Order Number': order.numero_commande,
-      'Date': formatDate(order.date_commande),
-      'Time': formatTime(order.date_commande),
+      'Date': formatDate(order.date_commande || order.created_at),
       'Customer': order.client_nom,
       'Phone': order.client_telephone,
       'Product': order.produit_nom,
       'Quantity': order.quantite,
-      'Unit Price': order.produit_prix,
-      'Subtotal': order.sous_total,
-      'Delivery Fee': order.frais_livraison,
       'Total': order.total,
       'Status': getStatusLabel(order.statut),
-      'Delivery Type': getDeliveryTypeLabel(order.type_livraison),
-      'Municipality': order.commune || order.ville,
-      'Address': order.adresse_complete,
-      'Store': order.boutique_name || order.boutique_nom
+      'Delivery Method': order.delivery_method || 'FOB',
+      'Destination': order.destination_port || order.adresse_complete
     }))
-
+    
     const wb = XLSX.utils.book_new()
     const ws = XLSX.utils.json_to_sheet(excelData)
-    
-    const colWidths = [
-      { wch: 15 }, { wch: 12 }, { wch: 8 }, { wch: 20 }, { wch: 15 },
-      { wch: 30 }, { wch: 8 }, { wch: 12 }, { wch: 12 }, { wch: 12 },
-      { wch: 12 }, { wch: 12 }, { wch: 15 }, { wch: 20 }, { wch: 30 }, { wch: 20 }
-    ]
-    ws['!cols'] = colWidths
-    
     XLSX.utils.book_append_sheet(wb, ws, 'Orders')
     XLSX.writeFile(wb, `orders_${Date.now()}.xlsx`)
     
@@ -2406,176 +3237,28 @@ const exportToExcel = () => {
   }
 }
 
-// Helper Functions
-const formatCurrency = (value) => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 0
-  }).format(value)
-}
-
-const formatDate = (dateString) => {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('fr-FR', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric'
-  }).format(date)
-}
-
-const formatTime = (dateString) => {
-  const date = new Date(dateString)
-  return new Intl.DateTimeFormat('fr-FR', {
-    hour: '2-digit',
-    minute: '2-digit'
-  }).format(date)
-}
-
-const getStatusLabel = (status) => {
-  const labels = {
-    'en_attente': 'Pending',
-    'confirmee': 'Confirmed',
-    'en_livraison': 'In Delivery',
-    'livree': 'Delivered',
-    'annule': 'Cancelled'
-  }
-  return labels[status] || status || "Other"
-}
-
-const getStatusClass = (status) => {
-  const classes = {
-    'en_attente': 'bg-yellow-100 text-yellow-800',
-    'confirmee': 'bg-green-100 text-green-800',
-    'en_livraison': 'bg-blue-100 text-blue-800',
-    'livree': 'bg-purple-100 text-purple-800',
-    'annule': 'bg-red-100 text-red-800'
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
-
-const getStatusIcon = (status) => {
-  const icons = {
-    'en_attente': Clock,
-    'confirmee': CheckCircle2Icon,
-    'en_livraison': Truck,
-    'livree': CheckCircle,
-    'annule': XIcon
-  }
-  return icons[status] || Clock
-}
-
-const getDeliveryTypeLabel = (type) => {
-  const labels = {
-    'abidjan': 'Abidjan',
-    'interieur': 'Interior',
-    'pickup': 'Pickup'
-  }
-  return labels[type] || type
-}
-
-const getBoutiqueStatusLabel = (status) => {
-  const labels = {
-    'active': 'Active',
-    'pending': 'Pending',
-    'suspended': 'Suspended'
-  }
-  return labels[status] || status
-}
-
-const getBoutiqueStatusClass = (status) => {
-  const classes = {
-    'active': 'bg-green-100 text-green-800',
-    'pending': 'bg-yellow-100 text-yellow-800',
-    'suspended': 'bg-red-100 text-red-800'
-  }
-  return classes[status] || 'bg-gray-100 text-gray-800'
-}
-
-const getNotificationClass = (type) => {
-  const classes = {
-    'success': 'bg-gradient-to-r from-green-500 to-green-600',
-    'error': 'bg-gradient-to-r from-red-500 to-red-600',
-    'info': 'bg-gradient-to-r from-blue-500 to-blue-600',
-    'warning': 'bg-gradient-to-r from-yellow-500 to-yellow-600'
-  }
-  return classes[type] || 'bg-gradient-to-r from-gray-500 to-gray-600'
-}
-
-const getNotificationIcon = (type) => {
-  const icons = {
-    'success': CheckCircle,
-    'error': XIcon,
-    'info': Bell,
-    'warning': WarningIcon
-  }
-  return icons[type] || Bell
-}
-
-const showNotificationMessage = (type, title, message) => {
-  notificationType.value = type
-  notificationTitle.value = title
-  notificationMessage.value = message
-  showNotification.value = true
-  
-  setTimeout(() => {
-    showNotification.value = false
-  }, 5000)
-}
-
-// Boutique Actions
-const callBoutique = (phone) => {
-  window.location.href = `tel:${phone}`
-}
-
-const emailBoutique = (email) => {
-  window.location.href = `mailto:${email}`
-}
-
-const notifyBoutiqueNewOrder = (order) => {
-  showNotificationMessage('info', 'Notification', 'Store notification sent successfully')
-}
-
-const generateReceiptPDF = (order) => {
-  try {
-    const doc = new jsPDF()
-    
-    doc.setFontSize(18)
-    doc.text('Order Receipt', 14, 22)
-    
-    doc.setFontSize(12)
-    doc.text(`Order #: ${order.numero_commande}`, 14, 35)
-    doc.text(`Date: ${formatDate(order.date_commande)}`, 14, 42)
-    doc.text(`Customer: ${order.client_nom}`, 14, 49)
-    doc.text(`Phone: ${order.client_telephone}`, 14, 56)
-    
-    doc.text(`Product: ${order.produit_nom}`, 14, 70)
-    doc.text(`Quantity: ${order.quantite}`, 14, 77)
-    doc.text(`Unit Price: ${formatCurrency(order.produit_prix)}`, 14, 84)
-    
-    doc.text(`Subtotal: ${formatCurrency(order.sous_total)}`, 14, 98)
-    doc.text(`Delivery: ${formatCurrency(order.frais_livraison)}`, 14, 105)
-    doc.setFontSize(14)
-    doc.text(`Total: ${formatCurrency(order.total)}`, 14, 115)
-    
-    doc.save(`receipt_${order.numero_commande}.pdf`)
-    showNotificationMessage('success', 'Receipt Generated', 'PDF receipt generated successfully')
-  } catch (error) {
-    showNotificationMessage('error', 'Error', 'Error generating receipt')
-  }
-}
+// Click outside handler
 const handleClickOutside = (event) => {
   if (exportDropdownRef.value && !exportDropdownRef.value.contains(event.target)) {
     showExportDropdown.value = false
   }
 }
 
-// Lifecycle
+// Cloudinary upload function (placeholder)
+const uploadToCloudinary = async (file) => {
+  // Replace with your actual Cloudinary configuration and API call
+  // For demonstration, simulate a network delay and return a dummy URL
+  console.warn('Cloudinary upload not configured. Using dummy URL.');
+  await new Promise(resolve => setTimeout(resolve, 1000)); // Simulate upload time
+  // In a real scenario, you'd return the URL from Cloudinary response
+  return URL.createObjectURL(file); // Fallback to local URL for demo
+}
+
+
 onMounted(() => {
   loadAllData()
   document.addEventListener('click', handleClickOutside)
 })
-
 
 onUnmounted(() => {
   document.removeEventListener('click', handleClickOutside)
@@ -2583,396 +3266,24 @@ onUnmounted(() => {
 </script>
 
 <style scoped>
-
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.modal-content {
-  background: white;
-  padding: 30px;
-  border-radius: 12px;
-  width: 90%;
-  max-width: 500px;
-  position: relative;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  animation: modal-fade-in 0.3s ease-out forwards;
-  overflow-y: auto; /* Allow scrolling if content is too long */
-  max-height: 90vh; /* Limit height to viewport */
-}
-
-@keyframes modal-fade-in {
-  from { opacity: 0; transform: scale(0.9); }
-  to { opacity: 1; transform: scale(1); }
-}
-.modal-close {
-  position: absolute;
-  top: 20px;
-  right: 20px;
-  background: none;
-  border: none;
-  cursor: pointer;
-  color: #999;
-  transition: color 0.3s;
-}
-
-.modal-close:hover {
-  color: #333;
-}
-
-.modal-header {
-  text-align: center;
-  margin-bottom: 25px;
-}
-
-.modal-title {
-  font-size: 24px;
-  font-weight: 700;
-  color: #333;
-  margin-bottom: 8px;
-}
-
-.modal-subtitle,
-.modal-message {
-  font-size: 15px;
-  color: #666;
-  margin-bottom: 0;
-}
-
-.modal-message {
-  margin-top: 15px;
-}
-
-.payment-info-box {
-  background-color: #f8f9fa;
-  padding: 15px;
-  border-radius: 8px;
-  margin-bottom: 20px;
-  border: 1px solid #e8e8e8;
-}
-
-.info-row {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 8px;
-  font-size: 14px;
-}
-
-.info-label {
-  color: #666;
-}
-
-.info-value {
-  color: #333;
-  font-weight: 600;
-}
-
-.info-note {
-  font-size: 13px;
-  color: #999;
-  margin-top: 10px;
-  text-align: center;
-}
-
-.upload-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.form-group {
-  text-align: left;
-}
-
-.form-label {
-  display: block;
-  margin-bottom: 8px;
-  font-weight: 500;
-  color: #333;
-  font-size: 14px;
-}
-
-.file-input-wrapper {
-  position: relative;
-  overflow: hidden;
-  cursor: pointer;
-  border: 2px dashed #d9d9d9;
-  border-radius: 8px;
-  background-color: #fefefe;
-  transition: all 0.3s;
-}
-
-.file-input-wrapper:hover {
-  border-color: #fe9700;
-}
-
-.file-input {
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  opacity: 0;
-  cursor: pointer;
-}
-
-.file-input-display {
-  padding: 15px 20px;
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  color: #666;
-  font-size: 15px;
-}
-
-.file-input-display span {
-  font-weight: 500;
-}
-
-.file-name {
-  color: #fe9700;
-}
-
-.file-hint {
-  font-size: 12px;
-  color: #999;
-  margin-top: 8px;
-}
-
-.upload-progress {
-  margin-top: 10px;
-}
-
-.progress-bar {
-  width: 100%;
-  height: 12px;
-  background-color: #e0e0e0;
-  border-radius: 6px;
-  overflow: hidden;
-  margin-bottom: 5px;
-}
-
-.progress-fill {
-  height: 100%;
-  background-color: #fe9700;
-  border-radius: 6px;
-  transition: width 0.4s ease-in-out;
-}
-
-.progress-text {
-  font-size: 12px;
-  color: #666;
-}
-
-.modal-actions {
-  display: flex;
-  justify-content: center;
-  gap: 15px;
-  margin-top: 30px;
-}
-/* Animations */
 @keyframes float-slow {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  50% {
-    transform: translateY(-20px) translateX(10px);
-  }
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(-20px) translateX(10px); }
 }
-
 @keyframes float-reverse {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  50% {
-    transform: translateY(15px) translateX(-15px);
-  }
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(15px) translateX(-15px); }
 }
-
 @keyframes float-diagonal {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  50% {
-    transform: translateY(-15px) translateX(-10px);
-  }
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(-15px) translateX(-10px); }
 }
-
 @keyframes float-slow-reverse {
-  0%, 100% {
-    transform: translateY(0px) translateX(0px);
-  }
-  50% {
-    transform: translateY(10px) translateX(15px);
-  }
+  0%, 100% { transform: translateY(0px) translateX(0px); }
+  50% { transform: translateY(10px) translateX(15px); }
 }
-
-@keyframes pulse-slow {
-  0%, 100% {
-    opacity: 0.6;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 1;
-    transform: scale(1.1);
-  }
-}
-
-@keyframes pulse-delayed {
-  0%, 100% {
-    opacity: 0.5;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.9;
-    transform: scale(1.15);
-  }
-}
-
-@keyframes pulse-delayed-2 {
-  0%, 100% {
-    opacity: 0.4;
-    transform: scale(1);
-  }
-  50% {
-    opacity: 0.8;
-    transform: scale(1.2);
-  }
-}
-
-@keyframes slide-down {
-  0% {
-    transform: translateY(-100%);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(300%);
-    opacity: 0;
-  }
-}
-
-@keyframes slide-right {
-  0% {
-    transform: translateX(-100%);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateX(300%);
-    opacity: 0;
-  }
-}
-
-@keyframes slide-up {
-  0% {
-    transform: translateY(100%);
-    opacity: 0;
-  }
-  50% {
-    opacity: 1;
-  }
-  100% {
-    transform: translateY(-200%);
-    opacity: 0;
-  }
-}
-
-@keyframes rotate-slow {
-  0% {
-    transform: rotate(0deg);
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-
-@keyframes float-small {
-  0%, 100% {
-    transform: translateY(0px);
-  }
-  50% {
-    transform: translateY(-10px);
-  }
-}
-
-.animate-float-slow {
-  animation: float-slow 20s ease-in-out infinite;
-}
-
-.animate-float-reverse {
-  animation: float-reverse 25s ease-in-out infinite;
-}
-
-.animate-float-diagonal {
-  animation: float-diagonal 18s ease-in-out infinite;
-}
-
-.animate-float-slow-reverse {
-  animation: float-slow-reverse 22s ease-in-out infinite;
-}
-
-.animate-pulse-slow {
-  animation: pulse-slow 4s ease-in-out infinite;
-}
-
-.animate-pulse-delayed {
-  animation: pulse-delayed 5s ease-in-out infinite 1s;
-}
-
-.animate-pulse-delayed-2 {
-  animation: pulse-delayed-2 6s ease-in-out infinite 2s;
-}
-
-.animate-slide-down {
-  animation: slide-down 8s linear infinite;
-}
-
-.animate-slide-right {
-  animation: slide-right 10s linear infinite;
-}
-
-.animate-slide-up {
-  animation: slide-up 9s linear infinite;
-}
-
-.animate-rotate-slow {
-  animation: rotate-slow 30s linear infinite;
-}
-
-.animate-float-small {
-  animation: float-small 3s ease-in-out infinite;
-}
-
-/* Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-
-::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb {
-  background: #c1c1c1;
-  border-radius: 3px;
-}
-
-::-webkit-scrollbar-thumb:hover {
-  background: #a8a8a8;
-}
+.animate-float-slow { animation: float-slow 20s ease-in-out infinite; }
+.animate-float-reverse { animation: float-reverse 25s ease-in-out infinite; }
+.animate-float-diagonal { animation: float-diagonal 18s ease-in-out infinite; }
+.animate-float-slow-reverse { animation: float-slow-reverse 22s ease-in-out infinite; }
 </style>
