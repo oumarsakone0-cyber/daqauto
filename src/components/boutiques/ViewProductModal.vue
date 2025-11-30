@@ -178,144 +178,206 @@
                     {{product.fuel_tank_capacity || "N/A"}}L
                   </div>
                 </div>
-                
-              </div>
-            </div>
-
-            <!-- Caractéristiques techniques -->
-            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm ">
-              <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
-                <SettingsIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
-                Technical Specifications
-              </h4>
-              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Stock number</div>
-                  <div class="font-semibold text-gray-900">{{ product.stock_number }}</div>
-                </div>
                 <div v-if="product.drive_type" class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Transmission type</div>
                   <div class="font-semibold text-gray-900">{{ product.drive_type }}</div>
                 </div>
-                <div v-if="product.fuel_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Fuel type</div>
-                  <div class="font-semibold text-gray-900 capitalize flex items-center">
-                    <div class="w-3 h-3 rounded-full mr-2" :class="getFuelTypeColor(product.fuel_type)"></div>
-                    {{ getFuelTypeLabel(product.fuel_type) }}
-                  </div>
-                </div>
-                <div v-if="product.transmission_type" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Gearbox</div>
-                  <div class="font-semibold text-gray-900 capitalize">
-                    {{ product.transmission_type === 'automatic' ? 'Automatique' : 'Manuelle' }}
-                  </div>
-                </div>
-                <div v-if="product.engine_brand" class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Engine brand</div>
-                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_brand }}</div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Engine power</div>
-                  <div class="font-semibold text-gray-900 uppercase">{{ product.power || "N/A"}}</div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Engine number</div>
-                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_number || "N/A"}}</div>
-                </div>
-                
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">VIN numbers / Chassis</div>
-                  <div class="font-semibold text-gray-900 uppercase">
-                    <ul v-if="product.vin_numbers && product.vin_numbers.length">
-                          <li v-for="vin in product.vin_numbers" :key="vin">
-                            {{ vin }}
-                          </li>
-                        </ul>
-                        <span v-else>N/A</span>
-                  </div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Trim numbers</div>
-                  <div class="font-semibold text-gray-900 uppercase">
-                    <ul v-if="product.trim_numbers && product.trim_numbers.length">
-                          <li v-for="trim_number in product.trim_numbers" :key="trim_number">                          
-                            {{ trim_number , console.log(product.trim_numbers)}}
-                          </li>
-                        </ul>
-                        <span v-else>N/A</span>
-                  </div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Engine emissions</div>
-                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_emissions || "N/A"}}</div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Wheelbase</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.wheelbase || "N/A"}}
-                  </div>
-                </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">GVW - Gross Vehicle Weight (kg)</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.gvw || "N/A"}}
-                  </div>
-              </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Payload capacity (kg)</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.payload_capacity || "N/A"}}
-                  </div>
-              </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Cabin type</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.cabin_type || "N/A"}}
-                  </div>
-              </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Suspension type</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.suspension_type || "N/A"}}
-                  </div>
-              </div>
                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Curb weight (T)</div>
                   <div class="font-semibold text-gray-900">
                     {{product.curb_weight || "N/A"}}
                   </div>
               </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Fuel tank capacity (L)</div>
+              <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Payload capacity (kg)</div>
                   <div class="font-semibold text-gray-900">
-                    {{product.fuel_tank_capacity || "N/A"}}
+                    {{product.payload_capacity || "N/A"}}
                   </div>
               </div>
+              <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">GVW - Gross Vehicle Weight (kg)</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.gvw || "N/A"}}
+                  </div>
+              </div>
+              <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Wheelbases(mm)</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.wheelbase || "N/A"}}
+                  </div>
+                </div><div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Economic speed / Maximum speed (km/h)</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.speed || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Cabin type</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.cabin_type || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Chassis Dimensions (mm) </div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.chassis_dimensions || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Frame rear suspension (mm) </div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.frame_rear_suspension || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Overall Dimensions LxlxH (mm) </div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.dimensions || "N/A"}}
+                  </div>
+                </div>
+                <div class="sm:col-span-3">
+                <div class="bg-gray-50 rounded-xl p-4 flex-1">
+                  <div class="text-sm text-gray-500 mb-1">Cab </div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.cab || "N/A"}}
+                  </div>
+                </div>
+                </div>
+              </div>
+            </div>
+
+            <!-- Caractéristiques techniques -->
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm ">
+              <div class="grid grid-cols-2">
+                <h4 class="text-lg sm:text-xl font-semibold text-gray-900 mb-4 flex items-center">
+                <SettingsIcon class="w-4 h-4 sm:w-5 sm:h-5 mr-2 primary-color" />
+                Technical Specifications
+              </h4>
+              <apn class="text-gray-400">Stock number : 
+                <div class="inline-flex">
+                  <div class="font-semibold text-gray-900">{{ product.stock_number }}</div>
+               </div>
+              </apn>
+              </div>
+              <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <div v-if="product.engine_brand" class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Engine brand</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_brand }}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Engine Model</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_number || "N/A"}}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Horse Power (HP)</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.power || "N/A"}}</div>
+                </div>
+                 <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Gearbox Brand </div>
+                  <div class="font-semibold text-gray-900 capitalize">
+                    {{ product.gearbox_brand || 'N/A' }}
+                  </div>
+                </div>
+                 <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Gearbox Model</div>
+                  <div class="font-semibold text-gray-900 capitalize">
+                    {{ product.gearbox_model || 'N/A' }}
+                  </div>
+                </div>
+                 <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Gearbox Type</div>
+                  <div class="font-semibold text-gray-900 capitalize">
+                    {{ product.transmission_type || 'N/A' }}
+                  </div>
+                </div>
+                 <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Emission Standards</div>
+                  <div class="font-semibold text-gray-900 uppercase">{{ product.engine_emissions || "N/A"}}</div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">VIN Number / Chassis Number </div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.vin_numbers[0] || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Vehicle Model (Trim)</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.trim_numbers[0] || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Axle Brand</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.axle_brand || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Front axle</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.axle_front || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Rear axle</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.axle_rear || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Suspension Type</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.suspension_type || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Front Suspension</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.suspension_front || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Rear Suspension</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.suspension_rear || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Speed ratio</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.axle_speed_ratio || "N/A"}}
+                  </div>
+                </div>
                 <div class="bg-gray-50 rounded-xl p-4">
                   <div class="text-sm text-gray-500 mb-1">Brake system</div>
                   <div class="font-semibold text-gray-900">
                     {{product.brake_system || "N/A"}}
                   </div>
-              </div>
-                <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Dimensions</div>
-                  <div class="font-semibold text-gray-900">
-                    {{product.dimensions || "N/A"}}
-                  </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Tire sizes</div>
+                  <div class="text-sm text-gray-500 mb-1">Tires</div>
                   <div class="font-semibold text-gray-900">
                     {{product.tyre_size || "N/A"}}
                   </div>
                 </div>
                 <div class="bg-gray-50 rounded-xl p-4">
-                  <div class="text-sm text-gray-500 mb-1">Unit</div>
+                  <div class="text-sm text-gray-500 mb-1">Air filter</div>
                   <div class="font-semibold text-gray-900">
-                    {{product.unit_type || "N/A"}}
+                    {{product.air_filter || "N/A"}}
                   </div>
                 </div>
-                
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Electrics</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.electrics || "N/A"}}
+                  </div>
+                </div>
+                <div class="bg-gray-50 rounded-xl p-4">
+                  <div class="text-sm text-gray-500 mb-1">Other Terms associated with the product</div>
+                  <div class="font-semibold text-gray-900">
+                    {{product.description_plus || "N/A"}}
+                  </div>
+                </div>
               </div>
             </div>
 
