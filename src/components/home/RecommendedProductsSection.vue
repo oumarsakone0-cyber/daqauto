@@ -180,7 +180,13 @@
           market: product.boutique_market.toLowerCase(),
           boutique_name: product.boutique_name,
           rating: product.rating || (Math.random() * 2 + 3).toFixed(1),
-          experience: product.experience || Math.floor(Math.random() * 8) + 2
+          experience: product.experience || Math.floor(Math.random() * 8) + 2,
+          vehicle_condition: product.vehicle_condition,
+          vehicle_mileage : product.vehicle_mileage,
+          fuel_type: product.fuel_type
+
+
+         
         }));
         
         console.log('✅ Produits recommandés chargés:', recommendedProducts.value);

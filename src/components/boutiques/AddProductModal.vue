@@ -1646,7 +1646,6 @@ const availableColors = ref([
 
 const availability = ref([
   { value: 'available', label: 'Available' },
-  { value: 'unavailable', label: 'Unavailable' },
   { value: 'on_order', label: 'On Order' },
 ])
 

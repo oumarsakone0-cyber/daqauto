@@ -1,60 +1,5 @@
 <template>
-  <!-- Version Mobile -->
-  <div 
-    v-if="isMobile"
-    class="mobile-grid-product"
-    @click="handleProductClick"
-  >
-    <div class="mobile-grid-image">
-      <img :src="product.primary_image || product.images?.[0] || '/placeholder.svg?height=200&width=200'" :alt="product.name" />
-      <button class="favorite-btn-mobile" @click.stop="handleFavoriteClick">
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"/>
-        </svg>
-      </button>
-    </div>
-    <div class="mobile-grid-info">
-      <h3 class="mobile-grid-title">{{ product.name }}</h3>
-      <div class="mobile-grid-price primary-color">{{ formatPrice(product.unit_price) }} </div>
-      <div class="wholesale-price" style="margin-bottom: 8px;" v-if="product.wholesale_price || product.wholesalePrice">
-          <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs :</span>
-          <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
-      </div>
-      <div v-if="product.freeShipping" class="shipping-info">
-        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-          <rect x="1" y="3" width="15" height="13"></rect>
-          <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
-          <circle cx="5.5" cy="18.5" r="2.5"></circle>
-          <circle cx="18.5" cy="18.5" r="2.5"></circle>
-        </svg>
-        <span>Livraison gratuite</span>
-      </div>
-  
-      <div class="alibaba-supplier-info">
-        <div class="alibaba-supplier-years">
-          <span>{{ product.market || 'CI' }}</span>
-        </div>
-        <div class="alibaba-review">
-          <span v-if="product.reviews">({{ product.reviews }} reviews)</span>
-        </div>
-      </div>
-      <div class="mobile-grid-shop">{{ product.boutique_name || product.shopName }}</div>
-      <div class="mobile-grid-rating">
-        <span class="stars">⭐⭐⭐⭐⭐</span>
-        <span class="rating-count">({{ product.views || product.reviews || 0 }})</span>
-      </div>
-      <div class="alibaba-action-buttons">
-        <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
-        <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
-      </div>
-    </div>
-  </div>
-  
-  <!-- Version Desktop -->
-  <div 
-    v-else
-    class="alibaba-product-card"
-  >
+  <div class="alibaba-product-card">
     <div @click="handleProductClick" class="alibaba-image-area" :style="{ height: cardImageHeight }">
       <div class="alibaba-slider">
         <div class="alibaba-slider-wrapper">
@@ -118,11 +63,6 @@
             <span class="current-price primary-color">{{ formatPrice(product.unit_price || product.unitPrice) }} <span style="font-size: 12px;"></span></span>
             <span v-if="product.originalPrice" class="original-price">{{ formatPrice(product.originalPrice) }}</span>
           </div>
-          <div class="wholesale-price" v-if="product.wholesale_price || product.wholesalePrice">
-            <span class="price-label">En gros:</span>
-            <span class="wholesale-amount">{{ formatPrice(product.wholesale_price || product.wholesalePrice) }}</span>
-            <span class="min-quantity">≥ {{ product.wholesale_min_qty || product.minQuantity || 10 }} pcs</span>
-          </div>
         </div>
 
         <div v-if="product.freeShipping" class="shipping-info">
@@ -141,22 +81,14 @@
 
         <div class="alibaba-supplier-info">
           <div class="alibaba-supplier-years">
-            <span>{{ product.market || 'CI' }}</span>
-          </div>
-          <div class="alibaba-review">
-            <span v-if="product.reviews">({{ product.reviews }} reviews)</span>
+            <span class="capitalize" >{{ product.vehicle_condition || 'new' }}</span>
+            <div class="flex flex-col">
+              <span >{{ product.vehicle_mileage || '2344944 km' }}</span>
+              <span class="capitalize" >{{ product.fuel_type || 'diesel' }}</span>
+            </div>
           </div>
         </div>
 
-        <div v-if="productImages.length > 1" class="alibaba-similar-products">
-          <div 
-            v-for="(img, imgIndex) in productImages.slice(0, 3)" 
-            :key="imgIndex"
-            class="alibaba-mini-product"
-          >
-            <img :src="img" alt="Similar product" loading="lazy">
-          </div>
-        </div>
       </div>
 
       <div class="alibaba-action-buttons">
@@ -196,7 +128,8 @@ const props = defineProps({
   isMobile: { type: Boolean, default: false },
   showAdBadge: { type: Boolean, default: false },
   cardHeight: { type: [String, Number], default: 230 },
-  imageHeight: { type: [String, Number], default: 200 }
+  imageHeight: { type: [String, Number], default: 200 },
+  
 })
 
 const emit = defineEmits(['product-click', 'favorite-click', 'contact-click', 'chat-click'])
@@ -535,7 +468,7 @@ const handleChatClick = async () => {
       align-items: center;
       gap: 4px;
       font-size: 12px;
-      color: #007185;
+      color: #fe7900;
       margin-bottom: 8px;
     }
     
@@ -556,9 +489,10 @@ const handleChatClick = async () => {
     
     .alibaba-supplier-years {
       display: flex;
-      align-items: center;
       gap: 4px;
       color: #666;
+      justify-content: space-between;
+      width: 100%;
     }
     
     .alibaba-country-flag {
