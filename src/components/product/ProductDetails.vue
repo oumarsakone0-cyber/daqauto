@@ -17,7 +17,7 @@
       </div>
     </div>
     <div class="order-section">
-      <div class=" w-full bg-gray-50 justify-end py-6 mb-5 rounded-lg">
+      <div class=" w-full bg-gray-50 justify-end py-6 mb-4 rounded-lg">
         <div class="quantity-selector ">
           <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.vehicle_condition }}</span>
           <span class="bg-white py-2 px-10 rounded-full" >{{ product.vehicle_mileage }} km</span>
@@ -25,7 +25,7 @@
       </div>
       </div>
       
-      <div class="quantity-selector mb-18">
+      <div class="quantity-selector mb-15">
         <span class="flex-1 capitalize"><span class="text-gray-500">VIN: </span>  {{  product.vin_numbers[0] }}</span>
         <span class="flex-1" ><span class="text-gray-500">Stock ID: </span> {{ product.stock_number }}</span>
       </div>
@@ -121,7 +121,7 @@ const handleOrderClick = () => {
 .product-badges {
   display: flex;
   gap: 8px;
-  margin-bottom: 40px;
+  margin-bottom: 30px;
   flex-wrap: wrap;
 }
 
@@ -248,7 +248,7 @@ const handleOrderClick = () => {
 
 .order-section {
   margin-bottom: 24px;
-  margin-top: 60px;
+  margin-top: 30px;
 }
 
 .quantity-selector {

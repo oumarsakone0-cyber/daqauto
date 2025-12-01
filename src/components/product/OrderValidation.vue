@@ -61,7 +61,7 @@
                   v-model="hasOwnProvider"
                   class="checkbox-style"
                 >
-                <span class="checkbox-text">I have a supplier for the delivery</span>
+                <span class="checkbox-text">I have my own freight forwarder for the delivery in China</span>
               </label>
               <p class="checkbox-hint">If you select this option, the delivery charges will be waived.</p>
             </div>
@@ -82,11 +82,11 @@
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
-              <span>You will use your own delivery provider</span>
+              <span>The delivery will be made to your own freight forwarder in China.</span>
             </div>
           </div>
 
-          <div class="section-card order-summary">
+          <!-- <div class="section-card order-summary">
             <h2 class="section-title">Order summary</h2>
             
             <div class="summary-row">
@@ -184,7 +184,7 @@
                 <span>Buyer protection</span>
               </div>
             </div>
-          </div>
+          </div> -->
         </div>
 
         <div class="right-column">

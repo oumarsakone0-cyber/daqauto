@@ -970,13 +970,13 @@ const toggleCart = () => {
     background: #fff;
     border-bottom: 1px solid #e8e8e8;
     padding: 12px 0;
+    padding-top: 40px;
   }
   
   .container {
     max-width: 1500px;
     margin: 0 auto;
     padding: 0 16px;
-    margin-top: 30px;
   }
   
   .breadcrumb {
