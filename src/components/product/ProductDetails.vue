@@ -17,23 +17,24 @@
       </div>
     </div>
     <div class="order-section">
-      <div class="quantity-selector mb-5">
-        <span class="capitalize bg-gray-50 p-2 rounded-full">{{ product.vehicle_condition }}</span>
-        <span class="bg-gray-50 p-2 rounded-full" >{{ product.vehicle_mileage }} km</span>
-        <span class="capitalize bg-gray-50 p-2 rounded-full">{{ product.fuel_type }}</span>
+      <div class=" w-full bg-gray-50 justify-end py-6 mb-5 rounded-lg">
+        <div class="quantity-selector ">
+          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.vehicle_condition }}</span>
+          <span class="bg-white py-2 px-10 rounded-full" >{{ product.vehicle_mileage }} km</span>
+          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.fuel_type }}</span>
       </div>
+      </div>
+      
       <div class="quantity-selector mb-18">
         <span class="flex-1 capitalize"><span class="text-gray-500">VIN: </span>  {{  product.vin_numbers[0] }}</span>
         <span class="flex-1" ><span class="text-gray-500">Stock ID: </span> {{ product.stock_number }}</span>
       </div>
       <div class="action-buttons">
-        <button class="btn-outline flex-1" @click="chat.isDesktopChatOpen=true">
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
-            </svg>
-            Chat now
+        <button class="btn-outline flex-1" @click="$emit('toggleCart')">
+            <PlusIcon class="w-5 h-5" />
+            Add to cart
           </button>
-        <button class="btn-degrade-orange flex-1" @click="handleOrderClick">
+        <button class="btn-outline-with-background flex-1" @click="handleOrderClick">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"></circle>
             <circle cx="20" cy="21" r="1"></circle>
@@ -49,123 +50,30 @@
 </template>
 
 <script setup>
-import { computed, defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatPrice } from '../../services/formatPrice'
-import { useChatStore } from '../../stores/chat'
+import { PlusIcon } from 'lucide-vue-next'
 
 const router = useRouter()
-const chat = useChatStore()
+
+
 
 const props = defineProps({
   product: {
     type: Object,
     required: true
   },
-  quantity: {
-    type: Number,
-    default: 1
-  },
-  selectedVariants: {
-    type: Array,
-    default: () => []
-  },
-  productColors: {
-    type: Array,
-    default: () => []
-  },
-  productSizes: {
-    type: Array,
-    default: () => []
-  },
-  selectedShipping: {
-    type: String,
-    default: 'adjame'
-  },
-  selectedCommune: {
-    type: String,
-    default: ''
-  },
-  selectedVille: {
-    type: String,
-    default: ''
-  },
-  tarifsAbidjan: {
-    type: Array,
-    default: () => []
-  },
-  tarifsInterieur: {
-    type: Array,
-    default: () => []
-  },
-  currentShippingCost: {
-    type: Number,
-    default: 0
-  }
 })
 
 const emit = defineEmits([
-  'addVariant',
-  'removeVariant',
-  'updateVariantSize',
-  'updateVariantColor', 
-  'updateVariantQuantity',
-  'selectShipping',
-  'updateCommune',
-  'updateVille',
-  'decreaseQuantity',
-  'increaseQuantity',
-  'updateQuantity',
-  'contactWhatsApp',
-  'openChat',
-  'startOrder'
+  'toggleCart',
 ])
 
-const hasVariants = computed(() => {
-  return props.productColors.length > 0 || props.productSizes.length > 0
-})
 
-const productRating = computed(() => {
-  if (!props.product) return 0
-  
-  const views = props.product.views_count || 0
-  const sales = props.product.sales_count || 0
-  
-  const rating = 3 + Math.min(2, (views + sales * 10) / 1000)
-  return Math.round(rating * 10) / 10
-})
-
-const calculateTotal = () => {
-  if (!props.product) return 0
-
-  const unitPrice = getUnitPrice()
-
-  if (hasVariants.value && props.selectedVariants.length > 0) {
-    return props.selectedVariants.reduce((total, variant) => {
-      return total + (unitPrice * variant.quantity)
-    }, 0)
-  }
-
-  return unitPrice * props.quantity
-}
-
-const getUnitPrice = () => {
-  if (!props.product) return 0
-  
-  let price = props.product.unit_price
-  
-  let totalQuantity = hasVariants.value 
-    ? props.selectedVariants.reduce((sum, variant) => sum + variant.quantity, 0)
-    : props.quantity
-  
-  if (props.product.wholesale_price && 
-      props.product.wholesale_min_qty && 
-      totalQuantity >= props.product.wholesale_min_qty) {
-    price = props.product.wholesale_price
-  }
-  
-  return price
-}
+const goToProfile = () => {
+  router.push('/profile_client')
+};
 
 const handleOrderClick = () => {
   const productData = {
@@ -345,7 +253,7 @@ const handleOrderClick = () => {
 
 .quantity-selector {
   display: flex;
-  justify-content: space-between;
+  justify-content: space-around;
   color: #333;
   /* margin-bottom: 16px; */
   gap: 20px;

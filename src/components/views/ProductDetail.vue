@@ -16,34 +16,10 @@
   
     <!-- Product content -->
     <div v-else-if="product">
-      <!-- Mobile Header -->
-      <div class="mobile-header">
-        <button class="back-btn" @click="$router.go(-1)">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-        </button>
-        <div class="header-actions">
-          <button class="header-action-btn" @click="openShareModal">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
-              <polyline points="16 6 12 2 8 6"></polyline>
-              <line x1="12" y1="2" x2="12" y2="15"></line>
-            </svg>
-          </button>
-          <button class="header-action-btn" @click="toggleFavorite" :class="{ 'is-favorite': isFavorite }">
-            <svg width="20" height="20" viewBox="0 0 24 24" :fill="isFavorite ? '#ff4d4f' : 'none'" stroke="currentColor" stroke-width="2">
-              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-            </svg>
-          </button>
-        </div>
-      </div>
-  
-      <!-- Desktop Header de navigation -->
-      <div class="page-header desktop-only">
+      <div class="page-header">
         <div class="container">
           <div class="breadcrumb">
-            <router-link to="/" class="breadcrumb-link">Accueil</router-link>
+            <router-link to="/" class="breadcrumb-link">Home</router-link>
             <span class="breadcrumb-separator">></span>
             <a href="#" class="breadcrumb-link">{{ product.category_name || 'Catégorie' }}</a>
             <span class="breadcrumb-separator">></span>
@@ -54,8 +30,7 @@
         </div>
       </div>
   
-      <!-- Desktop Section principale du produit -->
-      <div class="main-product-section desktop-only">
+      <div class="main-product-section ">
         <div class="container">
           <div class="product-main-content">
             <!-- Galerie d'images -->
@@ -72,30 +47,7 @@
             <!-- Informations du produit -->
             <ProductDetails 
               :product="product"
-              :quantity="quantity"
-              :selected-variants="selectedVariants"
-              :product-colors="productColors"
-              :product-sizes="productSizes"
-              :selected-shipping="selectedShipping"
-              :selected-commune="selectedCommune"
-              :selected-ville="selectedVille"
-              :tarifs-abidjan="tarifsAbidjan"
-              :tarifs-interieur="tarifsInterieur"
-              :current-shipping-cost="currentShippingCost"
-              @add-variant="addVariant"
-              @remove-variant="removeVariant"
-              @update-variant-size="updateVariantSize"
-              @update-variant-color="updateVariantColor"
-              @update-variant-quantity="updateVariantQuantity"
-              @select-shipping="selectShippingOption"
-              @update-commune="updateCommune"
-              @update-ville="updateVille"
-              @decrease-quantity="decreaseQuantity"
-              @increase-quantity="increaseQuantity"
-              @update-quantity="updateQuantity"
-              @contact-whats-app="contactWhatsApp"
-              @open-chat="openChat"
-              @start-order="startOrder"
+              @toggle-cart="toggleCart"
             />
   
             <!-- Informations du fournisseur -->
@@ -109,50 +61,7 @@
         </div>
       </div>
   
-      <!-- Mobile Product Gallery -->
-      <ProductImageGallery 
-        class="mobile-only"
-        :product="product"
-        :product-images="productImages"
-        :is-favorite="isFavorite"
-        @open-image-modal="openImageModal"
-        @toggle-favorite="toggleFavorite"
-        @open-share-modal="openShareModal"
-        @add-to-compare="addToCompare"
-      />
-  
-      <!-- Mobile Product Info -->
-      <MobileProductInfo 
-        class="mobile-only"
-        :product="product"
-        :quantity="quantity"
-        :selected-variants="selectedVariants"
-        :product-colors="productColors"
-        :product-sizes="productSizes"
-        :selected-shipping="selectedShipping"
-        :selected-commune="selectedCommune"
-        :selected-ville="selectedVille"
-        :tarifs-abidjan="tarifsAbidjan"
-        :tarifs-interieur="tarifsInterieur"
-        :supplier="supplier"
-        :current-shipping-cost="currentShippingCost"
-        @add-variant="addVariant"
-        @remove-variant="removeVariant"
-        @update-variant-size="updateVariantSize"
-        @update-variant-color="updateVariantColor"
-        @update-variant-quantity="updateVariantQuantity"
-        @select-shipping="selectShippingOption"
-        @update-commune="updateCommune"
-        @update-ville="updateVille"
-        @decrease-quantity="decreaseQuantity"
-        @increase-quantity="increaseQuantity"
-        @update-quantity="updateQuantity"
-        @visit-store="visitStore"
-        @contact-supplier="contactSupplier"
-      />
-  
-      <!-- Desktop Section des détails du produit -->
-      <div class="product-details-section desktop-only">
+      <div class="product-details-section ">
         <div class="container">
           <div class="two-column-layout">
             <!-- Colonne de gauche: Détails du produit -->
@@ -175,33 +84,6 @@
             </div>
           </div>
         </div>
-      </div>
-  
-      <!-- Mobile Details Tabs -->
-      <MobileDetailsTabs 
-        class="mobile-only"
-        :product="product"
-        :product-rating="productRating"
-        @open-review-form="openReviewForm"
-      />
-  
-      <!-- Mobile Bottom Actions -->
-      <div class="mobile-bottom-actions mobile-only">
-        <button class="mobile-action-btn secondary" @click="contactWhatsApp">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-            <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/>
-          </svg>
-          WhatsApp
-        </button>
-        <button class="mobile-action-btn primary" @click="startOrder">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="9" cy="21" r="1"></circle>
-            <circle cx="20" cy="21" r="1"></circle>
-            <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-          </svg>
-          Order now
-          <span class="mobile-action-price">{{ formatFCFA(calculateTotalWithShipping()) }}</span>
-        </button>
       </div>
   
       <!-- Modals -->
@@ -279,7 +161,7 @@
       />
     </div>
     <div v-else>
-<h1 class="text-black">no product</h1>
+        <h1 class="text-black">no product</h1>
     </div>
   </div>
   </template>
@@ -296,13 +178,10 @@ import ProductDetails from '../product/ProductDetails.vue'
 import ProductDescriptionCard from '../product/ProductDescriptionCard.vue'
 import StoreProducts from '../product/StoreProducts.vue'
 import SupplierCard from '../product/SupplierCard.vue'
-import MobileProductInfo from '../product/MobileProductInfo.vue'
-import MobileDetailsTabs from '../product/MobileDetailsTabs.vue'
 import ImageModal from '../product/modals/ImageModal.vue'
 import ShareModal from '../product/modals/ShareModal.vue'
 import OrderModal from '../product/modals/OrderModal.vue'
 import OrderSuccessModal from '../product/modals/OrderSuccessModal.vue'
-import ChatModal from '../product/modals/ChatModal.vue'
 import NotificationToast from '../product/NotificationToast.vue'
 import CartBadge from '../product/CartBadge.vue'
   
@@ -341,6 +220,7 @@ import CartBadge from '../product/CartBadge.vue'
   const notificationMessage = ref('')
   
   // États du panier et commande
+  const addedCart = ref(false)
   const cartCount = ref(0)
   const formSubmitted = ref(false)
   const orderLoading = ref(false)
@@ -532,188 +412,6 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   // Méthodes de gestion des variantes
-  const addVariant = () => {
-    const newVariant = {
-      id: Date.now(),
-      sizeIndex: productSizes.value.length > 0 ? 0 : null,
-      colorIndex: productColors.value.length > 0 ? 0 : null,
-      quantity: 1
-    }
-    selectedVariants.value.push(newVariant)
-  }
-  
-  const removeVariant = (index) => {
-    selectedVariants.value.splice(index, 1)
-  }
-  
-  const updateVariantSize = (variantIndex, sizeIndex) => {
-    selectedVariants.value[variantIndex].sizeIndex = sizeIndex
-  }
-  
-  const updateVariantColor = (variantIndex, colorIndex) => {
-    selectedVariants.value[variantIndex].colorIndex = colorIndex
-  }
-  
-  const updateVariantQuantity = (variantIndex, quantity) => {
-    if (quantity >= 1 && quantity <= product.value.stock) {
-      selectedVariants.value[variantIndex].quantity = quantity
-      // Forcer le recalcul des frais de livraison
-      updateShippingCost()
-    }
-  }
-  
-  // Méthodes de gestion de la quantité
-  const increaseQuantity = () => {
-    if (quantity.value < product.value.stock) {
-      quantity.value++
-      updateShippingCost()
-    }
-  }
-  
-  const decreaseQuantity = () => {
-    if (quantity.value > 1) {
-      quantity.value--
-      updateShippingCost()
-    }
-  }
-  
-  const updateQuantity = (newQuantity) => {
-    if (newQuantity >= 1 && newQuantity <= product.value.stock) {
-      quantity.value = newQuantity
-      updateShippingCost()
-    }
-  }
-  
-  // Méthodes de livraison
-  const selectShippingOption = (option) => {
-    selectedShipping.value = option
-    selectedCommune.value = ''
-    selectedVille.value = ''
-    currentShippingCost.value = 0
-    updateOrderFormDestination()
-  }
-  
-  const updateCommune = (commune) => {
-    selectedCommune.value = commune
-    updateShippingCost()
-  }
-  
-  const updateVille = (ville) => {
-    selectedVille.value = ville
-    updateShippingCost()
-  }
-  
-  const updateShippingCost = () => {
-    console.log('🔄 Mise à jour des frais de livraison...')
-    console.log('Selected shipping:', selectedShipping.value)
-    console.log('Selected commune:', selectedCommune.value)
-    console.log('Selected ville:', selectedVille.value)
-    console.log('Product tp/qtp:', product.value?.tp, product.value?.qtp)
-    
-    if (selectedShipping.value === 'retrait') {
-      currentShippingCost.value = 0
-      return
-    }
-  
-    currentShippingCost.value = getShippingCost(selectedShipping.value)
-    console.log('✅ Nouveaux frais calculés:', currentShippingCost.value)
-    updateOrderFormDestination()
-  }
-  
-  const updateOrderFormDestination = () => {
-    if (selectedShipping.value === 'abidjan') {
-      orderForm.value.destination = 'abidjan'
-      orderForm.value.commune = selectedCommune.value
-      orderForm.value.ville = 'Abidjan'
-    } else if (selectedShipping.value === 'interieur') {
-      orderForm.value.destination = 'interieur'
-      orderForm.value.ville = selectedVille.value
-      orderForm.value.commune = ''
-    }
-  }
-  
-  const getShippingCost = (type = selectedShipping.value) => {
-    if (type === 'retrait') {
-      return 0
-    }
-  
-    // Calculer la quantité totale
-    let totalQuantity = selectedVariants.value.length > 0
-      ? selectedVariants.value.reduce((sum, variant) => sum + variant.quantity, 0)
-      : quantity.value
-  
-    if (type === 'abidjan') {
-      if (selectedCommune.value) {
-        const tarif = tarifsAbidjan.value.find(t => t.commune === selectedCommune.value)
-        if (tarif) {
-          return calculateShippingCostWithProductRules(tarif, totalQuantity)
-        }
-      }
-      // Tarif par défaut Abidjan
-      const defaultTarif = { tarif_min: 1500, tarif_max: 3000 }
-      return calculateShippingCostWithProductRules(defaultTarif, totalQuantity)
-      
-    } else if (type === 'interieur') {
-      if (selectedVille.value) {
-        const tarif = tarifsInterieur.value.find(t => t.ville === selectedVille.value)
-        if (tarif) {
-          return calculateShippingCostWithProductRules(tarif, totalQuantity)
-        }
-      }
-      // Tarif par défaut intérieur
-      const defaultTarif = { tarif_min: 3000, tarif_max: 6000 }
-      return calculateShippingCostWithProductRules(defaultTarif, totalQuantity)
-    }
-  
-    return 0
-  }
-  
-  const calculateShippingCostWithProductRules = (tarif, totalQuantity) => {
-    if (!product.value) return tarif.tarif_min || tarif.tarif || 0
-  
-    const tp = product.value.tp || 1  // Type de transport (1=moto, 2=mini-camion, 3=gros camion)
-    const qtp = product.value.qtp || 1  // Quantité transportable au tarif normal
-  
-    // Déterminer le tarif de base selon le type de transport
-    let baseTarif = 0
-  
-    if (tp === 1) {
-      // Moto - tarif minimum
-      baseTarif = tarif.tarif_min || tarif.tarif || 0
-    } else if (tp === 2) {
-      // Mini-camion - tarif maximum
-      baseTarif = tarif.tarif_max || tarif.tarif || 0
-    } else if (tp === 3) {
-      // Gros camion - tarif maximum × 2
-      baseTarif = (tarif.tarif_max || tarif.tarif || 0) * 2
-    }
-  
-    // Calculer le coût selon la règle de quantité (qtp)
-    let finalCost = 0
-  
-    if (qtp === 1) {
-      // 1 article = 1 fois le tarif, 2 articles = 2 fois le tarif, etc.
-      finalCost = baseTarif * totalQuantity
-    } else if (qtp === 2) {
-      // Tarif valide pour 1-2 articles, au-delà on divise par 2 et multiplie
-      if (totalQuantity <= 2) {
-        finalCost = baseTarif
-      } else {
-        const multiplier = Math.ceil(totalQuantity / 2)
-        finalCost = baseTarif * multiplier
-      }
-    } else {
-      // Pour qtp > 2, même logique : tarif valide pour 1 à qtp articles
-      if (totalQuantity <= qtp) {
-        finalCost = baseTarif
-      } else {
-        const multiplier = Math.ceil(totalQuantity / qtp)
-        finalCost = baseTarif * multiplier
-      }
-    }
-  
-    return finalCost
-  }
   
   // Méthodes de calcul
   const calculateTotal = () => {
@@ -728,10 +426,6 @@ import CartBadge from '../product/CartBadge.vue'
     }
   
     return unitPrice * quantity.value
-  }
-  
-  const calculateTotalWithShipping = () => {
-    return calculateTotal() + currentShippingCost.value
   }
   
   const getUnitPrice = () => {
@@ -817,7 +511,7 @@ import CartBadge from '../product/CartBadge.vue'
   }
   
   // Méthodes d'actions
-  const toggleFavorite = async (idProduit) => {
+  const toggleFavorite = async () => {
   // On inverse l'état local
   isFavorite.value = !isFavorite.value;
 
@@ -848,7 +542,39 @@ import CartBadge from '../product/CartBadge.vue'
     console.error('Erreur toggleFavorite:', error);
     // Annuler le changement local en cas d'erreur
     isFavorite.value = !isFavorite.value;
-    displayNotification('error', 'Error', 'Une erreur est survenue lors de la mise à jour.');
+    displayNotification('error', 'Error', 'error to update.');
+  }
+};
+
+const toggleCart = () => {
+  // On inverse l'état local
+  addedCart.value = !addedCart.value;
+  try {
+    const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+    const user = JSON.parse(userData)
+    // Préparer les données pour l'API
+    const likeData = { id_produit: product.value.id, user_id: user.id };
+
+    // Appeler l'API pour ajouter ou retirer le like
+    // const result = await productsApi.addLike(likeData);
+
+    // if (result.success) {
+      // Notification selon le nouvel état
+      displayNotification(
+        addedCart.value ? 'success' : 'info',
+        addedCart.value ? 'Added to Cart' : 'Removed from Cart',
+        addedCart.value
+          ? 'Product added to your Cart.'
+          : 'Product removed from your Cart.'
+      );
+    // } else {
+    //   // Si erreur backend, on remet l'état à l'inverse
+    //   addedCart.value = !addedCart.value;
+    //   displayNotification('error', 'Error', result.error || 'Impossible to update Cart.');
+    // }
+  } catch (error) {
+    addedCart.value = !addedCart.value;
+    displayNotification('error', 'Error', 'error to update.');
   }
 };
 
@@ -881,62 +607,6 @@ import CartBadge from '../product/CartBadge.vue'
   
     const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodeURIComponent(message)}`
     window.open(whatsappUrl, '_blank')
-  }
-  
-  const openChat = () => {
-    showChatModal.value = true
-    if (chatMessages.value.length === 0) {
-      chatMessages.value.push({
-        id: 1,
-        sender: 'bot',
-        message: `Bonjour ! Je suis là pour vous aider concernant ${product.value.name}. Comment puis-je vous assister ?`,
-        timestamp: new Date()
-      })
-    }
-  }
-  
-  const closeChatModal = () => {
-    showChatModal.value = false
-  }
-  
-  const sendMessage = () => {
-    if (!newMessage.value.trim()) return
-  
-    chatMessages.value.push({
-      id: Date.now(),
-      sender: 'user',
-      message: newMessage.value,
-      timestamp: new Date()
-    })
-  
-    setTimeout(() => {
-      chatMessages.value.push({
-        id: Date.now() + 1,
-        sender: 'bot',
-        message: 'Merci pour votre message. Un de nos conseillers vous répondra dans les plus brefs délais.',
-        timestamp: new Date()
-      })
-    }, 1000)
-  
-    newMessage.value = ''
-  }
-  
-  const updateNewMessage = (message) => {
-    newMessage.value = message
-  }
-  
-  const startOrder = () => {
-    console.log('🛒 [ProductDetailPage] Ouverture du modal de commande')
-    console.log('Selected shipping:', selectedShipping.value)
-    console.log('Selected commune:', selectedCommune.value)
-    console.log('Selected ville:', selectedVille.value)
-    console.log('Current shipping cost:', currentShippingCost.value)
-    console.log('Tarifs Abidjan:', tarifsAbidjan.value)
-    console.log('Tarifs Intérieur:', tarifsInterieur.value)
-    console.log('Product tp/qtp:', product.value?.tp, product.value?.qtp)
-    
-    showOrderModal.value = true
-    formSubmitted.value = false
   }
   
   const closeOrderModal = () => {
@@ -1187,25 +857,6 @@ import CartBadge from '../product/CartBadge.vue'
     position: relative;
   }
   
-  /* Responsive utilities */
-  .desktop-only {
-    display: block;
-  }
-  
-  .mobile-only {
-    display: none;
-  }
-  
-  @media (max-width: 768px) {
-    .desktop-only {
-      display: none !important;
-    }
-  
-    .mobile-only {
-      display: block;
-    }
-  }
-  
   /* Loading et Error states */
   .loading-container,
   .error-container {
@@ -1325,6 +976,7 @@ import CartBadge from '../product/CartBadge.vue'
     max-width: 1500px;
     margin: 0 auto;
     padding: 0 16px;
+    margin-top: 30px;
   }
   
   .breadcrumb {

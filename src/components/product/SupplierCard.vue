@@ -46,12 +46,11 @@
 
   
       <div class="supplier-actions">
-        <button class="btn-outline" @click="$emit('contactSupplier')">
+        <button class="btn-outline" @click="chat.isDesktopChatOpen=true">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/>
-            <polyline points="22,6 12,13 2,6"/>
-          </svg>
-          Contact
+              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"></path>
+            </svg>
+          Chat now
         </button>
         <button class="btn-outline-with-background" @click="$emit('visitStore')">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -79,7 +78,9 @@
   <script setup>
   import { BadgeCheckIcon } from 'lucide-vue-next';
 import { defineProps, defineEmits } from 'vue'
+import { useChatStore } from '../../stores/chat'
   
+const chat = useChatStore()
   const props = defineProps({
     supplier: Object
   })

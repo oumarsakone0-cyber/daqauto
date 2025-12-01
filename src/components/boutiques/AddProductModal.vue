@@ -950,7 +950,7 @@
                 >
                   Browse the files
                 </button>
-                <p class="text-xs text-gray-500 mt-2">PNG, JPG up to 10MB per image (max 8)</p>
+                <p class="text-xs text-gray-500 mt-2">PNG, JPG up to 10MB per image (max 35)</p>
               </div>
 
               <div v-if="productData.images.length > 0" class="mt-6">
@@ -1565,14 +1565,14 @@ const canProceedToNextStep = computed(() => {
     case 2:
       getProductName();
       return !!(productData.engine_brand && productData.gearbox_brand 
-      && productData.engine_number && productData.gearbox_model 
-      && productData.power && productData.transmission_type 
-      && productData.engine_emissions && productData.vehicle_mileage 
-      && productData.axle_brand && productData.suspension_type && productData.axle_front
-      && productData.axle_rear && productData.suspension_front && productData.suspension_rear
-      && productData.axle_speed_ratio && productData.brake_system && productData.tire_size
-      && productData.air_filter && productData.electrics
-      && productData.vin.length && productData.trim_numbers.length
+      // && productData.engine_number && productData.gearbox_model 
+      // && productData.power && productData.transmission_type 
+      // && productData.engine_emissions && productData.vehicle_mileage 
+      // && productData.axle_brand && productData.suspension_type && productData.axle_front
+      // && productData.axle_rear && productData.suspension_front && productData.suspension_rear
+      // && productData.axle_speed_ratio && productData.brake_system && productData.tire_size
+      // && productData.air_filter && productData.electrics
+      // && productData.vin.length && productData.trim_numbers.length
     )
     case 3:
       return !!(productData.unit_price && productData.disponibility)
@@ -1781,7 +1781,7 @@ const addCustomColor = () => {
 
 const handleImageUpload = (event) => {
   const files = Array.from(event.target.files)
-  const remainingSlots = 8 - productData.images.length
+  const remainingSlots = 35 - productData.images.length
   
   files.slice(0, remainingSlots).forEach(file => {
     if (file.size <= 10 * 1024 * 1024) {
