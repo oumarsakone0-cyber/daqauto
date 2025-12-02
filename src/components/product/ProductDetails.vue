@@ -19,15 +19,15 @@
     <div class="order-section">
       <div class=" w-full bg-gray-50 justify-end py-6 mb-4 rounded-lg">
         <div class="quantity-selector ">
-          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.vehicle_condition }}</span>
-          <span class="bg-white py-2 px-10 rounded-full" >{{ product.vehicle_mileage }} km</span>
-          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.fuel_type }}</span>
+          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.vehicle_condition || "N/A" }}</span>
+          <span v-if="product.vehicle_mileage" class="bg-white py-2 px-10 rounded-full" >{{ product.vehicle_mileage }} km</span> <span v-else class="bg-white py-2 px-10 rounded-full">N/A</span>
+          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.fuel_type || "N/A" }}</span>
       </div>
       </div>
       
       <div class="quantity-selector mb-15">
-        <span class="flex-1 capitalize"><span class="text-gray-500">VIN: </span>  {{  product.vin_numbers[0] }}</span>
-        <span class="flex-1" ><span class="text-gray-500">Stock ID: </span> {{ product.stock_number }}</span>
+        <span class="flex-1 capitalize"><span class="text-gray-500">VIN: </span>  {{  product.vin_numbers[0] || "N/A" }}</span>
+        <span class="flex-1" ><span class="text-gray-500">Stock ID: </span> {{ product.stock_number || "N/A"}}</span>
       </div>
       <div class="action-buttons">
         <button class="btn-outline flex-1" @click="$emit('toggleCart')">
@@ -63,7 +63,7 @@ const props = defineProps({
   product: {
     type: Object,
     required: true
-  },
+  }
 })
 
 const emit = defineEmits([
@@ -80,9 +80,6 @@ const handleOrderClick = () => {
     id: props.product.id,
     name: props.product.name,
     unit_price: props.product.unit_price,
-    price: props.product.unit_price,
-    wholesale_price: props.product.wholesale_price,
-    wholesale_min_qty: props.product.wholesale_min_qty,
     stock: props.product.stock,
     primary_image: props.product.primary_image || props.product.images?.[0],
     image: props.product.primary_image || props.product.images?.[0],
@@ -90,12 +87,24 @@ const handleOrderClick = () => {
     vehicle_model: props.product.vehicle_model,
     vehicle_year: props.product.vehicle_year,
     boutique_name: props.product.boutique_name,
-    boutique_id: props.product.boutique_id
+    boutique_id: props.product.boutique_id,
+    boutique_logo: props.product.boutique_logo,
+    boutique_marche: props.product.boutique_marche,
+    boutique_type: props.product.boutique_type,
+    boutique_premium: props.product.boutique_premium,
+    boutique_verified: props.product.boutique_verified,
+    boutique_address: props.product.boutique_address,
+    boutique_description: props.product.boutique_description,
+    boutique_phone: props.product.boutique_phone,
+    vin_number:props.product.vin_numbers[0],
+    trim_number:props.product.trim_numbers[0],
+    stock_number: props.product.stock_number,
+    color: props.product.colors[0].name,
+    colorHex: props.product.colors[0].hex_value
   }
 
   const orderState = {
     product: productData,
-    quantity: props.quantity
   }
 
   // 🧠 Sauvegarde dans le sessionStorage (fallback pour refresh ou anciennes versions de Vue Router)

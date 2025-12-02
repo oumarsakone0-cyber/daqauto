@@ -55,7 +55,6 @@
               v-if="supplier"
               :supplier="supplier"
               @visit-store="visitStore"
-              @contact-supplier="contactSupplier"
             />
           </div>
         </div>
@@ -740,10 +739,6 @@ const toggleCart = () => {
     }
   }
   
-  const contactSupplier = () => {
-    displayNotification('info', 'contact form', 'The contact form of supplier will open.')
-  }
-  
   const viewStoreProduct = (storeProduct) => {
     router.push(`/detail_resultat_produit/${storeProduct.slug || storeProduct.id}`)
     scrollToTop()
@@ -837,7 +832,7 @@ const toggleCart = () => {
     if (!selectedCommune.value && selectedShipping.value === 'abidjan') {
       selectedCommune.value = 'Cocody'
       console.log('🏙️ Commune par défaut: Cocody')
-      updateShippingCost()
+      // updateShippingCost()
     }
     
     scrollToTop()

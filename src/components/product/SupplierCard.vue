@@ -87,7 +87,6 @@ const chat = useChatStore()
   
   const emit = defineEmits([
     'visitStore',
-    'contactSupplier'
   ])
 
 

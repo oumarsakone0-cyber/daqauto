@@ -16,26 +16,29 @@
       <div class="validation-grid">
         <div class="left-column">
           <div class="section-card product-summary">
-            <h2 class="section-title">Product summary</h2>
-            <div class="product-info">
-              <img :src="product.primary_image || product.image" :alt="product.name" class="product-image">
-              <div class="product-details">
-                <h3 class="product-name">{{ product.name }}</h3>
-                <div class="product-specs" v-if="product.vehicle_make || product.vehicle_model || product.vehicle_year">
-                  <span v-if="product.vehicle_make">{{ product.vehicle_make }}</span>
-                  <span v-if="product.vehicle_model">{{ product.vehicle_model }}</span>
-                  <span v-if="product.vehicle_year">{{ product.vehicle_year }}</span>
+            <h2 class="section-title">Product Summary</h2>
+            <div class="sub-section-card">
+              <div class="flex text-black font-bold py-3 ">
+                <Box class="w-5 h-5 primary-color mr-2"/>
+                Product Ordered
+              </div>
+              <div class="product-info">
+                <img :src="product.primary_image || product.image" :alt="product.name" class="product-image">
+                <div class="product-details">
+                  <h3 class="product-name">{{ product.name  }}</h3>
+                  <div class="product-specs" >
+                   <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ product.vin_number || "N/A"}}</span>
+                   <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ product.trim_number || "N/A"}}</span>
+                   <span class="bg-green-200 px-2 py-1 rounded-lg font-bold" >Stock number: {{ product.stock_number|| "N/A" }}</span>
+                    <span class=" px-2 py-1 rounded-lg font-bold" :style="{backgroundColor: product.colorHex || '#ffffff' }">Color: {{ product.color || "N/A" }}</span>
+                  </div>
                 </div>
-                <div class="product-price">
-                  <span class="price-label">Unit price:</span>
-                  <span class="price-value">{{ formatPrice(getUnitPrice(),{showFOB:true}) }}</span>
-                </div>
-                <div v-if="product.wholesale_price && product.wholesale_min_qty && quantity >= product.wholesale_min_qty" class="wholesale-info">
-                  <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
-                    <polyline points="20 6 9 17 4 12"></polyline>
-                  </svg>
-                  <span>Wholesale price applied (≥{{ product.wholesale_min_qty }} pcs)</span>
-                </div>
+              </div>
+              <div class="product-price">
+                <span class="text-gray-500 text-xl font-bold">Unit price</span>
+                <span class="price-value">{{ formatPrice(product.unit_price,{showFOB:true}) }}</span>
+              </div>
+              <!-- <div v-if="quantity >= 1">
                 <div class="product-quantity">
                   <span class="quantity-label">Quantity:</span>
                   <div class="quantity-controls">
@@ -44,9 +47,44 @@
                     <button @click="increaseQuantity">+</button>
                   </div>
                 </div>
-                <div v-if="product.stock" class="stock-info">
+                <div  class="stock-info">
                   <span>{{ product.stock }} parts available</span>
                 </div>
+              </div> -->
+              <div class="flex text-black font-bold py-3 ">
+                  <Banknote class="w-6 h-6 primary-color mt-0.5 mr-2"/>
+                  Financial Summary
+              </div>
+              <div class="flex justify-between">
+                <div class="flex text-gray-400 font-bold py-3 ">
+                  <CalculatorIcon class="w-5= h-5 mt-0.5 mr-2"/>
+                  Subtotal
+                </div>
+                <div>
+                  <span class="price-value">{{ formatPrice(subtotal) }}</span>
+                </div>
+              </div>
+              <div class="flex justify-between border-gray-200 border-b-2  text-gray-400 font-bold py-3 ">
+                <div class="flex text-gray-400  py-3 ">
+                  <TruckIcon class="w-5= h-5 mt-0.5 mr-2"/>
+                  Delivery Costs
+                </div>
+                <div>
+                  <span class="price-value">{{ formatPrice(shippingCost) }}</span>
+                </div>
+              </div>
+
+              <div>
+                <div class="flex justify-between primary-color font-bold py-4 text-xl">
+                  <div class="flex  ">
+                    <Banknote class="w-7 h-7  mr-3"/>
+                    Total
+                  </div>
+                  <div>
+                    <span >{{ formatPrice(totalAmount) }}</span>
+                  </div>
+                </div>
+                
               </div>
             </div>
           </div>
@@ -65,133 +103,21 @@
               </label>
               <p class="checkbox-hint">If you select this option, the delivery charges will be waived.</p>
             </div>
-
-            <div v-if="!hasOwnProvider">
-              <ShippingOptions
-                :selectedShipping="selectedShipping"
-                :selectedCommune="selectedCommune"
-                :selectedVille="selectedVille"
-                :tarifsAbidjan="tarifsAbidjan"
-                :tarifsInterieur="tarifsInterieur"
-                @selectShipping="selectShipping"
-                @updateCommune="updateCommune"
-                @updateVille="updateVille"
-              />
-            </div>
-            <div v-else class="own-provider-message">
+            <div v-if="hasOwnProvider" class="own-provider-message">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
                 <polyline points="20 6 9 17 4 12"></polyline>
               </svg>
               <span>The delivery will be made to your own freight forwarder in China.</span>
             </div>
           </div>
-
-          <!-- <div class="section-card order-summary">
-            <h2 class="section-title">Order summary</h2>
-            
-            <div class="summary-row">
-              <span class="summary-label">Subtotal ({{ quantity }} article{{ quantity > 1 ? 's' : '' }})</span>
-              <span class="summary-value">{{ formatPrice(subtotal) }}</span>
-            </div>
-
-            <div v-if="!hasOwnProvider" class="summary-row">
-              <span class="summary-label">Delivery costs</span>
-              <span class="summary-value" :class="{ 'free-shipping': shippingCost === 0 }">
-                {{ shippingCost === 0 ? 'Gratuit' : formatPrice(shippingCost) }}
-              </span>
-            </div>
-
-            <div v-if="!hasOwnProvider" class="summary-row">
-              <span class="summary-label">Other fees</span>
-              <span class="summary-value">{{ formatPrice(otherFees) }}</span>
-            </div>
-
-            <div class="summary-divider"></div>
-
-            <div class="summary-row total-row">
-              <span class="primary-color text-2xl font-bold">Total</span>
-              <span class="primary-color text-2xl font-bold">{{ formatPrice(totalAmount) }}</span>
-            </div>
-
-            <div class="deposit-info">
-              <div class="deposit-row">
-                <span class="deposit-label">Deposit to be paid (30%)</span>
-                <span class="deposit-value">{{ formatPrice(depositAmount) }}</span>
-              </div>
-              <p class="deposit-note">You must pay 30% of the total amount to confirm your order</p>
-            </div>
-
-            <div class="bank-info">
-              <h3 class="bank-title">Bank information</h3>
-              <div class="bank-details">
-                <div class="bank-row">
-                  <span class="bank-label">Bank:</span>
-                  <span class="bank-value copy-value" @click="copyToClipboard('SGCI (Société Générale)')">
-                    SGCI (Société Générale)
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                  </span>
-                </div>
-                <div class="bank-row">
-                  <span class="bank-label">Holder:</span>
-                  <span class="bank-value">MARKETPLACE CI</span>
-                </div>
-                <div class="bank-row">
-                  <span class="bank-label">Account number:</span>
-                  <span class="bank-value copy-value" @click="copyToClipboard('CI93 CI 01 234 567890123456')">
-                    CI93 CI 01 234 567890123456
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                  </span>
-                </div>
-                <div class="bank-row">
-                  <span class="bank-label">Mobile Money:</span>
-                  <span class="bank-value copy-value" @click="copyToClipboard('+225 07 XX XX XX XX')">
-                    +225 07 XX XX XX XX
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect>
-                      <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-                    </svg>
-                  </span>
-                </div>
-              </div>
-              <p class="bank-note">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#1890ff" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <line x1="12" y1="16" x2="12" y2="12"></line>
-                  <line x1="12" y1="8" x2="12.01" y2="8"></line>
-                </svg>
-                Make the deposit payment and then add the proof of payment from your "My Orders" section.
-              </p>
-            </div>
-
-            <div class="security-badges">
-              <div class="badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
-                  <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                </svg>
-                <span>Secure payment</span>
-              </div>
-              <div class="badge">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
-                  <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-                  <polyline points="22 4 12 14.01 9 11.01"></polyline>
-                </svg>
-                <span>Buyer protection</span>
-              </div>
-            </div>
-          </div> -->
         </div>
 
         <div class="right-column">
-          <div class="section-card user-info-form">
-            <h2 class="section-title">Delivery information</h2>
-            
-            <form @submit.prevent="submitOrder">
+           <!-- Informations du fournisseur -->
+           
+          <div class="section-card">
+            <!-- <h2 class="section-title">Delivery information</h2> -->
+            <!-- <form @submit.prevent="submitOrder">
               <div class="form-grid">
                 <div class="form-group">
                   <label class="form-label">Last Name</label>
@@ -265,20 +191,25 @@
                   ></textarea>
                 </div>
               </div>
-
-              <button 
-                type="submit"
-                class="btn-degrade-orange mt-6 w-full" 
-                :disabled="!canSubmitOrder"
-              >
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
-                Confirm the order
-              </button>
-            </form>
+            </form> -->
+            <h2 class="section-title">Supplier Information</h2>
+            <SupplierCard 
+              v-if="supplier"
+              :supplier="supplier"
+              @visit-store="visitStore"
+            />
+            <button 
+              type="submit"
+              class="btn-degrade-orange mt-6 w-full" 
+              :disabled="!canSubmitOrder"
+            >
+              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <circle cx="9" cy="21" r="1"></circle>
+                <circle cx="20" cy="21" r="1"></circle>
+                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+              </svg>
+              Confirm the order
+            </button>
           </div>
         </div>
       </div>
@@ -361,6 +292,8 @@ import { ref, computed, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 import { productsApi } from '../../services/api.js'
 import { formatPrice } from '../../services/formatPrice'
+import SupplierCard from './SupplierCard.vue'
+import { Banknote, Box, Building, CalculatorIcon, TruckIcon } from 'lucide-vue-next'
 
 const router = useRouter()
 const route = useRoute()
@@ -394,6 +327,31 @@ const selectedVille = ref('')
 const hasOwnProvider = ref(false)
 const otherFees = ref(5000)
 
+const supplier = computed(() => {
+    if (!product.value) return null
+  
+    return {
+      name: (product.value.boutique_name || 'Boutique Adjamé').toUpperCase(),
+      logo: product.value.boutique_logo || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop&auto=format',
+      market: (product.value.boutique_marche || 'Adjamé').toUpperCase(),
+      business_type: (product.value.boutique_type || 'Commerce').toUpperCase(),
+      experience: 5,
+      premium: product.value.boutique_premium !== 'free',
+      verify: product.value.boutique_verified !== 0,
+      adresse: (product.value.boutique_address || 'Abidjan, Adjamé'),
+      description: (product.value.boutique_description || ''),
+      contact: (product.value.boutique_phone || '').toUpperCase()
+    }
+  })
+  
+  const visitStore = () => {
+    if (product.value && product.value.boutique_id) {
+      router.push(`/boutique_resultat/${product.value.boutique_id}`)
+    } else {
+      displayNotification('info', 'Visit store', `Redirect to the store ${supplier.value.name}.`)
+    }
+  }
+
 const orderForm = ref({
   ville: '',
   adresse: '',
@@ -414,7 +372,7 @@ const tarifsInterieur = ref([
   { id: 3, ville: 'San-Pedro', tarif: 6000, delai_livraison: '5-7 jours' }
 ])
 
-const subtotal = computed(() => getUnitPrice() * quantity.value)
+const subtotal = computed(() => product.value.unit_price * quantity.value)
 
 const shippingCost = computed(() => {
   if (hasOwnProvider.value) return 0
@@ -441,9 +399,7 @@ const totalAmount = computed(() => {
 const depositAmount = computed(() => Math.round(totalAmount.value * 0.3))
 
 const canSubmitOrder = computed(() => {
-  return orderForm.value.ville &&
-         orderForm.value.adresse &&
-         quantity.value > 0
+  return quantity.value > 0
 })
 
 const increaseQuantity = () => {
@@ -604,21 +560,7 @@ const contactSeller = () => {
 const goToOrders = () => {
   showSuccessModal.value = false
   router.push('/profile_client')
-}
-
-const getUnitPrice = () => {
-  if (!product.value) return 0
-  
-  let price = product.value.unit_price || product.value.price
-  
-  if (product.value.wholesale_price && 
-      product.value.wholesale_min_qty && 
-      quantity.value >= product.value.wholesale_min_qty) {
-    price = product.value.wholesale_price
-  }
-  
-  return price
-}
+} 
 
 onMounted(() => {
   // 🔐 Vérifier si l'utilisateur est connecté
@@ -731,7 +673,7 @@ onMounted(() => {
 
 .validation-grid {
   display: grid;
-  grid-template-columns: 1fr 450px;
+  grid-template-columns: 2fr 1fr;
   gap: 24px;
 }
 
@@ -743,13 +685,19 @@ onMounted(() => {
   margin-bottom: 24px;
 }
 
+.sub-section-card{
+  background: #fff;
+  border-radius: 8px;
+  padding:10px 24px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+}
+
 .section-title {
   font-size: 18px;
   font-weight: 600;
   color: #333;
-  margin: 0 0 20px 0;
+  /* margin: 0 0 20px 0; */
   padding-bottom: 12px;
-  border-bottom: 2px solid #f0f0f0;
 }
 
 .product-info {
@@ -758,9 +706,9 @@ onMounted(() => {
 }
 
 .product-image {
-  width: 120px;
-  height: 120px;
-  object-fit: cover;
+  width: 100px;
+  height: 100px;
+  object-fit: contain;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
 }
@@ -774,38 +722,32 @@ onMounted(() => {
   font-weight: 600;
   color: #333;
   margin: 0 0 8px 0;
+  font-weight: bold;
+  font-size: 25px;
 }
 
 .product-specs {
   display: flex;
   gap: 12px;
-  margin-bottom: 12px;
+  margin: 25px auto;
   font-size: 14px;
   color: #666;
 }
 
-.product-specs span {
-  padding: 4px 8px;
-  background: #f5f5f5;
-  border-radius: 4px;
-}
 
 .product-price {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 8px;
   margin-bottom: 12px;
-}
-
-.price-label {
-  font-size: 14px;
-  color: #666;
+  margin-top: 20px;
 }
 
 .price-value {
   font-size: 20px;
-  font-weight: 700;
-  color: #fe9700;
+  font-weight: 600;
+  color: #333;
 }
 
 .product-quantity {
