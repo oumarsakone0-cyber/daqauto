@@ -273,13 +273,13 @@
                   <div v-for="item in group.items" :key="item.item_id" class="cart-item flex items-center justify-between">
                     <div class="flex items-center gap-4">
                       <div class="w-20 h-20 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 cursor-pointer" @click="goToProduct(item.product_slug)">
-                        <img :src="item.product_image" :alt="item.product_name" class="w-full h-full object-contain">
+                        <img :src="item.primary_image" :alt="item.name" class="w-full h-full object-contain">
                       </div>
                       <div class="flex flex-col">
-                        <h3 class="favorite-name">{{ item.product_name }}</h3>
+                        <h3 class="favorite-name">{{ item.name }}</h3>
                         <div class="flex gap-2 text-xs text-gray-600" >
-                          <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ item.vin_numbers || "N/A"}}</span>
-                          <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ item.trim_numbers || "N/A"}}</span>
+                          <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ item.vin_number || "N/A"}}</span>
+                          <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ item.trim_number || "N/A"}}</span>
                           <span class="bg-green-200 px-2 py-1 rounded-lg font-bold" >Stock number: {{ item.stock_number|| "N/A" }}</span>
                         </div>
                         <!-- <div class="flex gap-2 text-xs text-gray-600">
@@ -381,8 +381,10 @@ import { ElMessageBox, ElMessage } from 'element-plus';
 import { ListOrderedIcon, RefreshCcw as RefreshIcon, Trash2Icon } from 'lucide-vue-next';
 import { formatPrice } from '../../services/formatPrice';
 import { useCartStore } from '../../stores/cart'
+import { useOrdersStore } from '../../stores/orders.js'
 
 const cart = useCartStore()
+const ordersStore = useOrdersStore()
 const router = useRouter()
 const route = useRoute()
 
@@ -441,8 +443,13 @@ return cart.grandTotal;
 
 // Lance checkout pour une boutique (stocke les items en session et navigue)
 const checkoutBoutique = (group) => {
+
   sessionStorage.setItem('checkoutItems', JSON.stringify(group.items))
-  router.push({ path: '/checkout', query: { boutiqueId: group.boutique_id } }).catch(()=>{})
+  ordersStore.addOrder(group.items)
+  router.push({ 
+    path: '/order-validation',
+  })
+  // router.push({ path: '/checkout', query: { boutiqueId: group.boutique_id } }).catch(()=>{})
 }
 
 
@@ -612,37 +619,7 @@ const goBack = () => {
 }
 
 const handleOrderClick = () => {
-  const productData = {
-    id: props.product.id,
-    name: props.product.name,
-    unit_price: props.product.unit_price,
-    stock: props.product.stock,
-    primary_image: props.product.primary_image || props.product.images?.[0],
-    image: props.product.primary_image || props.product.images?.[0],
-    vehicle_make: props.product.vehicle_make,
-    vehicle_model: props.product.vehicle_model,
-    vehicle_year: props.product.vehicle_year,
-    boutique_name: props.product.boutique_name,
-    boutique_id: props.product.boutique_id,
-    boutique_logo: props.product.boutique_logo,
-    boutique_marche: props.product.boutique_marche,
-    boutique_type: props.product.boutique_type,
-    boutique_premium: props.product.boutique_premium,
-    boutique_verified: props.product.boutique_verified,
-    boutique_address: props.product.boutique_address,
-    boutique_description: props.product.boutique_description,
-    boutique_phone: props.product.boutique_phone,
-    vin_number:props.product.vin_numbers[0],
-    trim_number:props.product.trim_numbers[0],
-    stock_number: props.product.stock_number,
-    color: props.product.colors[0].name,
-    colorHex: props.product.colors[0].hex_value
-  }
-
-  const orderState = {
-    product: productData,
-    quantity: 1
-  }
+  
 
   // 🧠 Sauvegarde dans le sessionStorage (fallback pour refresh ou anciennes versions de Vue Router)
   try {
@@ -652,7 +629,7 @@ const handleOrderClick = () => {
   }
 
   // 🚀 Navigation avec route.state (si Vue Router ≥ 4.2)
-  router.push({
+  router.push({ 
     path: '/order-validation',
     state: orderState
   })

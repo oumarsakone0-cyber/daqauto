@@ -17,74 +17,90 @@
         <div class="left-column">
           <div class="section-card product-summary">
             <h2 class="section-title">Product Summary</h2>
-            <div class="sub-section-card">
+            <div>
+
+            </div>
+            <div v-for="group in groupedOrders" :key="group.boutique_id" class="px-3">
               <div class="flex text-black font-bold py-3 ">
                 <Box class="w-5 h-5 primary-color mr-2"/>
                 Product Ordered
               </div>
-              <div class="product-info">
-                <img :src="product.primary_image || product.image" :alt="product.name" class="product-image">
-                <div class="product-details">
-                  <h3 class="product-name">{{ product.name  }}</h3>
-                  <div class="product-specs" >
-                   <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ product.vin_number || "N/A"}}</span>
-                   <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ product.trim_number || "N/A"}}</span>
-                   <span class="bg-green-200 px-2 py-1 rounded-lg font-bold" >Stock number: {{ product.stock_number|| "N/A" }}</span>
-                    <span class=" px-2 py-1 rounded-lg font-bold" :style="{backgroundColor: product.colorHex || '#ffffff' }">Color: {{ product.color || "N/A" }}</span>
+              <div v-if="group.items.length>1" class="flex items-center justify-between mb-3">
+                  <div class="flex items-center gap-3">
+                    <div class="text-xl font-bold text-gray-500">Items: {{ group.items.length }}</div>
+                  </div>
+                  <div class="text-sm text-gray-600 font-bold">Subtotal: {{ formatPrice(group.subtotal) }}</div>
+              </div>
+              <div v-for="item in group.items" :key="item.item_id" class="sub-section-card items-center justify-between">
+                <div class="product-info">
+                  <img :src="item.primary_image" :alt="item.name" class="product-image">
+                  <div class="product-details">
+                    <h3 class="product-name">{{ item.name  }}</h3>
+                    <div class="product-specs" >
+                    <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ item.vin_number || "N/A"}}</span>
+                    <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ item.trim_number || "N/A"}}</span>
+                    <span class="bg-green-200 px-2 py-1 rounded-lg font-bold" >Stock number: {{ item.stock_number|| "N/A" }}</span>
+                      <span class=" px-2 py-1 rounded-lg font-bold" :style="{backgroundColor: item.colorHex || '#ffffff' }">Color: {{ item.color || "N/A" }}</span>
+                    </div>
                   </div>
                 </div>
-              </div>
-              <div class="product-price">
-                <span class="text-gray-500 text-xl font-bold">Unit price</span>
-                <span class="price-value">{{ formatPrice(product.unit_price,{showFOB:true}) }}</span>
-              </div>
-              <!-- <div v-if="quantity >= 1">
-                <div class="product-quantity">
-                  <span class="quantity-label">Quantity:</span>
-                  <div class="quantity-controls">
-                    <button @click="decreaseQuantity" :disabled="quantity <= 1">-</button>
-                    <input type="number" v-model.number="quantity" min="1" @input="validateQuantity" class="quantity-input focus:border-ring-2 focus:ring-0">
-                    <button @click="increaseQuantity">+</button>
+                <div class="product-price">
+                  <span class="text-gray-500 text-xl font-bold">Unit price</span>
+                  <span class="price-value">{{ formatPrice(item.unit_price,{showFOB:true}) }}</span>
+                </div>
+                <!-- <div v-if="quantity >= 1">
+                  <div class="product-quantity">
+                    <span class="quantity-label">Quantity:</span>
+                    <div class="quantity-controls">
+                      <button @click="decreaseQuantity" :disabled="quantity <= 1">-</button>
+                      <input type="number" v-model.number="quantity" min="1" @input="validateQuantity" class="quantity-input focus:border-ring-2 focus:ring-0">
+                      <button @click="increaseQuantity">+</button>
+                    </div>
+                  </div>
+                  <div  class="stock-info">
+                    <span>{{ product.stock }} parts available</span>
+                  </div>
+                </div> -->
+                <div class="flex text-black font-bold py-3 ">
+                    <Banknote class="w-6 h-6 primary-color mt-0.5 mr-2"/>
+                    Financial Summary
+                </div>
+                <div class="flex justify-between">
+                  <div class="flex text-gray-400 font-bold py-3 ">
+                    <CalculatorIcon class="w-5= h-5 mt-0.5 mr-2"/>
+                    Subtotal
+                  </div>
+                  <div>
+                    <span class="price-value">{{ formatPrice(group.subtotal) }}</span>
                   </div>
                 </div>
-                <div  class="stock-info">
-                  <span>{{ product.stock }} parts available</span>
+                <div class="flex justify-between border-gray-200 border-b-2  text-gray-400 font-bold py-3 ">
+                  <div class="flex text-gray-400  py-3 ">
+                    <TruckIcon class="w-5= h-5 mt-0.5 mr-2"/>
+                    Delivery Costs
+                  </div>
+                  <div>
+                    <span class="price-value">{{ formatPrice(shippingCost) }}</span>
+                  </div>
                 </div>
-              </div> -->
-              <div class="flex text-black font-bold py-3 ">
-                  <Banknote class="w-6 h-6 primary-color mt-0.5 mr-2"/>
-                  Financial Summary
-              </div>
-              <div class="flex justify-between">
-                <div class="flex text-gray-400 font-bold py-3 ">
-                  <CalculatorIcon class="w-5= h-5 mt-0.5 mr-2"/>
-                  Subtotal
-                </div>
-                <div>
-                  <span class="price-value">{{ formatPrice(subtotal) }}</span>
-                </div>
-              </div>
-              <div class="flex justify-between border-gray-200 border-b-2  text-gray-400 font-bold py-3 ">
-                <div class="flex text-gray-400  py-3 ">
-                  <TruckIcon class="w-5= h-5 mt-0.5 mr-2"/>
-                  Delivery Costs
-                </div>
-                <div>
-                  <span class="price-value">{{ formatPrice(shippingCost) }}</span>
+                <div v-if="group.items.length<=1" class="flex justify-between primary-color font-bold py-4 text-xl">
+                    <div class="flex  ">
+                        <Banknote class="w-7 h-7  mr-3"/>
+                        Total
+                    </div>
+                    <div>
+                      <span >{{ formatPrice(totalAmount) }}</span>
+                    </div>
                 </div>
               </div>
-
-              <div>
-                <div class="flex justify-between primary-color font-bold py-4 text-xl">
+              <div v-if="group.items.length>1" class="flex justify-between primary-color font-bold py-4 text-xl">
                   <div class="flex  ">
-                    <Banknote class="w-7 h-7  mr-3"/>
-                    Total
+                      <Banknote class="w-7 h-7  mr-3"/>
+                      Total
                   </div>
                   <div>
                     <span >{{ formatPrice(totalAmount) }}</span>
                   </div>
-                </div>
-                
               </div>
             </div>
           </div>
@@ -294,22 +310,37 @@ import { useRouter, useRoute } from 'vue-router'
 import { productsApi } from '../../services/api.js'
 import { formatPrice } from '../../services/formatPrice'
 import SupplierCard from './SupplierCard.vue'
-import { Banknote, Box, Building, CalculatorIcon, TruckIcon } from 'lucide-vue-next'
+import { Banknote, Box, CalculatorIcon, TruckIcon } from 'lucide-vue-next'
+import { useOrdersStore } from '../../stores/orders.js'
 
 const router = useRouter()
 const route = useRoute()
+const orders = useOrdersStore()
 
-const product = ref({
-  id: null,
-  name: 'Produit',
-  price: 0,
-  unit_price: 0,
-  wholesale_price: null,
-  wholesale_min_qty: null,
-  stock: 0,
-  primary_image: '/placeholder.svg?height=120&width=120',
-  image: '/placeholder.svg?height=120&width=120'
-})
+const product = ref([
+  {
+    id: null,
+    name: '',
+    unit_price: 0,
+    primary_image: '',
+    vin_number: '',
+    trim_number: '',
+    stock_number: '',
+    color: '',
+    colorHex: '',
+    stock: 0,
+    boutique_id: null,
+    boutique_name: '',
+    boutique_logo: '',
+    boutique_marche: '',
+    boutique_type: '',
+    boutique_premium: '',
+    boutique_verified: 0,
+    boutique_address: '',
+    boutique_description: '',
+    boutique_phone: ''
+  }
+])
 
 const user = ref({
   nom: '',
@@ -328,22 +359,28 @@ const selectedVille = ref('')
 const hasOwnProvider = ref(false)
 const otherFees = ref(5000)
 
+
 const supplier = computed(() => {
     if (!product.value) return null
-  
+  console.log("supplier: ",product.value)
     return {
-      name: (product.value.boutique_name || 'Boutique Adjamé').toUpperCase(),
-      logo: product.value.boutique_logo || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop&auto=format',
-      market: (product.value.boutique_marche || 'Adjamé').toUpperCase(),
-      business_type: (product.value.boutique_type || 'Commerce').toUpperCase(),
+      name: (product.value[0].boutique_name || 'Boutique Adjamé').toUpperCase(),
+      logo: product.value[0].boutique_logo || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop&auto=format',
+      market: (product.value[0].boutique_marche || 'Adjamé').toUpperCase(),
+      business_type: (product.value[0].boutique_type || 'Commerce').toUpperCase(),
       experience: 5,
-      premium: product.value.boutique_premium !== 'free',
-      verify: product.value.boutique_verified !== 0,
-      adresse: (product.value.boutique_address || 'Abidjan, Adjamé'),
-      description: (product.value.boutique_description || ''),
-      contact: (product.value.boutique_phone || '').toUpperCase()
+      premium: product.value[0].boutique_premium !== 'free',
+      verify: product.value[0].boutique_verified !== 0,
+      adresse: (product.value[0].boutique_address || 'Abidjan, Adjamé'),
+      description: (product.value[0].boutique_description || ''),
+      contact: (product.value[0].boutique_phone || '').toUpperCase()
     }
   })
+
+  const groupedOrders = computed(() => {
+  
+  return orders.grouped;
+})
   
   const visitStore = () => {
     if (product.value && product.value.boutique_id) {
@@ -373,7 +410,9 @@ const tarifsInterieur = ref([
   { id: 3, ville: 'San-Pedro', tarif: 6000, delai_livraison: '5-7 jours' }
 ])
 
-const subtotal = computed(() => product.value.unit_price * quantity.value)
+const subtotal = computed(() => {
+  return orders.total;
+})
 
 const shippingCost = computed(() => {
   if (hasOwnProvider.value) return 0
@@ -393,8 +432,8 @@ const shippingCost = computed(() => {
 })
 
 const totalAmount = computed(() => {
-  const base = subtotal.value + shippingCost.value
-  return hasOwnProvider.value ? base : base + otherFees.value
+  const base = orders.total + shippingCost.value
+  return base;
 })
 
 const depositAmount = computed(() => Math.round(totalAmount.value * 0.3))
@@ -583,37 +622,37 @@ onMounted(() => {
   }
 
   // 🧾 Récupération du produit depuis route.state (mémoire)
-  console.log('[v0] Route state on mount:', route.state)
-  if (route.state?.product) {
-    product.value = { ...product.value, ...route.state.product }
-    quantity.value = route.state.quantity || 1
-    console.log('[v0] Product loaded from route.state:', product.value)
-  } 
+  console.log('[v0] Route state on mount:', orders.itemsOrdered)
+  
+    product.value = orders.itemsOrdered 
+    quantity.value = orders.itemsOrdered[0].quantity || 1
+    console.log('[v0] Product loaded from Order store:', product.value)
+  
   // 🔁 Si actualisation, récupérer depuis sessionStorage
-  else {
-    const savedData = sessionStorage.getItem('lastProduct')
-    if (savedData) {
-      try {
-        const parsed = JSON.parse(savedData)
-        product.value = { ...product.value, ...parsed.product }
-        quantity.value = parsed.quantity || 1
-        console.log('[v0] Product loaded from sessionStorage:', product.value)
-      } catch (error) {
-        console.error('[v0] Error parsing product from sessionStorage:', error)
-      }
-    } 
-    // 🧩 Fallback : route.query si partagé via lien
-    else if (route.query.productData) {
-      try {
-        const productData = JSON.parse(decodeURIComponent(route.query.productData))
-        product.value = { ...product.value, ...productData }
-        quantity.value = parseInt(route.query.quantity) || 1
-        console.log('[v0] Product loaded from query params:', product.value)
-      } catch (error) {
-        console.error('[v0] Error parsing product data from query:', error)
-      }
-    }
-  }
+  // else {
+  //   const savedData = sessionStorage.getItem('lastProduct')
+  //   if (savedData) {
+  //     try {
+  //       const parsed = JSON.parse(savedData)
+  //       product.value = { ...product.value, ...parsed.product }
+  //       quantity.value = parsed.quantity || 1
+  //       console.log('[v0] Product loaded from sessionStorage:', product.value)
+  //     } catch (error) {
+  //       console.error('[v0] Error parsing product from sessionStorage:', error)
+  //     }
+  //   } 
+  //   // 🧩 Fallback : route.query si partagé via lien
+  //   else if (route.query.productData) {
+  //     try {
+  //       const productData = JSON.parse(decodeURIComponent(route.query.productData))
+  //       product.value = { ...product.value, ...productData }
+  //       quantity.value = parseInt(route.query.quantity) || 1
+  //       console.log('[v0] Product loaded from query params:', product.value)
+  //     } catch (error) {
+  //       console.error('[v0] Error parsing product data from query:', error)
+  //     }
+  //   }
+  // }
 
   // 🔒 Si non connecté, afficher le modal de connexion
   if (!isAuthenticated.value) {
@@ -689,6 +728,7 @@ onMounted(() => {
   background: #fff;
   border-radius: 8px;
   padding:10px 24px;
+  margin-bottom: 16px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
 }
 
@@ -700,6 +740,7 @@ onMounted(() => {
   padding-bottom: 12px;
 }
 
+.cart-item { background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); align-items: center; }
 .product-info {
   display: flex;
   gap: 16px;
@@ -708,7 +749,7 @@ onMounted(() => {
 .product-image {
   width: 100px;
   height: 100px;
-  object-fit: contain;
+  object-fit: cover;
   border-radius: 8px;
   border: 1px solid #e8e8e8;
 }
@@ -728,9 +769,9 @@ onMounted(() => {
 
 .product-specs {
   display: flex;
-  gap: 12px;
+  gap: 10px;
   margin: 25px auto;
-  font-size: 14px;
+  font-size: 12px;
   color: #666;
 }
 

@@ -54,8 +54,10 @@ import { defineProps, defineEmits } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatPrice } from '../../services/formatPrice'
 import { PlusIcon } from 'lucide-vue-next'
+import {useOrdersStore} from '../../stores/orders'
 
 const router = useRouter()
+const orders = useOrdersStore()
 
 
 
@@ -76,16 +78,8 @@ const goToProfile = () => {
 };
 
 const handleOrderClick = () => {
-  const productData =[ {
+  const productData = [{
     id: props.product.id,
-    name: props.product.name,
-    unit_price: props.product.unit_price,
-    stock: props.product.stock,
-    primary_image: props.product.primary_image || props.product.images?.[0],
-    image: props.product.primary_image || props.product.images?.[0],
-    vehicle_make: props.product.vehicle_make,
-    vehicle_model: props.product.vehicle_model,
-    vehicle_year: props.product.vehicle_year,
     boutique_name: props.product.boutique_name,
     boutique_id: props.product.boutique_id,
     boutique_logo: props.product.boutique_logo,
@@ -96,22 +90,31 @@ const handleOrderClick = () => {
     boutique_address: props.product.boutique_address,
     boutique_description: props.product.boutique_description,
     boutique_phone: props.product.boutique_phone,
+
+    name: props.product.name,
+    unit_price: props.product.unit_price,
+    stock: props.product.stock,
+    primary_image: props.product.primary_image || props.product.images?.[0],
+    vehicle_make: props.product.vehicle_make,
+    vehicle_model: props.product.vehicle_model,
+    vehicle_year: props.product.vehicle_year,
     vin_number:props.product.vin_numbers[0],
     trim_number:props.product.trim_numbers[0],
     stock_number: props.product.stock_number,
     color: props.product.colors[0].name,
     colorHex: props.product.colors[0].hex_value,
     quantity: 1,
+    slug: props.product.slug,
+    vehicle_mileage: props.product.vehicle_mileage,
+    fuel_type: props.product.fuel_type
   }]
-
-  const orderState = {
-    product: productData,
-  }
-  console.log('Navigating to order validation with state:', orderState)
+  
+  orders.addOrder(productData)
+  console.log('Navigating to order validation with Order store:', orders.itemsOrdered)
 
   // 🧠 Sauvegarde dans le sessionStorage (fallback pour refresh ou anciennes versions de Vue Router)
   try {
-    sessionStorage.setItem('lastProduct', JSON.stringify(orderState))
+    // sessionStorage.setItem('lastProduct', JSON.stringify(orderState))
   } catch (error) {
     console.error('[v0] Error saving product to sessionStorage:', error)
   }
@@ -119,7 +122,6 @@ const handleOrderClick = () => {
   // 🚀 Navigation avec route.state (si Vue Router ≥ 4.2)
   router.push({
     path: '/order-validation',
-    state: orderState
   })
 }
 </script>
