@@ -213,7 +213,7 @@
               </div>
             </div>
             
-            <div class="cart">
+            <router-link :to="{ name: 'profile_client', query: { tab: 'cart' } }" class="cart" @click="goToCart">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/>
                 <circle cx="20" cy="21" r="1"/>
@@ -225,7 +225,7 @@
                   <div v-else >
                    {{ cartCount }}
                    </div></div>
-            </div>
+            </router-link>
 
           </div>
           <div class="user-account" @click="handleLogout()" >
@@ -743,8 +743,10 @@ import { categoriesApi, productsApi } from '../../services/api.js';
 import { LogOut } from 'lucide-vue-next';
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { useCurrencyStore } from '../../stores/currency.js'
+import { useCartStore } from '../../stores/cart'
 
 const currencyStore = useCurrencyStore()
+const cart = useCartStore()
 
 const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
 const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
@@ -785,8 +787,7 @@ const categoriesError = ref('')
 const activeCategory = ref(null)
 const languet = ref('English')
 
-// === États pour le panier ===
-const cartCount = ref(0)
+
 
 // === États pour la liste déroulante langue/devise ===
 const showLanguageDropdown = ref(false)
@@ -901,6 +902,9 @@ const uniqueLanguages = computed(() => {
     return true
   })
 })
+
+// === États pour le panier ===
+const cartCount = computed(() => cart.itemCount)
 
 // Devises disponibles selon la langue sélectionnée
 const availableCurrencies = computed(() => {
@@ -1493,6 +1497,7 @@ const goToBoutique = () => {
 const goToAuthentication = () => {
   router.push('/login')
 };
+
 
 const handleEscapeKey = (event) => {
   if (event.key === 'Escape') {

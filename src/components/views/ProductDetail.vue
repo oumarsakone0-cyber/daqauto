@@ -183,10 +183,14 @@ import OrderModal from '../product/modals/OrderModal.vue'
 import OrderSuccessModal from '../product/modals/OrderSuccessModal.vue'
 import NotificationToast from '../product/NotificationToast.vue'
 import CartBadge from '../product/CartBadge.vue'
+import { useCartStore } from '../../stores/cart'
+
+
   
   // Router
   const route = useRoute()
   const router = useRouter()
+  const cart = useCartStore()
   
   
   // États de chargement
@@ -547,10 +551,12 @@ import CartBadge from '../product/CartBadge.vue'
 
 const toggleCart = () => {
   // On inverse l'état local
-  addedCart.value = !addedCart.value;
+  addedCart.value = true;
   try {
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
     const user = JSON.parse(userData)
+
+    cart.addItem(product.value);
     // Préparer les données pour l'API
     const likeData = { id_produit: product.value.id, user_id: user.id };
 

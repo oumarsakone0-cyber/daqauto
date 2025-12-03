@@ -76,7 +76,7 @@ const goToProfile = () => {
 };
 
 const handleOrderClick = () => {
-  const productData = {
+  const productData =[ {
     id: props.product.id,
     name: props.product.name,
     unit_price: props.product.unit_price,
@@ -100,12 +100,14 @@ const handleOrderClick = () => {
     trim_number:props.product.trim_numbers[0],
     stock_number: props.product.stock_number,
     color: props.product.colors[0].name,
-    colorHex: props.product.colors[0].hex_value
-  }
+    colorHex: props.product.colors[0].hex_value,
+    quantity: 1,
+  }]
 
   const orderState = {
     product: productData,
   }
+  console.log('Navigating to order validation with state:', orderState)
 
   // 🧠 Sauvegarde dans le sessionStorage (fallback pour refresh ou anciennes versions de Vue Router)
   try {

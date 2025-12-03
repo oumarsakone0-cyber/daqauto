@@ -202,6 +202,7 @@
               type="submit"
               class="btn-degrade-orange mt-6 w-full" 
               :disabled="!canSubmitOrder"
+              @click="submitOrder"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"></circle>
@@ -463,8 +464,6 @@ const submitOrder = async () => {
       quantity: quantity.value,
       shipping: {
         type: hasOwnProvider.value ? 'own_provider' : selectedShipping.value,
-        commune: selectedCommune.value,
-        ville: selectedVille.value,
         cost: shippingCost.value,
         hasOwnProvider: hasOwnProvider.value
       },
@@ -494,9 +493,9 @@ const submitOrder = async () => {
       client_telephone: orderData.user.contact,
       type_livraison: hasOwnProvider ? 1 : 0,
       commune: orderData.user.pays || '',
-      ville: orderData.shipping.ville || 'Abidjan',
-      adresse_complete: orderData.user.adresse || orderData.user.adresse_complete || '',
-      instructions_livraison: orderData.user.instructions || orderData.user.instructions_livraison || '',
+      // ville: orderData.shipping.ville || 'Abidjan',
+      // adresse_complete: orderData.user.adresse || orderData.user.adresse_complete || '',
+      // instructions_livraison: orderData.user.instructions || orderData.user.instructions_livraison || '',
       sous_total: orderData.pricing.subtotal,
       frais_livraison: orderData.pricing.shippingCost || 0,
       total: orderData.pricing.total,
@@ -584,6 +583,7 @@ onMounted(() => {
   }
 
   // 🧾 Récupération du produit depuis route.state (mémoire)
+  console.log('[v0] Route state on mount:', route.state)
   if (route.state?.product) {
     product.value = { ...product.value, ...route.state.product }
     quantity.value = route.state.quantity || 1
