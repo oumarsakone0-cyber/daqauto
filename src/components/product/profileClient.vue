@@ -1,45 +1,23 @@
 <template>
   <div class="profile-page">
-    <div class="page-header">
-      <div class="container" style="margin-top: 40px">
-        <button class="back-btn" @click="goBack">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-          Back
-        </button>
-        <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">My Profile</h1>
-      </div>
-        <button 
-              @click="loadAllData"
-              class="submit-btn mt-8 sm:mr-21 mr-4 h-10"
-            >
-              <RefreshIcon class="w-4 h-4" />
-              Refresh
-        </button>
-    </div>
-
-    <div class="container main-content">
-      <!-- Sidebar Menu -->
-      <div class="sidebar-menu">
-        <!-- Added user profile section at top of sidebar -->
-        <div class="user-profile-header">
-          <div class="user-avatar">
-            <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
-              <circle cx="12" cy="7" r="4"></circle>
+    <!-- Top Navigation Bar -->
+    <div class="top-navbar" style="margin-top: 40px">
+      <div class="navbar-container">
+        <!-- Logo/Title Section -->
+        <div class="navbar-brand">
+          <button class="back-btn" @click="goBack">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"></polyline>
             </svg>
-          </div>
-          <div class="user-info">
-            <p class="user-name">{{ profile.prenom }} {{ profile.nom }}</p>
-            <p class="user-email">{{ profile.email }}</p>
-          </div>
+          </button>
+          <h1 class="brand-title">My Profile</h1>
         </div>
 
-        <nav class="menu-list">
-          <a 
-            href="#" 
-            class="menu-item" 
+        <!-- Navigation Menu -->
+        <nav class="nav-menu">
+          <a
+            href="#"
+            class="nav-item"
             :class="{ active: activeTab === 'profile' }"
             @click.prevent="activeTab = 'profile'"
           >
@@ -47,46 +25,73 @@
               <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
               <circle cx="12" cy="7" r="4"></circle>
             </svg>
-            My Profile
+            <span>Profile</span>
           </a>
-          <a 
-            href="#" 
-            class="menu-item" 
+          <a
+            href="#"
+            class="nav-item"
             :class="{ active: activeTab === 'cart' }"
             @click.prevent="activeTab = 'cart'"
           >
-           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <circle cx="9" cy="21" r="1"></circle>
               <circle cx="20" cy="21" r="1"></circle>
               <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
             </svg>
-            My Cart
+            <span>Cart</span>
+            <span v-if="cartItems.length > 0" class="badge">{{ cartItems.length }}</span>
           </a>
-          <a 
-            href="#" 
-            class="menu-item" 
+          <a
+            href="#"
+            class="nav-item"
             :class="{ active: activeTab === 'favorites' }"
             @click.prevent="activeTab = 'favorites'"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
             </svg>
-            My favorites
+            <span>Favorites</span>
+            <span v-if="userFavorites.length > 0" class="badge">{{ userFavorites.length }}</span>
           </a>
-          
-          <a 
-            href="#" 
-            class="menu-item" 
+          <a
+            href="#"
+            class="nav-item"
             :class="{ active: activeTab === 'orders' }"
             @click.prevent="activeTab = 'orders'"
           >
-             <ListOrderedIcon class="w-6 h-6" />
-            My Orders
+            <ListOrderedIcon class="w-5 h-5" />
+            <span>Orders</span>
+            <span v-if="orders.length > 0" class="badge">{{ orders.length }}</span>
           </a>
         </nav>
+
+        <!-- User Profile & Actions -->
+        <div class="navbar-actions">
+          <button
+            @click="loadAllData"
+            class="refresh-btn"
+            title="Refresh data"
+          >
+            <RefreshIcon class="w-5 h-5" />
+          </button>
+          <div class="user-profile-mini">
+            <div class="user-avatar-mini">
+              <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                <circle cx="12" cy="7" r="4"></circle>
+              </svg>
+            </div>
+            <div class="user-info-mini">
+              <p class="user-name-mini">{{ profile.full_name }}</p>
+              <p class="user-email-mini">{{ profile.email }}</p>
+            </div>
+          </div>
+        </div>
       </div>
+    </div>
 
-
+    <!-- Main Content -->
+    <div class="content-container">
       <!-- Loading State -->
       <div v-if="dataLoading" class="loading-state">
         <div class="spinner"></div>
@@ -101,52 +106,52 @@
           <div class="stats-grid">
             <a href="#" @click.prevent="activeTab = 'cart'">
               <div class="stat-card">
-              <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
-                  <circle cx="9" cy="21" r="1"></circle>
-                  <circle cx="20" cy="21" r="1"></circle>
-                  <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-                </svg>
+                <div class="stat-icon cart-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="9" cy="21" r="1"></circle>
+                    <circle cx="20" cy="21" r="1"></circle>
+                    <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
+                  </svg>
+                </div>
+                <div class="stat-info">
+                  <p class="stat-label">My Cart</p>
+                  <p class="stat-value">{{ cartItems.length }}</p>
+                </div>
               </div>
-              <div class="stat-info">
-                <p class="stat-label">Cart</p>
-                <p class="stat-value">{{ cartItems.length }}</p>
-              </div>
-            </div>
             </a>
             <a href="#" @click.prevent="activeTab = 'favorites'">
               <div class="stat-card">
-              <div class="stat-icon">
-                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
+                <div class="stat-icon favorites-icon">
+                  <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+                  </svg>
+                </div>
+                <div class="stat-info">
+                  <p class="stat-label">My Favorites</p>
+                  <p class="stat-value">{{ userFavorites.length }}</p>
+                </div>
               </div>
-              <div class="stat-info">
-                <p class="stat-label">Favorites</p>
-                <p class="stat-value">{{ userFavorites.length }}</p>
-              </div>
-            </div>
             </a>
             <a href="#" @click.prevent="activeTab = 'orders'">
               <div class="stat-card">
-              <div class="stat-icon">
-                <ListOrderedIcon class="w-6 h-6 primary-color" />
+                <div class="stat-icon orders-icon">
+                  <ListOrderedIcon class="w-7 h-7" />
+                </div>
+                <div class="stat-info">
+                  <p class="stat-label">My Orders</p>
+                  <p class="stat-value">{{ orders.length }}</p>
+                </div>
               </div>
-              <div class="stat-info">
-                <p class="stat-label">Orders</p>
-                <p class="stat-value">{{ orders.length }}</p>
-              </div>
-            </div>
             </a>
           </div>
 
           <!-- User Info Card -->
           <div class="section-card">
             <div class="section-header">
-              <h2 class="section-title">Personal information</h2>
-              <button 
-                v-if="!isEditing" 
-                class="btn-degrade-orange" 
+              <h2 class="section-title">Personal Information</h2>
+              <button
+                v-if="!isEditing"
+                class="btn-degrade-orange"
                 @click="isEditing = true"
               >
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -155,15 +160,14 @@
                 </svg>
                 Edit
               </button>
-              {{currentUser}}
             </div>
 
             <form @submit.prevent="saveProfile" class="form-grid">
               <div class="form-group">
-                <label class="form-label">Full name</label>
-                <input 
-                  type="text" 
-                  class="input-style" 
+                <label class="form-label">Full Name</label>
+                <input
+                  type="text"
+                  class="input-style"
                   v-model="profile.full_name"
                   :readonly="!isEditing"
                 >
@@ -171,9 +175,9 @@
 
               <div class="form-group">
                 <label class="form-label">Email</label>
-                <input 
-                  type="email" 
-                  class="input-style" 
+                <input
+                  type="email"
+                  class="input-style"
                   v-model="profile.email"
                   :readonly="!isEditing"
                 >
@@ -181,9 +185,9 @@
 
               <div class="form-group">
                 <label class="form-label">Country</label>
-                <input 
-                  type="text" 
-                  class="input-style" 
+                <input
+                  type="text"
+                  class="input-style"
                   v-model="profile.pays"
                   :readonly="!isEditing"
                   placeholder="Enter your Country"
@@ -192,9 +196,9 @@
 
               <div class="form-group">
                 <label class="form-label">Contact</label>
-                <input 
-                  type="text" 
-                  class="input-style" 
+                <input
+                  type="text"
+                  class="input-style"
                   v-model="profile.contact"
                   :readonly="!isEditing"
                   placeholder="Enter your contact"
@@ -203,8 +207,8 @@
 
               <div class="form-group full-width">
                 <label class="form-label">Address</label>
-                <textarea 
-                  class="input-style" 
+                <textarea
+                  class="input-style"
                   v-model="profile.adresse"
                   :readonly="!isEditing"
                   placeholder="Enter your full address"
@@ -222,31 +226,29 @@
                     <polyline points="17 21 17 13 7 13 7 21"></polyline>
                     <polyline points="7 3 7 8 15 8"></polyline>
                   </svg>
-                  Save changes
+                  Save Changes
                 </button>
-                
               </div>
             </form>
           </div>
         </div>
-        
+
         <!-- Cart Tab -->
         <div v-if="activeTab === 'cart'" class="tab-content">
           <div class="section-card">
             <div class="flex justify-between items-center mb-5">
-                <h2 class="section-title">My Cart</h2>
-                <button 
+              <h2 class="section-title">My Cart</h2>
+              <button
                 @click="cart.clear"
-                class="btn-deconnexion h-10 "
+                class="btn-deconnexion h-10"
               >
                 <Trash2Icon class="w-4 h-4" />
-                clear
-                </button>
-
+                Clear
+              </button>
             </div>
 
             <div v-if="cartItems.length === 0" class="empty-state flex flex-col">
-              <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" class="opacity-50">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" class="opacity-50">
                 <circle cx="9" cy="21" r="1"></circle>
                 <circle cx="20" cy="21" r="1"></circle>
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
@@ -259,10 +261,11 @@
                 <div class="flex items-center justify-between mb-3">
                   <div class="flex items-center gap-3">
                     <div class="w-10 h-10 rounded-lg overflow-hidden border border-gray-200 flex-shrink-0 cursor-pointer">
-                        <img :src="group.boutique_logo" :alt="group.boutique_logo" class="w-full h-full object-contain">
-                      </div>
-                    <div class=" rounded-lg bg-gray-100 text-black py-1  px-2 flex items-center justify-center text-base font-semibold">
-                     <span v-if="group.boutique_name">{{ group.boutique_name }}</span> <span v-else>Boutique {{ group.boutique_id  }}</span>
+                      <img :src="group.boutique_logo" :alt="group.boutique_logo" class="w-full h-full object-contain">
+                    </div>
+                    <div class="rounded-lg bg-gray-100 text-black py-1 px-2 flex items-center justify-center text-base font-semibold">
+                      <span v-if="group.boutique_name">{{ group.boutique_name }}</span>
+                      <span v-else>Boutique {{ group.boutique_id }}</span>
                     </div>
                     <div class="text-xs text-gray-500">Items: {{ group.items.length }}</div>
                   </div>
@@ -277,31 +280,26 @@
                       </div>
                       <div class="flex flex-col">
                         <h3 class="favorite-name">{{ item.name }}</h3>
-                        <div class="flex gap-2 text-xs text-gray-600" >
-                          <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ item.vin_number || "N/A"}}</span>
-                          <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ item.trim_number || "N/A"}}</span>
-                          <span class="bg-green-200 px-2 py-1 rounded-lg font-bold" >Stock number: {{ item.stock_number|| "N/A" }}</span>
+                        <div class="flex gap-2 text-xs text-gray-600">
+                          <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ item.vin_number || "N/A" }}</span>
+                          <span class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ item.trim_number || "N/A" }}</span>
+                          <span class="bg-green-200 px-2 py-1 rounded-lg font-bold">Stock number: {{ item.stock_number || "N/A" }}</span>
                         </div>
-                        <!-- <div class="flex gap-2 text-xs text-gray-600">
-                          <span v-if="item.power" class="text-xs text-gray-500 mt-1">H Power : {{ item.power }}HP</span>
-                          <span v-if="item.fuel_type" class="text-xs text-gray-500 mt-1 capitalize">Fuel Type : {{ item.fuel_type }}</span>
-
-                        </div> -->
                         <div class="mt-2 flex items-center gap-4">
-                          <div class="text-sm text-gray-600">Unit Price :</div>
+                          <div class="text-sm text-gray-600">Unit Price:</div>
                           <div class="favorite-price">{{ formatPrice(item.unit_price) }}</div>
                         </div>
                       </div>
                     </div>
-                    
+
                     <div class="flex items-center gap-2">
                       <div class="product-quantity">
-                      <div class="quantity-controls">
-                        <button @click="decreaseQty(item)" :disabled="item.quantity <= 1">-</button>
-                        <input type="number" v-model.number="item.quantity" min="1" @input="validateQuantity" class="quantity-input focus:border-ring-2 focus:ring-0">
-                        <button @click="increaseQty(item)">+</button>
+                        <div class="quantity-controls">
+                          <button @click="decreaseQty(item)" :disabled="item.quantity <= 1">-</button>
+                          <input type="number" v-model.number="item.quantity" min="1" @input="validateQuantity" class="quantity-input focus:border-ring-2 focus:ring-0">
+                          <button @click="increaseQty(item)">+</button>
+                        </div>
                       </div>
-                    </div>
                       <button class="remove-btn ml-3" @click="removeCartItem(item)" title="Remove item from cart">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                           <line x1="18" y1="6" x2="6" y2="18"></line>
@@ -313,51 +311,50 @@
                 </div>
 
                 <div class="flex justify-end gap-3 mt-3">
-                  <button class="btn-gray" @click="continueShopping">Continue shopping</button>
+                  <button class="btn-gray" @click="continueShopping">Continue Shopping</button>
                   <button class="btn-degrade-orange text-white" @click="checkoutBoutique(group)">Order from this Shop</button>
                 </div>
-          </div>
+              </div>
 
-          <!-- total global -->
-          <div class="section-card flex items-center text-xl justify-between">
-            <div class=" text-gray-600 font-bold">Total ({{ cartItems.length }} Items) :</div>
-            <div class=" font-bold primary-color">{{ formatPrice(grandTotal) }}</div>
-          </div>
+              <!-- Total Global -->
+              <div class="section-card flex items-center text-xl justify-between">
+                <div class="text-gray-600 font-bold">Total ({{ cartItems.length }} Items):</div>
+                <div class="font-bold primary-color">{{ formatPrice(grandTotal) }}</div>
+              </div>
 
-          <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
-            <button class="btn-gray w-full" @click="continueShopping">Continue shopping</button>
-            <button class="btn-degrade-orange w-full text-white" @click="proceedToCheckout">Order now (all)</button>
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <button class="btn-gray w-full" @click="continueShopping">Continue Shopping</button>
+                <button class="btn-degrade-orange w-full text-white" @click="proceedToCheckout">Order Now (All)</button>
+              </div>
+            </div>
           </div>
         </div>
-        </div>
-      </div>
+
         <!-- Favorites Tab -->
         <div v-if="activeTab === 'favorites'" class="tab-content">
           <div class="section-card">
-            <h2 class="section-title">My favorites</h2>
+            <h2 class="section-title">My Favorites</h2>
             <div v-if="userFavorites.length === 0" class="empty-state flex flex-col">
-              
-                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" class="opacity-50">
-                  <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
-                </svg>
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" class="opacity-50">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
               <p>You don't have any items in your favorites yet.</p>
             </div>
             <div v-else class="favorites-list">
               <div v-for="item in userFavorites" :key="item.favorite_id" class="favorite-item">
-                 <div @click="goToProduct(item.slug)" style="display: flex; align-items: center; flex: 1; cursor: pointer;">
-                    <img :src="item.primary_image" :alt="item.name" class="favorite-image">
-                    <div class="favorite-info">
+                <div @click="goToProduct(item.slug)" style="display: flex; align-items: center; flex: 1; cursor: pointer;">
+                  <img :src="item.primary_image" :alt="item.name" class="favorite-image">
+                  <div class="favorite-info">
                     <h3 class="favorite-name">{{ item.name }}</h3>
                     <p class="favorite-price">{{ formatPrice(item.unit_price, {showFOB:true}) }}</p>
-                    </div>
-                    
+                  </div>
                 </div>
                 <button class="remove-btn" @click="removeFavorite(item.product_id)">
-                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                    </button>
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
               </div>
             </div>
           </div>
@@ -365,7 +362,7 @@
 
         <!-- Orders Tab -->
         <div v-if="activeTab === 'orders'" class="tab-content">
-            <Commandes/>
+          <Commandes/>
         </div>
       </div>
     </div>
@@ -373,13 +370,13 @@
 </template>
 
 <script setup>
-import { ref, onMounted,computed,watch } from 'vue'
+import { ref, onMounted, computed, watch } from 'vue'
 import Commandes from '../product/MesCommandes.vue'
-import { productsApi,ordersApi } from '../../services/api'
-import { useRouter,useRoute } from 'vue-router'
-import { ElMessageBox, ElMessage } from 'element-plus';
-import { ListOrderedIcon, RefreshCcw as RefreshIcon, Trash2Icon } from 'lucide-vue-next';
-import { formatPrice } from '../../services/formatPrice';
+import { productsApi, ordersApi } from '../../services/api'
+import { useRouter, useRoute } from 'vue-router'
+import { ElMessageBox, ElMessage } from 'element-plus'
+import { ListOrderedIcon, RefreshCcw as RefreshIcon, Trash2Icon } from 'lucide-vue-next'
+import { formatPrice } from '../../services/formatPrice'
 import { useCartStore } from '../../stores/cart'
 import { useOrdersStore } from '../../stores/orders.js'
 
@@ -393,9 +390,9 @@ const isFavorite = ref(true)
 const isEditing = ref(false)
 const dataLoading = ref(false)
 const currentUser = ref(null)
- const orders = ref([])
+const orders = ref([])
 
-const userFavorites = ref([]);
+const userFavorites = ref([])
 
 const profile = ref({
   id: 1,
@@ -414,11 +411,9 @@ const notificationMessage = ref('')
 const notificationTitle = ref('')
 const notificationType = ref('success')
 
-
 const saveProfile = () => {
   console.log('Profile saved:', profile.value)
   isEditing.value = false
-  // Ici ajouter l'appel API pour sauvegarder
 }
 
 const cancelEdit = () => {
@@ -426,105 +421,67 @@ const cancelEdit = () => {
 }
 
 const cartItems = computed(() => {
-  return cart.items;
-});
+  return cart.items
+})
 
-// Grouper les items du panier par boutique
 const groupedCart = computed(() => {
-  
-  return cart.grouped;
+  return cart.grouped
 })
 
 const grandTotal = computed(() => {
-  // return groupedCart.value.reduce((acc, g) => acc + (g.subtotal || 0), 0)
-
-return cart.grandTotal;
+  return cart.grandTotal
 })
 
-// Lance checkout pour une boutique (stocke les items en session et navigue)
 const checkoutBoutique = (group) => {
-
   sessionStorage.setItem('checkoutItems', JSON.stringify(group.items))
   ordersStore.addOrder(group.items)
-  router.push({ 
+  router.push({
     path: '/order-validation',
   })
-  // router.push({ path: '/checkout', query: { boutiqueId: group.boutique_id } }).catch(()=>{})
 }
-
 
 const increaseQty = (item) => {
   cart.increaseQty(item.item_id, Number(item.quantity) + 1)
-  // option: appeler API/store pour persister
 }
 
 const decreaseQty = (item) => {
   if ((Number(item.quantity) || 0) > 1) {
     cart.decreaseQty(item.item_id, Number(item.quantity) - 1)
-    // option: appeler API/store pour persister
   }
 }
 
 const removeCartItem = (item) => {
   cart.removeItem(item.item_id)
-
-  // option: appeler API pour supprimer côté serveur
 }
 
 const continueShopping = () => {
-  // comportement: aller vers la page d'accueil / catalogue
   router.push('/produits').catch(()=>{})
 }
 
 const proceedToCheckout = () => {
-  // comportement: ouvrir modal checkout ou router vers page de commande
   router.push({ path: '/checkout' }).catch(()=>{})
 }
 
-
 const fetchCartItems = async () => {
+  cartItems.value = cart.items
+  groupedCart.value = cart.grouped
+  grandTotal.value = cart.grandTotal
+}
 
-    cartItems.value =  cart.items;
-    groupedCart.value = cart.grouped;
-    grandTotal.value = cart.grandTotal;
-
-    // try {
-    // const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
-    // if (!userData) {
-    //   cartItems.value = []
-    //   return
-    // }
-
-    // const parsedUser = JSON.parse(userData)
-    // const userId = parsedUser.id
-
-    // const response = await ordersApi.getMyOrders(userId)
-
-    // if (response.success) {
-      // cartItems.value = response.data || []
-    // } else {
-    //   cartItems.value = []
-    // }
-  // } catch (error) {
-  //   console.error('Error fetching cart items:', error)
-  //   cartItems.value = []
-  // }
-};
 const fetchFavorites = async () => {
-
   try {
-    const userId = profile.value.id; // récupéré depuis le localStorage ou store
-    const result = await productsApi.getFavorites(userId);
+    const userId = profile.value.id
+    const result = await productsApi.getFavorites(userId)
 
     if (result.success) {
-      userFavorites.value = result.data;
+      userFavorites.value = result.data
     } else {
-      console.error('Erreur backend:', result.error);
+      console.error('Erreur backend:', result.error)
     }
   } catch (error) {
-    console.error('Erreur fetchFavorites:', error);
+    console.error('Erreur fetchFavorites:', error)
   }
-};
+}
 
 const fetchOrders = async () => {
   try {
@@ -551,13 +508,12 @@ const fetchOrders = async () => {
 }
 
 const goToProduct = (product) => {
-      const slug = product
-      router.push(`/detail_resultat_produit/${slug}`)
+  const slug = product
+  router.push(`/detail_resultat_produit/${slug}`)
 }
 
 const removeFavorite = async (idProduit) => {
   try {
-    // Si le produit est déjà un favori, demander confirmation
     if (isFavorite.value) {
       await ElMessageBox.confirm(
         'Are you sure you want to remove this product from your favorites?',
@@ -567,80 +523,47 @@ const removeFavorite = async (idProduit) => {
           cancelButtonText: 'Cancel',
           type: 'warning',
         }
-      );
+      )
     }
 
-    // Inverser l'état local
-    isFavorite.value = !isFavorite.value;
+    isFavorite.value = !isFavorite.value
 
-    const userData = localStorage.getItem('user') || sessionStorage.getItem('user');
-    const user = JSON.parse(userData);
+    const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+    const user = JSON.parse(userData)
 
-    const likeData = { id_produit: idProduit, user_id: user.id };
-    const result = await productsApi.addLike(likeData);
+    const likeData = { id_produit: idProduit, user_id: user.id }
+    const result = await productsApi.addLike(likeData)
 
     if (result.success) {
       ElMessage({
         type: isFavorite.value ? 'success' : 'info',
         message: isFavorite.value ? 'Product added to favorites.' : 'Product removed from favorites.',
-      });
+      })
 
-      fetchFavorites(); // Mettre à jour la liste des favoris
-
+      fetchFavorites()
     } else {
-      // Revenir en arrière si l'API renvoie une erreur
-      isFavorite.value = !isFavorite.value;
-      ElMessage({ type: 'error', message: result.error || 'Unable to update favorites.' });
+      isFavorite.value = !isFavorite.value
+      ElMessage({ type: 'error', message: result.error || 'Unable to update favorites.' })
     }
-
   } catch (error) {
-    // Si l'utilisateur annule la confirmation, on ne fait rien
     if (error !== 'cancel') {
-      console.error('Erreur toggleFavorite:', error);
-      isFavorite.value = !isFavorite.value;
-      ElMessage({ type: 'error', message: 'An error occurred during the update.' });
+      console.error('Erreur toggleFavorite:', error)
+      isFavorite.value = !isFavorite.value
+      ElMessage({ type: 'error', message: 'An error occurred during the update.' })
     }
   }
-};
-
-const displayNotification = (type, title, message) => {
-    notificationType.value = type
-    notificationTitle.value = title
-    notificationMessage.value = message
-    showNotification.value = true
-  
-    setTimeout(() => {
-      closeNotification()
-    }, 5000)
-  }
+}
 
 const goBack = () => {
   window.history.back()
 }
 
-const handleOrderClick = () => {
-  
-
-  // 🧠 Sauvegarde dans le sessionStorage (fallback pour refresh ou anciennes versions de Vue Router)
-  try {
-    sessionStorage.setItem('lastProduct', JSON.stringify(orderState))
-  } catch (error) {
-    console.error('[v0] Error saving product to sessionStorage:', error)
-  }
-
-  // 🚀 Navigation avec route.state (si Vue Router ≥ 4.2)
-  router.push({ 
-    path: '/order-validation',
-    state: orderState
-  })
-}
-
 const loadAllData = async () => {
   dataLoading.value = true
   try {
-    await fetchCartItems();
-    await fetchFavorites();
-    await fetchOrders();
+    await fetchCartItems()
+    await fetchFavorites()
+    await fetchOrders()
   } finally {
     dataLoading.value = false
   }
@@ -655,204 +578,252 @@ watch(
 )
 
 onMounted(async () => {
-  
   const qTab = route.query.tab
   const h = route.hash ? route.hash.replace('#', '') : null
 
   if (qTab) {
     activeTab.value = String(qTab)
-  }else if (h) {
+  } else if (h) {
     activeTab.value = String(h)
   }
 
   const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
   const user = JSON.parse(userData)
   profile.value = {
-      id: user.id,
-      full_name: user.full_name,
-      email: user.email,
-      picture: user.picture || '',
-      phone: user.phone || '',
-      boutiques: user.boutiques || []
-    }
+    id: user.id,
+    full_name: user.full_name,
+    email: user.email,
+    picture: user.picture || '',
+    phone: user.phone || '',
+    boutiques: user.boutiques || []
+  }
 
-    loadAllData();
-});
+  loadAllData()
+})
 </script>
 
 <style scoped>
 .profile-page {
   min-height: 100vh;
-  background: #f5f5f5;
+  background: linear-gradient(135deg, #f5f7fa 0%, #f0f2f5 100%);
   padding-bottom: 40px;
 }
 
-.page-header {
-  display: flex;
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
-  padding: 20px 0;
-  margin-bottom: 24px;
-  align-items: center;
-  justify-content: center;
-
+/* Top Navigation Bar */
+.top-navbar {
+  background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+  border-bottom: 2px solid #e8ecf1;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  backdrop-filter: blur(10px);
 }
 
-.container {
-  display: flex;
+.navbar-container {
   max-width: 1400px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 24px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 80px;
+  gap: 32px;
+}
+
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 250px;
 }
 
 .back-btn {
   display: inline-flex;
   align-items: center;
   gap: 8px;
-  padding: 8px 16px;
-  background: transparent;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
+  padding: 10px 14px;
+  background: #fff;
+  border: 2px solid #e8ecf1;
+  border-radius: 10px;
   color: #666;
   font-size: 14px;
+  font-weight: 500;
   cursor: pointer;
   transition: all 0.3s ease;
-  margin-bottom: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
 }
 
 .back-btn:hover {
   border-color: #fe9700;
   color: #fe9700;
+  transform: translateX(-2px);
+  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.15);
 }
 
-.page-title {
-  font-size: 22px;
-  font-weight: 600;
-  color: #333;
-  margin: 0;
-}
-
-.main-content {
-  display: grid;
-  grid-template-columns: 280px 1fr;
-  gap: 24px;
-}
-
-.sidebar-menu {
-  background: #fff;
-  border-radius: 8px;
-  padding: 0;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  height: fit-content;
-  position: sticky;
-  top: 16px;
-  overflow: hidden;
-}
-
-.loading-state {
-  text-align: center;
-  padding: 60px 20px;
-  background-color: #ffffff;
-  border-radius: 12px;
-  color: #fe9700;
-  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
-}
-.loading-state .spinner {
-  border: 4px solid #f3f3f3;
-  border-top: 4px solid #fe9700;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  animation: spin 1s linear infinite;
-  margin: 0 auto 15px auto;
-}
-.cart-list { display: flex; flex-direction: column; gap: 12px; }
-.cart-item { background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); align-items: center; }
-.cart-image { width:100%; height:100%; object-fit:cover; display:block; }
-
-
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-/* Added user profile header styling */
-.user-profile-header {
-  padding: 24px 16px;
-  background: linear-gradient(135deg, #fe9700 0%, #e68900 100%);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  border-bottom: 2px solid #e68900;
-}
-
-.user-avatar {
-  width: 64px;
-  height: 64px;
-  background: rgba(255, 255, 255, 0.2);
-  border: 3px solid rgba(255, 255, 255, 0.4);
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 12px;
-  color: #fff;
-}
-
-.user-info {
-  flex: 1;
-}
-
-.user-name {
-  font-size: 16px;
+.brand-title {
+  font-size: 24px;
   font-weight: 700;
-  color: #fff;
-  margin: 0 0 4px 0;
-  line-height: 1.2;
-}
-
-.user-email {
-  font-size: 14px;
-  color: rgba(255, 255, 255, 0.85);
+  color: #1a1a1a;
   margin: 0;
-  word-break: break-word;
+  background: linear-gradient(135deg, #fe9700 0%, #ff6b00 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
 }
 
-.menu-list {
-  list-style: none;
-  padding: 8px;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-}
-
-.menu-item {
+/* Navigation Menu */
+.nav-menu {
   display: flex;
   align-items: center;
-  gap: 12px;
-  padding: 12px 16px;
+  gap: 8px;
+  flex: 1;
+  justify-content: center;
+}
+
+.nav-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 20px;
   color: #666;
   text-decoration: none;
-  border-radius: 6px;
+  border-radius: 12px;
   transition: all 0.3s ease;
   cursor: pointer;
   font-size: 15px;
   font-weight: 500;
+  position: relative;
+  background: transparent;
 }
 
-.menu-item:hover {
-  background: #f5f5f5;
-  color: #fe9700;
-}
-
-.menu-item.active {
+.nav-item:hover {
   background: #fff7e6;
   color: #fe9700;
-  border-left: 3px solid #fe9700;
-  padding-left: 13px;
+  transform: translateY(-2px);
+}
+
+.nav-item.active {
+  background: linear-gradient(135deg, #fe9700 0%, #ff8c00 100%);
+  color: #fff;
+  box-shadow: 0 4px 16px rgba(254, 151, 0, 0.3);
+}
+
+.nav-item.active svg {
+  stroke: #fff;
+}
+
+.badge {
+  background: #ff4d4f;
+  color: #fff;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 12px;
+  min-width: 20px;
+  text-align: center;
+}
+
+.nav-item.active .badge {
+  background: #fff;
+  color: #fe9700;
+}
+
+/* Navbar Actions */
+.navbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  min-width: 250px;
+  justify-content: flex-end;
+}
+
+.refresh-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  background: #fff;
+  border: 2px solid #e8ecf1;
+  border-radius: 12px;
+  color: #666;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.refresh-btn:hover {
+  background: #fe9700;
+  border-color: #fe9700;
+  color: #fff;
+  transform: rotate(180deg);
+  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.2);
+}
+
+.user-profile-mini {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 8px 16px 8px 8px;
+  background: #fff;
+  border: 2px solid #e8ecf1;
+  border-radius: 50px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.user-profile-mini:hover {
+  border-color: #fe9700;
+  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.15);
+}
+
+.user-avatar-mini {
+  width: 40px;
+  height: 40px;
+  background: linear-gradient(135deg, #fe9700 0%, #ff8c00 100%);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.user-info-mini {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.user-name-mini {
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin: 0;
+  line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+.user-email-mini {
+  font-size: 12px;
+  color: #999;
+  margin: 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 150px;
+}
+
+/* Content Container */
+.content-container {
+  max-width: 1400px;
+  margin: 32px auto;
+  padding: 0 24px;
 }
 
 .content-area {
@@ -861,13 +832,13 @@ onMounted(async () => {
 }
 
 .tab-content {
-  animation: fadeIn 0.3s ease;
+  animation: fadeIn 0.4s ease;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(10px);
+    transform: translateY(20px);
   }
   to {
     opacity: 1;
@@ -875,32 +846,80 @@ onMounted(async () => {
   }
 }
 
+/* Loading State */
+.loading-state {
+  text-align: center;
+  padding: 80px 20px;
+  background: #fff;
+  border-radius: 16px;
+  color: #fe9700;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+}
+
+.loading-state .spinner {
+  border: 4px solid #f3f3f3;
+  border-top: 4px solid #fe9700;
+  border-radius: 50%;
+  width: 50px;
+  height: 50px;
+  animation: spin 1s linear infinite;
+  margin: 0 auto 20px auto;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
+
+/* Stats Grid */
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 16px;
-  margin-bottom: 24px;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 24px;
+  margin-bottom: 32px;
 }
 
 .stat-card {
   background: #fff;
-  border-radius: 8px;
-  padding: 20px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 28px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   display: flex;
   align-items: center;
-  gap: 16px;
+  gap: 20px;
+  transition: all 0.3s ease;
+  border: 2px solid transparent;
+}
+
+.stat-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+  border-color: #fe9700;
 }
 
 .stat-icon {
-  width: 56px;
-  height: 56px;
-  background: #fff7e6;
-  border-radius: 12px;
+  width: 64px;
+  height: 64px;
+  border-radius: 16px;
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+
+.cart-icon {
+  background: linear-gradient(135deg, #fff7e6 0%, #ffe8c2 100%);
+  color: #fe9700;
+}
+
+.favorites-icon {
+  background: linear-gradient(135deg, #ffe5e7 0%, #ffd1d6 100%);
+  color: #ff4d4f;
+}
+
+.orders-icon {
+  background: linear-gradient(135deg, #e6f7ff 0%, #bae7ff 100%);
+  color: #1890ff;
 }
 
 .stat-info {
@@ -909,66 +928,54 @@ onMounted(async () => {
 
 .stat-label {
   font-size: 14px;
-  color: #666;
-  margin: 0 0 4px 0;
+  color: #999;
+  margin: 0 0 6px 0;
+  font-weight: 500;
 }
 
 .stat-value {
-  font-size: 28px;
+  font-size: 32px;
   font-weight: 700;
-  color: #fe9700;
+  color: #1a1a1a;
   margin: 0;
 }
 
+/* Section Card */
 .section-card {
   background: #fff;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 16px;
+  padding: 32px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
   margin-bottom: 24px;
+  border: 2px solid #f5f5f5;
+  transition: all 0.3s ease;
+}
+
+.section-card:hover {
+  border-color: #fe9700;
 }
 
 .section-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 2px solid #f0f0f0;
+  margin-bottom: 24px;
+  padding-bottom: 20px;
+  border-bottom: 2px solid #f5f5f5;
 }
 
 .section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
+  font-size: 20px;
+  font-weight: 700;
+  color: #1a1a1a;
   margin: 0;
-  margin-bottom: 20px;
-
 }
 
-.edit-btn {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 16px;
-  background: #fe9700;
-  color: #fff;
-  border: none;
-  border-radius: 6px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.edit-btn:hover {
-  background: #e68900;
-}
-
+/* Form Styles */
 .form-grid {
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  gap: 20px;
 }
 
 .form-group {
@@ -982,143 +989,83 @@ onMounted(async () => {
 
 .form-label {
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
   color: #333;
   margin-bottom: 8px;
 }
 
 .input-style[readonly] {
-  background: #f5f5f5;
+  background: #f8f9fa;
   color: #666;
   cursor: not-allowed;
+  border-color: #e8ecf1;
 }
-.product-quantity {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.quantity-label {
-  font-size: 14px;
-  color: #666;
-}
-
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.quantity-controls button {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: white;
-  color: #333;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.quantity-controls button:hover:not(:disabled) {
-  background: #fe9700;
-  color: #fff;
-}
-
-.quantity-controls button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.quantity-input {
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
-  appearance: none;
-  width: auto;
-  height: 50px;
-  border: 1px solid #d9d9d9;
-  color: #333;
-  border-left: none;
-  border-right: none;
-  text-align: center;
-  font-size: 18px;
-}
-
-.quantity-input::-webkit-outer-spin-button,
-.quantity-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.quantity-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
-.quantity-controls input {
-  width: 50px;
-  height: 32px;
-  border: none;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-}
-
 
 .form-actions {
   display: flex;
-  gap: 12px;
-  margin-top: 20px;
-  padding-top: 20px;
-  border-top: 1px solid #e8e8e8;
+  gap: 16px;
+  margin-top: 24px;
+  padding-top: 24px;
+  border-top: 2px solid #f5f5f5;
 }
 
+/* Empty State */
 .empty-state {
   align-items: center;
-  padding: 60px 20px;
+  padding: 80px 20px;
   color: #999;
+  text-align: center;
 }
-
-/* .empty-state svg {
-  margin-bottom: 16px;
-  opacity: 0.5;
-  display: flex;
-  justify-content: center;
-
-} */
 
 .empty-state p {
   font-size: 16px;
-  margin: 0;
+  margin: 16px 0 0 0;
+}
+
+/* Cart & Favorites Items */
+.cart-item {
+  background: #f9fafb;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  align-items: center;
+  transition: all 0.3s ease;
+}
+
+.cart-item:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.08);
+  transform: translateY(-2px);
 }
 
 .favorites-list {
   display: flex;
   flex-direction: column;
-  gap: 12px;
+  gap: 16px;
 }
 
 .favorite-item {
   display: flex;
   align-items: center;
-  gap: 16px;
-  padding: 16px;
-  background: #f9f9f9;
-  border-radius: 8px;
+  gap: 20px;
+  padding: 20px;
+  background: #f9fafb;
+  border-radius: 12px;
   transition: all 0.3s ease;
+  border: 2px solid transparent;
 }
 
 .favorite-item:hover {
-  background: #f0f0f0;
+  background: #fff;
+  border-color: #fe9700;
+  box-shadow: 0 4px 16px rgba(254, 151, 0, 0.1);
 }
 
 .favorite-image {
-  width: 80px;
-  height: 80px;
+  width: 90px;
+  height: 90px;
   object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #e8e8e8;
+  border-radius: 12px;
+  border: 2px solid #e8ecf1;
 }
 
 .favorite-info {
@@ -1129,24 +1076,23 @@ onMounted(async () => {
 .favorite-name {
   font-size: 16px;
   font-weight: 600;
-  color: #333;
-  margin: 0 0 4px 0;
+  color: #1a1a1a;
+  margin: 0 0 8px 0;
 }
 
 .favorite-price {
-  font-size: 15px;
+  font-size: 16px;
   color: #fe9700;
-  font-weight: 600;
+  font-weight: 700;
   margin: 0;
 }
 
 .remove-btn {
-  width: 36px;
-  height: 36px;
-  border: none;
+  width: 40px;
+  height: 40px;
+  border: 2px solid #e8ecf1;
   background: #fff;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
+  border-radius: 10px;
   color: #999;
   cursor: pointer;
   display: flex;
@@ -1159,117 +1105,110 @@ onMounted(async () => {
   border-color: #ff4d4f;
   color: #ff4d4f;
   background: #fff1f0;
+  transform: scale(1.1);
 }
 
-.orders-list {
+/* Product Quantity */
+.product-quantity {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   gap: 12px;
 }
 
-.order-item {
-  padding: 16px;
-  background: #f9f9f9;
-  border-radius: 8px;
-  border-left: 4px solid #fe9700;
+.quantity-controls {
+  display: flex;
+  align-items: center;
+  border: 2px solid #e8ecf1;
+  border-radius: 10px;
+  overflow: hidden;
+  background: #fff;
+}
+
+.quantity-controls button {
+  width: 36px;
+  height: 36px;
+  border: none;
+  background: white;
+  color: #333;
+  font-size: 20px;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s ease;
 }
 
-.order-item:hover {
-  background: #f0f0f0;
-  box-shadow: 0 2px 8px rgba(254, 151, 0, 0.1);
+.quantity-controls button:hover:not(:disabled) {
+  background: #fe9700;
+  color: #fff;
 }
 
-.order-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 12px;
+.quantity-controls button:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
 }
 
-.order-number {
-  font-size: 15px;
-  font-weight: 600;
-  color: #333;
-}
-
-.order-status {
-  font-size: 12px;
-  font-weight: 600;
-  padding: 4px 12px;
-  border-radius: 20px;
-  text-transform: capitalize;
-}
-
-.order-status.delivered {
-  background: #f6ffed;
-  color: #52c41a;
-}
-
-.order-status.pending{
-  background: #e6f7ff;
-  color: #fe9700;
-}
-
-.order-status.canceled {
-  background: #fff1f0;
-  color: #ff4d4f;
-}
-
-.order-details {
-  margin-bottom: 12px;
-  color: #666;
-  font-size: 14px;
-}
-
-.order-details p {
-  margin: 4px 0;
-}
-
-.order-footer {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding-top: 12px;
-  border-top: 1px solid #e8e8e8;
-}
-
-.order-date {
-  font-size: 13px;
-  color: #999;
-}
-
-.order-total {
+.quantity-input {
+  width: 60px;
+  height: 36px;
+  border: none;
+  border-left: 2px solid #e8ecf1;
+  border-right: 2px solid #e8ecf1;
+  text-align: center;
   font-size: 16px;
-  font-weight: 700;
-  color: #fe9700;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.quantity-input::-webkit-outer-spin-button,
+.quantity-input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  .navbar-container {
+    flex-wrap: wrap;
+    height: auto;
+    padding: 16px 20px;
+  }
+
+  .navbar-brand {
+    order: 1;
+    min-width: auto;
+  }
+
+  .navbar-actions {
+    order: 2;
+    min-width: auto;
+  }
+
+  .nav-menu {
+    order: 3;
+    width: 100%;
+    margin-top: 16px;
+    justify-content: flex-start;
+    overflow-x: auto;
+    padding-bottom: 8px;
+  }
+
+  .nav-item span {
+    display: none;
+  }
+
+  .nav-item {
+    padding: 12px;
+    min-width: 44px;
+    justify-content: center;
+  }
 }
 
 @media (max-width: 768px) {
-  .main-content {
-    grid-template-columns: 1fr;
+  .brand-title {
+    font-size: 18px;
   }
 
-  .sidebar-menu {
-    position: static;
-  }
-
-  .menu-list {
-    flex-direction: row;
-    gap: 0;
-  }
-
-  .menu-item {
-    flex: 1;
-    justify-content: center;
-    border-left: none;
-    border-bottom: 3px solid transparent;
-  }
-
-  .menu-item.active {
-    border-left: none;
-    border-bottom: 3px solid #fe9700;
-    padding-left: 16px;
+  .user-info-mini {
+    display: none;
   }
 
   .stats-grid {
@@ -1278,6 +1217,10 @@ onMounted(async () => {
 
   .form-grid {
     grid-template-columns: 1fr;
+  }
+
+  .content-container {
+    padding: 0 16px;
   }
 }
 </style>

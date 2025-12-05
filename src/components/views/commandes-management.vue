@@ -213,7 +213,14 @@
               </tr>
             </thead>
             <tbody class="bg-white divide-y divide-gray-200">
-              <tr v-for="order in paginatedOrders" :key="order.id" class="hover:bg-orange-50/30 transition-colors">
+              <tr
+                v-for="order in paginatedOrders"
+                :key="order.id"
+                :class="[
+                  'hover:bg-orange-50/30 transition-colors',
+                  order.statut === 'confirmee' && order.ready_for_shipping && calculateRemaining(order) <= 0 ? 'border-l-4 border-l-green-500 bg-green-50/20' : ''
+                ]"
+              >
                 <!-- Order Info -->
                 <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="flex items-center gap-3">
@@ -310,27 +317,30 @@
                 <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-2">
                     <!-- Pending Stage Actions -->
-                    <div v-if="order.statut === 'en_attente' || order.statut === 'send'" class="space-y-1">
+                    <!-- Pending Stage - Awaiting Contract -->
+                    <div v-if="order.statut === 'en_attente'" class="space-y-1">
                       <div class="flex items-center gap-1 text-xs text-yellow-600">
                         <Clock class="w-3 h-3" />
-                        <span>Awaiting contract/payment</span>
+                        <span>Awaiting Contract</span>
                       </div>
                       <div class="flex gap-1 flex-wrap">
-                        <button 
+                        <button
                           @click="openDocumentModal(order, 'proforma')"
                           class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-[10px] font-medium hover:bg-orange-200 transition-colors"
                         >
                           Send Proforma
                         </button>
-                        <!-- Added button to upload/view payment proofs in pending stage -->
-                        <button 
-                          v-if="order.signature_method.length >=3"
-                          @click="openUploadPaymentModal(order)"
-                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
-                        >
-                          Add Proof 
-                        </button>
-                        <button 
+                      </div>
+                    </div>
+
+                    <!-- Contract Sent - Awaiting Initial Payment -->
+                    <div v-else-if="order.statut === 'send'" class="space-y-1">
+                      <div class="flex items-center gap-1 text-xs text-blue-600">
+                        <FileText class="w-3 h-3" />
+                        <span>Contract Sent - Awaiting Payment</span>
+                      </div>
+                      <div class="flex gap-1 flex-wrap">
+                        <button
                           @click="showPaymentProof(order)"
                           class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
                         >
@@ -340,59 +350,60 @@
                     </div>
 
                     <!-- Confirmed Stage - In Preparation -->
-                    <div v-else-if="order.statut === 'confirmee' || order.statut === 'send' && order.is_ready !== 'valid'" class="space-y-1">
+                    <div v-else-if="order.statut === 'confirmee' && !order.ready_for_shipping" class="space-y-1">
                       <div class="flex items-center gap-1 text-xs text-blue-600">
                         <Settings class="w-3 h-3 animate-spin" />
                         <span>In Preparation</span>
                       </div>
                       <div class="flex gap-1 flex-wrap">
-                        <button 
+                        <button
                           @click="showConfirmModal('ready', order)"
                           class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
                         >
                           Mark Ready
                         </button>
                         <!-- Added button to view/add payment proofs -->
-                        <button 
+                        <button
                           @click="showPaymentProof(order)"
                           class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
                         >
                           View Payments
                         </button>
-                        <button 
-                          v-if="order.signature_method.length >=3"
+                        <button
+                          v-if="order.signature_method && order.signature_method.length >= 3"
                           @click="openUploadPaymentModal(order)"
                           class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
                         >
-                          Add Proof 
+                          Add Proof
                         </button>
                       </div>
                     </div>
 
                     <!-- Ready for Shipping -->
-                    <div v-else-if="order.statut === 'confirmee' || order.statut === 'send' && order.is_ready === 'valid'" class="space-y-1">
+                    <div v-else-if="order.statut === 'confirmee' && order.ready_for_shipping" class="space-y-1">
                       <div class="flex items-center gap-1 text-xs text-green-600">
                         <PackageCheck class="w-3 h-3" />
                         <span>Ready for Shipping</span>
                       </div>
                       <div class="flex gap-1 flex-wrap">
                         <!-- Updated payment buttons for ready stage -->
-                        <button 
+                        <button
                           @click="showPaymentProof(order)"
                           class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
                         >
                           View Payments
                         </button>
-                        <button 
+                        <button
                           v-if="calculateRemaining(order) > 0"
                           @click="openUploadPaymentModal(order)"
                           class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px] font-medium hover:bg-yellow-200 transition-colors"
                         >
                           Add Payment
                         </button>
-                        <button 
+                        <!-- Only show Start Shipping if payment is complete -->
+                        <button
                           v-if="calculateRemaining(order) <= 0"
-                          @click="showConfirmModal('ship', order)"
+                          @click="openTrackingModal(order)"
                           class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
                         >
                           Start Shipping
@@ -414,8 +425,8 @@
                         >
                           🔗 Track Vessel
                         </button>
-                        <button 
-                          @click="showConfirmModal('deliver', order)"
+                        <button
+                          @click="openDeliveryModal(order)"
                           class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
                         >
                           ✅ Mark Delivered
@@ -687,6 +698,7 @@
                   <label class="text-xs text-gray-500">Deposit</label>
                   <input 
                     type="number" 
+                    style="background-color: gray; color: white"
                     v-model.number="paymentTerms.deposit"
                     min="0"
                     max="100"
@@ -738,7 +750,7 @@
               </label>
               <label 
                 class="flex items-center gap-3 p-4 border-2 rounded-xl cursor-pointer transition-all"
-                :class="deliveryMethod === 'FOB' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
+                :class="deliveryMethod === 'CIF' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
               >
                 <input type="radio" v-model="deliveryMethod" value="CIF" class="sr-only">
                 <Ship class="w-6 h-6 text-blue-600" />
@@ -763,7 +775,7 @@
                 :placeholder="deliveryMethod === 'FOB' ? 'e.g., Port of Abidjan' : 'e.g., Customer warehouse address'"
               >
             </div>
-            <div v-if="deliveryMethod === 'FOB'">
+            <div v-if="deliveryMethod === 'CIF'">
               <label class="block text-sm font-medium text-gray-700 mb-2">Loading Port</label>
               <input 
                 type="text" 
@@ -772,6 +784,15 @@
                 placeholder="e.g., Tema Port"
               >
             </div>
+          </div>
+          <div v-if="deliveryMethod === 'CIF'">
+            <label class="block text-sm font-medium text-gray-700 mb-2">CIF Shipping cost ($)</label>
+            <input 
+            style="background-color: #FFF3E0;"
+              type="number" 
+              v-model.number="shippingCost"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+            >
           </div>
 
           <!-- Additional Notes -->
@@ -797,14 +818,7 @@
                 <Globe class="w-5 h-5 text-orange-600" />
                 <span class="text-sm font-medium">Online Signature</span>
               </label>
-              <label 
-                class="flex items-center gap-3 p-3 border-2 rounded-xl cursor-pointer transition-all"
-                :class="signatureMethod === 'upload' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'"
-              >
-                <input type="radio" v-model="signatureMethod" value="upload" class="sr-only">
-                <Upload class="w-5 h-5 text-orange-600" />
-                <span class="text-sm font-medium">Download-Sign-Upload</span>
-              </label>
+              
             </div>
           </div>
 
@@ -838,65 +852,124 @@
               <Ship class="h-5 w-5 text-blue-600" />
             </div>
             <div>
-              <h3 class="text-lg font-bold text-gray-900">Vessel Tracking</h3>
-              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
+              <h3 class="text-lg font-bold text-gray-900">Start Shipping</h3>
+              <p class="text-sm text-gray-500">Enter shipping details for Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
         </div>
         <div class="p-6 space-y-4">
-          <div class="bg-blue-50 rounded-xl p-4 border border-blue-200">
-            <div class="flex items-center gap-3 mb-3">
-              <Ship class="w-8 h-8 text-blue-600" />
-              <div>
-                <p class="font-semibold text-gray-900">{{ vesselName || 'Vessel Name' }}</p>
-                <p class="text-sm text-gray-500">IMO: {{ imoNumber || 'N/A' }}</p>
-              </div>
-            </div>
-            <div class="grid grid-cols-2 gap-4 text-sm">
-              <div>
-                <span class="text-gray-500">Origin Port:</span>
-                <p class="font-medium text-gray-900">{{ loadingPort || 'Loading Port' }}</p>
-              </div>
-              <div>
-                <span class="text-gray-500">Destination:</span>
-                <p class="font-medium text-gray-900">{{ destinationAddress || 'Destination Port' }}</p>
-              </div>
-              <div>
-                <span class="text-gray-500">ETD:</span>
-                <p class="font-medium text-gray-900">{{ formatDate(etd) || 'TBD' }}</p>
-              </div>
-              <div>
-                <span class="text-gray-500">ETA:</span>
-                <p class="font-medium text-gray-900">{{ formatDate(eta) || 'TBD' }}</p>
-              </div>
-            </div>
+          <!-- Delivery Type Badge -->
+          <div class="flex items-center gap-2 mb-4">
+            <span class="px-3 py-1 rounded-full text-xs font-semibold"
+              :class="selectedOrder?.delivery_method === 'CIF' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'">
+              {{ selectedOrder?.delivery_method || 'FOB' }} Delivery
+            </span>
           </div>
 
-          <!-- Tracking Link Input -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Vessel Tracking Link</label>
-            <input 
-              type="url" 
-              v-model="trackingLink"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
-              placeholder="https://www.marinetraffic.com/..."
-            >
-          </div>
+          <!-- FOB: Simple delivery info -->
+          <template v-if="selectedOrder?.delivery_method === 'FOB' || !selectedOrder?.delivery_method">
+            <!-- Final Port/Address -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Final Destination Port</label>
+              <input
+                type="text"
+                v-model="destinationAddress"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                placeholder="Enter destination port address"
+              >
+            </div>
 
-          <!-- Bill of Lading Upload -->
-          <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Bill of Lading (B/L)</label>
-            <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer" @click="blFileInput.click()">
-              <input type="file" @change="handleBLUpload" accept=".pdf,image/*" class="hidden" ref="blFileInput">
-              <Upload class="w-8 h-8 text-gray-400 mx-auto mb-2" />
-              <p class="text-sm text-gray-600">Click to upload B/L document</p>
-              <p class="text-xs text-gray-400">PDF or Image files</p>
+            <!-- Delivery Document Upload -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Document</label>
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-green-400 transition-colors cursor-pointer" @click="blFileInput?.click()">
+                <input type="file" @change="handleBLUpload" accept=".pdf,image/*" class="hidden" ref="blFileInput">
+                <Upload class="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                <p class="text-sm text-gray-600">Click to upload delivery document</p>
+                <p class="text-xs text-gray-400">PDF or Image files</p>
+              </div>
+              <div v-if="blFile" class="mt-2 flex items-center gap-2 text-sm text-green-600">
+                <CheckCircle2Icon class="w-4 h-4" />
+                <span>{{ blFile.name }}</span>
+              </div>
             </div>
-            <div v-if="selectedOrder?.bl_document" class="mt-2 flex items-center gap-2 text-sm text-green-600">
-              <CheckCircle2Icon class="w-4 h-4" />
-              <span>B/L uploaded</span>
+          </template>
+
+          <!-- CIF: Full vessel tracking info -->
+          <template v-else-if="selectedOrder?.delivery_method === 'CIF'">
+            <!-- Vessel Tracking Link -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">
+                <div class="flex items-center gap-2">
+                  <Ship class="w-4 h-4" />
+                  Vessel Tracking Link
+                </div>
+              </label>
+              <input
+                type="url"
+                v-model="trackingLink"
+                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                placeholder="https://www.marinetraffic.com/..."
+              >
             </div>
-          </div>
+
+            <!-- Vessel Name and IMO -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Vessel Name</label>
+                <input
+                  type="text"
+                  v-model="vesselName"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="Vessel name"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">IMO Number</label>
+                <input
+                  type="text"
+                  v-model="imoNumber"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  placeholder="IMO number"
+                >
+              </div>
+            </div>
+
+            <!-- ETD and ETA -->
+            <div class="grid grid-cols-2 gap-4">
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ETD (Departure)</label>
+                <input
+                  type="date"
+                  v-model="etd"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+              <div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">ETA (Estimated Arrival)</label>
+                <input
+                  type="date"
+                  v-model="eta"
+                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                >
+              </div>
+            </div>
+
+            <!-- Bill of Lading Upload -->
+            <div>
+              <label class="block text-sm font-medium text-gray-700 mb-2">Bill of Lading (B/L)</label>
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer" @click="blFileInput?.click()">
+                <input type="file" @change="handleBLUpload" accept=".pdf,image/*" class="hidden" ref="blFileInput">
+                <Upload class="w-8 h-8 text-gray-400 mx-auto mb-2" />
+                <p class="text-sm text-gray-600">Click to upload B/L document</p>
+                <p class="text-xs text-gray-400">PDF or Image files</p>
+              </div>
+              <div v-if="blFile" class="mt-2 flex items-center gap-2 text-sm text-blue-600">
+                <CheckCircle2Icon class="w-4 h-4" />
+                <span>{{ blFile.name }}</span>
+              </div>
+            </div>
+          </template>
 
           <div class="flex gap-3 pt-4">
             <button 
@@ -905,13 +978,13 @@
             >
               Close
             </button>
-            <button 
+            <button
               @click="saveTrackingInfo"
               :disabled="trackingLoading"
               class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
             >
               <span v-if="trackingLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
-              Save & Share with Client
+              Start Shipping
             </button>
           </div>
         </div>
@@ -980,7 +1053,7 @@
 
           <!-- Payment Timeline -->
           <div class="space-y-4">
-            <h4 class="font-semibold text-gray-900 mb-4">Payment Timeline</h4>
+            <h4 class="font-semibold text-gray-900 mb-4">Payment Timeline </h4>
             
             <!-- Deposit Payment -->
             <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
@@ -990,7 +1063,7 @@
                     <Wallet class="h-5 w-5 text-orange-600" />
                   </div>
                   <div>
-                    <div class="font-semibold text-gray-900">Deposit Payment ({{ currentProofOrder?.payment_deposit_percent || 30 }}%)</div>
+                    <div class="font-semibold text-gray-900">Deposit Payment ({{ currentProofOrder.payment_terms.deposit_percent || 30 }}%)</div>
                     <div class="text-sm text-gray-500">{{ formatDate(currentProofOrder?.date_paiement) || 'Not yet paid' }}</div>
                     <!-- Show validation comment if exists -->
                     <div v-if="currentProofOrder?.commentaire_validation" class="text-xs text-gray-400 mt-1 italic">
@@ -999,7 +1072,7 @@
                   </div>
                 </div>
                 <div class="text-right">
-                  <div class="text-lg font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * ((currentProofOrder?.payment_deposit_percent || 30) / 100)) }}</div>
+                  <div class="text-lg font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * ((currentProofOrder.payment_terms.deposit_percent || 30) / 100)) }}</div>
                   <span v-if="currentProofOrder?.deposit_validated === 'valid' || currentProofOrder?.tobevalidate === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
                     <CheckCircle2Icon class="h-3 w-3" />
                     Validated
@@ -1182,6 +1255,14 @@
             </div>
           </div>
           <p class="text-gray-600 mb-6">{{ getConfirmationMessage() }}</p>
+          <div v-if="validatePaymentType === 'deposit' && getConfirmationTitle() !== 'Mark as Delivered'">
+            <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Delivery Date </label>
+            <input
+              type="date"
+              v-model="estimatedDeliveryDate"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+            />
+          </div>
           <div class="flex justify-end space-x-3">
             <button 
               @click="closeConfirmModal"
@@ -1253,6 +1334,58 @@
       </div>
     </div>
 
+    <!-- Delivery Modal -->
+    <div v-if="showDeliveryModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeDeliveryModal">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
+        <div class="px-6 py-4 border-b border-gray-100">
+          <div class="flex items-center gap-3">
+            <div class="p-2 bg-green-100 rounded-lg">
+              <CheckCircle2Icon class="h-5 w-5 text-green-600" />
+            </div>
+            <div>
+              <h3 class="text-lg font-bold text-gray-900">Mark Order as Delivered</h3>
+              <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
+            </div>
+          </div>
+        </div>
+        <div class="p-6 space-y-4">
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Date *</label>
+            <input
+              type="date"
+              v-model="deliveryDate"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              required
+            />
+          </div>
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Completion Notes (Optional)</label>
+            <textarea
+              v-model="deliveryNotes"
+              rows="3"
+              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              placeholder="Enter delivery notes, receiver name, condition, etc..."
+            ></textarea>
+          </div>
+          <div class="flex justify-end space-x-3">
+            <button
+              @click="closeDeliveryModal"
+              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+            >
+              Cancel
+            </button>
+            <button
+              @click="markDelivered"
+              :disabled="deliveryLoading || !deliveryDate"
+              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+            >
+              <span v-if="deliveryLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
+              Mark Delivered
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
 
     <!-- Order Details Modal -->
     <div v-if="showOrderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeOrderModal">
@@ -1431,16 +1564,16 @@
               <Check class="w-4 h-4" />
               Confirm Order
             </button>
-            <button 
-              v-if="selectedOrder.statut === 'confirmee' && !selectedOrder.is_ready"
+            <button
+              v-if="selectedOrder.statut === 'confirmee' && !selectedOrder.ready_for_shipping"
               @click="showConfirmModal('ready', selectedOrder)"
               class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
             >
               <Settings class="w-4 h-4" />
               Mark Ready
             </button>
-            <button 
-              v-if="selectedOrder.statut === 'confirmee' && selectedOrder.is_ready === 'valid'"
+            <button
+              v-if="selectedOrder.statut === 'confirmee' && selectedOrder.ready_for_shipping"
               @click="showConfirmModal('ship', selectedOrder)"
               class="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors inline-flex items-center gap-2"
             >
@@ -1559,7 +1692,7 @@
                 :disabled="selectedOrderForPayment?.deposit_validated === 'valid'"
               >
                 <Wallet class="w-5 h-5 mx-auto mb-1" />
-                Deposit ({{ selectedOrderForPayment?.payment_deposit_percent || 30 }}%)
+                Deposit ({{ selectedOrderForPayment.payment_terms.deposit_percent || 30 }}%)
               </button>
               <button
                 @click="paymentType = 'additional'"
@@ -1926,12 +2059,13 @@ const customCancelReason = ref('')
 const showDocumentModal = ref(false)
 const documentType = ref('proforma')
 const editablePrice = ref(0)
+const shippingCost = ref(0)
 const paymentTerms = ref({ deposit: 30, beforeShipping: 40, againstBL: 30 })
 const deliveryMethod = ref('FOB')
 const destinationAddress = ref('')
 const loadingPort = ref('')
 const additionalTerms = ref('')
-const signatureMethod = ref('upload')
+const signatureMethod = ref('online')
 const proformaLoading = ref(false)
 
 // Tracking Modal
@@ -1973,6 +2107,12 @@ const showReadyModal = ref(false) // Undeclared -> Added
 const readyComment = ref('') // Undeclared -> Added
 const inspectionNotes = ref('') // Undeclared -> Added
 const readyLoading = ref(false) // Undeclared -> Added
+
+// Delivery Modal state
+const showDeliveryModal = ref(false)
+const deliveryDate = ref('')
+const deliveryNotes = ref('')
+const deliveryLoading = ref(false)
 
 // Upload Payment Modal state
 const showUploadPaymentModal = ref(false) // Undeclared -> Added
@@ -2039,67 +2179,78 @@ const orderLifecycleSteps = [
 
 // Stats cards using API stats
 const statsCards = computed(() => [
-  { 
-    key: 'total', 
+  {
+    key: 'total',
     filterValue: 'all',
-    label: 'Total Orders', 
-    value: stats.value.total_orders, 
-    icon: ShoppingCartIcon, 
+    label: 'Total Orders',
+    value: stats.value.total_orders,
+    icon: ShoppingCartIcon,
     bgColor: 'bg-gradient-to-br from-orange-200 to-orange-300',
     emoji: '📊',
     changeColor: 'text-orange-600',
     description: 'All time'
   },
-  { 
-    key: 'pending', 
+  {
+    key: 'pending',
     filterValue: 'en_attente',
-    label: 'Pending', 
-    value: stats.value.pending_orders, 
-    icon: Clock, 
+    label: 'Pending',
+    value: stats.value.pending_orders,
+    icon: Clock,
     bgColor: 'bg-gradient-to-br from-yellow-200 to-yellow-300',
     emoji: '⏳',
     changeColor: 'text-yellow-600',
-    description: 'Awaiting action'
+    description: 'Awaiting contract'
   },
-  { 
-    key: 'confirmed', 
+  {
+    key: 'sent',
+    filterValue: 'send',
+    label: 'Contract Sent',
+    value: stats.value.sent_orders || 0,
+    icon: FileText,
+    bgColor: 'bg-gradient-to-br from-indigo-200 to-indigo-300',
+    emoji: '📄',
+    changeColor: 'text-indigo-600',
+    description: 'Awaiting payment'
+  },
+  {
+    key: 'confirmed',
     filterValue: 'confirmee',
-    label: 'Confirmed', 
-    value: stats.value.confirmed_orders, 
-    icon: CheckCircle2Icon, 
+    label: 'In Preparation',
+    value: stats.value.confirmed_orders,
+    icon: Settings,
     bgColor: 'bg-gradient-to-br from-green-200 to-green-300',
-    emoji: '✅',
+    emoji: '⚙️',
     changeColor: 'text-green-600',
     description: 'Processing'
   },
-  { 
-    key: 'ready', 
+  {
+    key: 'ready',
     filterValue: 'ready',
-    label: 'Ready', 
-    value: stats.value.ready_orders, 
-    icon: PackageCheck, 
+    label: 'Ready',
+    value: stats.value.ready_orders,
+    icon: PackageCheck,
     bgColor: 'bg-gradient-to-br from-blue-200 to-blue-300',
-    emoji: '⚙️',
+    emoji: '✅',
     changeColor: 'text-blue-600',
     description: 'For shipping'
   },
-  { 
-    key: 'shipping', 
+  {
+    key: 'shipping',
     filterValue: 'en_livraison',
-    label: 'Shipping', 
-    value: stats.value.shipping_orders, 
-    icon: Truck, 
+    label: 'Shipping',
+    value: stats.value.shipping_orders,
+    icon: Truck,
     bgColor: 'bg-gradient-to-br from-purple-200 to-purple-300',
     emoji: '🚚',
     changeColor: 'text-purple-600',
     description: 'In transit'
   },
-  { 
-    key: 'completed', 
+  {
+    key: 'completed',
     filterValue: 'livree',
-    label: 'Completed', 
-    value: stats.value.completed_orders, 
-    icon: CheckCircle, 
+    label: 'Completed',
+    value: stats.value.completed_orders,
+    icon: CheckCircle,
     bgColor: 'bg-gradient-to-br from-emerald-200 to-emerald-300',
     emoji: '🎉',
     changeColor: 'text-emerald-600',
@@ -2110,8 +2261,9 @@ const statsCards = computed(() => [
 const filterCounts = computed(() => ({
   all: orders.value.length,
   en_attente: orders.value.filter(o => o.statut === 'en_attente').length,
+  send: orders.value.filter(o => o.statut === 'send').length,
   confirmee: orders.value.filter(o => o.statut === 'confirmee').length,
-  ready: orders.value.filter(o => o.statut === 'confirmee' && o.is_ready === 'valid').length,
+  ready: orders.value.filter(o => o.statut === 'confirmee' && o.ready_for_shipping).length,
   en_livraison: orders.value.filter(o => o.statut === 'en_livraison').length,
   livree: orders.value.filter(o => o.statut === 'livree').length,
   annulee: orders.value.filter(o => o.statut === 'annulee').length
@@ -2131,7 +2283,7 @@ const filteredOrders = computed(() => {
 
   if (activeFilter.value !== 'all') {
     if (activeFilter.value === 'ready') {
-      filtered = filtered.filter(o => o.statut === 'confirmee' && o.is_ready === 'valid')
+      filtered = filtered.filter(o => o.statut === 'confirmee' && o.ready_for_shipping)
     } else if (activeFilter.value === 'confirmee') {
       filtered = filtered.filter(o => o.statut === 'confirmee')
     } else {
@@ -2281,7 +2433,7 @@ const calculateTotalPaid = (order) => {
   
   // Check if deposit is validated
   if (order.deposit_validated === 'valid' || order.tobevalidate === 'valid') {
-    const depositPercent = order.payment_deposit_percent || 30
+    const depositPercent = order.payment_terms.deposit_percent || 30
     total += order.total * (depositPercent / 100)
   }
   
@@ -2343,7 +2495,7 @@ const getCurrentStageIndex = (order) => {
   if (!order) return 0
   if (order.statut === 'livree') return 5
   if (order.statut === 'en_livraison') return 3
-  if (order.statut === 'confirmee' && order.is_ready === 'valid') return 2
+  if (order.statut === 'confirmee' && order.ready_for_shipping) return 2
   if (order.statut === 'confirmee') return 1
   return 0
 }
@@ -2409,7 +2561,7 @@ const loadAllData = async () => {
 // Confirm order API call
 const confirmOrder = async (orderId) => {
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=confirm&id=${orderId}`)
+    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=confirm&id=${orderId}&delai=${estimatedDeliveryDate.value}`)
     if (response.data.success) {
       showNotificationMessage('success', 'Order Confirmed', 'Order has been successfully confirmed.')
       await loadAllData()
@@ -2459,17 +2611,34 @@ const startShipping = async (orderId) => {
 }
 
 // Mark as delivered API call
-const markDelivered = async (orderId) => {
+const markDelivered = async () => {
+  if (!selectedOrder.value) return
+
+  deliveryLoading.value = true
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=deliver&id=${orderId}`)
+    const deliveryData = {
+      statut: 'livree',
+      delivery_date: deliveryDate.value,
+      completion_notes: deliveryNotes.value
+    }
+
+    const response = await axios.put(
+      `${API_BASE_URL}/commandes_api_v2.php?action=deliver&id=${selectedOrder.value.id}`,
+      deliveryData
+    )
+
     if (response.data.success) {
       showNotificationMessage('success', 'Order Delivered', 'Order has been marked as delivered.')
+      closeDeliveryModal()
       await loadAllData()
     } else {
       showNotificationMessage('error', 'Error', response.data.error || 'Error delivering order')
     }
   } catch (error) {
+    console.error('Error delivering order:', error)
     showNotificationMessage('error', 'Error', 'Error delivering order')
+  } finally {
+    deliveryLoading.value = false
   }
 }
 
@@ -2583,7 +2752,8 @@ const createProforma = async () => {
       loading_port: loadingPort.value,
       destination_port: destinationAddress.value,
       termes_additionnels: additionalTerms.value,
-      signature_method: signatureMethod.value
+      signature_method: signatureMethod.value,
+      shipping_cost: shippingCost.value
     })
     if (response.data.success) {
       showNotificationMessage('success', 'Proforma Created', 'Proforma invoice has been created and sent to client.')
@@ -2638,29 +2808,45 @@ const uploadBillOfLading = async () => {
   }
 }
 
-// Update vessel tracking API call
+// Update vessel tracking and start shipping
 const updateVesselTracking = async () => {
   if (!selectedOrder.value) return
-  
+
   trackingLoading.value = true
   try {
-    const response = await axios.put(`${API_BASE_URL}/commandes_api_v2.php?action=update_tracking&id=${selectedOrder.value.id}`, {
-      vessel_name: vesselName.value,
-      imo_number: imoNumber.value,
-      tracking_link: trackingLink.value,
-      etd: etd.value,
-      eta: eta.value
-    })
-    
+    // Prepare shipping data based on delivery method
+    const shippingData = {
+      statut: 'en_livraison'
+    }
+
+    if (selectedOrder.value.delivery_method === 'CIF') {
+      // CIF: Full vessel tracking
+      shippingData.tracking_link = trackingLink.value
+      shippingData.vessel_name = vesselName.value
+      shippingData.imo_number = imoNumber.value
+      shippingData.etd = etd.value
+      shippingData.eta = eta.value
+    } else {
+      // FOB: Simple destination
+      shippingData.destination_address = destinationAddress.value
+    }
+
+    // Start shipping and change status to en_livraison
+    const response = await axios.put(
+      `${API_BASE_URL}/commandes_api_v2.php?action=ship&id=${selectedOrder.value.id}`,
+      shippingData
+    )
+
     if (response.data.success) {
-      showNotificationMessage('success', 'Tracking Updated', 'Vessel tracking information has been updated.')
+      showNotificationMessage('success', 'Shipping Started', 'Order is now in shipping.')
       closeTrackingModal()
       await loadAllData()
     } else {
-      showNotificationMessage('error', 'Error', response.data.error || 'Error updating tracking')
+      showNotificationMessage('error', 'Error', response.data.error || 'Error starting shipping')
     }
   } catch (error) {
-    showNotificationMessage('error', 'Error', 'Error updating tracking')
+    console.error('Error starting shipping:', error)
+    showNotificationMessage('error', 'Error', 'Error starting shipping')
   } finally {
     trackingLoading.value = false
   }
@@ -2858,6 +3044,21 @@ const closeReadyModal = () => {
   selectedOrder.value = null
 }
 
+// Delivery Modal handlers
+const openDeliveryModal = (order) => {
+  selectedOrder.value = { ...order }
+  deliveryDate.value = new Date().toISOString().split('T')[0] // Default to today
+  deliveryNotes.value = ''
+  showDeliveryModal.value = true
+}
+
+const closeDeliveryModal = () => {
+  showDeliveryModal.value = false
+  deliveryDate.value = ''
+  deliveryNotes.value = ''
+  selectedOrder.value = null
+}
+
 // Upload Payment Modal handlers
 const openUploadPaymentModal = (order) => {
   selectedOrderForPayment.value = { ...order }
@@ -2978,16 +3179,13 @@ const getConfirmationButtonText = () => ({
 
 const executeAction = async () => {
   if (!selectedOrder.value) return
-  
+
   switch (confirmationAction.value) {
     case 'confirm':
       await confirmOrder(selectedOrder.value.id)
       break
     case 'ship':
       await startShipping(selectedOrder.value.id)
-      break
-    case 'deliver':
-      await markDelivered(selectedOrder.value.id)
       break
   }
 
@@ -3282,8 +3480,19 @@ onUnmounted(() => {
   0%, 100% { transform: translateY(0px) translateX(0px); }
   50% { transform: translateY(10px) translateX(15px); }
 }
+@keyframes pulse-slow {
+  0%, 100% {
+    opacity: 1;
+    box-shadow: 0 0 8px rgba(249, 115, 22, 0.5);
+  }
+  50% {
+    opacity: 0.85;
+    box-shadow: 0 0 20px rgba(249, 115, 22, 0.8);
+  }
+}
 .animate-float-slow { animation: float-slow 20s ease-in-out infinite; }
 .animate-float-reverse { animation: float-reverse 25s ease-in-out infinite; }
 .animate-float-diagonal { animation: float-diagonal 18s ease-in-out infinite; }
 .animate-float-slow-reverse { animation: float-slow-reverse 22s ease-in-out infinite; }
+.animate-pulse-slow { animation: pulse-slow 2s ease-in-out infinite; }
 </style>
