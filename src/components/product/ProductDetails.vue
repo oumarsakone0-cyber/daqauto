@@ -30,10 +30,24 @@
         <span class="flex-1" ><span class="text-gray-500">Stock ID: </span> {{ product.stock_number || "N/A"}}</span>
       </div>
       <div class="action-buttons">
-        <button class="btn-outline flex-1" @click="$emit('toggleCart')">
-            <PlusIcon class="w-5 h-5" />
-            Add to cart
-          </button>
+        <button
+          v-if="!isInCart"
+          class="btn-outline flex-1"
+          @click="$emit('toggleCart')"
+        >
+          <PlusIcon class="w-5 h-5" />
+          Add to cart
+        </button>
+        <button
+          v-else
+          class="btn-in-cart flex-1"
+          disabled
+        >
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="20 6 9 17 4 12"></polyline>
+          </svg>
+          Already in cart
+        </button>
         <button class="btn-outline-with-background flex-1" @click="handleOrderClick">
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"></circle>
@@ -50,16 +64,16 @@
 </template>
 
 <script setup>
-import { defineProps, defineEmits } from 'vue'
+import { defineProps, defineEmits, computed } from 'vue'
 import { useRouter } from 'vue-router'
 import { formatPrice } from '../../services/formatPrice'
 import { PlusIcon } from 'lucide-vue-next'
-import {useOrdersStore} from '../../stores/orders'
+import { useOrdersStore } from '../../stores/orders'
+import { useCartStore } from '../../stores/cart'
 
 const router = useRouter()
 const orders = useOrdersStore()
-
-
+const cart = useCartStore()
 
 const props = defineProps({
   product: {
@@ -71,6 +85,11 @@ const props = defineProps({
 const emit = defineEmits([
   'toggleCart',
 ])
+
+// Check if the product is already in the cart
+const isInCart = computed(() => {
+  return cart.items.some(item => item.id === props.product.id)
+})
 
 
 const goToProfile = () => {
@@ -652,6 +671,28 @@ const handleOrderClick = () => {
     display: flex;
     justify-content: space-between;
     font-size: 12px;
+  }
+
+  /* Already in cart button styles */
+  .btn-in-cart {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 12px 24px;
+    border: 2px solid #52c41a;
+    background: #f6ffed;
+    color: #52c41a;
+    border-radius: 8px;
+    font-size: 16px;
+    font-weight: 600;
+    cursor: not-allowed;
+    transition: all 0.3s ease;
+    opacity: 0.8;
+  }
+
+  .btn-in-cart svg {
+    flex-shrink: 0;
   }
 }
 </style>

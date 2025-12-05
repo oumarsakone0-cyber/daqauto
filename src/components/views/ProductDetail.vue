@@ -549,37 +549,34 @@ import { useCartStore } from '../../stores/cart'
   }
 };
 
-const toggleCart = () => {
-  // On inverse l'état local
+const toggleCart = async () => {
   addedCart.value = true;
   try {
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+    if (!userData) {
+      displayNotification('error', 'Error', 'Please log in first.')
+      addedCart.value = false
+      return
+    }
+    
     const user = JSON.parse(userData)
-
-    cart.addItem(product.value);
-    // Préparer les données pour l'API
-    const likeData = { id_produit: product.value.id, user_id: user.id };
-
-    // Appeler l'API pour ajouter ou retirer le like
-    // const result = await productsApi.addLike(likeData);
-
-    // if (result.success) {
-      // Notification selon le nouvel état
-      displayNotification(
-        addedCart.value ? 'success' : 'info',
-        addedCart.value ? 'Added to Cart' : 'Removed from Cart',
-        addedCart.value
-          ? 'Product added to your Cart.'
-          : 'Product removed from your Cart.'
-      );
-    // } else {
-    //   // Si erreur backend, on remet l'état à l'inverse
-    //   addedCart.value = !addedCart.value;
-    //   displayNotification('error', 'Error', result.error || 'Impossible to update Cart.');
-    // }
+    console.log("[v0] User found:", user.id)
+    console.log("[v0] Product to add:", product.value.id)
+    
+    // Appeler le store pour ajouter au panier
+    await cart.addItem(product.value)
+    
+    console.log("[v0] Item added to cart successfully")
+      
+    displayNotification(
+      'success',
+      'Added to Cart',
+      'Product added to your Cart.'
+    );
   } catch (error) {
-    addedCart.value = !addedCart.value;
-    displayNotification('error', 'Error', 'error to update.');
+    console.error("[v0] Error in toggleCart:", error)
+    addedCart.value = false;
+    displayNotification('error', 'Error', 'Failed to add to cart.');
   }
 };
 
