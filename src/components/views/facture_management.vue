@@ -60,6 +60,13 @@
             <Download class="w-4 h-4" />
             Invoice PDF
           </button>
+          <button 
+            @click="downloadContract(invoice,subtotal,total)"
+            class="btn-degrade-orange"
+          >
+            <Download class="w-4 h-4" />
+            Contract PDF
+          </button>
         </div>
       </div>
 
@@ -75,15 +82,15 @@
 
             <!-- Informations générales -->
             <div class="space-y-2 mb-3">
-              <div>
+              <!-- <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Invoice number</label>
                 <input 
                   v-model="invoice.number" 
                   type="text" 
                   class="input-style"
-                  placeholder="FAC-2025-001"
+                  placeholder=""
                 >
-              </div>
+              </div> -->
 
               <div>
                 <label class="block text-sm font-medium text-gray-700 mb-1">Invoice date</label>
@@ -524,6 +531,7 @@ import { productsApi } from '../../services/api'
 import logo from "../../assets/favicon.jpg"
 import Navbar from '../boutiques/Navbar.vue'
 import { downloadInvoice } from '../../composables/Invoice.js'
+import {downloadContract} from '../../composables/contract.js'
 import { downloadProforma } from '../../composables/ProformaInvoice.js'
 import { formatCurrency, formatDate} from '../../composables/utils.js'
 import { useRoute } from 'vue-router'
@@ -543,7 +551,7 @@ const currentBoutique = ref(null)
 
 // État de la facture
 const invoice = ref({
-  number: 'INV-2025-001',
+  number: '',
   date: new Date().toISOString().split('T')[0],
   dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
   client: {
@@ -637,7 +645,7 @@ onMounted(async () => {
   const orderData = sessionStorage.getItem('selectedOrder')
   order.value = orderData ? JSON.parse(orderData) : null
 
-  if (order) {
+  if (order!==null) {
     // client informations
     invoice.value.client.name = order.value.client_nom
     invoice.value.client.address = order.value.commune
