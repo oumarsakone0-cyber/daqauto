@@ -11,6 +11,7 @@
 
     <!-- Container responsive -->
     <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+      <Navbar/>
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
         <a href="/" class="hover:text-gray-700">
@@ -30,7 +31,7 @@
           <div class="relative" ref="exportDropdownRef">
             <button 
               @click="showExportDropdown = !showExportDropdown"
-              class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium bg-gradient-to-r from-orange-500 to-orange-600 text-white hover:from-orange-600 hover:to-orange-700 transition-all"
+              class="w-full sm:w-auto inline-flex items-center justify-center px-3 sm:px-4 py-2 rounded-lg text-sm font-medium btn-degrade-orange"
             >
               <DownloadIcon class="w-4 h-4" />
               <span>Export</span>
@@ -38,11 +39,11 @@
             </button>
             <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 z-50">
               <div role="menu">
-                <button @click="exportToPDF" class="flex items-center gap-2 text-sm mb-2 text-gray-700 hover:bg-gray-100 w-full px-3 py-2 rounded-lg" role="menuitem">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 btn-gray w-full" role="menuitem">
                   <FileTextIcon class="w-4 h-4 text-red-500" />
                   Export to PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center gap-2 text-sm text-gray-700 hover:bg-gray-100 w-full px-3 py-2 rounded-lg" role="menuitem">
+                <button @click="exportToExcel" class="flex items-center text-sm mb-2 btn-gray w-full" role="menuitem">
                   <FileTextIcon class="w-4 h-4 text-green-500" />
                   Export to Excel
                 </button>
@@ -51,7 +52,7 @@
           </div>
           <button 
             @click="loadAllData"
-            class="w-full sm:w-auto inline-flex items-center justify-center gap-2 px-3 sm:px-4 py-2 rounded-lg shadow-sm text-sm font-medium bg-gray-900 text-white hover:bg-gray-800 transition-all"
+            class="submit-btn"
           >
             <RefreshIcon class="w-4 h-4" />
             Refresh
@@ -69,7 +70,7 @@
 
       <!-- Error State -->
       <div v-if="hasError && !dataLoading" class="mb-6 sm:mb-8">
-        <div class="bg-red-50 border-l-4 border-red-400 text-red-700 p-4 rounded-lg shadow-lg flex items-center gap-3">
+        <div class="bg-red-50 border-l-4 border-red-400 error-color p-4 rounded-lg shadow-lg flex items-center gap-3">
           <AlertCircle class="w-6 h-6 flex-shrink-0" />
           <div>
             <p class="font-semibold">Error loading data</p>
@@ -86,7 +87,7 @@
           @click="handleFilterChange(stat.filterValue)"
           :class="[
             'bg-white overflow-hidden shadow-lg rounded-lg border cursor-pointer transition-all duration-300 hover:shadow-xl hover:scale-[1.02]',
-            activeFilter === stat.filterValue ? 'border-orange-400 ring-2 ring-orange-200' : 'border-gray-100'
+            activeFilter === stat.filterValue ? 'primary-color ring-2 ring-orange-200' : 'border-gray-100'
           ]"
         >
           <div class="px-3 sm:px-4 py-3 sm:py-4">
@@ -118,7 +119,7 @@
             :class="[
               'flex-1 min-w-[100px] p-3 rounded-xl cursor-pointer transition-all border-2',
               activeFilter === stage.filterValue 
-                ? 'border-orange-400 bg-orange-50' 
+                ? 'primary-color bg-orange-50' 
                 : 'border-transparent bg-gray-50 hover:bg-gray-100'
             ]"
           >
@@ -144,8 +145,8 @@
               :class="[
                 'px-2 sm:px-4 py-1.5 sm:py-2 rounded-lg transition-all duration-200 text-xs sm:text-sm font-medium inline-flex items-center gap-1',
                 activeFilter === tab.value 
-                  ? 'bg-gradient-to-r from-orange-500 to-orange-600 text-white shadow-md' 
-                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200'
+                  ? 'btn-degrade-orange' 
+                  : 'bg-white text-gray-700 hover:bg-gray-100 border border-gray-200 btn-gray'
               ]"
             >
               <span>{{ tab.emoji }}</span>
@@ -165,7 +166,7 @@
               <input 
                 v-model="searchQuery"
                 type="text" 
-                class="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent text-sm" 
+                class="input-style" 
                 placeholder="Search by number, customer, product..."
                 @input="handleSearch"
               >
@@ -174,7 +175,8 @@
               <select 
                 v-model="deliveryTypeFilter" 
                 @change="loadOrders" 
-                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+                style="padding-right: 2.5rem; padding-left:15px; "
+                class="input-style flex-3"
               >
                 <option value="">All Delivery Types</option>
                 <option value="FOB">FOB Delivery</option>
@@ -183,14 +185,14 @@
               <select 
                 v-model="dateFilter" 
                 @change="loadOrders" 
-                class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+                class="input-style flex-2"
               >
                 <option value="">All dates</option>
                 <option value="today">Today</option>
                 <option value="week">This Week</option>
                 <option value="month">This month</option>
               </select>
-              <button v-if="hasActiveFilters" @click="clearFilters" class="px-3 py-2 bg-red-500 text-white rounded-lg text-xs font-medium hover:bg-red-600 transition-colors">
+              <button v-if="hasActiveFilters" @click="clearFilters" class="btn-deconnexion">
                 <X class="w-4 h-4" />
               </button>
             </div>
@@ -238,7 +240,7 @@
                     <div>
                       <div class="text-sm font-semibold text-gray-900">{{ order.numero_commande }}</div>
                       <div class="flex items-center text-xs text-gray-500">
-                        <Calendar class="h-3 w-3 mr-1 text-orange-500" />
+                        <Calendar class="h-3 w-3 mr-1 primary-color" />
                         {{ formatDate(order.date_commande || order.created_at) }}
                       </div>
                     </div>
@@ -249,11 +251,11 @@
                 <td class="px-3 sm:px-4 py-3 sm:py-4 whitespace-nowrap">
                   <div class="space-y-1">
                     <div class="flex items-center text-sm font-medium text-gray-900">
-                      <User class="h-3 w-3 mr-1 text-orange-500" />
+                      <User class="h-3 w-3 mr-1 primary-color" />
                       {{ order.client_nom }}
                     </div>
                     <div class="flex items-center text-xs text-gray-500">
-                      <PhoneCall class="h-3 w-3 mr-1 text-orange-500" />
+                      <PhoneCall class="h-3 w-3 mr-1 primary-color" />
                       {{ order.client_telephone }}
                     </div>
                   </div>
@@ -265,7 +267,7 @@
                     <div class="text-sm font-medium text-gray-900 truncate max-w-[150px]" :title="order.produit_nom">{{ order.produit_nom }}</div>
                     <div class="flex items-center gap-2 text-xs text-gray-500">
                       <span>Qty: {{ order.quantite }}</span>
-                      <span class="text-orange-600 font-medium">{{ formatCurrency(order.produit_prix) }}</span>
+                      <span class="primary-color font-medium">{{ formatCurrency(order.produit_prix) }}</span>
                     </div>
                   </div>
                 </td>
@@ -275,14 +277,14 @@
                   <div class="space-y-1">
                     <span :class="[
                       'inline-flex items-center gap-1 px-2 py-1 rounded-full text-xs font-medium',
-                      order.delivery_method === 'FOB' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                      order.delivery_method === 'FOB' ? 'bg-blue-100 blue-color' : 'bg-green-100 green-color'
                     ]">
                       <Ship v-if="order.delivery_method === 'FOB'" class="w-3 h-3" />
                       <Truck v-else class="w-3 h-3" />
                       {{ order.delivery_method || 'FOB' }}
                     </span>
                     <div class="flex items-center text-xs text-gray-500">
-                      <MapPin class="h-3 w-3 mr-1 text-orange-500" />
+                      <MapPin class="h-3 w-3 mr-1 primary-color" />
                       {{ order.destination_port || order.adresse_complete || 'N/A' }}
                     </div>
                   </div>
@@ -319,14 +321,14 @@
                     <!-- Pending Stage Actions -->
                     <!-- Pending Stage - Awaiting Contract -->
                     <div v-if="order.statut === 'en_attente'" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-yellow-600">
+                      <div class="flex items-center gap-1 text-xs primary-color">
                         <Clock class="w-3 h-3" />
                         <span>Awaiting Contract</span>
                       </div>
                       <div class="flex gap-1 flex-wrap">
                         <button
                           @click="openDocumentModal(order, 'proforma')"
-                          class="px-2 py-1 bg-orange-100 text-orange-700 rounded text-[10px] font-medium hover:bg-orange-200 transition-colors"
+                          class="btn-degrade-orange text-[10px] h-6"
                         >
                           Send Proforma
                         </button>
@@ -335,14 +337,14 @@
 
                     <!-- Contract Sent - Awaiting Initial Payment -->
                     <div v-else-if="order.statut === 'send'" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-blue-600">
+                      <div class="flex items-center gap-1 text-xs blue-color">
                         <FileText class="w-3 h-3" />
                         <span>Contract Sent - Awaiting Payment</span>
                       </div>
                       <div class="flex gap-1 flex-wrap">
                         <button
                           @click="showPaymentProof(order)"
-                          class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
+                          class="submit-btn text-[10px] h-6"
                         >
                           View Payments
                         </button>
@@ -351,28 +353,28 @@
 
                     <!-- Confirmed Stage - In Preparation -->
                     <div v-else-if="order.statut === 'confirmee' && !order.ready_for_shipping" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-blue-600">
+                      <div class="flex items-center gap-1 text-xs blue-color">
                         <Settings class="w-3 h-3 animate-spin" />
                         <span>In Preparation</span>
                       </div>
                       <div class="flex gap-1 flex-wrap">
                         <button
                           @click="showConfirmModal('ready', order)"
-                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                          class="btn-degrade-orange text-[9px] h-6"
                         >
                           Mark Ready
                         </button>
                         <!-- Added button to view/add payment proofs -->
                         <button
                           @click="showPaymentProof(order)"
-                          class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
+                          class="submit-btn text-[9px] h-6"
                         >
                           View Payments
                         </button>
                         <button
                           v-if="order.signature_method && order.signature_method.length >= 3"
                           @click="openUploadPaymentModal(order)"
-                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                          class="btn-outline text-[9px] h-6"
                         >
                           Add Proof
                         </button>
@@ -381,7 +383,7 @@
 
                     <!-- Ready for Shipping -->
                     <div v-else-if="order.statut === 'confirmee' && order.ready_for_shipping" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-green-600">
+                      <div class="flex items-center gap-1 text-xs green-color">
                         <PackageCheck class="w-3 h-3" />
                         <span>Ready for Shipping</span>
                       </div>
@@ -389,14 +391,14 @@
                         <!-- Updated payment buttons for ready stage -->
                         <button
                           @click="showPaymentProof(order)"
-                          class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
+                          class="submit-btn text-[10px] h-6"
                         >
                           View Payments
                         </button>
                         <button
                           v-if="calculateRemaining(order) > 0"
                           @click="openUploadPaymentModal(order)"
-                          class="px-2 py-1 bg-yellow-100 text-yellow-700 rounded text-[10px] font-medium hover:bg-yellow-200 transition-colors"
+                          class="btn-outline text-[10px] h-6"
                         >
                           Add Payment
                         </button>
@@ -404,7 +406,7 @@
                         <button
                           v-if="calculateRemaining(order) <= 0"
                           @click="openTrackingModal(order)"
-                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                          class="btn-degrade-orange text-[10px] h-6"
                         >
                           Start Shipping
                         </button>
@@ -413,7 +415,7 @@
 
                     <!-- In Shipping -->
                     <div v-else-if="order.statut === 'en_livraison'" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-purple-600">
+                      <div class="flex items-center gap-1 text-xs purple-color">
                         <Truck class="w-3 h-3" />
                         <span>{{ order.delivery_method === 'FOB' ? 'In Transit' : 'Shipping' }}</span>
                       </div>
@@ -421,13 +423,13 @@
                         <button 
                           v-if="order.delivery_method === 'FOB' && order.tracking_link"
                           @click="openTrackingModal(order)"
-                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                          class="btn-degrade-orange text-[10px] h-6"
                         >
                           🔗 Track Vessel
                         </button>
                         <button
                           @click="openDeliveryModal(order)"
-                          class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors"
+                          class="btn-degrade-orange text-[10px] h-6"
                         >
                           ✅ Mark Delivered
                         </button>
@@ -436,7 +438,7 @@
 
                     <!-- Delivered/Completed -->
                     <div v-else-if="order.statut === 'livree'" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-green-600">
+                      <div class="flex items-center gap-1 text-xs green-color">
                         <CheckCircle2Icon class="w-3 h-3" />
                         <span>Completed</span>
                       </div>
@@ -445,7 +447,7 @@
 
                     <!-- Cancelled -->
                     <div v-else-if="order.statut === 'annulee'" class="space-y-1">
-                      <div class="flex items-center gap-1 text-xs text-red-600">
+                      <div class="flex items-center gap-1 text-xs error-color">
                         <XCircle class="w-3 h-3" />
                         <span>Cancelled</span>
                       </div>
@@ -460,7 +462,7 @@
                     <!-- View Details -->
                     <button 
                       @click="openOrderDetails(order)"
-                      class="p-2 rounded-lg bg-gray-100 text-gray-600 hover:bg-gray-200 transition-colors"
+                      class="btn-outline w-10 h-10"
                       title="View Details"
                     >
                       <EyeIcon class="h-4 w-4" />
@@ -470,7 +472,7 @@
                     <button 
                       v-if="order.statut === 'en_attente' || order.statut === 'send'"
                       @click="showConfirmModal('confirm', order)"
-                      class="p-2 rounded-lg bg-green-100 text-green-600 hover:bg-green-200 transition-colors"
+                      class="submit-btn w-10 h-10"
                       title="Confirm Order"
                     >
                       <Check class="h-4 w-4" />
@@ -480,7 +482,7 @@
                     <button 
                       v-if="['en_attente', 'confirmee'].includes(order.statut)"
                       @click="openCancelModal(order)"
-                      class="p-2 rounded-lg bg-red-100 text-red-600 hover:bg-red-200 transition-colors"
+                      class="btn-deconnexion w-10 h-10"
                       title="Cancel Order"
                     >
                       <X class="h-4 w-4" />
@@ -490,7 +492,7 @@
                     <button 
                       v-if="order.statut === 'en_attente' || order.statut === 'confirmee' || order.statut === 'send'"
                       @click="showPaymentProof(order)"
-                      class="p-2 rounded-lg bg-orange-100 text-orange-600 hover:bg-orange-200 transition-colors"
+                      class="submit-btn w-10 h-10"
                       title="View Payment Proof"
                     >
                       <ImageIcon class="h-4 w-4" />
@@ -500,7 +502,7 @@
                     <button 
                       v-if="order.delivery_method === 'FOB' && order.tracking_link"
                       @click="openTrackingModal(order)"
-                      class="p-2 rounded-lg bg-blue-100 text-blue-600 hover:bg-blue-200 transition-colors"
+                      class="btn-degrade-orange w-10 h-10"
                       title="View Tracking Info"
                     >
                       <Anchor class="h-4 w-4" />
@@ -529,8 +531,9 @@
             <span class="text-gray-700">Per page</span>
             <select 
               v-model="itemsPerPage" 
+              style="width:auto; height: 2.5rem; padding-left:20px; padding-right:40px"
               @change="handleItemsPerPageChange"
-              class="px-3 py-1.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 text-sm"
+              class="input-style w-10"
             >
               <option :value="10">10</option>
               <option :value="25">25</option>
@@ -544,7 +547,7 @@
             <button 
               @click="changePage(currentPage - 1)" 
               :disabled="isFirstPage"
-              class="p-2 rounded-lg bg-white border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              class="btn-gray"
             >
               <ChevronLeft class="h-4 w-4" />
             </button>
@@ -554,7 +557,7 @@
               @click="changePage(page)"
               :class="[
                 'px-3 py-1 rounded-lg text-sm font-medium transition-colors',
-                currentPage === page ? 'bg-orange-500 text-white' : 'bg-white border border-gray-200 hover:bg-gray-50'
+                currentPage === page ? 'btn-degrade-orange' : 'btn-gray'
               ]"
             >
               {{ page }}
@@ -562,7 +565,7 @@
             <button 
               @click="changePage(currentPage + 1)" 
               :disabled="isLastPage"
-              class="p-2 rounded-lg bg-white border border-gray-200 disabled:opacity-50 disabled:cursor-not-allowed hover:bg-gray-50"
+              class="btn-gray"
             >
               <ChevronRight class="h-4 w-4" />
             </button>
@@ -573,19 +576,20 @@
 
     <!-- Cancel Order Modal with Reasons -->
     <div v-if="showCancelModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeCancelModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-red-100 rounded-lg">
-              <XCircle class="h-5 w-5 text-red-600" />
+              <XCircle class="h-5 w-5 error-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Cancel Order</h3>
               <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 text-gray-500 cursor-pointer" @click="closeCancelModal" />
         </div>
-        <div class="p-6 space-y-4">
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)] space-y-6 ">
           <p class="text-gray-600">Please select a reason for cancellation:</p>
           
           <div class="space-y-2">
@@ -599,7 +603,7 @@
                 type="radio" 
                 v-model="selectedCancelReason" 
                 :value="reason.value"
-                class="w-4 h-4 text-red-600 focus:ring-red-500"
+                class="w-4 h-4 error-color focus:ring-red-500"
               >
               <div>
                 <span class="text-sm font-medium text-gray-900">{{ reason.emoji }} {{ reason.label }}</span>
@@ -613,7 +617,7 @@
             <textarea 
               v-model="customCancelReason"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              class="input-style"
               placeholder="Enter the cancellation reason..."
             ></textarea>
           </div>
@@ -621,14 +625,14 @@
           <div class="flex justify-end gap-3 pt-4">
             <button 
               @click="closeCancelModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="btn-gray flex-1"
             >
               Cancel
             </button>
             <button 
               @click="confirmCancelOrder"
               :disabled="!selectedCancelReason || (selectedCancelReason === 'other' && !customCancelReason)"
-              class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              class="btn-deconnexion flex-1"
             >
               Confirm Cancellation
             </button>
@@ -643,16 +647,14 @@
         <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-orange-100 rounded-lg">
-              <FileTextIcon class="h-5 w-5 text-orange-600" />
+              <FileTextIcon class="h-5 w-5 primary-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">{{ documentType === 'proforma' ? 'Proforma Invoice' : 'Contract' }}</h3>
               <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
-          <button @click="closeDocumentModal" class="p-2 hover:bg-gray-100 rounded-lg">
-            <X class="h-5 w-5 text-gray-500" />
-          </button>
+            <X class="h-7 w-7 text-gray-500 cursor-pointer" @click="closeDocumentModal" />
         </div>
         
         <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)] space-y-6">
@@ -674,7 +676,7 @@
               </div>
               <div>
                 <span class="text-gray-500">Total:</span>
-                <span class="font-bold text-orange-600 ml-2">{{ formatCurrency(selectedOrder?.total) }}</span>
+                <span class="font-bold primary-color ml-2">{{ formatCurrency(selectedOrder?.total) }}</span>
               </div>
             </div>
           </div>
@@ -685,7 +687,7 @@
             <input 
               type="number" 
               v-model.number="editablePrice"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+              class="input-style"
             >
           </div>
 
@@ -695,40 +697,39 @@
             <div class="space-y-3">
               <div class="grid grid-cols-3 gap-4">
                 <div class="flex flex-col">
-                  <label class="text-xs text-gray-500">Deposit</label>
+                  <label class="text-xs text-gray-500 mb-2">Deposit</label>
                   <input 
                     type="number" 
-                    style="background-color: gray; color: white"
                     v-model.number="paymentTerms.deposit"
                     min="0"
                     max="100"
-                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    class="input-style "
                   >
                 </div>
                 <div class="flex flex-col">
-                  <label class="text-xs text-gray-500">Before Shipping</label>
+                  <label class="text-xs text-gray-500 mb-2">Before Shipping</label>
                   <input 
                     type="number" 
                     v-model.number="paymentTerms.beforeShipping"
                     min="0"
                     max="100"
-                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    class="input-style"
                   >
                 </div>
                 <div class="flex flex-col">
-                  <label class="text-xs text-gray-500">Against B/L</label>
+                  <label class="text-xs text-gray-500 mb-2">Against B/L</label>
                   <input 
                     type="number" 
                     v-model.number="paymentTerms.againstBL"
                     min="0"
                     max="100"
-                    class="px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                    class="input-style"
                   >
                 </div>
               </div>
               <p class="text-xs text-gray-500">
                 Total: {{ paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL }}% 
-                <span v-if="paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL !== 100" class="text-red-500">(Must equal 100%)</span>
+                <span v-if="paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL !== 100" class="error-color">(Must equal 100%)</span>
               </p>
             </div>
           </div>
@@ -742,7 +743,7 @@
                 :class="deliveryMethod === 'FOB' ? 'border-green-500 bg-green-50' : 'border-gray-200 hover:border-gray-300'"
               >
                 <input type="radio" v-model="deliveryMethod" value="FOB" class="sr-only">
-                <Truck class="w-6 h-6 text-green-600" />
+                <Truck class="w-6 h-6 green-color" />
                 <div>
                   <span class="font-medium text-gray-900">FOB</span>
                   <p class="text-xs text-gray-500">Free On Board - Buyer takes responsibility at port</p>
@@ -753,7 +754,7 @@
                 :class="deliveryMethod === 'CIF' ? 'border-blue-500 bg-blue-50' : 'border-gray-200 hover:border-gray-300'"
               >
                 <input type="radio" v-model="deliveryMethod" value="CIF" class="sr-only">
-                <Ship class="w-6 h-6 text-blue-600" />
+                <Ship class="w-6 h-6 blue-color" />
                 <div>
                   <span class="font-medium text-gray-900">CIF</span>
                   <p class="text-xs text-gray-500">Cost, Insurance, Freight - Delivered to destination port</p>
@@ -771,7 +772,7 @@
               <input 
                 type="text" 
                 v-model="destinationAddress"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                class="input-style"
                 :placeholder="deliveryMethod === 'FOB' ? 'e.g., Port of Abidjan' : 'e.g., Customer warehouse address'"
               >
             </div>
@@ -780,7 +781,7 @@
               <input 
                 type="text" 
                 v-model="loadingPort"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+                class="input-style"
                 placeholder="e.g., Tema Port"
               >
             </div>
@@ -788,10 +789,9 @@
           <div v-if="deliveryMethod === 'CIF'">
             <label class="block text-sm font-medium text-gray-700 mb-2">CIF Shipping cost ($)</label>
             <input 
-            style="background-color: #FFF3E0;"
               type="number" 
               v-model.number="shippingCost"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+              class="input-style bg-orange-50"
             >
           </div>
 
@@ -801,7 +801,7 @@
             <textarea 
               v-model="additionalTerms"
               rows="4"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500"
+              class="input-style"
               placeholder="Enter any additional terms..."
             ></textarea>
           </div>
@@ -811,11 +811,11 @@
             <label class="block text-sm font-medium text-gray-700 mb-2">Signature Method</label>
             <div class="grid grid-cols-2 gap-3">
               <label 
-                class="flex items-center gap-3 p-3 border-2 rounded-xl cursor-pointer transition-all"
-                :class="signatureMethod === 'online' ? 'border-orange-500 bg-orange-50' : 'border-gray-200'"
+                class="flex items-center gap-3 p-3 text-black border-2 rounded-lg cursor-pointer transition-all"
+                :class="signatureMethod === 'online' ? 'border-orange-500 ' : 'border-gray-200'"
               >
-                <input type="radio" v-model="signatureMethod" value="online" class="sr-only">
-                <Globe class="w-5 h-5 text-orange-600" />
+                <input type="radio" v-model="signatureMethod" value="online" class="input-style sr-only">
+                <Globe class="w-5 h-5 primary-color" />
                 <span class="text-sm font-medium">Online Signature</span>
               </label>
               
@@ -826,14 +826,14 @@
           <div class="flex gap-3 pt-4 border-t border-gray-100">
             <button 
               @click="closeDocumentModal"
-              class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="btn-gray flex-1"
             >
               Cancel
             </button>
             <button 
               @click="generateAndSendDocument"
               :disabled="paymentTerms.deposit + paymentTerms.beforeShipping + paymentTerms.againstBL !== 100 || proformaLoading"
-              class="flex-1 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              class="btn-degrade-orange flex-1"
             >
               <span v-if="proformaLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
               Generate & Send to Client
@@ -845,23 +845,24 @@
 
     <!-- Tracking Modal for CIF -->
     <div v-if="showTrackingModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeTrackingModal">
-      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-lg" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
+      <div class="bg-white rounded-2xl shadow-2xl w-full max-w-2xl max-h-[90vh] overflow-hidden" @click.stop>
+        <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-blue-100 rounded-lg">
-              <Ship class="h-5 w-5 text-blue-600" />
+            <div class="p-2 bg-blue-100 rounded-lg" :class="selectedOrder?.delivery_method === 'CIF' ? 'bg-blue-100 blue-color' : 'bg-green-100 green-color'">
+              <Ship class="h-5 w-5" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Start Shipping</h3>
               <p class="text-sm text-gray-500">Enter shipping details for Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 text-gray-500 cursor-pointer" @click="closeTrackingModal" />
         </div>
-        <div class="p-6 space-y-4">
+        <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)] space-y-6">
           <!-- Delivery Type Badge -->
           <div class="flex items-center gap-2 mb-4">
             <span class="px-3 py-1 rounded-full text-xs font-semibold"
-              :class="selectedOrder?.delivery_method === 'CIF' ? 'bg-blue-100 text-blue-700' : 'bg-green-100 text-green-700'">
+              :class="selectedOrder?.delivery_method === 'CIF' ? 'bg-blue-100 blue-color' : 'bg-green-100 green-color'">
               {{ selectedOrder?.delivery_method || 'FOB' }} Delivery
             </span>
           </div>
@@ -874,7 +875,7 @@
               <input
                 type="text"
                 v-model="destinationAddress"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+                class="input-style"
                 placeholder="Enter destination port address"
               >
             </div>
@@ -882,13 +883,13 @@
             <!-- Delivery Document Upload -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Delivery Document</label>
-              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-green-400 transition-colors cursor-pointer" @click="blFileInput?.click()">
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors cursor-pointer" @click="blFileInput?.click()">
                 <input type="file" @change="handleBLUpload" accept=".pdf,image/*" class="hidden" ref="blFileInput">
                 <Upload class="w-8 h-8 text-gray-400 mx-auto mb-2" />
                 <p class="text-sm text-gray-600">Click to upload delivery document</p>
                 <p class="text-xs text-gray-400">PDF or Image files</p>
               </div>
-              <div v-if="blFile" class="mt-2 flex items-center gap-2 text-sm text-green-600">
+              <div v-if="blFile" class="mt-2 flex items-center gap-2 text-sm green-color">
                 <CheckCircle2Icon class="w-4 h-4" />
                 <span>{{ blFile.name }}</span>
               </div>
@@ -908,7 +909,7 @@
               <input
                 type="url"
                 v-model="trackingLink"
-                class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                class="input-style"
                 placeholder="https://www.marinetraffic.com/..."
               >
             </div>
@@ -920,7 +921,7 @@
                 <input
                   type="text"
                   v-model="vesselName"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  class="input-style"
                   placeholder="Vessel name"
                 >
               </div>
@@ -929,7 +930,7 @@
                 <input
                   type="text"
                   v-model="imoNumber"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  class="input-style"
                   placeholder="IMO number"
                 >
               </div>
@@ -942,7 +943,7 @@
                 <input
                   type="date"
                   v-model="etd"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  class="input-style"
                 >
               </div>
               <div>
@@ -950,7 +951,7 @@
                 <input
                   type="date"
                   v-model="eta"
-                  class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+                  class="input-style"
                 >
               </div>
             </div>
@@ -958,13 +959,13 @@
             <!-- Bill of Lading Upload -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">Bill of Lading (B/L)</label>
-              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-blue-400 transition-colors cursor-pointer" @click="blFileInput?.click()">
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors cursor-pointer" @click="blFileInput?.click()">
                 <input type="file" @change="handleBLUpload" accept=".pdf,image/*" class="hidden" ref="blFileInput">
                 <Upload class="w-8 h-8 text-gray-400 mx-auto mb-2" />
                 <p class="text-sm text-gray-600">Click to upload B/L document</p>
                 <p class="text-xs text-gray-400">PDF or Image files</p>
               </div>
-              <div v-if="blFile" class="mt-2 flex items-center gap-2 text-sm text-blue-600">
+              <div v-if="blFile" class="mt-2 flex items-center gap-2 text-sm primary-color">
                 <CheckCircle2Icon class="w-4 h-4" />
                 <span>{{ blFile.name }}</span>
               </div>
@@ -974,14 +975,14 @@
           <div class="flex gap-3 pt-4">
             <button 
               @click="closeTrackingModal"
-              class="flex-1 px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="flex-1 btn-gray"
             >
               Close
             </button>
             <button
               @click="saveTrackingInfo"
               :disabled="trackingLoading"
-              class="flex-1 px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              class="flex-1 btn-degrade-orange"
             >
               <span v-if="trackingLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
               Start Shipping
@@ -1004,25 +1005,23 @@
               <p class="text-sm text-gray-500">Order #{{ currentProofOrder?.numero_commande }}</p>
             </div>
           </div>
-          <button @click="closePaymentProofModal" class="p-2 hover:bg-gray-100 rounded-lg">
-            <X class="h-5 w-5 text-gray-500" />
-          </button>
+            <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closePaymentProofModal"/>
         </div>
 
         <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
           <!-- Payment Statistics -->
           <div class="grid grid-cols-3 gap-4 mb-6">
             <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 border border-orange-200">
-              <div class="text-sm text-orange-600 font-medium mb-1">Total Order</div>
-              <div class="text-2xl font-bold text-orange-700">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
+              <div class="text-sm primary-color font-medium mb-1">Total Order</div>
+              <div class="text-2xl font-bold primary-color">{{ formatCurrency(currentProofOrder?.total || 0) }}</div>
             </div>
             <div class="bg-gradient-to-br from-green-50 to-green-100 rounded-xl p-4 border border-green-200">
-              <div class="text-sm text-green-600 font-medium mb-1">Total Paid</div>
-              <div class="text-2xl font-bold text-green-700">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
+              <div class="text-sm green-color font-medium mb-1">Total Paid</div>
+              <div class="text-2xl font-bold green-color">{{ formatCurrency(calculateTotalPaid(currentProofOrder)) }}</div>
             </div>
             <div class="bg-gradient-to-br from-red-50 to-red-100 rounded-xl p-4 border border-red-200">
-              <div class="text-sm text-red-600 font-medium mb-1">Remaining</div>
-              <div class="text-2xl font-bold text-red-700">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
+              <div class="text-sm error-color font-medium mb-1">Remaining</div>
+              <div class="text-2xl font-bold error-color">{{ formatCurrency(calculateRemaining(currentProofOrder)) }}</div>
             </div>
           </div>
 
@@ -1044,7 +1043,7 @@
           <div class="mb-6 flex justify-end">
             <button 
               @click="openUploadPaymentModal(currentProofOrder)"
-              class="inline-flex items-center gap-2 px-4 py-2 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all"
+              class="btn-degrade-orange"
             >
               <Upload class="h-4 w-4" />
               Add Payment Proof
@@ -1060,7 +1059,7 @@
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
                   <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
-                    <Wallet class="h-5 w-5 text-orange-600" />
+                    <Wallet class="h-5 w-5 primary-color" />
                   </div>
                   <div>
                     <div class="font-semibold text-gray-900">Deposit Payment ({{ currentProofOrder.payment_terms.deposit_percent || 30 }}%)</div>
@@ -1073,7 +1072,7 @@
                 </div>
                 <div class="text-right">
                   <div class="text-lg font-bold text-gray-900">{{ formatCurrency((currentProofOrder?.total || 0) * ((currentProofOrder.payment_terms.deposit_percent || 30) / 100)) }}</div>
-                  <span v-if="currentProofOrder?.deposit_validated === 'valid' || currentProofOrder?.tobevalidate === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                  <span v-if="currentProofOrder?.deposit_validated === 'valid' || currentProofOrder?.tobevalidate === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium">
                     <CheckCircle2Icon class="h-3 w-3" />
                     Validated
                   </span>
@@ -1081,7 +1080,7 @@
                     <Clock class="h-3 w-3" />
                     Pending Validation
                   </span>
-                  <span v-else-if="currentProofOrder?.deposit_validated === 'rejected'" class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                  <span v-else-if="currentProofOrder?.deposit_validated === 'rejected'" class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 error-color rounded-full text-xs font-medium">
                     <XCircle class="h-3 w-3" />
                     Rejected
                   </span>
@@ -1096,7 +1095,7 @@
               <div v-if="currentProofOrder?.preuve_paiement" class="mt-3 flex flex-wrap gap-2">
                 <button 
                   @click="viewProofImage(currentProofOrder.preuve_paiement)"
-                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                  class="submit-btn h-8 text-xs"
                 >
                   <ImageIcon class="h-4 w-4" />
                   View Proof
@@ -1105,7 +1104,7 @@
                 <button 
                   v-if="currentProofOrder?.deposit_validated !== 'valid' && currentProofOrder?.tobevalidate !== 'valid'"
                   @click="openValidateModal(currentProofOrder, 'deposit')"
-                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition-colors"
+                  class="btn-degrade-orange h-8 text-xs"
                 >
                   <Check class="h-4 w-4" />
                   Validate
@@ -1114,7 +1113,7 @@
                 <button 
                   v-if="currentProofOrder?.deposit_validated !== 'valid' && currentProofOrder?.tobevalidate !== 'valid' && currentProofOrder?.deposit_validated !== 'rejected'"
                   @click="openRejectModal(currentProofOrder, 'deposit')"
-                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors"
+                  class="btn-deconnexion h-8 text-xs"
                 >
                   <XCircle class="h-4 w-4" />
                   Reject
@@ -1122,7 +1121,7 @@
               </div>
               <!-- Show rejection reason if rejected -->
               <div v-if="currentProofOrder?.deposit_validated === 'rejected' && currentProofOrder?.rejection_reason" class="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                <p class="text-sm text-red-700"><strong>Rejection reason:</strong> {{ currentProofOrder.rejection_reason }}</p>
+                <p class="text-sm error-color"><strong>Rejection reason:</strong> {{ currentProofOrder.rejection_reason }}</p>
               </div>
             </div>
 
@@ -1134,22 +1133,22 @@
             >
               <div class="flex items-start justify-between">
                 <div class="flex items-center gap-3">
-                  <div class="w-10 h-10 bg-purple-100 rounded-lg flex items-center justify-center">
-                    <CreditCard class="h-5 w-5 text-purple-600" />
+                  <div class="w-10 h-10 bg-orange-100 rounded-lg flex items-center justify-center">
+                    <CreditCard class="h-5 w-5 primary-color" />
                   </div>
                   <div>
                     <div class="font-semibold text-gray-900">{{ payment.description || `Additional Payment #${index + 1}` }}</div>
                     <div class="text-sm text-gray-500">{{ formatDate(payment.date_paiement) }}</div>
                     <div v-if="payment.commentaire" class="text-xs text-gray-400 mt-1">{{ payment.commentaire }}</div>
                     <!-- Show admin comment if validated -->
-                    <div v-if="payment.commentaire_admin" class="text-xs text-green-600 mt-1 italic">
+                    <div v-if="payment.commentaire_admin" class="text-xs green-color mt-1 italic">
                       Admin: "{{ payment.commentaire_admin }}"
                     </div>
                   </div>
                 </div>
                 <div class="text-right">
                   <div class="text-lg font-bold text-gray-900">{{ formatCurrency(payment.montant) }}</div>
-                  <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 text-green-700 rounded-full text-xs font-medium">
+                  <span v-if="payment.valide === 'valid'" class="inline-flex items-center gap-1 px-2 py-1 bg-green-100 green-color rounded-full text-xs font-medium">
                     <CheckCircle2Icon class="h-3 w-3" />
                     Validated
                   </span>
@@ -1157,7 +1156,7 @@
                     <Clock class="h-3 w-3" />
                     Pending
                   </span>
-                  <span v-else-if="payment.valide === 'rejected'" class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 text-red-700 rounded-full text-xs font-medium">
+                  <span v-else-if="payment.valide === 'rejected'" class="inline-flex items-center gap-1 px-2 py-1 bg-red-100 error-color rounded-full text-xs font-medium">
                     <XCircle class="h-3 w-3" />
                     Rejected
                   </span>
@@ -1168,7 +1167,7 @@
               <div class="mt-3 flex flex-wrap gap-2">
                 <button 
                   @click="viewProofImage(payment.preuve_url)"
-                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-gray-100 text-gray-700 rounded-lg text-sm hover:bg-gray-200 transition-colors"
+                  class="submit-btn h-8 text-xs"
                 >
                   <ImageIcon class="h-4 w-4" />
                   View Proof
@@ -1177,7 +1176,7 @@
                 <button 
                   v-if="payment.valide !== 'valid'"
                   @click="openValidateModal(payment, 'additional')"
-                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-green-100 text-green-700 rounded-lg text-sm hover:bg-green-200 transition-colors"
+                  class="btn-degrade-orange h-8 text-xs"
                 >
                   <Check class="h-4 w-4" />
                   Validate
@@ -1186,7 +1185,7 @@
                 <button 
                   v-if="payment.valide !== 'valid' && payment.valide !== 'rejected'"
                   @click="openRejectModal(payment, 'additional')"
-                  class="inline-flex items-center gap-2 px-3 py-1.5 bg-red-100 text-red-700 rounded-lg text-sm hover:bg-red-200 transition-colors"
+                  class="btn-deconnexion h-8 text-xs"
                 >
                   <XCircle class="h-4 w-4" />
                   Reject
@@ -1194,7 +1193,7 @@
               </div>
               <!-- Show rejection reason if rejected -->
               <div v-if="payment.valide === 'rejected' && payment.rejection_reason" class="mt-3 p-3 bg-red-50 rounded-lg border border-red-200">
-                <p class="text-sm text-red-700"><strong>Rejection reason:</strong> {{ payment.rejection_reason }}</p>
+                <p class="text-sm error-color"><strong>Rejection reason:</strong> {{ payment.rejection_reason }}</p>
               </div>
             </div>
 
@@ -1210,7 +1209,7 @@
           <div class="mt-6 flex justify-end">
             <button 
               @click="closePaymentProofModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="btn-gray"
             >
               Close
             </button>
@@ -1224,9 +1223,7 @@
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] overflow-hidden" @click.stop>
         <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <h3 class="text-lg font-bold text-gray-900">Payment Proof</h3>
-          <button @click="closeProofImageModal" class="p-2 hover:bg-gray-100 rounded-lg">
-            <X class="h-5 w-5 text-gray-500" />
-          </button>
+        <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closeProofImageModal" />
         </div>
         <div class="p-6">
           <div class="bg-gray-50 rounded-xl overflow-auto max-h-[60vh]">
@@ -1244,8 +1241,8 @@
     <!-- Confirmation Modal -->
     <div v-if="showConfirmationModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeConfirmModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="p-6">
-          <div class="flex items-center mb-4">
+        <div class="flex  justify-between m-4">
+          <div class="flex items-center mb-4 ">
             <div :class="['w-12 h-12 rounded-full flex items-center justify-center mr-4', getConfirmationIconClass()]">
               <component :is="getConfirmationIcon()" class="h-6 w-6" />
             </div>
@@ -1254,25 +1251,28 @@
               <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closeConfirmModal" />
+        </div>          
+        <div class="p-6">
           <p class="text-gray-600 mb-6">{{ getConfirmationMessage() }}</p>
           <div v-if="validatePaymentType === 'deposit' && getConfirmationTitle() !== 'Mark as Delivered'">
             <label class="block text-sm font-medium text-gray-700 mb-2">Estimated Delivery Date </label>
             <input
               type="date"
               v-model="estimatedDeliveryDate"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              class="input-style"
             />
           </div>
-          <div class="flex justify-end space-x-3">
+          <div class="flex justify-end space-x-3 mt-4">
             <button 
               @click="closeConfirmModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="btn-gray"
             >
-              Cancel
+              Cancelnnn
             </button>
             <button 
               @click="executeAction"
-              :class="['px-4 py-2 rounded-lg font-medium transition-colors text-white', getConfirmationButtonClass()]"
+              :class="[ getConfirmationButtonClass()]"
             >
               {{ getConfirmationButtonText() }}
             </button>
@@ -1284,16 +1284,17 @@
     <!-- Ready Modal -->
     <div v-if="showReadyModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeReadyModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between">
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-blue-100 rounded-lg">
-              <Settings class="h-5 w-5 text-blue-600" />
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <Settings class="h-5 w-5 primary-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Mark Order as Ready</h3>
               <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closeReadyModal" />
         </div>
         <div class="p-6 space-y-4">
           <div>
@@ -1301,7 +1302,7 @@
             <textarea 
               v-model="readyComment"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              class="input-style"
               placeholder="Enter any relevant comments..."
             ></textarea>
           </div>
@@ -1310,21 +1311,21 @@
             <textarea 
               v-model="inspectionNotes"
               rows="2"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500"
+              class="input-style"
               placeholder="e.g., Product checked, packaging intact..."
             ></textarea>
           </div>
           <div class="flex justify-end space-x-3">
             <button 
               @click="closeReadyModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="flex-1 btn-gray"
             >
               Cancel
             </button>
             <button 
               @click="markOrderReady(selectedOrder.id)"
               :disabled="readyLoading"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              class="flex-1 btn-degrade-orange "
             >
                <span v-if="readyLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
               Mark Ready
@@ -1337,16 +1338,17 @@
     <!-- Delivery Modal -->
     <div v-if="showDeliveryModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeDeliveryModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-100 flex justify-between">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircle2Icon class="h-5 w-5 text-green-600" />
+              <CheckCircle2Icon class="h-5 w-5 green-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Mark Order as Delivered</h3>
               <p class="text-sm text-gray-500">Order #{{ selectedOrder?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closeDeliveryModal" />
         </div>
         <div class="p-6 space-y-4">
           <div>
@@ -1354,7 +1356,7 @@
             <input
               type="date"
               v-model="deliveryDate"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              class="input-style"
               required
             />
           </div>
@@ -1363,21 +1365,21 @@
             <textarea
               v-model="deliveryNotes"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              class="input-style"
               placeholder="Enter delivery notes, receiver name, condition, etc..."
             ></textarea>
           </div>
           <div class="flex justify-end space-x-3">
             <button
               @click="closeDeliveryModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="flex-1 btn-gray"
             >
               Cancel
             </button>
             <button
               @click="markDelivered"
               :disabled="deliveryLoading || !deliveryDate"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center"
+              class="flex-1 submit-btn"
             >
               <span v-if="deliveryLoading" class="animate-spin h-4 w-4 border-2 border-white border-t-transparent rounded-full mr-2"></span>
               Mark Delivered
@@ -1387,20 +1389,19 @@
       </div>
     </div>
 
+
     <!-- Order Details Modal -->
     <div v-if="showOrderModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeOrderModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-4xl max-h-[90vh] overflow-y-auto" @click.stop>
         <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between z-10">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-orange-100 rounded-lg">
-              <FileTextIcon class="h-5 w-5 text-orange-600" />
+              <FileTextIcon class="h-5 w-5 primary-color" />
             </div>
             <h3 class="text-lg font-bold text-gray-900">Order Details</h3>
           </div>
-          <button @click="closeOrderModal" class="p-2 hover:bg-gray-100 rounded-lg">
-            <X class="h-5 w-5 text-gray-500" />
-          </button>
-        </div>
+            <X class="h-7 w-7 text-gray-500 cursor-pointer" @click="closeOrderModal"/>
+        </div>  
 
         <div v-if="selectedOrder" class="p-6 space-y-6">
           <!-- Order Header -->
@@ -1430,7 +1431,7 @@
                 </span>
                 <span :class="[
                   'inline-flex items-center gap-1 px-3 py-1.5 rounded-full text-sm font-medium',
-                  selectedOrder.delivery_method === 'FOB' ? 'bg-blue-100 text-blue-800' : 'bg-green-100 text-green-800'
+                  selectedOrder.delivery_method === 'FOB' ? 'bg-blue-100 blue-color' : 'bg-green-100 green-color'
                 ]">
                   {{ selectedOrder.delivery_method === 'FOB' ? '🚢 CIF' : '🚚 FOB' }}
                 </span>
@@ -1441,7 +1442,7 @@
             <div class="grid grid-cols-3 gap-4 mt-6">
               <div class="bg-white/70 rounded-lg p-3">
                 <div class="text-sm text-gray-600">Total</div>
-                <div class="text-xl font-bold text-orange-600">{{ formatCurrency(selectedOrder.total) }}</div>
+                <div class="text-xl font-bold primary-color">{{ formatCurrency(selectedOrder.total) }}</div>
               </div>
               <div class="bg-white/70 rounded-lg p-3">
                 <div class="text-sm text-gray-600">Quantity</div>
@@ -1449,7 +1450,7 @@
               </div>
               <div class="bg-white/70 rounded-lg p-3">
                 <div class="text-sm text-gray-600">Paid</div>
-                <div class="text-xl font-bold text-green-600">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
+                <div class="text-xl font-bold green-color">{{ formatCurrency(calculateTotalPaid(selectedOrder)) }}</div>
               </div>
             </div>
           </div>
@@ -1458,7 +1459,7 @@
           <div class="grid md:grid-cols-2 gap-6">
             <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
               <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <User class="w-5 h-5 text-orange-500" />
+                <User class="w-5 h-5 primary-color" />
                 Customer Information
               </h4>
               <div class="space-y-3">
@@ -1482,7 +1483,7 @@
 
             <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
               <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-                <Truck class="w-5 h-5 text-orange-500" />
+                <Truck class="w-5 h-5 primary-color" />
                 Delivery Information
               </h4>
               <div class="space-y-3">
@@ -1500,9 +1501,9 @@
                   <span class="text-gray-600">Loading Port:</span>
                   <span class="font-medium text-gray-900">{{ selectedOrder.loading_port }}</span>
                 </div>
-                <div v-if="selectedOrder.tracking_link" class="flex items-center gap-2 text-sm">
+                <div v-if="selectedOrder.tracking_link" class="flex items-center gap-2 text-sm ">
                   <ExternalLink class="w-4 h-4 text-gray-400" />
-                  <a :href="selectedOrder.tracking_link" target="_blank" class="text-blue-600 hover:underline">
+                  <a :href="selectedOrder.tracking_link" target="_blank" class="blue-color hover:underline cursor-pointer">
                     Track Shipment
                   </a>
                 </div>
@@ -1513,7 +1514,7 @@
           <!-- Order Lifecycle Timeline -->
           <div class="bg-white rounded-xl p-6 border border-gray-200 shadow-sm">
             <h4 class="font-semibold text-gray-900 mb-4 flex items-center gap-2">
-              <Clock class="w-5 h-5 text-orange-500" />
+              <Clock class="w-5 h-5 primary-color" />
               Order Lifecycle
             </h4>
             <div class="flex items-center justify-between">
@@ -1525,13 +1526,13 @@
                 <div class="flex flex-col items-center">
                   <div :class="[
                     'w-10 h-10 rounded-full flex items-center justify-center text-lg z-10',
-                    isStageComplete(selectedOrder, stage.key) ? 'bg-green-500 text-white' : 
-                    isStageActive(selectedOrder, stage.key) ? 'bg-orange-500 text-white animate-pulse' : 
+                    isStageComplete(selectedOrder, stage.key) ? 'bg-step-color text-white' : 
+                    isStageActive(selectedOrder, stage.key) ? 'bg-orange animate-pulse' : 
                     'bg-gray-200 text-gray-500'
                   ]">
                     {{ stage.emoji }}
                   </div>
-                  <div class="text-xs text-center mt-2 font-medium" :class="isStageComplete(selectedOrder, stage.key) ? 'text-green-600' : 'text-gray-500'">
+                  <div class="text-xs text-center mt-2 font-medium" :class="isStageComplete(selectedOrder, stage.key) ? 'green-color' : 'text-gray-500'">
                     {{ stage.label }}
                   </div>
                 </div>
@@ -1548,10 +1549,18 @@
 
           <!-- Action Buttons -->
           <div class="flex flex-wrap gap-3 justify-end pt-4 border-t border-gray-100">
+             <button 
+              v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)"
+              @click="openCancelModal(selectedOrder)"
+              class="btn-deconnexion inline-flex items-center gap-2"
+            >
+              <X class="w-4 h-4" />
+              Cancel Order
+            </button>
             <button 
               v-if="selectedOrder.statut === 'en_attente'"
               @click="openDocumentModal(selectedOrder, 'proforma')"
-              class="px-4 py-2 bg-orange-100 text-orange-700 rounded-lg font-medium hover:bg-orange-200 transition-colors inline-flex items-center gap-2"
+              class="submit-btn inline-flex items-center gap-2"
             >
               <FileTextIcon class="w-4 h-4" />
               Send Proforma
@@ -1559,7 +1568,7 @@
             <button 
               v-if="selectedOrder.statut === 'en_attente'"
               @click="showConfirmModal('confirm', selectedOrder)"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center gap-2"
+              class="btn-degrade-orange inline-flex items-center gap-2"
             >
               <Check class="w-4 h-4" />
               Confirm Order
@@ -1567,7 +1576,7 @@
             <button
               v-if="selectedOrder.statut === 'confirmee' && !selectedOrder.ready_for_shipping"
               @click="showConfirmModal('ready', selectedOrder)"
-              class="px-4 py-2 bg-blue-600 text-white rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center gap-2"
+              class="btn-degrade-orange inline-flex items-center gap-2"
             >
               <Settings class="w-4 h-4" />
               Mark Ready
@@ -1575,7 +1584,7 @@
             <button
               v-if="selectedOrder.statut === 'confirmee' && selectedOrder.ready_for_shipping"
               @click="showConfirmModal('ship', selectedOrder)"
-              class="px-4 py-2 bg-purple-600 text-white rounded-lg font-medium hover:bg-purple-700 transition-colors inline-flex items-center gap-2"
+              class="submit-btn inline-flex items-center gap-2"
             >
               <Truck class="w-4 h-4" />
               Start Shipping
@@ -1583,19 +1592,12 @@
             <button 
               v-if="selectedOrder.statut === 'en_livraison'"
               @click="showConfirmModal('deliver', selectedOrder)"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center gap-2"
+              class="submit-btn inline-flex items-center gap-2"
             >
               <CheckCircle2Icon class="w-4 h-4" />
               Mark Delivered
             </button>
-            <button 
-              v-if="['en_attente', 'confirmee'].includes(selectedOrder.statut)"
-              @click="openCancelModal(selectedOrder)"
-              class="px-4 py-2 bg-red-100 text-red-700 rounded-lg font-medium hover:bg-red-200 transition-colors inline-flex items-center gap-2"
-            >
-              <X class="w-4 h-4" />
-              Cancel Order
-            </button>
+           
           </div>
         </div>
       </div>
@@ -1630,16 +1632,14 @@
         <div class="sticky top-0 bg-white border-b border-gray-100 px-6 py-4 flex items-center justify-between">
           <div class="flex items-center gap-3">
             <div class="p-2 bg-orange-100 rounded-lg">
-              <Upload class="h-5 w-5 text-orange-600" />
+              <Upload class="h-5 w-5 primary-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Add Proof of Payment</h3>
               <p class="text-sm text-gray-500">Order #{{ selectedOrderForPayment?.numero_commande }}</p>
             </div>
           </div>
-          <button @click="closeUploadPaymentModal" class="p-2 hover:bg-gray-100 rounded-lg">
-            <X class="h-5 w-5 text-gray-500" />
-          </button>
+            <X class="h-7 w-7 text-gray-500 cursor-pointer" @click="closeUploadPaymentModal"/>
         </div>
 
         <div class="p-6 overflow-y-auto max-h-[calc(90vh-80px)]">
@@ -1647,20 +1647,20 @@
           <div class="bg-gradient-to-br from-orange-50 to-orange-100 rounded-xl p-4 mb-6 border border-orange-200">
             <div class="grid grid-cols-2 gap-4">
               <div>
-                <span class="text-xs text-orange-600 font-medium">Total Order</span>
+                <span class="text-xs primary-color font-medium">Total Order</span>
                 <div class="text-lg font-bold text-gray-900">{{ formatCurrency(selectedOrderForPayment?.total || 0) }}</div>
               </div>
               <div>
-                <span class="text-xs text-orange-600 font-medium">Amount Due</span>
+                <span class="text-xs primary-color font-medium">Amount Due</span>
                 <div class="text-lg font-bold text-orange-700">{{ formatCurrency(getAmountDue(selectedOrderForPayment)) }}</div>
               </div>
               <div>
-                <span class="text-xs text-green-600 font-medium">Already Paid</span>
-                <div class="text-lg font-bold text-green-700">{{ formatCurrency(calculateTotalPaid(selectedOrderForPayment)) }}</div>
+                <span class="text-xs green-color font-medium">Already Paid</span>
+                <div class="text-lg font-bold green-color">{{ formatCurrency(calculateTotalPaid(selectedOrderForPayment)) }}</div>
               </div>
               <div>
-                <span class="text-xs text-red-600 font-medium">Remaining</span>
-                <div class="text-lg font-bold text-red-700">{{ formatCurrency(calculateRemaining(selectedOrderForPayment)) }}</div>
+                <span class="text-xs error-color font-medium">Remaining</span>
+                <div class="text-lg font-bold error-color">{{ formatCurrency(calculateRemaining(selectedOrderForPayment)) }}</div>
               </div>
             </div>
             <div class="mt-3">
@@ -1686,8 +1686,8 @@
                 :class="[
                   'p-3 rounded-lg border-2 text-sm font-medium transition-all',
                   paymentType === 'deposit' 
-                    ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                    ? 'btn-outline flex-col items-center justify-center' 
+                    : 'btn-gray flex-col items-center justify-center',
                 ]"
                 :disabled="selectedOrderForPayment?.deposit_validated === 'valid'"
               >
@@ -1699,8 +1699,8 @@
                 :class="[
                   'p-3 rounded-lg border-2 text-sm font-medium transition-all',
                   paymentType === 'additional' 
-                    ? 'border-orange-500 bg-orange-50 text-orange-700' 
-                    : 'border-gray-200 hover:border-gray-300 text-gray-700'
+                    ? 'btn-outline-with-background flex-col items-center justify-center' 
+                    : 'btn-gray flex-col items-center justify-center',
                 ]"
               >
                 <CreditCard class="w-5 h-5 mx-auto mb-1" />
@@ -1713,14 +1713,14 @@
             <!-- Payment Amount -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                Payment Amount <span class="text-red-500">*</span>
+                Payment Amount <span class="error-color">*</span>
               </label>
               <div class="relative">
                 <span class="absolute left-3 top-1/2 -translate-y-1/2 text-gray-500">$</span>
                 <input
                   type="number"
                   v-model="uploadPaymentAmount"
-                  class="w-full pl-8 pr-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent"
+                  class="input-style pl-20"
                   :placeholder="paymentType === 'deposit' ? 'Deposit amount' : 'Enter amount'"
                   :max="getAmountDue(selectedOrderForPayment)"
                   min="1"
@@ -1736,7 +1736,7 @@
             <!-- File Upload -->
             <div>
               <label class="block text-sm font-medium text-gray-700 mb-2">
-                Proof of Payment <span class="text-red-500">*</span>
+                Proof of Payment <span class="error-color">*</span>
               </label>
               <div 
                 @click="$refs.paymentFileInput.click()"
@@ -1761,7 +1761,7 @@
                   <p class="text-xs text-gray-400 mt-1">JPG, PNG or PDF (Max 10MB)</p>
                 </div>
                 <div v-else class="flex items-center justify-center gap-3">
-                  <FileText class="w-8 h-8 text-orange-500" />
+                  <FileText class="w-8 h-8 primary-color" />
                   <div class="text-left">
                     <p class="text-sm font-medium text-gray-900">{{ uploadPaymentFile.name }}</p>
                     <p class="text-xs text-gray-500">{{ formatFileSize(uploadPaymentFile.size) }}</p>
@@ -1769,9 +1769,9 @@
                   <button 
                     type="button"
                     @click.stop="uploadPaymentFile = null"
-                    class="p-1 hover:bg-red-100 rounded-full"
+                    class="btn-deconnexion rounded-full ml-auto h-10 w-10"
                   >
-                    <X class="w-4 h-4 text-red-500" />
+                    <X class="w-4 h-4" />
                   </button>
                 </div>
               </div>
@@ -1780,11 +1780,11 @@
               <div v-if="uploadingPayment" class="mt-3">
                 <div class="flex justify-between text-xs mb-1">
                   <span class="text-gray-600">Uploading...</span>
-                  <span class="font-medium text-orange-600">{{ uploadPaymentProgress }}%</span>
+                  <span class="font-medium primary-color">{{ uploadPaymentProgress }}%</span>
                 </div>
                 <div class="w-full bg-gray-200 rounded-full h-2">
                   <div 
-                    class="bg-gradient-to-r from-orange-500 to-orange-600 h-2 rounded-full transition-all duration-300"
+                    class="bg-orange h-2 rounded-full transition-all duration-300"
                     :style="{ width: uploadPaymentProgress + '%' }"
                   ></div>
                 </div>
@@ -1797,7 +1797,7 @@
               <textarea
                 v-model="uploadPaymentComment"
                 rows="3"
-                class="w-full px-4 py-2.5 border border-gray-300 rounded-lg focus:ring-2 focus:ring-orange-500 focus:border-transparent resize-none"
+                class="input-style"
                 placeholder="Add a note about this payment..."
               ></textarea>
             </div>
@@ -1807,14 +1807,14 @@
               <button 
                 type="button"
                 @click="closeUploadPaymentModal"
-                class="flex-1 px-4 py-2.5 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+                class="flex-1 btn-gray"
                 :disabled="uploadingPayment"
               >
                 Cancel
               </button>
               <button 
                 type="submit"
-                class="flex-1 px-4 py-2.5 bg-gradient-to-r from-orange-500 to-orange-600 text-white rounded-lg font-medium hover:from-orange-600 hover:to-orange-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                class="flex-1 btn-degrade-orange"
                 :disabled="uploadingPayment || !uploadPaymentFile || !uploadPaymentAmount"
               >
                 <Loader2 v-if="uploadingPayment" class="w-4 h-4 animate-spin" />
@@ -1829,16 +1829,17 @@
     <!-- Validate Payment Modal -->
     <div v-if="showValidateModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeValidateModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-100 justify-between flex" >
           <div class="flex items-center gap-3">
-            <div class="p-2 bg-green-100 rounded-lg">
-              <CheckCircle2Icon class="h-5 w-5 text-green-600" />
+            <div class="p-2 bg-orange-100 rounded-lg">
+              <CheckCircle2Icon class="h-5 w-5 primary-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Validate Payment</h3>
               <p class="text-sm text-gray-500">Order #{{ currentValidateItem?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closeValidateModal" />
         </div>
         <div class="p-6 space-y-4">
           <!-- Comment Input -->
@@ -1847,7 +1848,7 @@
             <textarea
               v-model="validationComment"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-transparent"
+              class="input-style"
               placeholder="Enter any notes for the client..."
             ></textarea>
           </div>
@@ -1858,21 +1859,21 @@
             <input
               type="date"
               v-model="estimatedDeliveryDate"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500"
+              class="input-style"
             />
           </div>
 
           <div class="flex justify-end gap-3 pt-4">
             <button
               @click="closeValidateModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="btn-gray flex-1"
             >
               Cancel
             </button>
             <button
               @click="confirmValidatePayment"
               :disabled="validateLoading"
-              class="px-4 py-2 bg-green-600 text-white rounded-lg font-medium hover:bg-green-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              class="btn-degrade-orange flex-1"
             >
               <Loader2 v-if="validateLoading" class="w-4 h-4 animate-spin" />
               Validate
@@ -1885,16 +1886,17 @@
     <!-- Reject Payment Modal -->
     <div v-if="showRejectModal" class="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50 p-4" @click="closeRejectModal">
       <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md" @click.stop>
-        <div class="px-6 py-4 border-b border-gray-100">
+        <div class="px-6 py-4 border-b border-gray-100 justify-between flex" >
           <div class="flex items-center gap-3">
             <div class="p-2 bg-red-100 rounded-lg">
-              <XCircle class="h-5 w-5 text-red-600" />
+              <XCircle class="h-5 w-5 error-color" />
             </div>
             <div>
               <h3 class="text-lg font-bold text-gray-900">Reject Payment</h3>
               <p class="text-sm text-gray-500">Order #{{ currentRejectItem?.numero_commande }}</p>
             </div>
           </div>
+          <X class="h-7 w-7 cursor-pointer text-gray-500" @click="closeRejectModal" />
         </div>
         <div class="p-6 space-y-4">
           <p class="text-gray-600">Please select a reason for rejection:</p>
@@ -1910,7 +1912,7 @@
                 type="radio" 
                 v-model="selectedRejectionReason" 
                 :value="reason.value"
-                class="w-4 h-4 text-red-600 focus:ring-red-500"
+                class="w-4 h-4 error-color focus:ring-red-500"
               >
               <div>
                 <span class="text-sm font-medium text-gray-900">{{ reason.label }}</span>
@@ -1924,7 +1926,7 @@
             <textarea 
               v-model="customRejectionReason"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              class="input-style"
               placeholder="Enter the rejection reason..."
             ></textarea>
           </div>
@@ -1934,7 +1936,7 @@
             <textarea
               v-model="rejectionComment"
               rows="3"
-              class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-red-500 focus:border-transparent"
+              class="input-style"
               placeholder="Enter any notes for the client..."
             ></textarea>
           </div>
@@ -1942,14 +1944,14 @@
           <div class="flex justify-end gap-3 pt-4">
             <button 
               @click="closeRejectModal"
-              class="px-4 py-2 bg-gray-100 text-gray-700 rounded-lg font-medium hover:bg-gray-200 transition-colors"
+              class="btn-gray flex-1"
             >
               Cancel
             </button>
             <button 
               @click="confirmRejectPayment"
               :disabled="!selectedRejectionReason || (selectedRejectionReason === 'other' && !customRejectionReason) || rejectLoading"
-              class="px-4 py-2 bg-red-600 text-white rounded-lg font-medium hover:bg-red-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
+              class="btn-degrade-orange flex-1"
             >
               <Loader2 v-if="rejectLoading" class="w-4 h-4 animate-spin" />
               Reject Payment
@@ -1968,6 +1970,7 @@ import axios from 'axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
+import Navbar from '../boutiques/Navbar.vue'
 import {
   Home as HomeIcon,
   Download as DownloadIcon,
@@ -1978,12 +1981,10 @@ import {
   RefreshCcw as RefreshIcon,
   Clock,
   CheckCircle2 as CheckCircle2Icon,
-  DollarSign,
   Search,
   Calendar,
   User,
   PhoneCall,
-  Building,
   Truck,
   MapPin,
   Check,
@@ -2183,18 +2184,18 @@ const statsCards = computed(() => [
     key: 'total',
     filterValue: 'all',
     label: 'Total Orders',
-    value: stats.value.total_orders,
+    value: stats.value.total_orders || 0,
     icon: ShoppingCartIcon,
     bgColor: 'bg-gradient-to-br from-orange-200 to-orange-300',
     emoji: '📊',
-    changeColor: 'text-orange-600',
+    changeColor: 'primary-color',
     description: 'All time'
   },
   {
     key: 'pending',
     filterValue: 'en_attente',
     label: 'Pending',
-    value: stats.value.pending_orders,
+    value: stats.value.pending_orders || 0,
     icon: Clock,
     bgColor: 'bg-gradient-to-br from-yellow-200 to-yellow-300',
     emoji: '⏳',
@@ -2216,7 +2217,7 @@ const statsCards = computed(() => [
     key: 'confirmed',
     filterValue: 'confirmee',
     label: 'In Preparation',
-    value: stats.value.confirmed_orders,
+    value: stats.value.confirmed_orders || 0,
     icon: Settings,
     bgColor: 'bg-gradient-to-br from-green-200 to-green-300',
     emoji: '⚙️',
@@ -2227,7 +2228,7 @@ const statsCards = computed(() => [
     key: 'ready',
     filterValue: 'ready',
     label: 'Ready',
-    value: stats.value.ready_orders,
+    value: stats.value.ready_orders || 0,
     icon: PackageCheck,
     bgColor: 'bg-gradient-to-br from-blue-200 to-blue-300',
     emoji: '✅',
@@ -2238,7 +2239,7 @@ const statsCards = computed(() => [
     key: 'shipping',
     filterValue: 'en_livraison',
     label: 'Shipping',
-    value: stats.value.shipping_orders,
+    value: stats.value.shipping_orders || 0,
     icon: Truck,
     bgColor: 'bg-gradient-to-br from-purple-200 to-purple-300',
     emoji: '🚚',
@@ -2249,7 +2250,7 @@ const statsCards = computed(() => [
     key: 'completed',
     filterValue: 'livree',
     label: 'Completed',
-    value: stats.value.completed_orders,
+    value: stats.value.completed_orders || 0,
     icon: CheckCircle,
     bgColor: 'bg-gradient-to-br from-emerald-200 to-emerald-300',
     emoji: '🎉',
@@ -2466,9 +2467,9 @@ const getPaymentStatusLabel = (order) => {
 
 const getPaymentStatusClass = (order) => {
   const percentage = getPaymentPercentage(order)
-  if (percentage === 0) return 'text-red-600'
-  if (percentage < 100) return 'text-yellow-600'
-  return 'text-green-600'
+  if (percentage === 0) return 'error-color'
+  if (percentage < 100) return 'primary-color'
+  return 'green-color'
 }
 
 // Get Amount Due for Upload Payment Modal
@@ -3146,11 +3147,11 @@ const getConfirmationMessage = () => ({
 }[confirmationAction.value] || '')
 
 const getConfirmationIconClass = () => ({
-  confirm: 'bg-green-100 text-green-600',
-  ready: 'bg-blue-100 text-blue-600',
-  ship: 'bg-purple-100 text-purple-600',
-  deliver: 'bg-emerald-100 text-emerald-600',
-  cancel: 'bg-red-100 text-red-600'
+  confirm: 'bg-orange-100 primary-color',
+  ready: 'bg-orange-100 primary-color',
+  ship: 'bg-green-100 green-color',
+  deliver: 'bg-orange-100 primary-color',
+  cancel: 'bg-red-100 error-color'
 }[confirmationAction.value] || 'bg-gray-100 text-gray-600')
 
 const getConfirmationIcon = () => ({
@@ -3162,11 +3163,11 @@ const getConfirmationIcon = () => ({
 }[confirmationAction.value] || Check)
 
 const getConfirmationButtonClass = () => ({
-  confirm: 'bg-green-600 hover:bg-green-700',
-  ready: 'bg-blue-600 hover:bg-blue-700',
-  ship: 'bg-purple-600 hover:bg-purple-700',
-  deliver: 'bg-emerald-600 hover:bg-emerald-700',
-  cancel: 'bg-red-600 hover:bg-red-700'
+  confirm: 'btn-degrade-orange',
+  ready: 'btn-degrade-orange',
+  ship: 'submit-btn',
+  deliver: 'btn-outline',
+  cancel: 'btn-deconnexion'
 }[confirmationAction.value] || 'bg-gray-600')
 
 const getConfirmationButtonText = () => ({

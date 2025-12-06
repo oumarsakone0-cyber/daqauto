@@ -220,13 +220,12 @@ button:focus-visible {
     background-color: white;
     border: 1px solid #fe7900;
     font-weight: 500;
-    font-size: 12px;
   }
   .btn-outline-with-background{
     color: white;
     background-color: #fe7900;
     font-weight: 500;
-    font-size: 12px;
+    /* font-size: 12px; */
   }
   .btn-outline-with-background:hover{
     color: #fe7900;
