@@ -1630,10 +1630,10 @@ const handleChatClick = async (order) => {
       rating: 0
     }
 
-    console.log('📞 Ouverture du chat avec le vendeur:', product)
+    console.log('📞 Ouverture du chat avec le vendeur:', product, 'Commande:', order.id)
 
-    // Utiliser setSupplier pour créer/ouvrir la conversation avec le vendeur
-    await chatStore.setSupplier(product)
+    // Utiliser setSupplier pour créer/ouvrir la conversation avec le vendeur et passer le numéro de commande
+    await chatStore.setSupplier(product, order.id)
 
     // Ouvrir le chat en fonction de la taille de l'écran
     const isMobile = window.innerWidth <= 768

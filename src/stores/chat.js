@@ -26,24 +26,70 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   // 🔹 Crée un message "carte produit" pour affichage spécial
-  const sendProductIntroMessage = (product) => {
-    if (!product) return
+  const sendProductIntroMessage = async (product, orderNumber = null) => {
+    if (!product || !activeConversationId.value) return
+
+    // Créer le message avec ou sans numéro de commande
+    const messageText = orderNumber
+      ? `Je suis intéressé par: ${product.name} (Commande #${orderNumber})`
+      : `Je suis intéressé par: ${product.name}`
 
     const productMessage = {
       id: Date.now(),
-      message: JSON.stringify({
+      message: messageText,
+      text: messageText,
+      sender: 'user',
+      message_type: 'product',
+      timestamp: new Date(),
+      product: {
+        id: product.id,
         name: product.name,
         price: product.unit_price,
         image: product.primary_image,
         shop: product.boutique_name,
         rating: product.rating
-      }),
-      sender: 'bot',
-      timestamp: new Date(),
-      type: 'product'
+      },
+      order_number: orderNumber
     }
 
+    // Ajouter localement
+    chatMessages.value.push(productMessage)
     addMessageToConversation(activeConversationId.value, productMessage)
+
+    // Envoyer au backend
+    try {
+      const payload = {
+        session_id: activeConversationId.value,
+        message: messageText,
+        sender: 'user',
+        message_type: 'product',
+        product_id: product.id,
+        product_name: product.name,
+        product_price: product.unit_price,
+        product_image: product.primary_image
+      }
+
+      // Ajouter le numéro de commande si présent
+      if (orderNumber) {
+        payload.order_number = orderNumber
+      }
+
+      const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=send_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      const data = await response.json()
+      if (data.success && data.message) {
+        const messageIndex = chatMessages.value.findIndex(m => m.id === productMessage.id)
+        if (messageIndex !== -1) {
+          chatMessages.value[messageIndex].id = data.message.id
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erreur envoi produit intro:", error)
+    }
   }
 
   // 🔹 Ajoute un message à la bonne conversation
@@ -63,7 +109,8 @@ export const useChatStore = defineStore('chat', () => {
       timestamp: new Date(msg.timestamp || msg.created_at),
       type: msg.type || msg.message_type || 'text',
       message_type: msg.message_type || msg.type || 'text',
-      product: msg.product || null
+      product: msg.product || null,
+      order_number: msg.order_number || null
     })
 
     // Met à jour dernier message
@@ -111,7 +158,7 @@ export const useChatStore = defineStore('chat', () => {
 
     // Sinon, créer une nouvelle session
     const payload = {
-      supplier_id: 10,
+      supplier_id: product.boutique_id || product.supplier_id || 10,
       supplier_name: product.boutique_name,
       user_id: user.id,
       user_email: user.email || user.contact,
@@ -208,7 +255,8 @@ export const useChatStore = defineStore('chat', () => {
             timestamp: new Date(msg.timestamp || msg.created_at),
             type: msg.message_type || (msg.product?.id ? "product" : "text"),
             message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
-            product: msg.product || null
+            product: msg.product || null,
+            order_number: msg.order_number || null
           }))
         }
       })
@@ -238,7 +286,7 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   // 🔹 Définit le fournisseur et envoie le message produit
-  const setSupplier = async (product) => {
+  const setSupplier = async (product, orderNumber = null) => {
     const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
     if (!userRaw) return console.error("❌ Aucun utilisateur connecté")
 
@@ -261,7 +309,7 @@ export const useChatStore = defineStore('chat', () => {
         status: 'En ligne'
       }
 
-      sendProductIntroMessage(product)
+      sendProductIntroMessage(product, orderNumber)
     } catch (error) {
       console.error('❌ setSupplier failed:', error)
     }
@@ -345,7 +393,8 @@ export const useChatStore = defineStore('chat', () => {
           timestamp: new Date(msg.timestamp || msg.created_at),
           type: msg.message_type || (msg.product?.id ? "product" : "text"),
           message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
-          product: msg.product || null
+          product: msg.product || null,
+          order_number: msg.order_number || null
         }))
       })
     } else if (serverMessagesCount !== localMessagesCount) {
@@ -357,7 +406,8 @@ export const useChatStore = defineStore('chat', () => {
         timestamp: new Date(msg.timestamp || msg.created_at),
         type: msg.message_type || (msg.product?.id ? "product" : "text"),
         message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
-        product: msg.product || null
+        product: msg.product || null,
+        order_number: msg.order_number || null
       }))
 
       // Mettre à jour le dernier message

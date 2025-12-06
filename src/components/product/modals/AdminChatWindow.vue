@@ -83,25 +83,42 @@
 
         <!-- Messages -->
         <div class="messages-container" ref="messagesContainer">
-          <div v-for="message in chatStore.chatMessages" :key="message.id" :class="['message-wrapper', message.sender]">
+          <div
+            v-for="message in chatStore.chatMessages"
+            :key="message.id"
+            :class="['message-wrapper', message.sender === 'supplier' ? 'supplier' : 'user']"
+            :data-sender="message.sender"
+            :data-debug="`sender: ${message.sender}, class: ${message.sender === 'supplier' ? 'supplier' : 'user'}`"
+          >
 
             <!-- Message produit -->
-            <div v-if="message.type === 'product'" class="product-message-card">
-              <div class="product-image">
-                <img :src="message.product?.image || JSON.parse(message.message).image" alt="Product">
+            <div v-if="message.type === 'product' || message.message_type === 'product'" class="product-message-card">
+              <!-- Numéro de commande si présent -->
+              <div v-if="message.order_number" class="order-badge">
+                📦 Commande #{{ message.order_number }}
               </div>
-              <div class="product-details">
-                <h4>{{ message.product?.name || JSON.parse(message.message).name }}</h4>
-                <p class="product-price">{{ formatPrice(message.product?.price || JSON.parse(message.message).price) }}</p>
-                <div class="product-meta">
-                  <span>⭐ {{ message.product?.rating || JSON.parse(message.message).rating || 'N/A' }}</span>
-                  <span>{{ message.product?.shop || JSON.parse(message.message).shop }}</span>
+              <div class="product-content">
+                <div class="product-image">
+                  <img :src="message.product?.image" alt="Product">
+                </div>
+                <div class="product-details">
+                  <h4>{{ message.product?.name }}</h4>
+                  <p class="product-price">{{ formatPrice(message.product?.price) }}</p>
+                  <div class="product-meta">
+                    <span>⭐ {{ message.product?.rating || 'N/A' }}</span>
+                    <span>{{ message.product?.shop }}</span>
+                  </div>
                 </div>
               </div>
+              <!-- Message texte associé au produit -->
+              <div v-if="message.message || message.text" class="product-message-text">
+                💬 {{ message.message || message.text }}
+              </div>
+              <span class="message-timestamp">{{ formatTime(message.timestamp) }}</span>
             </div>
 
             <!-- Message image -->
-            <div v-else-if="message.message_type === 'image'" class="image-wrapper">
+            <div v-else-if="message.message_type === 'image' || message.type === 'image'" class="image-wrapper">
               <img
                 :src="message.message"
                 alt="Image partagée"
@@ -182,14 +199,22 @@ const unreadCount = computed(() => {
   return chatStore.unreadCount
 })
 
+// Debug: Log les messages pour voir leur structure
+watch(() => chatStore.chatMessages, (messages) => {
+  console.log('🔍 Messages dans le chat admin:', messages)
+  messages.forEach(msg => {
+    console.log(`Message ${msg.id}: sender=${msg.sender}, type=${msg.message_type}`)
+  })
+}, { immediate: true, deep: true })
+
 // Récupérer l'ID du fournisseur depuis localStorage
 const initSupplier = () => {
   const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
   if (userRaw) {
     try {
       const user = JSON.parse(userRaw)
-      supplierId.value = user.id
-      return user.id
+      supplierId.value = user.boutiques?.[0]?.id
+      return supplierId.value
     } catch (error) {
       console.error('❌ Erreur parsing user:', error)
     }
@@ -633,13 +658,26 @@ onUnmounted(() => {
 /* Product Message */
 .product-message-card {
   max-width: 60%;
-  display: flex;
-  gap: 12px;
   background: #fff;
   border: 1px solid #e5e7eb;
   border-radius: 12px;
-  padding: 12px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+  overflow: hidden;
+}
+
+.order-badge {
+  background: #fff7ed;
+  border-bottom: 1px solid #fed7aa;
+  padding: 8px 12px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #c2410c;
+}
+
+.product-content {
+  display: flex;
+  gap: 12px;
+  padding: 12px;
 }
 
 .product-image img {
@@ -676,6 +714,15 @@ onUnmounted(() => {
   gap: 12px;
   font-size: 12px;
   color: #6b7280;
+}
+
+.product-message-text {
+  padding: 10px 12px;
+  background: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  font-size: 13px;
+  color: #374151;
+  line-height: 1.5;
 }
 
 /* Image Message */

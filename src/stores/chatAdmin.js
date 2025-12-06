@@ -24,6 +24,16 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
 
       console.log('📥 Sessions reçues pour le vendeur:', data)
 
+      // Debug: Log les messages bruts du backend
+      if (data.sessions && data.sessions.length > 0) {
+        data.sessions.forEach(session => {
+          console.log(`Session ${session.id}:`)
+          session.messages?.forEach(msg => {
+            console.log(`  Message ${msg.id}: sender="${msg.sender}", type="${msg.message_type}", text="${msg.text || msg.message}"`)
+          })
+        })
+      }
+
       if (!data.success || !Array.isArray(data.sessions) || data.sessions.length === 0) {
         conversations.value = []
         return
@@ -55,15 +65,28 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
           lastMessage: lastMsgText,
           lastMessageTime: lastMsg?.timestamp || session.created_at,
           unread: session.unread_count || 0,
-          messages: (session.messages || []).map(msg => ({
-            id: msg.id,
-            message: msg.text || msg.message,
-            sender: msg.sender,
-            timestamp: new Date(msg.timestamp || msg.created_at),
-            type: msg.message_type || (msg.product?.id ? "product" : "text"),
-            message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
-            product: msg.product || null
-          }))
+          messages: (session.messages || []).map(msg => {
+            const messageType = msg.message_type || (msg.product?.id ? "product" : "text")
+            // Si sender est vide ou "supplier", c'est le supplier, sinon c'est user
+            let sender = 'user'
+            if (msg.sender === 'supplier' || msg.sender === '') {
+              sender = 'supplier'
+            } else if (msg.sender === 'user') {
+              sender = 'user'
+            }
+
+            return {
+              id: msg.id,
+              message: msg.message || msg.text,
+              text: msg.text || msg.message,
+              sender: sender,
+              timestamp: new Date(msg.timestamp || msg.created_at),
+              type: messageType,
+              message_type: messageType,
+              product: msg.product || null,
+              order_number: msg.order_number || null
+            }
+          })
         }
       })
 
@@ -196,14 +219,26 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
     const exists = conversation.messages.some(m => m.id === msg.id)
     if (exists) return
 
+    const messageType = msg.message_type || msg.type || 'text'
+
+    // Si sender est vide ou "supplier", c'est le supplier, sinon c'est user
+    let sender = 'user'
+    if (msg.sender === 'supplier' || msg.sender === '') {
+      sender = 'supplier'
+    } else if (msg.sender === 'user') {
+      sender = 'user'
+    }
+
     conversation.messages.push({
       id: msg.id,
-      message: msg.text || msg.message,
-      sender: msg.sender,
+      message: msg.message || msg.text,
+      text: msg.text || msg.message,
+      sender: sender,
       timestamp: new Date(msg.timestamp || msg.created_at),
-      type: msg.type || msg.message_type || 'text',
-      message_type: msg.message_type || msg.type || 'text',
-      product: msg.product || null
+      type: messageType,
+      message_type: messageType,
+      product: msg.product || null,
+      order_number: msg.order_number || null
     })
 
     // Met à jour dernier message
@@ -252,25 +287,52 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
             ? serverSession.messages[serverSession.messages.length - 1].timestamp
             : serverSession.created_at,
           unread: serverSession.unread_count || 0,
-          messages: (serverSession.messages || []).map(msg => ({
-            id: msg.id,
-            message: msg.message,
-            sender: msg.sender,
-            timestamp: new Date(msg.timestamp || msg.created_at),
-            type: msg.product?.id ? "product" : "text",
-            product: msg.product || null
-          }))
+          messages: (serverSession.messages || []).map(msg => {
+            const messageType = msg.message_type || (msg.product?.id ? "product" : "text")
+            // Si sender est vide ou "supplier", c'est le supplier, sinon c'est user
+            let sender = 'user'
+            if (msg.sender === 'supplier' || msg.sender === '') {
+              sender = 'supplier'
+            } else if (msg.sender === 'user') {
+              sender = 'user'
+            }
+
+            return {
+              id: msg.id,
+              message: msg.message || msg.text,
+              text: msg.text || msg.message,
+              sender: sender,
+              timestamp: new Date(msg.timestamp || msg.created_at),
+              type: messageType,
+              message_type: messageType,
+              product: msg.product || null,
+              order_number: msg.order_number || null
+            }
+          })
         })
       } else if (serverMessagesCount !== localMessagesCount) {
         // Mise à jour des messages
-        conversation.messages = (serverSession.messages || []).map(msg => ({
-          id: msg.id,
-          message: msg.message,
-          sender: msg.sender,
-          timestamp: new Date(msg.timestamp || msg.created_at),
-          type: msg.product?.id ? "product" : "text",
-          product: msg.product || null
-        }))
+        conversation.messages = (serverSession.messages || []).map(msg => {
+          const messageType = msg.message_type || (msg.product?.id ? "product" : "text")
+          // Si sender est vide ou "supplier", c'est le supplier, sinon c'est user
+          let sender = 'user'
+          if (msg.sender === 'supplier' || msg.sender === '') {
+            sender = 'supplier'
+          } else if (msg.sender === 'user') {
+            sender = 'user'
+          }
+
+          return {
+            id: msg.id,
+            message: msg.message || msg.text,
+            text: msg.text || msg.message,
+            sender: sender,
+            timestamp: new Date(msg.timestamp || msg.created_at),
+            type: messageType,
+            message_type: messageType,
+            product: msg.product || null
+          }
+        })
 
         // Mettre à jour le dernier message
         const lastMsg = conversation.messages[conversation.messages.length - 1]

@@ -145,8 +145,12 @@
               message.sender === 'user' ? 'justify-end' : 'justify-start'
             ]"
           >
-            <div v-if="message.type === 'product'" class="max-w-[85%] md:max-w-[70%]">
+            <div v-if="message.type === 'product' || message.message_type === 'product'" class="max-w-[85%] md:max-w-[70%]">
               <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                <!-- Numéro de commande si présent -->
+                <div v-if="message.order_number" class="bg-orange-50 px-3 py-2 border-b border-orange-100">
+                  <p class="text-xs text-orange-700 font-medium">📦 Commande #{{ message.order_number }}</p>
+                </div>
                 <div class="flex gap-3 p-3">
                   <img
                     :src="message.product.image"
@@ -164,6 +168,10 @@
                       </div>
                     </div>
                   </div>
+                </div>
+                <!-- Message texte associé au produit -->
+                <div v-if="message.message || message.text" class="px-3 py-2 bg-gray-50 border-t border-gray-200">
+                  <p class="text-xs text-gray-700">💬 {{ message.message || message.text }}</p>
                 </div>
               </div>
               <span class="text-xs text-gray-500 mt-1 block">{{ formatTime(message.timestamp) }}</span>
@@ -270,7 +278,7 @@ const chatStore = useChatStore()
 const { uploadChatImage, uploading } = useImageUpload()
 
 // ✅ URL de ton backend (à adapter à ton API)
-const API_BASE_URL = 'https://sastock.com/api_adjame/chat.php'
+const API_BASE_URL = 'https://sastock.com/api_adjame/chat_UPDATED.php'
 
 const activeConversation = computed(() => {
   return conversations.value.find(c => c.id === activeConversationId.value) || conversations.value[0]
@@ -432,15 +440,14 @@ const handleImageUpload = async (event) => {
   const file = event.target.files?.[0]
   if (!file) return
 
+  const sessionId = activeConversationId.value
+
   try {
-    // Upload l'image vers le serveur
+    // Upload l'image vers Cloudinary
     const imageUrl = await uploadChatImage(file)
 
     if (imageUrl) {
-      // Envoyer l'image dans le chat via le store
-      await chatStore.sendImageMessage(imageUrl, file.name)
-
-      // Ajouter aussi localement pour affichage immédiat
+      // Ajouter localement pour affichage immédiat
       const imageMessage = {
         id: Date.now(),
         message: imageUrl,
@@ -449,7 +456,7 @@ const handleImageUpload = async (event) => {
         timestamp: new Date()
       }
 
-      const activeConv = conversations.value.find(c => c.id === activeConversationId.value)
+      const activeConv = conversations.value.find(c => c.id === sessionId)
       if (activeConv) {
         activeConv.messages.push(imageMessage)
         activeConv.lastMessage = 'Image partagée'
@@ -457,6 +464,17 @@ const handleImageUpload = async (event) => {
       }
 
       scrollToBottom()
+
+      // Envoyer l'image au backend avec le bon session_id
+      await axios.post(`${API_BASE_URL}?action=send_message`, {
+        session_id: sessionId,
+        sender: 'user',
+        message: imageUrl,
+        message_type: 'image',
+        image_url: imageUrl
+      })
+
+      console.log('✅ Image envoyée au backend avec session_id:', sessionId)
     }
   } catch (error) {
     console.error('❌ Erreur upload image:', error)

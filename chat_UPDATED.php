@@ -730,7 +730,7 @@ class ChatAPI {
             $this->sendResponse(500, ['error' => 'Erreur serveur: ' . $e->getMessage()]);
         }
     }
- 
+
     private function sendResponse($statusCode, $data) {
         http_response_code($statusCode);
         echo json_encode($data, JSON_UNESCAPED_UNICODE);
