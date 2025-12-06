@@ -334,7 +334,7 @@
                         </button>
                         <button
                           @click="openChatWithClient(order)"
-                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                          class="btn-outline text-[10px] h-6"
                           title="Chat with client"
                         >
                           💬 Chat
@@ -357,7 +357,7 @@
                         </button>
                         <button
                           @click="openChatWithClient(order)"
-                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                          class="btn-outline text-[10px] h-6"
                           title="Chat with client"
                         >
                           💬 Chat
@@ -1986,7 +1986,7 @@ import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { useChatAdminStore } from '../../stores/chatAdmin'
-import {Navbar } from '../../components/Navbar.vue'
+import Navbar  from '../../components/boutiques/Navbar.vue'
 import {
   Home as HomeIcon,
   Download as DownloadIcon,

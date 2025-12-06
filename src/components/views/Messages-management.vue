@@ -17,21 +17,21 @@
           </svg>
         </router-link>
         <span class="mx-2">/</span>
-        <span class="font-medium text-gray-700 truncate">Gestion des Messages</span>
+        <span class="font-medium text-gray-700 truncate">Message Management</span>
       </div>
 
       <div class="flex flex-col space-y-4 lg:flex-row lg:items-center lg:justify-between lg:space-y-0 mb-6 sm:mb-8">
         <div>
-          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Gestion des Messages</h1>
-          <p class="text-sm sm:text-base text-gray-600">Suivez et répondez aux messages de vos clients en temps réel</p>
+          <h1 class="text-2xl sm:text-3xl font-bold text-gray-900 mb-2">Message Management</h1>
+          <p class="text-sm sm:text-base text-gray-600">Track and respond to your customers' messages in real time</p>
         </div>
 
         <div class="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 sm:gap-3">
-          <button @click="refreshMessages" class="submit-btn">
+          <button @click="refreshMessages" class="btn-degrade-orange">
             <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
               <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
             </svg>
-            <span>Actualiser</span>
+            <span>Refresh</span>
           </button>
         </div>
       </div>
@@ -63,7 +63,7 @@
                 </svg>
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Non lus</p>
+                <p class="text-xs sm:text-sm text-gray-600">Not read</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ chatStore.unreadCount }}</p>
               </div>
             </div>
@@ -79,7 +79,7 @@
                 </svg>
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Conversations Actives</p>
+                <p class="text-xs sm:text-sm text-gray-600">Active Conversations</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">{{ chatStore.conversations.length }}</p>
               </div>
             </div>
@@ -95,7 +95,7 @@
                 </svg>
               </div>
               <div class="min-w-0">
-                <p class="text-xs sm:text-sm text-gray-600">Temps de réponse moy.</p>
+                <p class="text-xs sm:text-sm text-gray-600">Average response time.</p>
                 <p class="text-xl sm:text-2xl font-bold text-gray-900">2h 15m</p>
               </div>
             </div>
@@ -110,7 +110,7 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
+import { computed, onMounted } from 'vue'
 import Navbar from '../boutiques/Navbar.vue'
 import AdminChatWindow from '../product/modals/AdminChatWindow.vue'
 import { useChatAdminStore } from '../../stores/chatAdmin'
