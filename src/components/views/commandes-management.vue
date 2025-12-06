@@ -1986,6 +1986,7 @@ import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { useChatAdminStore } from '../../stores/chatAdmin'
+import {Navbar } from '../../components/Navbar.vue'
 import {
   Home as HomeIcon,
   Download as DownloadIcon,
