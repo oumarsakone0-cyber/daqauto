@@ -3,7 +3,18 @@ import { imgUrlToDataUrl } from './imgUrlToDataUrl.js'
 import logo from "../assets/favicon.jpg"
 import { formatCurrency, formatDate, capitalizeFirst } from './utils.js'
 
+const generateInvoiceIdWithTimestamp = () => {
+  const timestamp = Math.floor(Date.now() / 1000)
+  const random = Math.random().toString(36).substring(2, 8).toUpperCase()
+  return `INV-${timestamp}-${random}`
+}
+
 export const downloadInvoice = async(invoice,subtotal,total) => {
+   
+  
+    invoice.number = generateInvoiceIdWithTimestamp() // ou une autre fonction
+  
+
   const doc = new jsPDF()
   
   // Configuration
@@ -56,12 +67,12 @@ export const downloadInvoice = async(invoice,subtotal,total) => {
   margin = 20
   doc.setFillColor(254, 121, 0)
   doc.setDrawColor(254, 121, 0);
-  doc.roundedRect(pageWidth - margin -30, yPos-4, 30, 6,1,1, 'FD')
+  doc.roundedRect(pageWidth - margin -30, yPos-4, 40, 6,1,1, 'FD')
   
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(9)
-  doc.text(invoice.number || 'INV-XXXX-XXX', pageWidth - margin-15, yPos, { align: 'center' })
+  doc.text(invoice.number || 'INV-XXXX-XXX', pageWidth - margin-10, yPos, { align: 'center' })
 
   // Dates (sous le n°)
   doc.setTextColor(0, 0, 0)
