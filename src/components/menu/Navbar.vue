@@ -904,7 +904,7 @@ const uniqueLanguages = computed(() => {
 })
 
 // === États pour le panier ===
-const cartCount = computed(() => cart.itemCount)
+const cartCount = computed(() => cart.items.length)
 
 // Devises disponibles selon la langue sélectionnée
 const availableCurrencies = computed(() => {
@@ -1670,8 +1670,8 @@ const goToProfile = () => {
 // Lifecycle - Load categories on component mount
 onMounted(async () => {
   console.log('[v0] Navbar with MyMemory Translation mounted')
-  
-  loadCache()
+  cart.loadCartFromDB();
+  loadCache();
    loadCategories();
   
   const savedLang = localStorage.getItem('preferred-language')

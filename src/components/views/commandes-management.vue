@@ -330,6 +330,13 @@
                         >
                           Send Proforma
                         </button>
+                        <button
+                          @click="openChatWithClient(order)"
+                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                          title="Chat with client"
+                        >
+                          💬 Chat
+                        </button>
                       </div>
                     </div>
 
@@ -345,6 +352,13 @@
                           class="px-2 py-1 bg-purple-100 text-purple-700 rounded text-[10px] font-medium hover:bg-purple-200 transition-colors"
                         >
                           View Payments
+                        </button>
+                        <button
+                          @click="openChatWithClient(order)"
+                          class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors"
+                          title="Chat with client"
+                        >
+                          💬 Chat
                         </button>
                       </div>
                     </div>
@@ -1964,10 +1978,12 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
+import { useRouter } from 'vue-router'
 import axios from 'axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
+import { useChatAdminStore } from '../../stores/chatAdmin'
 import {
   Home as HomeIcon,
   Download as DownloadIcon,
@@ -2012,6 +2028,10 @@ import {
 } from 'lucide-vue-next'
 
 const API_BASE_URL = 'https://sastock.com/api_adjame'
+
+// Router and stores
+const router = useRouter()
+const chatStore = useChatAdminStore()
 
 // Reactive data
 const dataLoading = ref(false)
@@ -2502,6 +2522,27 @@ const getCurrentStageIndex = (order) => {
 
 // =============================================
 // =============================================
+
+// Open chat with client
+const openChatWithClient = async (order) => {
+  try {
+    // Chercher si une session existe déjà avec ce client pour cette commande
+    await chatStore.fetchSupplierSessions(order.fournisseur_id)
+
+    // Trouver la session correspondante au client de cette commande
+    const clientSession = chatStore.conversations.find(conv => conv.user_id === order.client_id)
+
+    if (clientSession) {
+      // Activer la conversation existante
+      chatStore.setActiveConversation(clientSession.id)
+    }
+
+    // Rediriger vers la page des messages
+    router.push('/dashboard-admin/messages')
+  } catch (error) {
+    console.error('❌ Erreur ouverture chat:', error)
+  }
+}
 
 // Load stats from API
 const loadStats = async () => {

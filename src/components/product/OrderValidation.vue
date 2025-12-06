@@ -1,274 +1,176 @@
 <template>
   <div class="order-validation-page">
-    <div class="page-header">
-      <div class="container" style="margin-top: 40px">
-        <button class="back-btn" @click="goBack">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="15,18 9,12 15,6"></polyline>
-          </svg>
-          Back
-        </button>
-        <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">Order confirmation</h1>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="validation-grid">
-        <div class="left-column">
-          <div class="section-card product-summary">
-            <h2 class="section-title">Product Summary</h2>
-            <div>
-
-            </div>
-            <div v-for="group in groupedOrders" :key="group.boutique_id" class="px-3">
-              <div class="flex text-black font-bold py-3 ">
-                <Box class="w-5 h-5 primary-color mr-2"/>
-                Product Ordered
-              </div>
-              <div v-if="group.items.length>1" class="flex items-center justify-between mb-3">
-                  <div class="flex items-center gap-3">
-                    <div class="text-xl font-bold text-gray-500">Items: {{ group.items.length }}</div>
-                  </div>
-                  <div class="text-sm text-gray-600 font-bold">Subtotal: {{ formatPrice(group.subtotal) }}</div>
-              </div>
-              <div v-for="item in group.items" :key="item.item_id" class="sub-section-card items-center justify-between">
-                <div class="product-info">
-                  <img :src="item.primary_image" :alt="item.name" class="product-image">
-                  <div class="product-details">
-                    <h3 class="product-name">{{ item.name  }}</h3>
-                    <div class="product-specs" >
-                    <span class="bg-orange-200 px-2 py-1 rounded-lg font-bold">VIN: {{ item.vin_number || "N/A"}}</span>
-                    <span  class="bg-blue-200 px-2 py-1 rounded-lg font-bold">Trim: {{ item.trim_number || "N/A"}}</span>
-                    <span class="bg-green-200 px-2 py-1 rounded-lg font-bold" >Stock number: {{ item.stock_number|| "N/A" }}</span>
-                      <span class=" px-2 py-1 rounded-lg font-bold" :style="{backgroundColor: item.colorHex || '#ffffff' }">Color: {{ item.color || "N/A" }}</span>
-                    </div>
-                  </div>
-                </div>
-                <div class="product-price">
-                  <span class="text-gray-500 text-xl font-bold">Unit price</span>
-                  <span class="price-value">{{ formatPrice(item.unit_price,{showFOB:true}) }}</span>
-                </div>
-                <!-- <div v-if="quantity >= 1">
-                  <div class="product-quantity">
-                    <span class="quantity-label">Quantity:</span>
-                    <div class="quantity-controls">
-                      <button @click="decreaseQuantity" :disabled="quantity <= 1">-</button>
-                      <input type="number" v-model.number="quantity" min="1" @input="validateQuantity" class="quantity-input focus:border-ring-2 focus:ring-0">
-                      <button @click="increaseQuantity">+</button>
-                    </div>
-                  </div>
-                  <div  class="stock-info">
-                    <span>{{ product.stock }} parts available</span>
-                  </div>
-                </div> -->
-                <div class="flex text-black font-bold py-3 ">
-                    <Banknote class="w-6 h-6 primary-color mt-0.5 mr-2"/>
-                    Financial Summary
-                </div>
-                <div class="flex justify-between">
-                  <div class="flex text-gray-400 font-bold py-3 ">
-                    <CalculatorIcon class="w-5= h-5 mt-0.5 mr-2"/>
-                    Subtotal
-                  </div>
-                  <div>
-                    <span class="price-value">{{ formatPrice(group.subtotal) }}</span>
-                  </div>
-                </div>
-                <div class="flex justify-between border-gray-200 border-b-2  text-gray-400 font-bold py-3 ">
-                  <div class="flex text-gray-400  py-3 ">
-                    <TruckIcon class="w-5= h-5 mt-0.5 mr-2"/>
-                    Delivery Costs
-                  </div>
-                  <div>
-                    <span class="price-value">{{ formatPrice(shippingCost) }}</span>
-                  </div>
-                </div>
-                <div v-if="group.items.length<=1" class="flex justify-between primary-color font-bold py-4 text-xl">
-                    <div class="flex  ">
-                        <Banknote class="w-7 h-7  mr-3"/>
-                        Total
-                    </div>
-                    <div>
-                      <span >{{ formatPrice(totalAmount) }}</span>
-                    </div>
-                </div>
-              </div>
-              <div v-if="group.items.length>1" class="flex justify-between primary-color font-bold py-4 text-xl">
-                  <div class="flex  ">
-                      <Banknote class="w-7 h-7  mr-3"/>
-                      Total
-                  </div>
-                  <div>
-                    <span >{{ formatPrice(totalAmount) }}</span>
-                  </div>
-              </div>
-            </div>
+    <!-- Animation de confirmation de commande -->
+    <transition name="fade">
+      <div v-if="orderConfirmed" class="confirmation-overlay">
+        <div class="confirmation-animation">
+          <!-- Cercle animé avec icône de succès -->
+          <div class="success-circle">
+            <svg class="checkmark" width="80" height="80" viewBox="0 0 80 80">
+              <circle class="checkmark-circle" cx="40" cy="40" r="35" fill="none" stroke="#52c41a" stroke-width="4"/>
+              <path class="checkmark-check" fill="none" stroke="#52c41a" stroke-width="4" d="M25 40 L35 50 L55 30"/>
+            </svg>
           </div>
 
-          <div class="section-card shipping-section">
-            <h2 class="section-title">Delivery options</h2>
-            
-            <div class="own-provider-option">
-              <label class="checkbox-label">
-                <input 
-                  type="checkbox" 
-                  v-model="hasOwnProvider"
-                  class="checkbox-style"
-                >
-                <span class="checkbox-text">I have my own freight forwarder for the delivery in China</span>
-              </label>
-              <p class="checkbox-hint">If you select this option, the delivery charges will be waived.</p>
-            </div>
-            <div v-if="hasOwnProvider" class="own-provider-message">
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
-                <polyline points="20 6 9 17 4 12"></polyline>
-              </svg>
-              <span>The delivery will be made to your own freight forwarder in China.</span>
+          <!-- Message de confirmation -->
+          <div class="confirmation-content">
+            <h2 class="confirmation-title">Order confirmed successfully!</h2>
+            <p class="confirmation-message">
+              Your order has been successfully registered with reference <strong>{{ orderReference }}</strong>.
+              When the order is processed by the supplier, you will receive an email notification.
+            </p>
+            <p class="confirmation-submessage">
+              You can also check your order status in your "My Orders" section at any time.
+            </p>
+
+            <!-- Boutons d'action -->
+            <div class="confirmation-actions">
+              <button class="btn-orders" @click="goToOrders">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                  <circle cx="12" cy="7" r="4"></circle>
+                </svg>
+                View My Orders
+              </button>
+              <button class="btn-home" @click="goToHome">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                </svg>
+                Back to Home
+              </button>
             </div>
           </div>
         </div>
+      </div>
+    </transition>
 
-        <div class="right-column">
-           <!-- Informations du fournisseur -->
-           
-          <div class="section-card">
-            <!-- <h2 class="section-title">Delivery information</h2> -->
-            <!-- <form @submit.prevent="submitOrder">
-              <div class="form-grid">
+    <!-- Contenu principal (masqué après confirmation) -->
+    <div v-show="!orderConfirmed">
+      <div class="page-header">
+        <div class="container" style="margin-top: 40px">
+          <button class="back-btn" @click="goBack">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <polyline points="15,18 9,12 15,6"></polyline>
+            </svg>
+            Back
+          </button>
+          <h1 class="page-title" style="margin-left: 15px; margin-top: 8px;">Order confirmation</h1>
+        </div>
+      </div>
+
+      <div class="container">
+        <div class="validation-grid">
+          <!-- Colonne de gauche - Informations utilisateur -->
+          <div class="left-column">
+            <div class="section-card">
+              <h2 class="section-title">Your Information</h2>
+              <div class="user-info-form">
                 <div class="form-group">
                   <label class="form-label">Last Name</label>
-                  <input 
-                    type="text" 
-                    class="input-style" 
-                    :value="user.nom" 
+                  <input
+                    type="text"
+                    class="input-style"
+                    :value="user.nom"
                     readonly
                   >
                 </div>
 
                 <div class="form-group">
-                  <label class="form-label">First name</label>
-                  <input 
-                    type="text" 
-                    class="input-style" 
-                    :value="user.prenom" 
+                  <label class="form-label">First Name</label>
+                  <input
+                    type="text"
+                    class="input-style"
+                    :value="user.prenom"
                     readonly
                   >
                 </div>
 
                 <div class="form-group full-width">
                   <label class="form-label">Email</label>
-                  <input 
-                    type="text" 
-                    class="input-style" 
-                    :value="user.contact" 
+                  <input
+                    type="email"
+                    class="input-style"
+                    :value="user.contact"
                     readonly
                   >
-                </div>
-
-                <div class="form-group full-width">
-                  <label class="form-label">Country</label>
-                  <input 
-                    type="text" 
-                    class="input-style" 
-                    :value="user.pays" 
-                    readonly
-                  >
-                </div>
-
-                <div class="form-group full-width">
-                  <label class="form-label required">City</label>
-                  <input 
-                    type="text" 
-                    class="input-style" 
-                    v-model="orderForm.ville"
-                    placeholder="Enter your city"
-                    required
-                  >
-                </div>
-
-                <div class="form-group full-width">
-                  <label class="form-label required">Full address</label>
-                  <textarea 
-                    class="input-style" 
-                    v-model="orderForm.adresse"
-                    placeholder="Enter your full delivery address"
-                    rows="3"
-                    required
-                  ></textarea>
-                </div>
-
-                <div class="form-group full-width">
-                  <label class="form-label">Delivery instructions (optional)</label>
-                  <textarea 
-                    class="input-style" 
-                    v-model="orderForm.instructions"
-                    placeholder="Add special delivery instructions"
-                    rows="2"
-                  ></textarea>
                 </div>
               </div>
-            </form> -->
-            <h2 class="section-title">Supplier Information</h2>
-            <SupplierCard 
-              v-if="supplier"
-              :supplier="supplier"
-              @visit-store="visitStore"
-            />
-            <button 
-              type="submit"
-              class="btn-degrade-orange mt-6 w-full" 
-              :disabled="!canSubmitOrder"
-              @click="submitOrder"
-            >
-              <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <circle cx="9" cy="21" r="1"></circle>
-                <circle cx="20" cy="21" r="1"></circle>
-                <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"></path>
-              </svg>
-              Confirm the order
-            </button>
+            </div>
+          </div>
+
+          <!-- Colonne de droite - Résumé de la commande -->
+          <div class="right-column">
+            <div class="section-card order-summary-card">
+              <h2 class="section-title">Order Summary</h2>
+
+              <!-- Résumé des articles -->
+              <div class="summary-items">
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <ShoppingCart class="w-5 h-5 mr-2" />
+                    <span>Number of items</span>
+                  </div>
+                  <span class="summary-value">{{ totalItems }}</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <CalculatorIcon class="w-5 h-5 mr-2" />
+                    <span>Subtotal</span>
+                  </div>
+                  <span class="summary-value">{{ formatPrice(subtotal) }}</span>
+                </div>
+
+                <div class="summary-row">
+                  <div class="summary-label">
+                    <TruckIcon class="w-5 h-5 mr-2" />
+                    <span>Delivery costs</span>
+                  </div>
+                  <span class="summary-value">{{ formatPrice(shippingCost) }}</span>
+                </div>
+
+                <div class="summary-divider"></div>
+
+                <div class="summary-row total-row">
+                  <div class="summary-label">
+                    <Banknote class="w-6 h-6 mr-2" />
+                    <span>Total</span>
+                  </div>
+                  <span class="summary-total-value">{{ formatPrice(totalAmount) }}</span>
+                </div>
+              </div>
+
+              <!-- Bouton de confirmation -->
+              <button
+                type="submit"
+                class="btn-confirm-order"
+                :disabled="isSubmitting || !canSubmitOrder"
+                @click="submitOrder"
+              >
+                <Loader2 v-if="isSubmitting" class="w-5 h-5 animate-spin mr-2" />
+                <svg v-else width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="20 6 9 17 4 12"></polyline>
+                </svg>
+                {{ isSubmitting ? 'Processing...' : 'Confirm Order' }}
+              </button>
+
+              <!-- Note de sécurité -->
+              <div class="security-note">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
+                  <rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect>
+                  <path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+                </svg>
+                <span>Your payment is secure and encrypted</span>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
-    <div v-if="showSuccessModal" class="modal-overlay" @click="closeSuccessModal">
-      <div class="modal-content success-modal" @click.stop>
-        <button class="modal-close" @click="closeSuccessModal">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"></line>
-            <line x1="6" y1="6" x2="18" y2="18"></line>
-          </svg>
-        </button>
-        
-        <div class="modal-icon success-icon">
-          <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#52c41a" stroke-width="2">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-          </svg>
-        </div>
-        
-        <h2 class="modal-title">Order confirmed</h2>
-        <p class="modal-message">
-          Your order has been successfully registered ! 
-          Please make the deposit payment according to the contract and add the proofs from your "My Orders" area.
-        </p>
-        
-        <div class="modal-actions">
-          <button class="flex-1 btn-gray text-xs" @click="goToOrders">
-            View my orders
-          </button>
-          <button class="flex-1 btn-degrade-orange text-xs" @click="contactSeller">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path>
-            </svg>
-            Communicate with the Seller
-          </button>
-          
-        </div>
-      </div>
-    </div>
-
+    <!-- Modal de connexion -->
     <div v-if="showLoginModal" class="modal-overlay" @click="closeLoginModal">
       <div class="modal-content" @click.stop>
         <button class="modal-close" @click="closeLoginModal">
@@ -277,20 +179,20 @@
             <line x1="6" y1="6" x2="18" y2="18"></line>
           </svg>
         </button>
-        
+
         <div class="modal-icon">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="#fe9700" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
             <circle cx="12" cy="7" r="4"></circle>
           </svg>
         </div>
-        
+
         <h2 class="modal-title">Login required</h2>
         <p class="modal-message">
           You must be logged in to place an order.
           Please log in or create an account to continue.
         </p>
-        
+
         <div class="modal-actions">
           <button class="flex-1 btn-degrade-orange" @click="redirectToLogin">
             Login
@@ -306,41 +208,14 @@
 
 <script setup>
 import { ref, computed, onMounted } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { useRouter } from 'vue-router'
 import { productsApi } from '../../services/api.js'
 import { formatPrice } from '../../services/formatPrice'
-import SupplierCard from './SupplierCard.vue'
-import { Banknote, Box, CalculatorIcon, TruckIcon } from 'lucide-vue-next'
-import { useOrdersStore } from '../../stores/orders.js'
+import { Banknote, CalculatorIcon, TruckIcon, ShoppingCart, Loader2 } from 'lucide-vue-next'
+import { useCartStore } from '../../stores/cart.js'
 
 const router = useRouter()
-const route = useRoute()
-const orders = useOrdersStore()
-
-const product = ref([
-  {
-    id: null,
-    name: '',
-    unit_price: 0,
-    primary_image: '',
-    vin_number: '',
-    trim_number: '',
-    stock_number: '',
-    color: '',
-    colorHex: '',
-    stock: 0,
-    boutique_id: null,
-    boutique_name: '',
-    boutique_logo: '',
-    boutique_marche: '',
-    boutique_type: '',
-    boutique_premium: '',
-    boutique_verified: 0,
-    boutique_address: '',
-    boutique_description: '',
-    boutique_phone: ''
-  }
-])
+const cart = useCartStore()
 
 const user = ref({
   nom: '',
@@ -351,227 +226,92 @@ const user = ref({
 
 const isAuthenticated = ref(false)
 const showLoginModal = ref(false)
-const showSuccessModal = ref(false)
-const quantity = ref(1)
-const selectedShipping = ref('')
-const selectedCommune = ref('')
-const selectedVille = ref('')
+const orderConfirmed = ref(false)
+const isSubmitting = ref(false)
+const orderReference = ref('')
 const hasOwnProvider = ref(false)
-const otherFees = ref(5000)
 
-
-const supplier = computed(() => {
-    if (!product.value) return null
-  console.log("supplier: ",product.value)
-    return {
-      name: (product.value[0].boutique_name || 'Boutique Adjamé').toUpperCase(),
-      logo: product.value[0].boutique_logo || 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?w=100&h=100&fit=crop&auto=format',
-      market: (product.value[0].boutique_marche || 'Adjamé').toUpperCase(),
-      business_type: (product.value[0].boutique_type || 'Commerce').toUpperCase(),
-      experience: 5,
-      premium: product.value[0].boutique_premium !== 'free',
-      verify: product.value[0].boutique_verified !== 0,
-      adresse: (product.value[0].boutique_address || 'Abidjan, Adjamé'),
-      description: (product.value[0].boutique_description || ''),
-      contact: (product.value[0].boutique_phone || '').toUpperCase()
-    }
-  })
-
-  const groupedOrders = computed(() => {
-  
-  return orders.grouped;
+const totalItems = computed(() => {
+  return cart.totalQuantity
 })
-  
-  const visitStore = () => {
-    if (product.value && product.value.boutique_id) {
-      router.push(`/boutique_resultat/${product.value.boutique_id}`)
-    } else {
-      displayNotification('info', 'Visit store', `Redirect to the store ${supplier.value.name}.`)
-    }
-  }
-
-const orderForm = ref({
-  ville: '',
-  adresse: '',
-  quartier: '',
-  instructions: ''
-})
-
-const tarifsAbidjan = ref([
-  { id: 1, commune: 'Cocody', tarif_min: 1500, tarif_max: 2500, delai_livraison: '1-2 jours' },
-  { id: 2, commune: 'Plateau', tarif_min: 1500, tarif_max: 2000, delai_livraison: '1-2 jours' },
-  { id: 3, commune: 'Adjamé', tarif_min: 2000, tarif_max: 3000, delai_livraison: '1-2 jours' },
-  { id: 4, commune: 'Yopougon', tarif_min: 2500, tarif_max: 3500, delai_livraison: '1-2 jours' }
-])
-
-const tarifsInterieur = ref([
-  { id: 1, ville: 'Bouaké', tarif: 5000, delai_livraison: '3-5 jours' },
-  { id: 2, ville: 'Yamoussoukro', tarif: 4500, delai_livraison: '3-5 jours' },
-  { id: 3, ville: 'San-Pedro', tarif: 6000, delai_livraison: '5-7 jours' }
-])
 
 const subtotal = computed(() => {
-  return orders.total;
+  return cart.totalPrice
 })
 
 const shippingCost = computed(() => {
   if (hasOwnProvider.value) return 0
-  if (selectedShipping.value === 'retrait') return 0
-  
-  if (selectedShipping.value === 'abidjan' && selectedCommune.value) {
-    const tarif = tarifsAbidjan.value.find(t => t.commune === selectedCommune.value)
-    return tarif ? tarif.tarif_max : 0
-  }
-  
-  if (selectedShipping.value === 'interieur' && selectedVille.value) {
-    const tarif = tarifsInterieur.value.find(t => t.ville === selectedVille.value)
-    return tarif ? tarif.tarif : 0
-  }
-  
-  return 0
+  return 0 // Vous pouvez ajouter la logique de calcul des frais de livraison ici
 })
 
 const totalAmount = computed(() => {
-  const base = orders.total + shippingCost.value
-  return base;
+  return subtotal.value + shippingCost.value
 })
-
-const depositAmount = computed(() => Math.round(totalAmount.value * 0.3))
 
 const canSubmitOrder = computed(() => {
-  return quantity.value > 0
+  return isAuthenticated.value && totalItems.value > 0
 })
 
-const increaseQuantity = () => {
-  quantity.value++
-}
-
-const decreaseQuantity = () => {
-  if (quantity.value > 1) {
-    quantity.value--
-  }
-}
-
-const validateQuantity = () => {
-  if (quantity.value < 1) {
-    quantity.value = 1
-  }
-}
-
-const selectShipping = (option) => {
-  selectedShipping.value = option
-  if (option !== 'abidjan') selectedCommune.value = ''
-  if (option !== 'interieur') selectedVille.value = ''
-}
-
-const updateCommune = (commune) => {
-  selectedCommune.value = commune
-}
-
-const updateVille = (ville) => {
-  selectedVille.value = ville
-}
-
-const copyToClipboard = (text) => {
-  navigator.clipboard.writeText(text).then(() => {
-    alert('Copied to clipboard!')
-  }).catch(err => {
-    console.error('Erreur lors de la copie:', err)
-  })
-}
-
 const submitOrder = async () => {
-  console.log("📦 ===== DÉBUT handleConfirmOrder =====")
-
   if (!isAuthenticated.value) {
     showLoginModal.value = true
     return
   }
 
   if (!canSubmitOrder.value) {
-    alert('Please fill in all required fields.')
     return
   }
 
-  //formSubmitted.value = true
-  //orderLoading.value = true
+  isSubmitting.value = true
 
   try {
-    // ✅ 1️⃣ Récupérer toutes les infos dans l'ordre du frontend
-    const orderData = {
-      product: product.value,
-      quantity: quantity.value,
-      shipping: {
-        type: hasOwnProvider.value ? 'own_provider' : selectedShipping.value,
-        cost: shippingCost.value,
-        hasOwnProvider: hasOwnProvider.value
-      },
-      user: {
-        ...user.value,
-        ...orderForm.value
-      },
-      pricing: {
-        subtotal: subtotal.value,
-        shippingCost: shippingCost.value,
-        otherFees: hasOwnProvider.value ? 0 : otherFees.value,
-        total: totalAmount.value,
-        deposit: depositAmount.value
+    // Préparer les données de commande pour chaque article du panier
+    const orderPromises = cart.items.map(async (item) => {
+      const orderData = {
+        numero_commande: `CMD-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
+        produit_id: item.product_id || item.id,
+        produit_nom: item.name,
+        produit_prix: item.unit_price,
+        quantite: item.quantity,
+        client_nom: `${user.value.nom} ${user.value.prenom}`.trim(),
+        client_telephone: user.value.contact,
+        type_livraison: hasOwnProvider.value ? 1 : 0,
+        sous_total: item.unit_price * item.quantity,
+        frais_livraison: 0,
+        total: item.unit_price * item.quantity,
+        boutique_id: item.boutique_id,
+        boutique_nom: item.boutique_name,
+        statut: "en_attente",
       }
-    }
 
-    console.log('[v0] Données initiales (frontend):', orderData)
+      return productsApi.createOrder(orderData)
+    })
 
-    // ✅ 2️⃣ Reformater selon la structure attendue par confirmOrder()
-    const finalOrderData = {
-      numero_commande: `CMD-${Date.now()}-${Math.random().toString(36).substr(2, 5).toUpperCase()}`,
-      produit_id: orderData.product.id,
-      produit_nom: orderData.product.name,
-      produit_prix: orderData.product.price || orderData.product.unit_price,
-      quantite: orderData.quantity || 1,
-      client_nom: `${orderData.user.nom || ''} ${orderData.user.prenom || ''}`.trim(),
-      client_telephone: orderData.user.contact,
-      type_livraison: hasOwnProvider ? 1 : 0,
-      commune: orderData.user.pays || '',
-      // ville: orderData.shipping.ville || 'Abidjan',
-      // adresse_complete: orderData.user.adresse || orderData.user.adresse_complete || '',
-      // instructions_livraison: orderData.user.instructions || orderData.user.instructions_livraison || '',
-      sous_total: orderData.pricing.subtotal,
-      frais_livraison: orderData.pricing.shippingCost || 0,
-      total: orderData.pricing.total,
-      acompte: orderData.pricing.deposit || 0,
-     // options_variantes: selectedVariants.value.length > 0 ? getSelectedVariants() : null,
-      boutique_id: orderData.product.boutique_id,
-      boutique_nom: orderData.product.boutique_name || supplier.value.name,
-      statut: "en_attente",
-    }
+    // Attendre que toutes les commandes soient créées
+    const results = await Promise.all(orderPromises)
 
-    console.log("📤 Données finales envoyées à l'API:", finalOrderData)
+    // Vérifier si toutes les commandes ont réussi
+    const allSuccess = results.every(result => result.success)
 
-    // ✅ 3️⃣ Envoi à ton API
-    const result = await productsApi.createOrder(finalOrderData)
+    if (allSuccess) {
+      // Générer une référence de commande unique
+      orderReference.value = `CMD-${Date.now()}`
 
-    if (result.success) {
-      console.log("✅ Commande créée avec succès:", result)
-     // orderLoading.value = false
-      closeOrderModal()
-      showOrderSuccessNotification(finalOrderData)
+      // Vider le panier
+      await cart.clear()
 
-      // 🧹 Nettoyage du stockage temporaire
-      sessionStorage.removeItem('lastProduct')
+      // Afficher l'animation de confirmation
+      orderConfirmed.value = true
     } else {
-      throw new Error(result.error || result.message || "Erreur lors de la création de la commande")
+      throw new Error("Certaines commandes n'ont pas pu être créées")
     }
   } catch (error) {
-   // orderLoading.value = false
     console.error("❌ Erreur lors de la confirmation:", error)
-    //displayNotification("error", "Erreur", error.message)
+    alert("Une erreur s'est produite lors de la confirmation de votre commande. Veuillez réessayer.")
+  } finally {
+    isSubmitting.value = false
   }
-
-  console.log("📦 ===== FIN handleConfirmOrder =====")
-  showSuccessModal.value = true
 }
-
-
 
 const goBack = () => {
   router.back()
@@ -585,81 +325,39 @@ const redirectToLogin = () => {
   router.push('/login')
 }
 
-const closeSuccessModal = () => {
-  showSuccessModal.value = false
-}
-
-const contactSeller = () => {
-  console.log('[v0] Contact seller')
-  alert('Messaging functionality coming soon')
-  showSuccessModal.value = false
-}
-
 const goToOrders = () => {
-  showSuccessModal.value = false
-  router.push('/profile_client')
-} 
+  router.push('/profile_client?tab=orders')
+}
+
+const goToHome = () => {
+  router.push('/')
+}
 
 onMounted(() => {
-  // 🔐 Vérifier si l'utilisateur est connecté
-  const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-  isAuthenticated.value = !!authToken
+  // Charger le panier depuis la base de données
+  cart.loadCartFromDB()
 
-  // 👤 Charger les infos utilisateur
+  // Vérifier si l'utilisateur est connecté
   const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+
   if (userData) {
     try {
       const parsedUser = JSON.parse(userData)
       user.value = {
         nom: parsedUser.full_name?.split(' ')[0] || '',
-        prenom: parsedUser.full_name?.split(' ')[1] || '',
-        contact: parsedUser.email || '',
+        prenom: parsedUser.full_name?.split(' ').slice(1).join(' ') || '',
+        contact: parsedUser.email || parsedUser.phone || '',
         pays: "Côte d'Ivoire"
       }
+      isAuthenticated.value = true
     } catch (error) {
-      console.error('[v0] Error parsing user data:', error)
+      console.error('Error parsing user data:', error)
+      showLoginModal.value = true
     }
-  }
-
-  // 🧾 Récupération du produit depuis route.state (mémoire)
-  console.log('[v0] Route state on mount:', orders.itemsOrdered)
-  
-    product.value = orders.itemsOrdered 
-    quantity.value = orders.itemsOrdered[0].quantity || 1
-    console.log('[v0] Product loaded from Order store:', product.value)
-  
-  // 🔁 Si actualisation, récupérer depuis sessionStorage
-  // else {
-  //   const savedData = sessionStorage.getItem('lastProduct')
-  //   if (savedData) {
-  //     try {
-  //       const parsed = JSON.parse(savedData)
-  //       product.value = { ...product.value, ...parsed.product }
-  //       quantity.value = parsed.quantity || 1
-  //       console.log('[v0] Product loaded from sessionStorage:', product.value)
-  //     } catch (error) {
-  //       console.error('[v0] Error parsing product from sessionStorage:', error)
-  //     }
-  //   } 
-  //   // 🧩 Fallback : route.query si partagé via lien
-  //   else if (route.query.productData) {
-  //     try {
-  //       const productData = JSON.parse(decodeURIComponent(route.query.productData))
-  //       product.value = { ...product.value, ...productData }
-  //       quantity.value = parseInt(route.query.quantity) || 1
-  //       console.log('[v0] Product loaded from query params:', product.value)
-  //     } catch (error) {
-  //       console.error('[v0] Error parsing product data from query:', error)
-  //     }
-  //   }
-  // }
-
-  // 🔒 Si non connecté, afficher le modal de connexion
-  if (!isAuthenticated.value) {
+  } else {
     showLoginModal.value = true
   }
 })
-
 </script>
 
 <style scoped>
@@ -669,6 +367,179 @@ onMounted(() => {
   padding-bottom: 40px;
 }
 
+/* Animation de confirmation */
+.confirmation-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.confirmation-animation {
+  background: white;
+  border-radius: 24px;
+  padding: 60px 40px;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+  animation: slideInUp 0.6s ease-out;
+}
+
+@keyframes slideInUp {
+  from {
+    opacity: 0;
+    transform: translateY(50px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.success-circle {
+  width: 120px;
+  height: 120px;
+  margin: 0 auto 30px;
+  position: relative;
+  animation: scaleIn 0.5s ease-out 0.3s both;
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkmark-circle {
+  stroke-dasharray: 220;
+  stroke-dashoffset: 220;
+  animation: drawCircle 1s ease-out 0.5s forwards;
+}
+
+@keyframes drawCircle {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.checkmark-check {
+  stroke-dasharray: 50;
+  stroke-dashoffset: 50;
+  animation: drawCheck 0.5s ease-out 1.2s forwards;
+}
+
+@keyframes drawCheck {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+.confirmation-content {
+  animation: fadeIn 0.6s ease-out 1.5s both;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.confirmation-title {
+  font-size: 32px;
+  font-weight: 700;
+  color: #52c41a;
+  margin: 0 0 20px 0;
+}
+
+.confirmation-message {
+  font-size: 16px;
+  color: #666;
+  line-height: 1.6;
+  margin: 0 0 15px 0;
+}
+
+.confirmation-message strong {
+  color: #fe9700;
+  font-weight: 600;
+}
+
+.confirmation-submessage {
+  font-size: 14px;
+  color: #999;
+  margin: 0 0 40px 0;
+  line-height: 1.5;
+}
+
+.confirmation-actions {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+}
+
+.btn-orders,
+.btn-home {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 14px 28px;
+  border-radius: 10px;
+  font-size: 15px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  border: none;
+}
+
+.btn-orders {
+  background: linear-gradient(135deg, #fe9700 0%, #ff7a00 100%);
+  color: white;
+  box-shadow: 0 4px 16px rgba(254, 151, 0, 0.3);
+}
+
+.btn-orders:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(254, 151, 0, 0.4);
+}
+
+.btn-home {
+  background: #f5f5f5;
+  color: #666;
+}
+
+.btn-home:hover {
+  background: #e8e8e8;
+  color: #333;
+}
+
+/* Transition fade */
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.3s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+}
+
+/* Header */
 .page-header {
   background: #fff;
   border-bottom: 1px solid #e8e8e8;
@@ -677,10 +548,9 @@ onMounted(() => {
 }
 
 .container {
-  max-width: 1400px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 0 16px;
-  display: flex
 }
 
 .back-btn {
@@ -710,164 +580,34 @@ onMounted(() => {
   margin: 0;
 }
 
+/* Grid layout */
 .validation-grid {
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 1fr 1fr;
   gap: 24px;
 }
 
 .section-card {
   background: #fff;
-  border-radius: 8px;
-  padding: 24px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
-  margin-bottom: 24px;
-}
-
-.sub-section-card{
-  background: #fff;
-  border-radius: 8px;
-  padding:10px 24px;
-  margin-bottom: 16px;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  padding: 32px;
+  box-shadow: 0 2px 12px rgba(0, 0, 0, 0.08);
 }
 
 .section-title {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  /* margin: 0 0 20px 0; */
-  padding-bottom: 12px;
-}
-
-.cart-item { background: #fff; padding: 12px; border-radius: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.03); align-items: center; }
-.product-info {
-  display: flex;
-  gap: 16px;
-}
-
-.product-image {
-  width: 100px;
-  height: 100px;
-  object-fit: cover;
-  border-radius: 8px;
-  border: 1px solid #e8e8e8;
-}
-
-.product-details {
-  flex: 1;
-}
-
-.product-name {
-  font-size: 18px;
-  font-weight: 600;
-  color: #333;
-  margin: 0 0 8px 0;
-  font-weight: bold;
-  font-size: 25px;
-}
-
-.product-specs {
-  display: flex;
-  gap: 10px;
-  margin: 25px auto;
-  font-size: 12px;
-  color: #666;
-}
-
-
-.product-price {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-  margin-bottom: 12px;
-  margin-top: 20px;
-}
-
-.price-value {
   font-size: 20px;
   font-weight: 600;
   color: #333;
+  margin: 0 0 24px 0;
+  padding-bottom: 16px;
+  border-bottom: 2px solid #f0f0f0;
 }
 
-.product-quantity {
+/* Formulaire utilisateur */
+.user-info-form {
   display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.quantity-label {
-  font-size: 14px;
-  color: #666;
-}
-
-.quantity-controls {
-  display: flex;
-  align-items: center;
-  border: 1px solid #d9d9d9;
-  border-radius: 6px;
-  overflow: hidden;
-}
-
-.quantity-controls button {
-  width: 32px;
-  height: 32px;
-  border: none;
-  background: white;
-  color: #333;
-  font-size: 18px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.quantity-controls button:hover:not(:disabled) {
-  background: #fe9700;
-  color: #fff;
-}
-
-.quantity-controls button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-.quantity-input {
-  -webkit-appearance: none;
-  -moz-appearance: textfield;
-  appearance: none;
-  width: auto;
-  height: 50px;
-  border: 1px solid #d9d9d9;
-  color: #333;
-  border-left: none;
-  border-right: none;
-  text-align: center;
-  font-size: 18px;
-}
-
-.quantity-input::-webkit-outer-spin-button,
-.quantity-input::-webkit-inner-spin-button {
-  -webkit-appearance: none;
-  margin: 0;
-}
-
-.quantity-input[type="number"] {
-  -moz-appearance: textfield;
-  appearance: textfield;
-}
-
-.quantity-controls input {
-  width: 50px;
-  height: 32px;
-  border: none;
-  text-align: center;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 16px;
+  flex-direction: column;
+  gap: 20px;
 }
 
 .form-group {
@@ -875,20 +615,25 @@ onMounted(() => {
   flex-direction: column;
 }
 
-.form-group.full-width {
-  grid-column: 1 / -1;
-}
-
 .form-label {
   font-size: 14px;
   font-weight: 500;
-  color: #333;
+  color: #666;
   margin-bottom: 8px;
 }
 
-.form-label.required::after {
-  content: ' *';
-  color: #ff4d4f;
+.input-style {
+  padding: 12px 16px;
+  border: 2px solid #e8e8e8;
+  border-radius: 8px;
+  font-size: 15px;
+  color: #333;
+  transition: all 0.3s ease;
+}
+
+.input-style:focus {
+  outline: none;
+  border-color: #fe9700;
 }
 
 .input-style[readonly] {
@@ -897,25 +642,35 @@ onMounted(() => {
   cursor: not-allowed;
 }
 
+/* Résumé de commande */
+.order-summary-card {
+  position: sticky;
+  top: 100px;
+}
+
+.summary-items {
+  margin-bottom: 24px;
+}
+
 .summary-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 12px 0;
+  padding: 16px 0;
   font-size: 15px;
 }
 
 .summary-label {
+  display: flex;
+  align-items: center;
   color: #666;
+  font-weight: 500;
 }
 
 .summary-value {
   font-weight: 600;
   color: #333;
-}
-
-.summary-value.free-shipping {
-  color: #52c41a;
+  font-size: 16px;
 }
 
 .summary-divider {
@@ -925,7 +680,7 @@ onMounted(() => {
 }
 
 .total-row {
-  padding: 16px 0;
+  padding: 20px 0;
   border-top: 2px solid #f0f0f0;
   margin-top: 8px;
 }
@@ -936,34 +691,59 @@ onMounted(() => {
   color: #333;
 }
 
-/* .btn-degrade-orange:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 4px 12px rgba(254, 151, 0, 0.3);
+.summary-total-value {
+  font-size: 28px;
+  font-weight: 700;
+  color: #fe9700;
 }
 
-.btn-degrade-orange:disabled {
+/* Bouton de confirmation */
+.btn-confirm-order {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 16px;
+  background: linear-gradient(135deg, #fe9700 0%, #ff7a00 100%);
+  color: white;
+  border: none;
+  border-radius: 10px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 16px rgba(254, 151, 0, 0.3);
+}
+
+.btn-confirm-order:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(254, 151, 0, 0.4);
+}
+
+.btn-confirm-order:disabled {
   opacity: 0.5;
   cursor: not-allowed;
   transform: none;
-} */
-
-.security-badges {
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-  margin-top: 16px;
-  padding-top: 16px;
-  border-top: 1px solid #e8e8e8;
 }
 
-.badge {
+/* Note de sécurité */
+.security-note {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  margin-top: 20px;
+  padding: 12px;
+  background: #f6ffed;
+  border: 1px solid #b7eb8f;
+  border-radius: 8px;
   font-size: 13px;
   color: #52c41a;
+  font-weight: 500;
 }
 
+/* Modal */
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -1037,260 +817,41 @@ onMounted(() => {
   gap: 12px;
 }
 
-.modal-btn {
-  flex: 1;
-  padding: 12px 24px;
-  border: none;
-  border-radius: 8px;
-  font-size: 15px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.modal-btn.primary {
-  background: #fe9700;
-  color: #fff;
-}
-
-.modal-btn.primary:hover {
-  background: #e68900;
-}
-
-.modal-btn.secondary {
-  background: #f5f5f5;
-  color: #666;
-}
-
-.modal-btn.secondary:hover {
-  background: #e8e8e8;
-}
-
-.own-provider-option {
-  margin-bottom: 20px;
-  padding: 16px;
-  background: #f9f9f9;
-  border: 1px solid #e8e8e8;
-  border-radius: 8px;
-}
-
-.checkbox-label {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  cursor: pointer;
-  font-size: 15px;
-  font-weight: 500;
-  color: #333;
-}
-
-.checkbox-text {
-  user-select: none;
-}
-
-.checkbox-hint {
-  margin: 8px 0 0 28px;
-  font-size: 13px;
-  color: #666;
-  line-height: 1.5;
-}
-
-.own-provider-message {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  padding: 16px;
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-  border-radius: 8px;
-  color: #52c41a;
-  font-size: 14px;
-  font-weight: 500;
-}
-
-.deposit-info {
-  margin-top: 16px;
-  padding: 16px;
-  background: #fff7e6;
-  border: 1px solid #ffd591;
-  border-radius: 8px;
-}
-
-.deposit-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.deposit-label {
-  font-size: 15px;
-  font-weight: 600;
-  color: #d46b08;
-}
-
-.deposit-value {
-  font-size: 20px;
-  font-weight: 700;
-  color: #d46b08;
-}
-
-.deposit-note {
-  margin: 0;
-  font-size: 13px;
-  color: #ad6800;
-  line-height: 1.5;
-}
-
-.bank-info {
-  margin-top: 20px;
-  padding: 16px;
-  background: #f0f5ff;
-  border: 1px solid #adc6ff;
-  border-radius: 8px;
-}
-
-.bank-title {
-  font-size: 15px;
-  font-weight: 600;
-  color: #1890ff;
-  margin: 0 0 12px 0;
-}
-
-.bank-details {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.bank-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  font-size: 14px;
-}
-
-.bank-label {
-  color: #666;
-  font-weight: 500;
-}
-
-.bank-value {
-  color: #333;
-  font-weight: 600;
-}
-
-.copy-value {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  cursor: pointer;
-  color: #1890ff;
-  transition: all 0.3s ease;
-}
-
-.copy-value:hover {
-  color: #096dd9;
-}
-
-.copy-value svg {
-  flex-shrink: 0;
-}
-
-.bank-note {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  margin: 12px 0 0 0;
-  padding-top: 12px;
-  border-top: 1px solid #d6e4ff;
-  font-size: 13px;
-  color: #0050b3;
-  line-height: 1.5;
-}
-
-.bank-note svg {
-  flex-shrink: 0;
-  margin-top: 2px;
-}
-
-.success-modal {
-  text-align: center;
-}
-
-.success-icon {
-  background: #f6ffed;
-  width: 96px;
-  height: 96px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  margin: 0 auto 24px;
-}
-
-.success-title {
-  color: #52c41a;
-}
-
-.modal-message strong {
-  color: #fe9700;
-  font-weight: 700;
-}
-
-.modal-btn svg {
-  width: 20px;
-  height: 20px;
-}
-
-.modal-btn.primary {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 8px;
-}
-
-.wholesale-info {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  padding: 8px 12px;
-  background: #f6ffed;
-  border: 1px solid #b7eb8f;
-  border-radius: 6px;
-  font-size: 13px;
-  color: #52c41a;
-  margin-bottom: 12px;
-}
-
-.stock-info {
-  font-size: 13px;
-  color: #666;
-  margin-top: 8px;
-}
-
+/* Responsive */
 @media (max-width: 1024px) {
   .validation-grid {
     grid-template-columns: 1fr;
   }
+
+  .order-summary-card {
+    position: static;
+  }
 }
 
 @media (max-width: 768px) {
+  .confirmation-animation {
+    padding: 40px 24px;
+  }
+
+  .confirmation-title {
+    font-size: 24px;
+  }
+
+  .confirmation-actions {
+    flex-direction: column;
+  }
+
+  .btn-orders,
+  .btn-home {
+    width: 100%;
+  }
+
   .page-title {
     font-size: 18px;
   }
 
-  .product-info {
-    flex-direction: column;
-  }
-
-  .product-image {
-    width: 100%;
-    height: 200px;
-  }
-
-  .form-grid {
-    grid-template-columns: 1fr;
+  .section-card {
+    padding: 20px;
   }
 }
 </style>

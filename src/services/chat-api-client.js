@@ -9,7 +9,7 @@ class ChatApiClient {
 
   async request(endpoint, options = {}) {
     const randomValue = Math.random().toString(36).substring(2, 10);
-    const url = `${this.baseUrl}/chat.php?action=${endpoint}&rand=${randomValue}`
+    const url = `${this.baseUrl}/chat_UPDATED.php?action=${endpoint}&rand=${randomValue}`
 
     const config = {
       headers: {
@@ -147,10 +147,10 @@ async sendMessage(message, sender = "user", productId = null) {
   async getMessages() {
     try {
       if (!this.userCode) {
-        return { success: false, sessions: {} }
+        return { success: false, sessions: [] }
       }
 
-      const response = await this.request(`get_messages&user_id=${this.userCode.id}`)
+      const response = await this.request(`get_sessions_chat&user_id=${this.userCode.id}`)
       return response
     } catch (error) {
       console.error("Erreur récupération messages:", error)
