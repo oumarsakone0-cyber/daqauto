@@ -401,7 +401,7 @@
                   <span class="total-value">{{ formatPrice(grandTotal) }}</span>
                 </div>
 
-                <button class="btn-checkout-all" @click="proceedToCheckout">
+                <button class="btn-checkout-all" @click="proceedToOrder">
                   <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <circle cx="9" cy="21" r="1"></circle>
                     <circle cx="20" cy="21" r="1"></circle>
@@ -517,11 +517,11 @@ const cartItems = computed(() => {
 })
 
 const groupedCart = computed(() => {
-  return cart.grouped
+  return cart.groupedByBoutique  // <CHANGE> Utiliser le bon nom du store
 })
 
 const grandTotal = computed(() => {
-  return cart.grandTotal
+  return cart.totalPrice  // <CHANGE> Utiliser le bon nom du store
 })
 
 const checkoutBoutique = (group) => {
@@ -533,12 +533,16 @@ const checkoutBoutique = (group) => {
 }
 
 const increaseQty = (item) => {
-  cart.increaseQty(item.item_id, Number(item.quantity) + 1)
+  // <CHANGE> Utiliser item_id (de la BD) au lieu de product_id
+  const itemId = item.item_id || item.id
+  cart.increaseQty(itemId, Number(item.quantity) + 1)
 }
 
 const decreaseQty = (item) => {
   if ((Number(item.quantity) || 0) > 1) {
-    cart.decreaseQty(item.item_id, Number(item.quantity) - 1)
+    // <CHANGE> Utiliser item_id (de la BD) au lieu de product_id
+    const itemId = item.item_id || item.id
+    cart.decreaseQty(itemId, Number(item.quantity) - 1)
   }
 }
 
@@ -550,8 +554,15 @@ const continueShopping = () => {
   router.push('/produits').catch(()=>{})
 }
 
-const proceedToCheckout = () => {
-  router.push({ path: '/checkout' }).catch(()=>{})
+const proceedToOrder = () => {
+  // Vérifier si le panier n'est pas vide
+  if (cart.items.length === 0) {
+    ElMessage.warning('Your cart is empty')
+    return
+  }
+
+  // Rediriger vers la page de validation de commande
+  router.push({ path: '/order-validation' }).catch(()=>{})
 }
 
 const fetchCartItems = async () => {
@@ -670,6 +681,7 @@ watch(
 )
 
 onMounted(async () => {
+  cart.loadCartFromDB();
   const qTab = route.query.tab
   const h = route.hash ? route.hash.replace('#', '') : null
 

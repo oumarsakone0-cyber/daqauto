@@ -26,24 +26,70 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   // 🔹 Crée un message "carte produit" pour affichage spécial
-  const sendProductIntroMessage = (product) => {
-    if (!product) return
+  const sendProductIntroMessage = async (product, orderNumber = null) => {
+    if (!product || !activeConversationId.value) return
+
+    // Créer le message avec ou sans numéro de commande
+    const messageText = orderNumber
+      ? `Je suis intéressé par: ${product.name} (Commande #${orderNumber})`
+      : `Je suis intéressé par: ${product.name}`
 
     const productMessage = {
       id: Date.now(),
-      message: JSON.stringify({
+      message: messageText,
+      text: messageText,
+      sender: 'user',
+      message_type: 'product',
+      timestamp: new Date(),
+      product: {
+        id: product.id,
         name: product.name,
         price: product.unit_price,
         image: product.primary_image,
         shop: product.boutique_name,
         rating: product.rating
-      }),
-      sender: 'bot',
-      timestamp: new Date(),
-      type: 'product'
+      },
+      order_number: orderNumber
     }
 
+    // Ajouter localement
+    chatMessages.value.push(productMessage)
     addMessageToConversation(activeConversationId.value, productMessage)
+
+    // Envoyer au backend
+    try {
+      const payload = {
+        session_id: activeConversationId.value,
+        message: messageText,
+        sender: 'user',
+        message_type: 'product',
+        product_id: product.id,
+        product_name: product.name,
+        product_price: product.unit_price,
+        product_image: product.primary_image
+      }
+
+      // Ajouter le numéro de commande si présent
+      if (orderNumber) {
+        payload.order_number = orderNumber
+      }
+
+      const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=send_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload)
+      })
+
+      const data = await response.json()
+      if (data.success && data.message) {
+        const messageIndex = chatMessages.value.findIndex(m => m.id === productMessage.id)
+        if (messageIndex !== -1) {
+          chatMessages.value[messageIndex].id = data.message.id
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erreur envoi produit intro:", error)
+    }
   }
 
   // 🔹 Ajoute un message à la bonne conversation
@@ -61,13 +107,23 @@ export const useChatStore = defineStore('chat', () => {
       message: msg.text || msg.message,
       sender: msg.sender,
       timestamp: new Date(msg.timestamp || msg.created_at),
-      type: msg.type || 'text',
-      product: msg.product || null
+      type: msg.type || msg.message_type || 'text',
+      message_type: msg.message_type || msg.type || 'text',
+      product: msg.product || null,
+      order_number: msg.order_number || null
     })
 
     // Met à jour dernier message
     const lastMsg = conversation.messages[conversation.messages.length - 1]
-    conversation.lastMessage = lastMsg?.text || lastMsg?.message || "Nouveau message"
+    let lastMsgText = "Nouveau message"
+    if (lastMsg?.message_type === 'image') {
+      lastMsgText = "Image partagée"
+    } else if (lastMsg?.message_type === 'product') {
+      lastMsgText = "Produit partagé"
+    } else {
+      lastMsgText = lastMsg?.text || lastMsg?.message || "Nouveau message"
+    }
+    conversation.lastMessage = lastMsgText
     conversation.lastMessageTime = lastMsg?.timestamp || new Date()
 
     // Si c'est la session active, met à jour chatMessages
@@ -78,32 +134,66 @@ export const useChatStore = defineStore('chat', () => {
 
   // 🔹 Envoie fournisseur + user + produit au backend
   const sendSupplierToBackend = async (product, user) => {
+    // D'abord, chercher si une session existe déjà avec ce vendeur
+    const existingConversation = conversations.value.find(
+      conv => conv.supplier_id === product.boutique_id
+    )
+
+    if (existingConversation) {
+      console.log('✅ Session existante trouvée avec ce vendeur:', existingConversation.id)
+
+      // Activer la conversation existante
+      activeProductId.value = product.id
+      activeConversationId.value = existingConversation.id
+      localStorage.setItem("chat_session_id", existingConversation.id)
+      chatClient.value.sessionId = existingConversation.id
+
+      setActiveConversation(existingConversation.id)
+
+      // Envoyer le message produit si c'est un nouveau produit dans cette conversation
+      sendProductIntroMessage(product)
+
+      return { success: true, session_id: existingConversation.id }
+    }
+
+    // Sinon, créer une nouvelle session
     const payload = {
-      supplier_id: product.boutique_id,
+      supplier_id: product.boutique_id || product.supplier_id || 10,
       supplier_name: product.boutique_name,
       user_id: user.id,
-      user_name: user.name,
-      user_email: user.email,
+      user_email: user.email || user.contact,
       product_id: product.id,
       product_name: product.name,
       product_price: product.unit_price,
       product_image: product.primary_image,
-      product_rating: product.rating
+      product_rating: product.rating || 0
     }
 
+    console.log('📤 Envoi nouvelle session au backend:', payload)
+
     try {
-      const response = await fetch('https://sastock.com/api_adjame/chat.php?action=create_session_chat', {
+      const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=create_session_chat', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(payload)
       })
       const data = await response.json()
-      if (data.session_id) {
+
+      console.log('📥 Réponse du backend:', data)
+
+      if (data.success && data.session_id) {
         localStorage.setItem("chat_session_id", data.session_id)
         chatClient.value.sessionId = data.session_id
         activeProductId.value = product.id
+        activeConversationId.value = data.session_id
+
+        // Récupérer immédiatement les sessions pour mettre à jour l'interface
+        await fetchSupplierSessions()
+
+        // Activer la conversation qui vient d'être créée
+        setActiveConversation(data.session_id)
       }
-      await fetchSupplierSessions()
+
       return data
     } catch (error) {
       console.error('❌ Erreur backend:', error)
@@ -126,7 +216,7 @@ export const useChatStore = defineStore('chat', () => {
     try {
       const random = Math.floor(Math.random() * 1000000)
       const response = await fetch(
-        `https://sastock.com/api_adjame/chat.php?action=get_sessions_chat&user_id=${currentUser.id}&_=${random}`
+        `https://sastock.com/api_adjame/chat_UPDATED.php?action=get_sessions_chat&user_id=${currentUser.id}&_=${random}`
       )
       const data = await response.json()
 
@@ -136,27 +226,40 @@ export const useChatStore = defineStore('chat', () => {
       }
 
       // 🧩 Crée toutes les conversations
-      conversations.value = data.sessions.map(session => ({
-        id: session.id,
-        name: session.supplier_name || "Fournisseur inconnu",
-        avatar: session.product_image || "/placeholder.svg?height=40&width=40",
-        status: "En ligne",
-        online: true,
-        lastMessage: session.messages?.length
-          ? session.messages[session.messages.length - 1].text
-          : "Aucun message",
-        lastMessageTime: session.messages?.length
-          ? session.messages[session.messages.length - 1].timestamp
-          : session.created_at,
-        messages: (session.messages || []).map(msg => ({
-          id: msg.id,
-          message: msg.text,
-          sender: msg.sender,
-          timestamp: new Date(msg.timestamp || msg.created_at),
-          type: msg.product?.id ? "product" : "text",
-          product: msg.product || null
-        }))
-      }))
+      conversations.value = data.sessions.map(session => {
+        const lastMsg = session.messages?.length ? session.messages[session.messages.length - 1] : null
+        let lastMsgText = "Aucun message"
+        if (lastMsg) {
+          if (lastMsg.message_type === 'image') {
+            lastMsgText = "Image partagée"
+          } else if (lastMsg.message_type === 'product' || lastMsg.product?.id) {
+            lastMsgText = "Produit partagé"
+          } else {
+            lastMsgText = lastMsg.text || lastMsg.message
+          }
+        }
+
+        return {
+          id: session.id,
+          supplier_id: session.supplier_id,
+          name: session.supplier_name || "Fournisseur inconnu",
+          avatar: session.product_image || "/placeholder.svg?height=40&width=40",
+          status: "En ligne",
+          online: true,
+          lastMessage: lastMsgText,
+          lastMessageTime: lastMsg?.timestamp || session.created_at,
+          messages: (session.messages || []).map(msg => ({
+            id: msg.id,
+            message: msg.text || msg.message,
+            sender: msg.sender,
+            timestamp: new Date(msg.timestamp || msg.created_at),
+            type: msg.message_type || (msg.product?.id ? "product" : "text"),
+            message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
+            product: msg.product || null,
+            order_number: msg.order_number || null
+          }))
+        }
+      })
 
       // Active automatiquement la dernière session
       if (conversations.value.length > 0 && !activeConversationId.value) {
@@ -183,7 +286,7 @@ export const useChatStore = defineStore('chat', () => {
   }
 
   // 🔹 Définit le fournisseur et envoie le message produit
-  const setSupplier = async (product) => {
+  const setSupplier = async (product, orderNumber = null) => {
     const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
     if (!userRaw) return console.error("❌ Aucun utilisateur connecté")
 
@@ -206,7 +309,7 @@ export const useChatStore = defineStore('chat', () => {
         status: 'En ligne'
       }
 
-      sendProductIntroMessage(product)
+      sendProductIntroMessage(product, orderNumber)
     } catch (error) {
       console.error('❌ setSupplier failed:', error)
     }
@@ -262,41 +365,62 @@ export const useChatStore = defineStore('chat', () => {
     // Si le nombre de messages diffère, on met à jour
     if (!conversation) {
       // Nouvelle session => ajouter
+      const lastMsg = serverSession.messages?.length ? serverSession.messages[serverSession.messages.length - 1] : null
+      let lastMsgText = "Aucun message"
+      if (lastMsg) {
+        if (lastMsg.message_type === 'image') {
+          lastMsgText = "Image partagée"
+        } else if (lastMsg.message_type === 'product' || lastMsg.product?.id) {
+          lastMsgText = "Produit partagé"
+        } else {
+          lastMsgText = lastMsg.text || lastMsg.message
+        }
+      }
+
       conversations.value.push({
         id: serverSession.id,
+        supplier_id: serverSession.supplier_id,
         name: serverSession.supplier_name || "Fournisseur inconnu",
         avatar: serverSession.product_image || "/placeholder.svg?height=40&width=40",
         status: "En ligne",
         online: true,
-        lastMessage: serverSession.messages?.length
-          ? serverSession.messages[serverSession.messages.length - 1].message
-          : "Aucun message",
-        lastMessageTime: serverSession.messages?.length
-          ? serverSession.messages[serverSession.messages.length - 1].timestamp
-          : serverSession.created_at,
+        lastMessage: lastMsgText,
+        lastMessageTime: lastMsg?.timestamp || serverSession.created_at,
         messages: (serverSession.messages || []).map(msg => ({
           id: msg.id,
-          message: msg.message,
+          message: msg.text || msg.message,
           sender: msg.sender,
           timestamp: new Date(msg.timestamp || msg.created_at),
-          type: msg.product?.id ? "product" : "text",
-          product: msg.product || null
+          type: msg.message_type || (msg.product?.id ? "product" : "text"),
+          message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
+          product: msg.product || null,
+          order_number: msg.order_number || null
         }))
       })
     } else if (serverMessagesCount !== localMessagesCount) {
       // Mise à jour des messages
       conversation.messages = (serverSession.messages || []).map(msg => ({
         id: msg.id,
-        message: msg.message,
+        message: msg.text || msg.message,
         sender: msg.sender,
         timestamp: new Date(msg.timestamp || msg.created_at),
-        type: msg.product?.id ? "product" : "text",
-        product: msg.product || null
+        type: msg.message_type || (msg.product?.id ? "product" : "text"),
+        message_type: msg.message_type || (msg.product?.id ? "product" : "text"),
+        product: msg.product || null,
+        order_number: msg.order_number || null
       }))
 
       // Mettre à jour le dernier message
       const lastMsg = conversation.messages[conversation.messages.length - 1]
-      conversation.lastMessage = lastMsg?.message || "Nouveau message"
+      let lastMsgText = "Nouveau message"
+      if (lastMsg?.message_type === 'image') {
+        lastMsgText = "Image partagée"
+      } else if (lastMsg?.message_type === 'product') {
+        lastMsgText = "Produit partagé"
+      } else {
+        lastMsgText = lastMsg?.message || "Nouveau message"
+      }
+      conversation.lastMessage = lastMsgText
       conversation.lastMessageTime = lastMsg?.timestamp || new Date()
 
       // Si c'est la session active, mettre à jour chatMessages
@@ -311,6 +435,11 @@ export const useChatStore = defineStore('chat', () => {
   const sendMessage = async (text) => {
     if (!text || !text.trim()) return
 
+    if (!activeConversationId.value) {
+      console.error("❌ Aucune conversation active")
+      return
+    }
+
     const newMessage = {
       id: Date.now(),
       message: text,
@@ -318,13 +447,34 @@ export const useChatStore = defineStore('chat', () => {
       timestamp: new Date()
     }
 
+    // Ajouter le message à l'interface immédiatement
     chatMessages.value.push(newMessage)
     addMessageToConversation(activeConversationId.value, newMessage)
 
     try {
-      await chatClient.value.sendMessage(text, 'user', activeProductId.value)
+      // Envoyer le message au backend
+      const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=send_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: activeConversationId.value,
+          message: text,
+          sender: 'user'
+        })
+      })
+
+      const data = await response.json()
+      console.log('📤 Message envoyé:', data)
+
+      if (data.success && data.message) {
+        // Mettre à jour l'ID du message local avec celui du serveur
+        const messageIndex = chatMessages.value.findIndex(m => m.id === newMessage.id)
+        if (messageIndex !== -1) {
+          chatMessages.value[messageIndex].id = data.message.id
+        }
+      }
     } catch (error) {
-      console.error("❌ Erreur lors de l’envoi du message :", error)
+      console.error("❌ Erreur lors de l'envoi du message:", error)
     }
   }
 
@@ -353,6 +503,104 @@ const startPolling = () => {
     if (pollingInterval) {
       clearInterval(pollingInterval)
       pollingInterval = null
+    }
+  }
+
+  // 🔹 Envoyer une image
+  const sendImageMessage = async (imageUrl, caption = '') => {
+    if (!activeConversationId.value) {
+      console.error("❌ Aucune conversation active")
+      return
+    }
+
+    const imageMessage = {
+      id: Date.now(),
+      message: imageUrl,
+      sender: 'user',
+      message_type: 'image',
+      timestamp: new Date()
+    }
+
+    // Ajouter localement
+    chatMessages.value.push(imageMessage)
+    addMessageToConversation(activeConversationId.value, imageMessage)
+
+    try {
+      const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=send_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: activeConversationId.value,
+          message: caption || imageUrl,
+          sender: 'user',
+          message_type: 'image',
+          image_url: imageUrl
+        })
+      })
+
+      const data = await response.json()
+      console.log('📤 Image envoyée:', data)
+
+      if (data.success && data.message) {
+        const messageIndex = chatMessages.value.findIndex(m => m.id === imageMessage.id)
+        if (messageIndex !== -1) {
+          chatMessages.value[messageIndex].id = data.message.id
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erreur envoi image:", error)
+    }
+  }
+
+  // 🔹 Envoyer un produit
+  const sendProductMessage = async (product) => {
+    if (!activeConversationId.value) {
+      console.error("❌ Aucune conversation active")
+      return
+    }
+
+    const productMessage = {
+      id: Date.now(),
+      message: 'Produit partagé',
+      sender: 'bot',
+      message_type: 'product',
+      timestamp: new Date(),
+      product: {
+        id: product.id,
+        name: product.name,
+        price: product.unit_price,
+        image: product.primary_image
+      }
+    }
+
+    chatMessages.value.push(productMessage)
+    addMessageToConversation(activeConversationId.value, productMessage)
+
+    try {
+      const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=send_message', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          session_id: activeConversationId.value,
+          message: 'Produit partagé',
+          sender: 'bot',
+          message_type: 'product',
+          product_id: product.id,
+          product_name: product.name,
+          product_price: product.unit_price,
+          product_image: product.primary_image
+        })
+      })
+
+      const data = await response.json()
+      if (data.success && data.message) {
+        const messageIndex = chatMessages.value.findIndex(m => m.id === productMessage.id)
+        if (messageIndex !== -1) {
+          chatMessages.value[messageIndex].id = data.message.id
+        }
+      }
+    } catch (error) {
+      console.error("❌ Erreur envoi produit:", error)
     }
   }
 
@@ -404,6 +652,9 @@ const startPolling = () => {
     sendProductIntroMessage,
     fetchSupplierSessions,
     sendMessage,
-    setActiveConversation
+    sendImageMessage,
+    sendProductMessage,
+    setActiveConversation,
+    initChatStore
   }
 })

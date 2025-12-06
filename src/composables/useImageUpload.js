@@ -244,6 +244,83 @@ export function useImageUpload() {
     error.value = null;
   };
 
+  /**
+   * Upload d'image pour le chat (vers Cloudinary)
+   * @param {File} file - Fichier image
+   * @returns {Promise<string>} - URL de l'image uploadée
+   */
+  const uploadChatImage = async (file) => {
+    // Validation
+    const validation = validateFile(file);
+    if (!validation.valid) {
+      error.value = validation.error;
+      throw new Error(validation.error);
+    }
+
+    try {
+      uploading.value = true;
+      error.value = null;
+      uploadProgress.value = 0;
+
+      // Configuration Cloudinary
+      const cloudinaryConfig = {
+        uploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/image/upload',
+        uploadPreset: 'aliadjame',
+        apiKey: 'wy0Eh-uA0Y0Ci3nyODix0b3WejA'
+      };
+
+      // Créer le nom unique du fichier (sans extension et sans caractères spéciaux)
+      const timestamp = Date.now();
+      const randomStr = Math.random().toString(36).substring(2, 8);
+      const fileName = `chat_${timestamp}_${randomStr}`;
+
+      // Créer le FormData
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('upload_preset', cloudinaryConfig.uploadPreset);
+      formData.append('folder', `adjame/chat_images`);
+      formData.append('public_id', fileName);
+
+      // Upload vers Cloudinary
+      const response = await fetch(cloudinaryConfig.uploadUrl, {
+        method: 'POST',
+        body: formData
+      });
+
+      const data = await response.json();
+
+      if (!data.secure_url) {
+        throw new Error('Erreur lors de l\'upload vers Cloudinary');
+      }
+
+      uploadProgress.value = 100;
+      return data.secure_url;
+    } catch (err) {
+      error.value = err.message;
+      console.error('Erreur uploadChatImage:', err);
+      throw err;
+    } finally {
+      uploading.value = false;
+    }
+  };
+
+  /**
+   * Upload d'image pour le chat depuis un input file
+   * @param {Event} event - L'événement change de l'input file
+   * @returns {Promise<string>} - URL de l'image uploadée
+   */
+  const uploadChatImageFromInput = async (event) => {
+    const file = event.target.files?.[0];
+    if (!file) return null;
+
+    const url = await uploadChatImage(file);
+
+    // Reset l'input pour permettre de re-uploader la même image
+    event.target.value = '';
+
+    return url;
+  };
+
   return {
     // État
     uploading,
@@ -264,6 +341,8 @@ export function useImageUpload() {
     createPreview,
     resizeImage,
     reset,
-    clearError
+    clearError,
+    uploadChatImage,
+    uploadChatImageFromInput
   };
 }

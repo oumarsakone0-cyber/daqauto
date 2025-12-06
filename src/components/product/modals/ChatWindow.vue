@@ -145,8 +145,12 @@
               message.sender === 'user' ? 'justify-end' : 'justify-start'
             ]"
           >
-            <div v-if="message.type === 'product'" class="max-w-[85%] md:max-w-[70%]">
+            <div v-if="message.type === 'product' || message.message_type === 'product'" class="max-w-[85%] md:max-w-[70%]">
               <div class="bg-white border border-gray-200 rounded-xl overflow-hidden shadow-sm">
+                <!-- Numéro de commande si présent -->
+                <div v-if="message.order_number" class="bg-orange-50 px-3 py-2 border-b border-orange-100">
+                  <p class="text-xs text-orange-700 font-medium">📦 Commande #{{ message.order_number }}</p>
+                </div>
                 <div class="flex gap-3 p-3">
                   <img
                     :src="message.product.image"
@@ -165,11 +169,28 @@
                     </div>
                   </div>
                 </div>
+                <!-- Message texte associé au produit -->
+                <div v-if="message.message || message.text" class="px-3 py-2 bg-gray-50 border-t border-gray-200">
+                  <p class="text-xs text-gray-700">💬 {{ message.message || message.text }}</p>
+                </div>
               </div>
               <span class="text-xs text-gray-500 mt-1 block">{{ formatTime(message.timestamp) }}</span>
             </div>
 
-            
+            <!-- Message image -->
+            <div v-else-if="message.message_type === 'image'" class="max-w-[85%] md:max-w-[70%]">
+              <div class="rounded-2xl overflow-hidden">
+                <img
+                  :src="message.message"
+                  alt="Image partagée"
+                  class="max-w-full h-auto rounded-lg cursor-pointer shadow-md"
+                  @click="openImage(message.message)"
+                />
+              </div>
+              <span class="text-xs text-gray-500 mt-1 block">{{ formatTime(message.timestamp) }}</span>
+            </div>
+
+            <!-- Message texte -->
             <div v-else class="max-w-[85%] md:max-w-[70%]">
               <div
                 :class="[
@@ -180,17 +201,36 @@
                 ]"
                 :style="message.sender === 'user' ? 'background: linear-gradient(160deg, #fe9700, #fc4618)' : ''"
               >
-                <p class="text-sm leading-relaxed">{{ message.message}}</p>
+                <p class="text-sm leading-relaxed">{{ message.message || message.text }}</p>
               </div>
               <span class="text-xs text-gray-500 mt-1 block">{{ formatTime(message.timestamp) }}</span>
             </div>
-            
-           
+
+
           </div>
         </div>
 
         <div class="border-t border-gray-200 p-4">
           <div class="flex items-center gap-2">
+            <!-- Bouton upload image -->
+            <button
+              @click="triggerFileInput"
+              class="p-3 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
+              title="Envoyer une image"
+            >
+              <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
+              </svg>
+            </button>
+
+            <input
+              ref="fileInput"
+              type="file"
+              accept="image/*"
+              class="hidden"
+              @change="handleImageUpload"
+            />
+
             <input
               v-model="newMessage"
               @keypress.enter="sendMessage"
@@ -208,7 +248,7 @@
                 <line x1="22" y1="2" x2="11" y2="13"/>
                 <polygon points="22,2 15,22 11,13 2,9 22,2"/>
               </svg>
-              
+
             </button>
           </div>
         </div>
@@ -220,6 +260,7 @@
 <script setup>
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
 import { useChatStore } from '../../../stores/chat'
+import { useImageUpload } from '../../../composables/useImageUpload'
 import axios from 'axios' // ✅ on utilise axios (tu peux remplacer par fetch)
 
 const isOpen = ref(false)
@@ -231,11 +272,13 @@ const activeConversationId = ref(1)
 const isLoggedIn = ref(false)
 const user = ref(null)
 const conversations = ref([])
+const fileInput = ref(null)
 
 const chatStore = useChatStore()
+const { uploadChatImage, uploading } = useImageUpload()
 
 // ✅ URL de ton backend (à adapter à ton API)
-const API_BASE_URL = 'https://sastock.com/api_adjame/chat.php'
+const API_BASE_URL = 'https://sastock.com/api_adjame/chat_UPDATED.php'
 
 const activeConversation = computed(() => {
   return conversations.value.find(c => c.id === activeConversationId.value) || conversations.value[0]
@@ -389,6 +432,63 @@ const selectConversation = (id) => {
   scrollToBottom()
 }
 
+const triggerFileInput = () => {
+  fileInput.value?.click()
+}
+
+const handleImageUpload = async (event) => {
+  const file = event.target.files?.[0]
+  if (!file) return
+
+  const sessionId = activeConversationId.value
+
+  try {
+    // Upload l'image vers Cloudinary
+    const imageUrl = await uploadChatImage(file)
+
+    if (imageUrl) {
+      // Ajouter localement pour affichage immédiat
+      const imageMessage = {
+        id: Date.now(),
+        message: imageUrl,
+        sender: 'user',
+        message_type: 'image',
+        timestamp: new Date()
+      }
+
+      const activeConv = conversations.value.find(c => c.id === sessionId)
+      if (activeConv) {
+        activeConv.messages.push(imageMessage)
+        activeConv.lastMessage = 'Image partagée'
+        activeConv.lastMessageTime = formatTime(new Date())
+      }
+
+      scrollToBottom()
+
+      // Envoyer l'image au backend avec le bon session_id
+      await axios.post(`${API_BASE_URL}?action=send_message`, {
+        session_id: sessionId,
+        sender: 'user',
+        message: imageUrl,
+        message_type: 'image',
+        image_url: imageUrl
+      })
+
+      console.log('✅ Image envoyée au backend avec session_id:', sessionId)
+    }
+  } catch (error) {
+    console.error('❌ Erreur upload image:', error)
+    alert('Erreur lors de l\'upload de l\'image. Veuillez réessayer.')
+  }
+
+  // Reset l'input
+  event.target.value = ''
+}
+
+const openImage = (url) => {
+  window.open(url, '_blank')
+}
+
 const sendMessage = async () => {
   if (!newMessage.value.trim()) return
 
@@ -423,8 +523,8 @@ const sendMessage = async () => {
 
     console.log('✅ Message envoyé au backend !')
   } catch (error) {
-    console.error('❌ Erreur lors de l’envoi du message :', error)
-    alert("Erreur lors de l’envoi du message. Veuillez réessayer.")
+    console.error('❌ Erreur lors de l\'envoi du message :', error)
+    alert('Erreur lors de l\'envoi du message. Veuillez réessayer.')
   }
 }
 

@@ -1619,34 +1619,32 @@ const closeAdditionalPaymentModal = () => {
 
 const handleChatClick = async (order) => {
   try {
-    const supplierData = {
-      id: order.fournisseur_id,
-      nom: order.boutique_nom,
-      email: order.fournisseur_email || '',
-      phone: order.fournisseur_phone || '',
-      address: order.fournisseur_address || ''
-    }
-
-    const productData = {
+    // Créer un objet produit avec les infos de la commande
+    const product = {
       id: order.produit_id,
-      nom: order.produit_nom,
-      image: order.produit_image,
-      prix: order.produit_prix
+      name: order.produit_nom,
+      primary_image: order.produit_image,
+      unit_price: order.produit_prix,
+      boutique_id: order.fournisseur_id,
+      boutique_name: order.boutique_nom,
+      rating: 0
     }
 
-    chatStore.setCurrentSupplier(supplierData)
-    chatStore.setCurrentProduct(productData)
-    chatStore.setCurrentOrder(order)
+    console.log('📞 Ouverture du chat avec le vendeur:', product, 'Commande:', order.id)
 
+    // Utiliser setSupplier pour créer/ouvrir la conversation avec le vendeur et passer le numéro de commande
+    await chatStore.setSupplier(product, order.id)
+
+    // Ouvrir le chat en fonction de la taille de l'écran
     const isMobile = window.innerWidth <= 768
     if (isMobile) {
-      chatStore.openChatModal()
+      await chatStore.openChat()
     } else {
-      chatStore.openDesktopChat()
+      await chatStore.openDesktopChat()
     }
   } catch (error) {
-    console.error('Error opening chat:', error)
-    alert('Unable to open chat. Please try again.')
+    console.error('❌ Erreur ouverture du chat:', error)
+    alert('Impossible d\'ouvrir le chat. Veuillez réessayer.')
   }
 }
 

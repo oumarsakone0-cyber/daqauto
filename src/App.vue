@@ -32,6 +32,7 @@ import { useRoute } from 'vue-router'
 import Navbar from './components/menu/Navbar.vue'
 import Footer from './components/menu/Footer.vue'
 import AutoTranslator from './components/traduction/AutoTranslator.vue'
+import { useChatStore } from './stores/chat'
 
 export default {
   name: 'App',
@@ -43,12 +44,13 @@ export default {
   setup() {
     const route = useRoute()
     const hideNavbar = ref(false)
+    const chatStore = useChatStore()
 
     const shouldHideNavbar = computed(() => {
       const isAuthPage = route.name === 'login' || route.name === 'register'
       const isDashboardAdmin = route.path.startsWith('/dashboard-admin/')
       const isBoutiquedAdmin = route.path.startsWith('/boutique-admin/')
-      
+
       return isAuthPage || isDashboardAdmin || isBoutiquedAdmin
     })
 
@@ -59,8 +61,19 @@ export default {
       return 'padding: 123px 0px 0px 0px;'
     })
 
-    onMounted(() => {
+    onMounted(async () => {
       hideNavbar.value = shouldHideNavbar.value
+
+      // Initialiser le chat store si l'utilisateur est connecté
+      const userRaw = localStorage.getItem('user') || sessionStorage.getItem('user')
+      if (userRaw) {
+        try {
+          await chatStore.initChatStore()
+          console.log('✅ Chat store initialisé')
+        } catch (error) {
+          console.error('❌ Erreur initialisation chat store:', error)
+        }
+      }
     })
 
     watch(shouldHideNavbar, (newValue) => {

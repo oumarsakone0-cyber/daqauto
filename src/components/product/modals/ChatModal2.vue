@@ -52,7 +52,7 @@
           </div>
           
           <div v-else class="message-content">
-            <div class="message-text">{{ message.message }}</div>
+            <div class="message-text">{{ message.message || message.text }}</div>
             <div class="message-time">{{ formatTime(message.timestamp) }}</div>
           </div>
         </div>
