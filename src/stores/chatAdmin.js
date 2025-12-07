@@ -83,7 +83,10 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
               timestamp: new Date(msg.timestamp || msg.created_at),
               type: messageType,
               message_type: messageType,
-              product: msg.product || null,
+              product: msg.product ? {
+                ...msg.product,
+                slug: msg.product.slug || msg.product_slug
+              } : null,
               order_number: msg.order_number || null
             }
           })
@@ -237,7 +240,10 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
       timestamp: new Date(msg.timestamp || msg.created_at),
       type: messageType,
       message_type: messageType,
-      product: msg.product || null,
+      product: msg.product ? {
+        ...msg.product,
+        slug: msg.product.slug || msg.product_slug
+      } : null,
       order_number: msg.order_number || null
     })
 
@@ -305,7 +311,10 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
               timestamp: new Date(msg.timestamp || msg.created_at),
               type: messageType,
               message_type: messageType,
-              product: msg.product || null,
+              product: msg.product ? {
+                ...msg.product,
+                slug: msg.product.slug || msg.product_slug
+              } : null,
               order_number: msg.order_number || null
             }
           })
@@ -330,7 +339,11 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
             timestamp: new Date(msg.timestamp || msg.created_at),
             type: messageType,
             message_type: messageType,
-            product: msg.product || null
+            product: msg.product ? {
+              ...msg.product,
+              slug: msg.product.slug || msg.product_slug
+            } : null,
+            order_number: msg.order_number || null
           }
         })
 

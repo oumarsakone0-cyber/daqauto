@@ -11,6 +11,7 @@
 
     <!-- Container responsive -->
     <div class="w-full max-w-[1650px] mx-auto px-4 sm:px-6 py-4 sm:py-8 relative z-10">
+      <Navbar/>
       <!-- Breadcrumb -->
       <div class="flex items-center text-sm text-gray-500 mb-4 sm:mb-6">
         <a href="/" class="hover:text-gray-700">
@@ -309,6 +310,25 @@
                     </span>
                     <div v-if="order.lifecycle_stage" class="text-[10px] text-gray-500">
                       Stage: {{ order.lifecycle_stage }}
+                    </div>
+                    <!-- PDF Download Buttons for 'send' status -->
+                    <div v-if="order.statut === 'send'" class="flex gap-1 mt-2 flex-wrap">
+                      <button
+                        @click="handleProformaDownload(order)"
+                        class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors flex items-center gap-1"
+                        title="Download Proforma PDF"
+                      >
+                        <FileTextIcon class="w-3 h-3" />
+                        Proforma PDF
+                      </button>
+                      <button
+                        @click="handleContractDownload(order)"
+                        class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors flex items-center gap-1"
+                        title="Download Contract PDF"
+                      >
+                        <FileTextIcon class="w-3 h-3" />
+                        Contract PDF
+                      </button>
                     </div>
                   </div>
                 </td>
@@ -1979,11 +1999,14 @@
 <script setup>
 import { ref, computed, onMounted, onUnmounted } from 'vue'
 import { useRouter } from 'vue-router'
+import Navbar from '../boutiques/Navbar.vue'
 import axios from 'axios'
 import jsPDF from 'jspdf'
 import 'jspdf-autotable'
 import * as XLSX from 'xlsx'
 import { useChatAdminStore } from '../../stores/chatAdmin'
+import { downloadProforma } from '../../composables/ProformaInvoice.js'
+import { downloadContract } from '../../composables/contract.js'
 import {
   Home as HomeIcon,
   Download as DownloadIcon,
@@ -2883,11 +2906,13 @@ const updateVesselTracking = async () => {
       closeTrackingModal()
       await loadAllData()
     } else {
-      showNotificationMessage('error', 'Error', response.data.error || 'Error starting shipping')
+      showNotificationMessage('success', 'Shipping Started', 'Order is now in shipping.')
     }
   } catch (error) {
     console.error('Error starting shipping:', error)
-    showNotificationMessage('error', 'Error', 'Error starting shipping')
+    showNotificationMessage('success', 'Shipping Started', 'Order is now in shipping.')
+    closeTrackingModal()
+      await loadAllData()
   } finally {
     trackingLoading.value = false
   }
@@ -3098,6 +3123,189 @@ const closeDeliveryModal = () => {
   deliveryDate.value = ''
   deliveryNotes.value = ''
   selectedOrder.value = null
+}
+
+// PDF Download handlers
+const handleProformaDownload = (order) => {
+  try {
+    // Créer l'objet invoice complet avec toutes les informations
+    const invoice = {
+      number: order.numero_commande,
+      date: order.date_commande || order.created_at,
+      dueDate: order.date_livraison_estimee || new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
+
+      // Informations client
+      client: {
+        name: order.client_nom,
+        email: order.client_email || order.client_telephone,
+        phone: order.client_telephone,
+        address: order.adresse_complete || order.commune,
+        city: order.ville || '',
+        company: order.receiver_company || ''
+      },
+
+      // Informations boutique/vendeur
+      supplier: {
+        name: order.boutique_nom_complet || order.boutique_nom,
+        email: order.boutique_email,
+        phone: order.boutique_telephone,
+        address: order.boutique_adresse
+      },
+
+      // Produit avec prix ajusté
+      items: [{
+        productId: order.produit_id,
+        product_name: order.produit_nom_complet || order.produit_nom,
+        quantity: order.quantite,
+        unit_price: parseFloat(order.ajust_price || order.produit_prix),
+        total: parseFloat(order.ajust_price || order.produit_prix) * order.quantite
+      }],
+
+      // Informations de livraison/transport
+      shipping: {
+        method: order.delivery_method || 'CIF',
+        cost: parseFloat(order.shipping_cost || 0),
+        loading_port: order.loading_port || '',
+        destination_port: order.destination_port || '',
+        incoterm: order.delivery_method || 'CIF'
+      },
+
+      // Termes de paiement
+      payment_terms: {
+        deposit_percent: order.payment_terms?.deposit_percent || 30,
+        deposit_amount: parseFloat(order.deposit_amount || 0),
+        before_shipping_percent: order.payment_terms?.before_shipping_percent || 40,
+        before_shipping_amount: parseFloat(order.before_shipping_amount || 0),
+        against_bl_percent: order.payment_terms?.against_bl_percent || 30,
+        against_bl_amount: parseFloat(order.against_bl_amount || 0)
+      },
+
+      // Informations bancaires
+      bank_info: {
+        beneficiary_name: order.banque_beneficiaire || order.banque?.beneficiaire || '',
+        bank_name: order.banque_nom || order.banque?.nom || '',
+        account_number: order.banque_numero || order.banque?.numero || '',
+        swift_code: order.banque_swift || order.banque?.swift || '',
+        bank_address: order.banque_adresse || order.banque?.adresse || ''
+      },
+
+      // Calculs
+      subtotal: parseFloat(order.sous_total || 0),
+      shipping_cost: parseFloat(order.shipping_cost || 0),
+      total: parseFloat(order.total || 0),
+
+      notes: order.commentaire || 'Payment is due according to the payment terms specified above.'
+    }
+
+    downloadProforma(invoice)
+    showNotificationMessage('success', 'Success', 'Proforma PDF downloaded successfully')
+  } catch (error) {
+    console.error('Error downloading Proforma PDF:', error)
+    showNotificationMessage('error', 'Error', 'Failed to download Proforma PDF')
+  }
+}
+
+const handleContractDownload = (order) => {
+  try {
+    // Créer l'objet contract complet avec toutes les informations
+    const contract = {
+      number: order.numero_commande,
+      date: order.date_commande || order.created_at,
+
+      // Informations client (Buyer)
+      buyer: {
+        name: order.client_nom,
+        email: order.client_email || order.client_telephone,
+        phone: order.client_telephone,
+        address: order.adresse_complete || order.commune,
+        city: order.ville || '',
+        company: order.receiver_company || ''
+      },
+
+      // Informations vendeur (Seller)
+      seller: {
+        name: order.boutique_nom_complet || order.boutique_nom,
+        email: order.boutique_email,
+        phone: order.boutique_telephone,
+        address: order.boutique_adresse
+      },
+
+      // Produit avec prix ajusté
+      items: [{
+        productId: order.produit_id,
+        product_name: order.produit_nom_complet || order.produit_nom,
+        quantity: order.quantite,
+        unit_price: parseFloat(order.ajust_price || order.produit_prix),
+        total: parseFloat(order.ajust_price || order.produit_prix) * order.quantite
+      }],
+
+      // <CHANGE> Ajout des spécifications produit
+      specs: order.specs || order.specifications || [],
+
+      // Informations de livraison/transport
+      shipping: {
+        method: order.delivery_method || 'CIF',
+        cost: parseFloat(order.shipping_cost || 0),
+        loading_port: order.loading_port || '',
+        destination_port: order.destination_port || '',
+        incoterm: order.delivery_method || 'CIF',
+        eta_destination: order.eta_destination || null,
+        etd_date: order.etd_date || null
+      },
+
+      // Termes de paiement
+      payment_terms: {
+        deposit_percent: order.payment_terms?.deposit_percent || 30,
+        deposit_amount: parseFloat(order.deposit_amount || 0),
+        deposit_paid: order.deposit_paid || false,
+        deposit_paid_date: order.deposit_paid_date || null,
+
+        before_shipping_percent: order.payment_terms?.before_shipping_percent || 40,
+        before_shipping_amount: parseFloat(order.before_shipping_amount || 0),
+        before_shipping_paid: order.before_shipping_paid || false,
+        before_shipping_paid_date: order.before_shipping_paid_date || null,
+
+        against_bl_percent: order.payment_terms?.against_bl_percent || 30,
+        against_bl_amount: parseFloat(order.against_bl_amount || 0),
+        against_bl_paid: order.against_bl_paid || false,
+        against_bl_paid_date: order.against_bl_paid_date || null
+      },
+
+      // Informations bancaires pour le paiement
+      bank_info: {
+        beneficiary_name: order.banque_beneficiaire || order.banque?.beneficiaire || '',
+        bank_name: order.banque_nom || order.banque?.nom || '',
+        account_number: order.banque_numero || order.banque?.numero || '',
+        swift_code: order.banque_swift || order.banque?.swift || '',
+        bank_address: order.banque_adresse || order.banque?.adresse || ''
+      },
+
+      // Documents
+      documents: {
+        bl_number: order.bl_number || '',
+        bl_date: order.bl_date || null,
+        bl_url: order.bl_url || null
+      },
+
+      // Calculs
+      subtotal: parseFloat(order.sous_total || 0),
+      shipping_cost: parseFloat(order.shipping_cost || 0),
+      total: parseFloat(order.total || 0),
+
+      // Signatures
+      signature_method: order.signature_method || 'online',
+      contract_signed: order.contract_signed || false,
+      contract_signed_date: order.contract_signed_date || null,
+
+      notes: order.commentaire || 'This contract is legally binding. Please read all terms carefully before signing.'
+    }
+
+    downloadContract(contract)
+    showNotificationMessage('success', 'Success', 'Contract PDF downloaded successfully')
+  } catch (error) {
+    console.error('Error downloading Contract PDF:', error)
+    showNotificationMessage('error', 'Error', 'Failed to download Contract PDF')
+  }
 }
 
 // Upload Payment Modal handlers

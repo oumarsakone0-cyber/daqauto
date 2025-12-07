@@ -173,6 +173,16 @@
                 <div v-if="message.message || message.text" class="px-3 py-2 bg-gray-50 border-t border-gray-200">
                   <p class="text-xs text-gray-700">💬 {{ message.message || message.text }}</p>
                 </div>
+                <!-- Bouton Order Now -->
+                <div v-if="message.product.slug" class="px-3 py-2 border-t border-gray-200">
+                  <button
+                    @click="goToProductDetail(message.product.slug)"
+                    class="w-full py-2 px-4 rounded-lg font-semibold text-sm text-white transition-transform hover:scale-105"
+                    style="background: linear-gradient(160deg, #fe9700, #fc4618)"
+                  >
+                    Order Now
+                  </button>
+                </div>
               </div>
               <span class="text-xs text-gray-500 mt-1 block">{{ formatTime(message.timestamp) }}</span>
             </div>
@@ -259,9 +269,12 @@
 
 <script setup>
 import { ref, computed, nextTick, watch, onMounted } from 'vue'
+import { useRouter } from 'vue-router'
 import { useChatStore } from '../../../stores/chat'
 import { useImageUpload } from '../../../composables/useImageUpload'
 import axios from 'axios' // ✅ on utilise axios (tu peux remplacer par fetch)
+
+const router = useRouter()
 
 const isOpen = ref(false)
 const showSidebar = ref(false)
@@ -487,6 +500,15 @@ const handleImageUpload = async (event) => {
 
 const openImage = (url) => {
   window.open(url, '_blank')
+}
+
+const goToProductDetail = (slug) => {
+  if (!slug) return
+  router.push(`/product/${slug}`)
+  // Fermer le chat après navigation
+  isOpen.value = false
+  chatStore.closeDesktopChat()
+  chatStore.closeChat()
 }
 
 const sendMessage = async () => {

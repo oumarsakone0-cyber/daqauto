@@ -47,7 +47,8 @@ export const useChatStore = defineStore('chat', () => {
         price: product.unit_price,
         image: product.primary_image,
         shop: product.boutique_name,
-        rating: product.rating
+        rating: product.rating,
+        slug: product.slug
       },
       order_number: orderNumber
     }
@@ -66,7 +67,8 @@ export const useChatStore = defineStore('chat', () => {
         product_id: product.id,
         product_name: product.name,
         product_price: product.unit_price,
-        product_image: product.primary_image
+        product_image: product.primary_image,
+        product_slug: product.slug
       }
 
       // Ajouter le numéro de commande si présent

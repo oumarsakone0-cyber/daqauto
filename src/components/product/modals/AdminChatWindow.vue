@@ -114,6 +114,15 @@
               <div v-if="message.message || message.text" class="product-message-text">
                 💬 {{ message.message || message.text }}
               </div>
+              <!-- Bouton Order Now -->
+              <div v-if="message.product?.slug" class="product-action-button">
+                <button
+                  @click="goToProductDetail(message.product.slug)"
+                  class="order-now-btn"
+                >
+                  Order Now
+                </button>
+              </div>
               <span class="message-timestamp">{{ formatTime(message.timestamp) }}</span>
             </div>
 
@@ -180,9 +189,11 @@
 
 <script setup>
 import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
+import { useRouter } from 'vue-router'
 import { useChatAdminStore } from '../../../stores/chatAdmin'
 import { useImageUpload } from '../../../composables/useImageUpload'
 
+const router = useRouter()
 const chatStore = useChatAdminStore()
 const newMessage = ref('')
 const messagesContainer = ref(null)
@@ -252,6 +263,11 @@ const handleImageUpload = async (event) => {
 
 const openImage = (url) => {
   window.open(url, '_blank')
+}
+
+const goToProductDetail = (slug) => {
+  if (!slug) return
+  router.push(`/product/${slug}`)
 }
 
 const handleSendMessage = async () => {
@@ -723,6 +739,32 @@ onUnmounted(() => {
   font-size: 13px;
   color: #374151;
   line-height: 1.5;
+}
+
+.product-action-button {
+  padding: 10px 12px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.order-now-btn {
+  width: 100%;
+  padding: 10px 16px;
+  background: linear-gradient(160deg, #fe9700, #fc4618);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  font-size: 14px;
+  cursor: pointer;
+  transition: transform 0.2s ease;
+}
+
+.order-now-btn:hover {
+  transform: scale(1.02);
+}
+
+.order-now-btn:active {
+  transform: scale(0.98);
 }
 
 /* Image Message */

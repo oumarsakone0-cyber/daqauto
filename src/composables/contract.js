@@ -9,10 +9,11 @@ const generateContractIdWithTimestamp = () => {
   return `CON-${timestamp}-${random}`
 }
 
-export const downloadContract = async(contract,subtotal,total) => {
+export const downloadContract = async(contract) => {
+  // contract now contains all order information in a single object
+  // including: buyer, seller, items, shipping, payment_terms, bank_info, documents, subtotal, total
 
-   
-    contract.number = generateContractIdWithTimestamp() // ou une autre fonction
+  contract.number = generateContractIdWithTimestamp() // ou une autre fonction
 
   const writeWrapped = (text, x = margin, lineHeight = 5) => {
     const maxWidth = pageWidth - margin - 15;
@@ -99,36 +100,35 @@ const subHeader =()=>{
   /// Fin entête ----- Debut sous entête
   yPos += 24
   margin = 15
-  doc.setFontSize(9) 
+  doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(107, 114, 128)
   doc.text('Seller :', margin, yPos)
-  
+
   yPos += 3
-  // Informations entreprise
+  // Informations entreprise (Seller from contract data)
   doc.addImage(logo, 'PNG', margin, yPos, 6, 6)
   doc.setFontSize(9)
   doc.setFont('helvetica', 'normal')
-  doc.text('DAQ AUTO', margin+8, yPos+5)
+  doc.text(contract.seller?.name || 'DAQ AUTO', margin+8, yPos+5)
   doc.setFontSize(7)
   doc.setTextColor(107, 114, 128)
-  doc.text('Abidjan, Côte d\'Ivoire', margin, yPos +10 )
-  doc.text('+225 01 53 67 60 62', margin, yPos + 13)
-  doc.text('commandes@daqauto.com', margin, yPos + 16)
-  doc.text('(USCC): 91310000MA1K4T123X', margin, yPos + 19)
-  
-  // Infos client
+  doc.text(contract.seller?.address || 'Abidjan, Côte d\'Ivoire', margin, yPos +10 )
+  doc.text(contract.seller?.phone || '+225 01 53 67 60 62', margin, yPos + 13)
+  doc.text(contract.seller?.email || 'commandes@daqauto.com', margin, yPos + 16)
+
+  // Infos client (Buyer)
   margin=50
-  doc.setFontSize(9) 
+  doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
   doc.text('Buyer :', pageWidth - margin, yPos-3, { align: 'left' })
   doc.setFont('helvetica', 'normal')
-  doc.text(contract.client.name || 'Customer name', pageWidth - margin, yPos+4,{ align: 'left' })
+  doc.text(contract.buyer?.name || 'Customer name', pageWidth - margin, yPos+4,{ align: 'left' })
   doc.setFontSize(7)
   doc.setTextColor(107, 114, 128)
-  doc.text(contract.client.address || 'Customer address', pageWidth - margin, yPos + 7,{ align: 'left' })
-  doc.text(contract.client.phone || '+225 XX XX XX XX XX', pageWidth - margin, yPos + 10,{ align: 'left' })
-  doc.text(contract.client.email || 'email@exemple.com', pageWidth - margin, yPos + 13,{ align: 'left' })
+  doc.text(contract.buyer?.address || 'Customer address', pageWidth - margin, yPos + 7,{ align: 'left' })
+  doc.text(contract.buyer?.phone || '+225 XX XX XX XX XX', pageWidth - margin, yPos + 10,{ align: 'left' })
+  doc.text(contract.buyer?.email || 'email@exemple.com', pageWidth - margin, yPos + 13,{ align: 'left' })
 }
   
 // Section des articles
@@ -177,8 +177,8 @@ doc.setFontSize(8)
     doc.text(contract.items[index].stock_number || "N/A",margin + 130, yPos, { align: 'center' } )
     doc.text(contract.items[index].color || "N/A", margin + 145, yPos, { align: 'center' })
     doc.text(String(contract.items[index].quantity), margin + 152, yPos, { align: 'center' })
-    doc.text(formatCurrency(contract.items[index].price), margin +163, yPos, { align: 'center' })
-    doc.text(formatCurrency(contract.items[index].quantity * contract.items[index].price), margin + 175, yPos, { align: 'center' })
+    doc.text(formatCurrency(contract.items[index].unit_price), margin +163, yPos, { align: 'center' })
+    doc.text(formatCurrency(contract.items[index].total), margin + 175, yPos, { align: 'center' })
     
     yPos += 7
 
@@ -188,7 +188,7 @@ doc.setFontSize(8)
 }
 
 // Section des totaux
-const totalsSection =()=>{  
+const totalsSection =()=>{
   yPos += 10
    if (yPos > pageHeight - 40) {
       footer()
@@ -200,24 +200,17 @@ const totalsSection =()=>{
   doc.setTextColor(107, 114, 128)
   doc.setFontSize(7)
   doc.text('Subtotal:', pageWidth - 80, yPos)
-  doc.text(formatCurrency(subtotal), pageWidth - 25, yPos, { align: 'right' })
-  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
-  
-  yPos += 10
-  doc.text("Shipping / Handling :", pageWidth - 80, yPos)
-  doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
+  doc.text(formatCurrency(contract.subtotal), pageWidth - 25, yPos, { align: 'right' })
   divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
 
-  yPos += 10
-  doc.text("Insurance :", pageWidth - 80, yPos)
-  doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
+  // Only show shipping if cost > 0
+  if (contract.shipping_cost > 0) {
+    yPos += 10
+    doc.text("Shipping Cost (" + (contract.shipping?.method || 'CIF') + "):", pageWidth - 80, yPos)
+    doc.text(formatCurrency(contract.shipping_cost), pageWidth - 25, yPos, { align: 'right' })
+    divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
+  }
 
-  yPos += 10
-  doc.text("Sea Shipping :", pageWidth - 80, yPos)
-  doc.text("N/A", pageWidth - 25, yPos, { align: 'right' })
-  divider(0.1,pageWidth - 80, yPos+2,  pageWidth-15 , yPos+2)
-  
   yPos += 10
    if (yPos > pageHeight - 40) {
       footer()
@@ -227,58 +220,197 @@ const totalsSection =()=>{
   doc.setDrawColor(254, 121, 0);
   doc.setFillColor(254, 121, 0)
   doc.roundedRect(pageWidth - 90, yPos - 5, 75, 10,2, 2, 'FD')
-  
+
   doc.setTextColor(255, 255, 255)
   doc.setFont('helvetica', 'bold')
   doc.setFontSize(11)
   doc.text('TOTAL:', pageWidth - 85, yPos + 2)
-  doc.text(formatCurrency(total), pageWidth - 20, yPos + 2, { align: 'right' })
+  doc.text(formatCurrency(contract.total), pageWidth - 20, yPos + 2, { align: 'right' })
 }
 
-// Bank Information
-const bankInfos = ()=>{
+// Payment Terms Section (with status)
+const paymentTermsSection = ()=>{
   yPos += 15
    if (yPos > pageHeight - 40) {
       footer()
       doc.addPage()
       yPos = 20
     }
-  
+
+  doc.setFillColor(240, 249, 255)
+  doc.setDrawColor(59, 130, 246);
+  doc.roundedRect(margin, yPos, pageWidth - 30, 38, 1, 1, 'FD')
+
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'bold')
+  doc.setTextColor(59, 130, 246)
+  doc.text('Article 2: Payment Terms', margin+5, yPos + 7)
+
+  doc.setTextColor(0, 0, 0)
+  doc.setFontSize(7)
+  doc.setFont('helvetica', 'normal')
+
+  const pt = contract.payment_terms || {}
+
+  // Deposit
+  doc.text(`Deposit (${pt.deposit_percent || 30}%):`, 25, yPos + 13)
+  doc.setFont('helvetica', 'bold')
+  doc.text(formatCurrency(pt.deposit_amount || 0), 60, yPos + 13)
+  doc.setFont('helvetica', 'italic')
+  doc.setFontSize(6)
+  doc.text(pt.deposit_paid ? `[Paid: ${formatDate(pt.deposit_paid_date)}]` : '[Unpaid]', 90, yPos + 13)
+
+  // Before Shipping
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(7)
+  doc.text(`Before Shipping (${pt.before_shipping_percent || 40}%):`, 25, yPos + 20)
+  doc.setFont('helvetica', 'bold')
+  doc.text(formatCurrency(pt.before_shipping_amount || 0), 75, yPos + 20)
+  doc.setFont('helvetica', 'italic')
+  doc.setFontSize(6)
+  doc.text(pt.before_shipping_paid ? `[Paid: ${formatDate(pt.before_shipping_paid_date)}]` : '[Unpaid]', 105, yPos + 20)
+
+  // Against BL
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(7)
+  doc.text(`Against BL (${pt.against_bl_percent || 30}%):`, 25, yPos + 27)
+  doc.setFont('helvetica', 'bold')
+  doc.text(formatCurrency(pt.against_bl_amount || 0), 65, yPos + 27)
+  doc.setFont('helvetica', 'italic')
+  doc.setFontSize(6)
+  doc.text(pt.against_bl_paid ? `[Paid: ${formatDate(pt.against_bl_paid_date)}]` : '[Unpaid]', 95, yPos + 27)
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(7)
+  doc.setTextColor(107, 114, 128)
+  doc.text('Total Contract Value: ' + formatCurrency(contract.total), 25, yPos + 34)
+
+  yPos += 43
+}
+
+// Bank Information
+const bankInfos = ()=>{
+  yPos += 5
+   if (yPos > pageHeight - 40) {
+      footer()
+      doc.addPage()
+      yPos = 20
+    }
+
   // Informations Bank
   doc.setFillColor(254, 243, 199)
   doc.setDrawColor(254, 121, 0); // Orange clair
   doc.roundedRect(margin, yPos, pageWidth - 30, 38,1,1, 'FD')
-  
+
   doc.setFontSize(9)
   doc.setFont('helvetica', 'bold')
   doc.setTextColor(254, 121, 0) // Orange foncé
-  doc.text(' Bank Information', margin+5, yPos + 7)
-  
+  doc.text('Article 4: Bank Information for Payment', margin+5, yPos + 7)
+
   doc.setTextColor(0, 0, 0)
   doc.setFontSize(8)
   doc.setFont('helvetica', 'normal')
+
+  const bank = contract.bank_info || {}
   doc.text( 'Beneficiary Name :', 25, yPos + 13)
   doc.setFont('helvetica', 'bold')
-  doc.text( 'DAQ AUTO CO., LTD', 50, yPos + 13, )
+  doc.text(bank.beneficiary_name || 'To be provided', 60, yPos + 13)
   doc.setFont('helvetica', 'normal')
   doc.text('Bank Name :', 25, yPos + 18)
   doc.setFont('helvetica', 'bold')
-  doc.text( ' Bank of China, Chongqing Branch', 50, yPos + 18, )
+  doc.text(bank.bank_name || 'To be provided', 60, yPos + 18)
   doc.setFont('helvetica', 'normal')
   doc.text('Account Number :', 25, yPos + 23)
   doc.setFont('helvetica', 'bold')
-  doc.text( '123 456 7890', 50, yPos + 23, )
+  doc.text(bank.account_number || 'To be provided', 60, yPos + 23)
   doc.setFont('helvetica', 'normal')
   doc.text('SWIFT Code :', 25, yPos + 28)
   doc.setFont('helvetica', 'bold')
-  doc.text( 'BKCHCNBJ600', 50, yPos + 28, )
+  doc.text(bank.swift_code || 'N/A', 60, yPos + 28)
   doc.setFont('helvetica', 'normal')
   doc.text('Bank Address :', 25, yPos + 33)
   doc.setFont('helvetica', 'bold')
-  doc.text( 'No. 123 Jiangbei District, Chongqing, China', 50, yPos + 33, )
+  const addressLines = doc.splitTextToSize(bank.bank_address || 'To be provided', pageWidth - 90)
+  doc.text(addressLines, 60, yPos + 33)
 
-  // divider
-  divider(0.1,margin, yPos+43,  pageWidth-15 , yPos+43)
+  yPos += 43
+  divider(0.1,margin, yPos,  pageWidth-15 , yPos)
+}
+
+// Shipping Information Section
+const shippingSection = ()=>{
+  yPos += 10
+   if (yPos > pageHeight - 40) {
+      footer()
+      doc.addPage()
+      yPos = 20
+    }
+
+  doc.setTextColor(107, 114, 128)
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'bold')
+  doc.text('Article 3: Delivery Terms', margin, yPos)
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(7)
+  yPos += 5
+
+  const ship = contract.shipping || {}
+  if (ship.incoterm) {
+    doc.text(`- Incoterm: ${ship.incoterm}`, margin+2, yPos)
+    yPos += 5
+  }
+  if (ship.loading_port) {
+    doc.text(`- Port of Loading: ${ship.loading_port}`, margin+2, yPos)
+    yPos += 5
+  }
+  if (ship.destination_port) {
+    doc.text(`- Port of Destination: ${ship.destination_port}`, margin+2, yPos)
+    yPos += 5
+  }
+  if (ship.etd_date) {
+    doc.text(`- ETD (Estimated Time of Departure): ${formatDate(ship.etd_date)}`, margin+2, yPos)
+    yPos += 5
+  }
+  if (ship.eta_destination) {
+    doc.text(`- ETA (Estimated Time of Arrival): ${formatDate(ship.eta_destination)}`, margin+2, yPos)
+    yPos += 5
+  }
+}
+
+// Documents Section
+const documentsSection = ()=>{
+  const docs = contract.documents || {}
+
+  // Only show if there's document information
+  if (!docs.bl_number && !docs.bl_date) {
+    return
+  }
+
+  yPos += 10
+   if (yPos > pageHeight - 40) {
+      footer()
+      doc.addPage()
+      yPos = 20
+    }
+
+  doc.setTextColor(107, 114, 128)
+  doc.setFontSize(9)
+  doc.setFont('helvetica', 'bold')
+  doc.text('Article 5: Shipping Documents', margin, yPos)
+
+  doc.setFont('helvetica', 'normal')
+  doc.setFontSize(7)
+  yPos += 5
+
+  if (docs.bl_number) {
+    doc.text(`- Bill of Lading Number: ${docs.bl_number}`, margin+2, yPos)
+    yPos += 5
+  }
+  if (docs.bl_date) {
+    doc.text(`- BL Date: ${formatDate(docs.bl_date)}`, margin+2, yPos)
+    yPos += 5
+  }
 }
 
 // Terms & Conditions
@@ -455,6 +587,10 @@ const signature = ()=>{
 
 // Specifications
   const specifications = async()=>{
+
+    if (!contract.specs || contract.specs.length === 0) {
+      return;
+    }
 
     for (let index = 0; index < contract.specs.length; index++) {
       doc.addPage()

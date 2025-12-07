@@ -97,7 +97,8 @@ const goToProfile = () => {
 };
 
 const handleOrderClick = () => {
-  const productData = [{
+  // Créer l'objet produit pour le panier
+  const productForCart = {
     id: props.product.id,
     boutique_name: props.product.boutique_name,
     boutique_id: props.product.boutique_id,
@@ -109,7 +110,6 @@ const handleOrderClick = () => {
     boutique_address: props.product.boutique_address,
     boutique_description: props.product.boutique_description,
     boutique_phone: props.product.boutique_phone,
-
     name: props.product.name,
     unit_price: props.product.unit_price,
     stock: props.product.stock,
@@ -117,8 +117,8 @@ const handleOrderClick = () => {
     vehicle_make: props.product.vehicle_make,
     vehicle_model: props.product.vehicle_model,
     vehicle_year: props.product.vehicle_year,
-    vin_number:props.product.vin_numbers[0],
-    trim_number:props.product.trim_numbers[0],
+    vin_number: props.product.vin_numbers[0],
+    trim_number: props.product.trim_numbers[0],
     stock_number: props.product.stock_number,
     color: props.product.colors[0].name,
     colorHex: props.product.colors[0].hex_value,
@@ -126,21 +126,23 @@ const handleOrderClick = () => {
     slug: props.product.slug,
     vehicle_mileage: props.product.vehicle_mileage,
     fuel_type: props.product.fuel_type
-  }]
-  
-  orders.addOrder(productData)
-  console.log('Navigating to order validation with Order store:', orders.itemsOrdered)
-
-  // 🧠 Sauvegarde dans le sessionStorage (fallback pour refresh ou anciennes versions de Vue Router)
-  try {
-    // sessionStorage.setItem('lastProduct', JSON.stringify(orderState))
-  } catch (error) {
-    console.error('[v0] Error saving product to sessionStorage:', error)
   }
 
-  // 🚀 Navigation avec route.state (si Vue Router ≥ 4.2)
+  // Ajouter le produit au panier s'il n'y est pas déjà
+  if (!isInCart.value) {
+    cart.addItem(productForCart)
+    console.log('✅ Produit ajouté au panier:', productForCart)
+  }
+
+  // Préparer les données pour la validation de commande
+  const productData = [productForCart]
+
+  orders.addOrder(productData)
+  console.log('📦 Navigation vers la validation de commande avec:', orders.itemsOrdered)
+
+  // Navigation vers la page du panier
   router.push({
-    path: '/order-validation',
+    path: '/cart',
   })
 }
 </script>

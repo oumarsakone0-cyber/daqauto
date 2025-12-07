@@ -110,7 +110,7 @@
                 </span>
               </td>
               <td class="actions-cell" @click.stop>
-                <button v-if="order.statut === 'send'" @click="downloadContract(order.numero_commande)" class="action-btn download-btn" title="Download contract">
+                <button v-if="order.statut === 'send'" @click="handleContractDownload(order)" class="action-btn download-btn" title="Download contract">
                   <Download class="w-4 h-4" />
                 </button>
                 <button v-if="order.preuve_paiement" @click="viewPaymentProof(order)" class="action-btn payment-btn" title="View payment proof">
@@ -204,7 +204,7 @@
                     <div v-if="order.statut === 'send' || order.tobevalidate === 'valid'" class="detail-section">
                       <h4 class="section-title">Contract & Payment</h4>
                       <div class="contract-actions-section">
-                        <button class="download-contract-btn-large" @click.stop="downloadContract(order.numero_commande)">
+                        <button class="download-contract-btn-large" @click.stop="handleContractDownload(order)">
                           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                             <polyline points="7 10 12 15 17 10"></polyline>
@@ -294,7 +294,7 @@
                         </div>
 
                         <div v-else class="contract-actions">
-                          <button class="download-contract-btn" @click.stop="downloadContract(order.numero_commande)">
+                          <button class="download-contract-btn" @click.stop="handleContractDownload(order)">
                             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                               <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                               <polyline points="7 10 12 15 17 10"></polyline>
@@ -1166,6 +1166,7 @@ import { ordersApi } from '../../services/api.js'
 import axios from 'axios'
 import { useChatStore } from '../../stores/chat'
 import {formatPrice} from "../../services/formatPrice"
+import { downloadContract } from '../../composables/contract.js'
 import { Download } from 'lucide-vue-next'
 
 const router = useRouter()
@@ -1271,69 +1272,110 @@ const getStatusLabel = (status) => {
   return labelMap[status] || status
 }
 
-const downloadContract = async (orderNumber) => {
+
+const handleContractDownload = (order) => {
   try {
-    // Find the order to get all details
-    const order = orders.value.find(o => o.numero_commande === orderNumber)
-    if (!order) {
-      alert('Order not found')
-      return
+    // Créer l'objet contract complet avec toutes les informations
+    const contract = {
+      number: order.numero_commande,
+      date: order.date_commande || order.created_at,
+
+      // Informations client (Buyer)
+      buyer: {
+        name: order.client_nom,
+        email: order.client_email || order.client_telephone,
+        phone: order.client_telephone,
+        address: order.adresse_complete || order.commune,
+        city: order.ville || '',
+        company: order.receiver_company || ''
+      },
+
+      // Informations vendeur (Seller)
+      seller: {
+        name: order.boutique_nom_complet || order.boutique_nom,
+        email: order.boutique_email,
+        phone: order.boutique_telephone,
+        address: order.boutique_adresse
+      },
+
+      // Produit avec prix ajusté
+      items: [{
+        productId: order.produit_id,
+        product_name: order.produit_nom_complet || order.produit_nom,
+        quantity: order.quantite,
+        unit_price: parseFloat(order.ajust_price || order.produit_prix),
+        total: parseFloat(order.ajust_price || order.produit_prix) * order.quantite
+      }],
+
+      // <CHANGE> Ajout des spécifications produit
+      specs: order.specs || order.specifications || [],
+
+      // Informations de livraison/transport
+      shipping: {
+        method: order.delivery_method || 'CIF',
+        cost: parseFloat(order.shipping_cost || 0),
+        loading_port: order.loading_port || '',
+        destination_port: order.destination_port || '',
+        incoterm: order.delivery_method || 'CIF',
+        eta_destination: order.eta_destination || null,
+        etd_date: order.etd_date || null
+      },
+
+      // Termes de paiement
+      payment_terms: {
+        deposit_percent: order.payment_terms?.deposit_percent || 30,
+        deposit_amount: parseFloat(order.deposit_amount || 0),
+        deposit_paid: order.deposit_paid || false,
+        deposit_paid_date: order.deposit_paid_date || null,
+
+        before_shipping_percent: order.payment_terms?.before_shipping_percent || 40,
+        before_shipping_amount: parseFloat(order.before_shipping_amount || 0),
+        before_shipping_paid: order.before_shipping_paid || false,
+        before_shipping_paid_date: order.before_shipping_paid_date || null,
+
+        against_bl_percent: order.payment_terms?.against_bl_percent || 30,
+        against_bl_amount: parseFloat(order.against_bl_amount || 0),
+        against_bl_paid: order.against_bl_paid || false,
+        against_bl_paid_date: order.against_bl_paid_date || null
+      },
+
+      // Informations bancaires pour le paiement
+      bank_info: {
+        beneficiary_name: order.banque_beneficiaire || order.banque?.beneficiaire || '',
+        bank_name: order.banque_nom || order.banque?.nom || '',
+        account_number: order.banque_numero || order.banque?.numero || '',
+        swift_code: order.banque_swift || order.banque?.swift || '',
+        bank_address: order.banque_adresse || order.banque?.adresse || ''
+      },
+
+      // Documents
+      documents: {
+        bl_number: order.bl_number || '',
+        bl_date: order.bl_date || null,
+        bl_url: order.bl_url || null
+      },
+
+      // Calculs
+      subtotal: parseFloat(order.sous_total || 0),
+      shipping_cost: parseFloat(order.shipping_cost || 0),
+      total: parseFloat(order.total || 0),
+
+      // Signatures
+      signature_method: order.signature_method || 'online',
+      contract_signed: order.contract_signed || false,
+      contract_signed_date: order.contract_signed_date || null,
+
+      notes: order.commentaire || 'This contract is legally binding. Please read all terms carefully before signing.'
     }
 
-    // Create contract content with all pricing details
-    const paymentTerms = JSON.parse(order.payment_terms)
-    const contractContent = `
-CONTRACT - ORDER #${order.numero_commande}
-================================
-
-PRODUCT INFORMATION:
-- Product: ${order.produit_nom}
-- Quantity: ${order.quantite}
-- Boutique: ${order.boutique_nom}
-
-PRICING DETAILS:
-- Sub total: ${formatPrice(order.sous_total)}
-${order.frais_livraison > 0 ? `- Delivery fees: ${formatPrice(order.frais_livraison)}` : ''}
-${order.delivery_method === 'CIF' && order.shipping_cost ? `
-INTERNATIONAL SHIPPING (CIF):
-- Shipping Cost: ${formatPrice(order.shipping_cost)}
-- Loading Port: ${order.loading_port || 'N/A'}
-- Destination Port: ${order.destination_port || 'N/A'}
-` : ''}
-- TOTAL: ${formatPrice(order.total)}
-
-PAYMENT TERMS:
-- Deposit percentage: ${paymentTerms.deposit_percent}%
-- Minimum deposit amount: ${formatPrice(order.total * paymentTerms.deposit_percent / 100)}
-- Remaining balance: ${formatPrice(order.total - (order.total * paymentTerms.deposit_percent / 100))}
-
-ORDER DATE: ${formatDate(order.date_commande)}
-STATUS: ${getStatusLabel(order.statut)}
-
-================================
-This contract is valid for order #${order.numero_commande}
-Generated on: ${new Date().toLocaleDateString('fr-FR')}
-    `.trim()
-
-    // Create a Blob with the contract content
-    const blob = new Blob([contractContent], { type: 'text/plain' })
-    const url = window.URL.createObjectURL(blob)
-
-    // Create a temporary link and trigger download
-    const link = document.createElement('a')
-    link.href = url
-    link.download = `Contract_Order_${orderNumber}.txt`
-    document.body.appendChild(link)
-    link.click()
-
-    // Cleanup
-    document.body.removeChild(link)
-    window.URL.revokeObjectURL(url)
+    downloadContract(contract)
+    showNotificationMessage('success', 'Success', 'Contract PDF downloaded successfully')
   } catch (error) {
-    console.error('Error downloading contract:', error)
-    alert('Error downloading contract. Please try again.')
+    console.error('Error downloading Contract PDF:', error)
+    showNotificationMessage('error', 'Error', 'Failed to download Contract PDF')
   }
 }
+
 
 // Download Bill of Lading (BL)
 const downloadBL = async (blUrl, orderNumber) => {

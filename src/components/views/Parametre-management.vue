@@ -203,6 +203,7 @@
                 <thead class="bg-gray-50">
                   <tr>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Users</th>
+                    <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Type</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Role</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                     <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Added</th>
@@ -215,13 +216,18 @@
                     <td class="px-6 py-4 whitespace-nowrap">
                       <div class="flex items-center">
                         <div class="w-10 h-10 bg-orange rounded-full flex items-center justify-center font-semibold">
-                          {{ user.name.charAt(0).toUpperCase() }}
+                          {{ user.full_name ? user.full_name.charAt(0).toUpperCase() : 'U' }}
                         </div>
                         <div class="ml-4">
                           <div class="text-sm font-medium text-gray-900">{{ user.full_name }}</div>
                           <div class="text-sm text-gray-500">{{ user.email }}</div>
                         </div>
                       </div>
+                    </td>
+                    <td class="px-6 py-4 whitespace-nowrap">
+                      <span :class="user.agent === 'agent' ? 'bg-blue-100 text-blue-800' : 'bg-purple-100 text-purple-800'" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
+                        {{ user.agent === 'agent' ? 'Agent' : 'Admin' }}
+                      </span>
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap">
                       <span :class="getRoleBadgeClass(user.role)" class="px-2 inline-flex text-xs leading-5 font-semibold rounded-full">
@@ -237,9 +243,9 @@
                       {{ formatDate(user.created_at) }}
                     </td>
                     <td class="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                      <button 
+                      <button
                         v-if="!user.isOwner"
-                        @click="removeUser(user.id)" 
+                        @click="removeUser(user.id)"
                         class="btn-deconnexion"
                       >
                         Delete
@@ -268,34 +274,32 @@
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Name of the holder <span class="error-color">*</span></label>
-                <input 
-                  v-model="bankingInfo.accountHolder"
-                  type="text" 
+                <label class="block text-sm font-medium text-gray-700 mb-2">Beneficiary Name <span class="error-color">*</span></label>
+                <input
+                  v-model="bankingInfo.beneficiaryName"
+                  type="text"
                   class="input-style"
-                  placeholder="Jean Dupont"
+                  placeholder="John Doe"
                   @input="markAsChanged"
                 >
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Bank <span class="error-color">*</span></label>
-                <select v-model="bankingInfo.bankName" class="input-style" @change="markAsChanged">
-                  <option value="">Select your bank</option>
-                  <option value="SGCI">Société Générale CI</option>
-                  <option value="BICICI">BICICI</option>
-                  <option value="BOA">Bank of Africa</option>
-                  <option value="ECOBANK">Ecobank</option>
-                  <option value="UBA">UBA</option>
-                  <option value="NSIA">NSIA Banque</option>
-                </select>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Bank Name <span class="error-color">*</span></label>
+                <input
+                  v-model="bankingInfo.bankName"
+                  type="text"
+                  class="input-style"
+                  placeholder="Bank of Africa"
+                  @input="markAsChanged"
+                >
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">Account number <span class="error-color">*</span></label>
-                <input 
+                <label class="block text-sm font-medium text-gray-700 mb-2">Account Number <span class="error-color">*</span></label>
+                <input
                   v-model="bankingInfo.accountNumber"
-                  type="text" 
+                  type="text"
                   class="input-style"
                   placeholder="CI00 0000 0000 0000 0000 0000"
                   @input="markAsChanged"
@@ -303,38 +307,38 @@
               </div>
 
               <div>
-                <label class="block text-sm font-medium text-gray-700 mb-2">SWIFT/BIC code</label>
-                <input 
+                <label class="block text-sm font-medium text-gray-700 mb-2">SWIFT Code</label>
+                <input
                   v-model="bankingInfo.swiftCode"
-                  type="text" 
+                  type="text"
                   class="input-style"
-                  placeholder="SGCIABCD"
+                  placeholder="BOABCIAB"
                   @input="markAsChanged"
                 >
               </div>
 
               <div class="md:col-span-2">
-                <label class="block text-sm font-medium text-gray-700 mb-2">Mobile Money</label>
-                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  <div>
-                    <select v-model="bankingInfo.mobileMoneyProvider" class="input-style mb-2" @change="markAsChanged">
-                      <option value="">Select your operator</option>
-                      <option value="ORANGE">Orange Money</option>
-                      <option value="MTN">MTN Mobile Money</option>
-                      <option value="MOOV">Moov Money</option>
-                      <option value="WAVE">Wave</option>
-                    </select>
-                  </div>
-                  <div>
-                    <input 
-                      v-model="bankingInfo.mobileMoneyNumber"
-                      type="tel" 
-                      class="input-style"
-                      placeholder="+225 XX XX XX XX XX"
-                      @input="markAsChanged"
-                    >
-                  </div>
-                </div>
+                <label class="block text-sm font-medium text-gray-700 mb-2">Bank Address</label>
+                <textarea
+                  v-model="bankingInfo.bankAddress"
+                  rows="3"
+                  class="input-style"
+                  placeholder="123 Avenue Street, Abidjan, Côte d'Ivoire"
+                  @input="markAsChanged"
+                ></textarea>
+              </div>
+
+              <div class="md:col-span-2">
+                <button
+                  @click="saveBankInfo"
+                  :disabled="!hasUnsavedBankChanges || isSavingBank"
+                  :class="[
+                    'px-6 py-2 rounded-lg text-sm font-medium',
+                    hasUnsavedBankChanges && !isSavingBank ? 'btn-degrade-orange' : 'btn-gray cursor-not-allowed'
+                  ]"
+                >
+                  {{ isSavingBank ? 'Saving...' : 'Save Bank Information' }}
+                </button>
               </div>
             </div>
           </div>
@@ -559,9 +563,9 @@
         <div class="space-y-4">
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Full name <span class="error-color">*</span></label>
-            <input 
+            <input
               v-model="newUser.name"
-              type="text" 
+              type="text"
               class="input-style"
               placeholder="Jean Dupont"
             >
@@ -569,31 +573,53 @@
 
           <div>
             <label class="block text-sm font-medium text-gray-700 mb-2">Email <span class="error-color">*</span></label>
-            <input 
+            <input
               v-model="newUser.email"
-              type="email" 
+              type="email"
               class="input-style"
               placeholder="jean@example.com"
             >
           </div>
 
           <div>
-            <label class="block text-sm font-medium text-gray-700 mb-2">Role <span class="error-color">*</span></label>
-            <select v-model="newUser.role" class="input-style">
-              <option value="admin">Administrator</option>
-              <option value="manager">Manager</option>
-              <option value="staff">Staff</option>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Phone</label>
+            <input
+              v-model="newUser.phone"
+              type="tel"
+              class="input-style"
+              placeholder="+225 XX XX XX XX XX"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">Password <span class="error-color">*</span></label>
+            <input
+              v-model="newUser.password"
+              type="password"
+              class="input-style"
+              placeholder="********"
+            >
+          </div>
+
+          <div>
+            <label class="block text-sm font-medium text-gray-700 mb-2">User Type <span class="error-color">*</span></label>
+            <select v-model="newUser.userType" class="input-style">
+              <option value="">Admin (Owner)</option>
+              <option value="agent">Agent (Staff Member)</option>
             </select>
+            <p class="text-xs text-gray-500 mt-1">
+              Admins have full access, Agents have limited permissions
+            </p>
           </div>
 
           <div class="flex gap-3 mt-6">
-            <button 
+            <button
               @click="showAddUserModal = false"
               class="flex-1 btn-gray"
             >
               Cancel
             </button>
-            <button 
+            <button
               @click="addUser"
               class="flex-1 btn-degrade-orange"
             >
@@ -676,18 +702,32 @@ const router = useRouter()
 const newUser = ref({
   name: '',
   email: '',
+  phone: '',
+  password: '',
+  userType: '', // '' = admin, 'agent' = agent
   role: 'staff'
 })
 
 // Informations bancaires
 const bankingInfo = ref({
-  accountHolder: '',
+  beneficiaryName: '',
   bankName: '',
   accountNumber: '',
   swiftCode: '',
-  mobileMoneyProvider: '',
-  mobileMoneyNumber: ''
+  bankAddress: ''
 })
+
+const originalBankingInfo = ref({
+  beneficiaryName: '',
+  bankName: '',
+  accountNumber: '',
+  swiftCode: '',
+  bankAddress: ''
+})
+
+const hasUnsavedBankChanges = ref(false)
+const isSavingBank = ref(false)
+const bankInfoExists = ref(false)
 
 // Sécurité
 const securityInfo = ref({
@@ -718,11 +758,7 @@ const passwordStrength = computed(() => {
 
 const handleGetUsersByBoutique = async (boutiqueId) => {
   if (!boutiqueId) {
-    ElNotification({
-      title: 'Error',
-      message: 'Store ID required',
-      type: 'error'
-    })
+    console.error('❌ Boutique ID manquant')
     return
   }
 
@@ -730,40 +766,31 @@ const handleGetUsersByBoutique = async (boutiqueId) => {
     isLoading.value = true
     error.value = ''
 
-    const response = await usersApi.getUsersByBoutique(boutiqueId)
+    console.log('📤 Chargement des utilisateurs pour la boutique:', boutiqueId)
 
-    if (response.success) {
-      users.value = response.data.users
-      boutique.value = response.data.boutique
+    const random = Math.random();
 
-      ElNotification({
-        title: 'Success',
-        message: `List of users retrieved for ${boutique.value.name}`,
-        type: 'success'
-      })
+    const response = await fetch(`https://sastock.com/api_adjame/users.php?action=get_users_by_boutique&boutique_id=${boutiqueId}&_=${random}`);
+    const data = await response.json()
+
+    console.log('📥 Réponse API getUsersByBoutique:', data)
+
+    if (data.success) {
+      users.value = data.data.users
+      boutique.value = data.data.boutique
+      console.log('✅ Utilisateurs chargés:', users.value.length, 'utilisateurs')
     } else {
-      error.value = response.error || 'Error to load users for the store.'
+      error.value = data.error || 'Error loading users for the store.'
       users.value = []
       boutique.value = null
-
-      ElNotification({
-        title: 'Error',
-        message: error.value,
-        type: 'error'
-      })
+      console.error('❌ Erreur:', error.value)
     }
 
   } catch (err) {
-    console.error('Erreur API getUsersByBoutique:', err)
-    error.value = err.response?.data?.error || 'Erreur réseau. Veuillez réessayer.'
+    console.error('❌ Erreur API getUsersByBoutique:', err)
+    error.value = 'Network error. Please try again.'
     users.value = []
     boutique.value = null
-
-    ElNotification({
-      title: 'Error',
-      message: error.value,
-      type: 'error'
-    })
   } finally {
     isLoading.value = false
   }
@@ -782,67 +809,110 @@ const canChangePassword = computed(() => {
 // Méthodes
 const markAsChanged = () => {
   hasUnsavedChanges.value = true
+  checkBankInfoChanges()
 }
 
-const handleAddUserToBoutique = async () => {
-  console.log('Ajout de l\'utilisateur:', newUser.value)
-  if (!newUser.value.name || !newUser.value.email) {
-    ElNotification({
-      title: 'Error',
-      message: 'Please fill in all required fields.',
-      type: 'error'
-    })
+const checkBankInfoChanges = () => {
+  hasUnsavedBankChanges.value =
+    bankingInfo.value.beneficiaryName !== originalBankingInfo.value.beneficiaryName ||
+    bankingInfo.value.bankName !== originalBankingInfo.value.bankName ||
+    bankingInfo.value.accountNumber !== originalBankingInfo.value.accountNumber ||
+    bankingInfo.value.swiftCode !== originalBankingInfo.value.swiftCode ||
+    bankingInfo.value.bankAddress !== originalBankingInfo.value.bankAddress
+}
+
+// Charger les informations bancaires
+const loadBankInfo = async (boutiqueId) => {
+  if (!boutiqueId) return
+
+  try {
+    const random = Math.random()
+    const response = await fetch(
+      `https://sastock.com/api_adjame/bank_info.php?action=get_by_boutique&boutique_id=${boutiqueId}&_=${random}`
+    )
+    const data = await response.json()
+
+    console.log('📥 Informations bancaires:', data)
+
+    if (data.success && data.exists && data.data) {
+      bankInfoExists.value = true
+      bankingInfo.value = {
+        beneficiaryName: data.data.beneficiary_name || '',
+        bankName: data.data.bank_name || '',
+        accountNumber: data.data.account_number || '',
+        swiftCode: data.data.swift_code || '',
+        bankAddress: data.data.bank_address || ''
+      }
+      // Sauvegarder l'état original
+      originalBankingInfo.value = { ...bankingInfo.value }
+    } else {
+      bankInfoExists.value = false
+      console.log('ℹ️ Aucune information bancaire trouvée')
+    }
+  } catch (error) {
+    console.error('❌ Erreur lors du chargement des informations bancaires:', error)
+  }
+}
+
+// Sauvegarder les informations bancaires
+const saveBankInfo = async () => {
+  if (!currentBoutique.value?.id) {
+    alert('Boutique ID missing')
+    return
+  }
+
+  // Validation
+  if (!bankingInfo.value.beneficiaryName || !bankingInfo.value.bankName || !bankingInfo.value.accountNumber) {
+    alert('Please fill in all required fields (Beneficiary Name, Bank Name, Account Number)')
     return
   }
 
   try {
-    //isLoading.value = true
-    error.value = ''
+    isSavingBank.value = true
 
     const payload = {
-      full_name: newUser.value.name,
-      email: newUser.value.email,
-      boutique_id: currentUser.value.boutiques[0].id  // Assurez-vous que la boutique est sélectionnée correctement
+      boutique_id: currentBoutique.value.id,
+      beneficiary_name: bankingInfo.value.beneficiaryName,
+      bank_name: bankingInfo.value.bankName,
+      account_number: bankingInfo.value.accountNumber,
+      swift_code: bankingInfo.value.swiftCode || '',
+      bank_address: bankingInfo.value.bankAddress || ''
     }
 
-    const response = await usersApi.addUserToBoutique(payload)
-    console.log('Réponse API ajout utilisateur:', response)
+    console.log('📤 Envoi des informations bancaires:', payload)
 
-    if (response.success) {
-      ElNotification({
-        title: 'Success',
-        message: 'User added and invitation sent successfully.',
-        type: 'success'
-      })
+    const action = bankInfoExists.value ? 'update' : 'create'
+    const method = bankInfoExists.value ? 'PUT' : 'POST'
 
-      successMessage.value = 'User successfully added.'
-      // Si tu veux, tu peux vider le formulaire
-      newUser.value.name = ''
-      newUser.value.email = ''
+    const response = await fetch(
+      `https://sastock.com/api_adjame/bank_info.php?action=${action}`,
+      {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      }
+    )
 
-      showAddUserModal.value = false
+    const data = await response.json()
+    console.log('📥 Réponse API:', data)
+
+    if (data.success) {
+      showNotificationToast('Bank information saved successfully!')
+      bankInfoExists.value = true
+      originalBankingInfo.value = { ...bankingInfo.value }
+      hasUnsavedBankChanges.value = false
     } else {
-      error.value = response.error || 'Erreur lors de l’ajout de l’utilisateur.'
-      ElNotification({
-        title: 'Error',
-        message: error.value,
-        type: 'error'
-      })
+      alert(data.error || 'Error saving bank information')
     }
-  } catch (err) {
-    console.error('Erreur lors de l’ajout d’un utilisateur:', err)
-    error.value = err.response?.data?.error || 'Erreur réseau. Veuillez réessayer.'
-
-    ElNotification({
-      title: 'Error',
-      message: error.value,
-      type: 'error'
-    })
+  } catch (error) {
+    console.error('❌ Erreur lors de la sauvegarde:', error)
+    alert('Error saving bank information. Please try again.')
   } finally {
-    //isLoading.value = false
+    isSavingBank.value = false
   }
 }
-
 
 const initializeUserData = () => {
   try {
@@ -933,25 +1003,50 @@ const saveAllSettings = () => {
   hasUnsavedChanges.value = false
 }
 
-const addUser = () => {
-  if (!newUser.value.name || !newUser.value.email) {
-    alert('Please fill in all required fields.')
+const addUser = async () => {
+  if (!newUser.value.name || !newUser.value.email || !newUser.value.password) {
+    alert('Please fill in all required fields (name, email, password).')
     return
   }
 
-  users.value.push({
-    id: users.value.length + 1,
-    name: newUser.value.name,
-    email: newUser.value.email,
-    role: newUser.value.role,
-    active: true,
-    isOwner: false,
-    created_at: new Date().toISOString()
-  })
+  try {
+    const payload = {
+      full_name: newUser.value.name,
+      email: newUser.value.email,
+      phone: newUser.value.phone || '',
+      password: newUser.value.password,
+      agent: newUser.value.userType, // '' = admin, 'agent' = agent
+      boutique_id: currentBoutique.value.id
+    }
 
-  showAddUserModal.value = false
-  newUser.value = { name: '', email: '', role: 'staff' }
-  showNotificationToast('User successfully added!')
+    console.log('📤 Envoi de la requête d\'ajout d\'utilisateur:', payload)
+
+    // Appel API pour ajouter l'agent
+    const response = await fetch('https://sastock.com/api_adjame/users.php?action=add_agent', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(payload)
+    })
+
+    const data = await response.json()
+    console.log('📥 Réponse de l\'API:', data)
+
+    if (data.success) {
+      showNotificationToast('User successfully added!')
+      showAddUserModal.value = false
+      newUser.value = { name: '', email: '', phone: '', password: '', userType: '', role: 'staff' }
+
+      // Recharger la liste des utilisateurs
+      await handleGetUsersByBoutique(currentBoutique.value.id)
+    } else {
+      alert(data.error || 'Error adding user')
+    }
+  } catch (error) {
+    console.error('❌ Error adding user:', error)
+    alert('Error adding user. Please try again.')
+  }
 }
 
 const removeUser = (userId) => {
@@ -1010,21 +1105,25 @@ const formatDate = (dateString) => {
 }
 
 onMounted(async () => {
+  const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
+  console.log('🔑 Token:', token ? 'Présent' : 'Absent')
 
+  if (!token) {
+    router.replace('/boutique-admin/login')
+    return
+  }
+
+  // Initialiser les données utilisateur
   initializeUserData()
 
-  handleGetUsersByBoutique(currentUser.value.boutiques[0].id)
-  
-    const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-    console.log(token)
-    if (!token) {
-      router.replace('/boutique-admin/login')
-      return
-    }
-
-  // Initialiser avec les données mock pour la démo
-  // products.value = mockProducts
-  
+  // Attendre que currentUser soit initialisé
+  if (currentUser.value?.boutiques?.[0]?.id) {
+    const boutiqueId = currentUser.value.boutiques[0].id
+    await handleGetUsersByBoutique(boutiqueId)
+    await loadBankInfo(boutiqueId)
+  } else {
+    console.error('❌ Aucune boutique trouvée pour l\'utilisateur')
+  }
 })
 </script>
 
