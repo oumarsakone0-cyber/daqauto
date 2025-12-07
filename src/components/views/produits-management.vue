@@ -58,15 +58,13 @@
                 <span >Exporter</span>
                 <ChevronDownIcon class="w-4 h-4 ml-2" />
               </button>
-              <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2">
-                <div class="py-1" role="menu">
-                </div>
+              <div v-if="showExportDropdown" class="origin-top-right absolute right-0 w-50 mt-2 ring-1 ring-gray-400 rounded-md shadow-lg bg-white p-2 z-50">
                 <div  role="menu">
-                <button @click="exportToPDF" class="flex items-center text-sm mb-2   btn-gray" role="menuitem">
+                <button @click="exportToPDF" class="flex items-center text-sm mb-2 btn-gray w-full" role="menuitem">
                    <FileTextIcon   class="w-4 h-4 mr-2 error-color" />
                   Exporter en PDF
                 </button>
-                <button @click="exportToExcel" class="flex items-center text-sm  btn-gray" role="menuitem">
+                <button @click="exportToExcel" class="flex items-center text-sm btn-gray w-full" role="menuitem">
                   <FileTextIcon class="w-4 h-4 mr-1 green-color" />
                   Exporter en Excel
                 </button>

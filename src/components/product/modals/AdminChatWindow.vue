@@ -3,7 +3,7 @@
     <!-- Sidebar des conversations -->
     <div class="conversations-sidebar">
       <div class="sidebar-header">
-        <h3>Conversations Clients</h3>
+        <h3>Customer Conversations</h3>
         <div v-if="unreadCount > 0" class="unread-badge">
           {{ unreadCount }}
         </div>
@@ -47,7 +47,7 @@
           <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.5">
             <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
           </svg>
-          <p>Aucune conversation</p>
+          <p>No conversation</p>
         </div>
       </div>
     </div>
@@ -58,8 +58,8 @@
         <svg width="80" height="80" viewBox="0 0 24 24" fill="none" stroke="#e5e7eb" stroke-width="1.5">
           <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
         </svg>
-        <h3>Sélectionnez une conversation</h3>
-        <p>Choisissez un client dans la liste pour commencer à discuter</p>
+        <h3>Select a conversation</h3>
+        <p>Choose a client from the list to start chatting</p>
       </div>
 
       <div v-else class="chat-content">
@@ -95,7 +95,7 @@
             <div v-if="message.type === 'product' || message.message_type === 'product'" class="product-message-card">
               <!-- Numéro de commande si présent -->
               <div v-if="message.order_number" class="order-badge">
-                📦 Commande #{{ message.order_number }}
+                📦 Order #{{ message.order_number }}
               </div>
               <div class="product-content">
                 <div class="product-image">
@@ -130,7 +130,7 @@
             <div v-else-if="message.message_type === 'image' || message.type === 'image'" class="image-wrapper">
               <img
                 :src="message.message"
-                alt="Image partagée"
+                alt="Image shared"
                 class="chat-image"
                 @click="openImage(message.message)"
               />
@@ -151,8 +151,8 @@
             <!-- Bouton upload image -->
             <button
               @click="triggerFileInput"
-              class="upload-button"
-              title="Envoyer une image"
+              class="btn-gray"
+              title="Send an image"
             >
               <svg class="upload-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -167,14 +167,14 @@
               @change="handleImageUpload"
             />
 
-            <textarea
+            <input
               v-model="newMessage"
               @keydown.enter.exact.prevent="handleSendMessage"
-              placeholder="Tapez votre message..."
-              rows="1"
-              class="message-input"
-            ></textarea>
-            <button @click="handleSendMessage" :disabled="!newMessage.trim()" class="send-button">
+              placeholder="Type your message..."
+              type="text"
+              class="input-style h-10"
+            />
+            <button @click="handleSendMessage" :disabled="!newMessage.trim()" class="btn-degrade-orange" title="Send Message">
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="22" y1="2" x2="11" y2="13"></line>
                 <polygon points="22 2 15 22 11 13 2 9 22 2"></polygon>
@@ -192,6 +192,7 @@ import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue'
 import { useRouter } from 'vue-router'
 import { useChatAdminStore } from '../../../stores/chatAdmin'
 import { useImageUpload } from '../../../composables/useImageUpload'
+import {formatPrice} from '../../../services/formatPrice'
 
 const router = useRouter()
 const chatStore = useChatAdminStore()
@@ -292,19 +293,10 @@ const formatTime = (timestamp) => {
   const now = new Date()
   const diff = now - date
 
-  if (diff < 60000) return 'À l\'instant'
+  if (diff < 60000) return 'Now'
   if (diff < 3600000) return `${Math.floor(diff / 60000)} min`
   if (diff < 86400000) return date.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit' })
   return date.toLocaleDateString('fr-FR', { day: 'numeric', month: 'short' })
-}
-
-const formatPrice = (price) => {
-  if (!price) return 'N/A'
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'XOF',
-    minimumFractionDigits: 0
-  }).format(price)
 }
 
 // Watch pour scroll automatique
@@ -806,25 +798,7 @@ onUnmounted(() => {
   width: 100%;
 }
 
-.upload-button {
-  width: 40px;
-  height: 40px;
-  background: #f3f4f6;
-  border: 1px solid #e5e7eb;
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: all 0.2s;
-  flex-shrink: 0;
-  color: #6b7280;
-}
 
-.upload-button:hover {
-  background: #e5e7eb;
-  color: #374151;
-}
 
 .upload-icon {
   width: 20px;
@@ -833,48 +807,6 @@ onUnmounted(() => {
 
 .hidden-file-input {
   display: none;
-}
-
-.message-input {
-  flex: 1;
-  padding: 12px 16px;
-  border: 2px solid #e5e7eb;
-  border-radius: 12px;
-  font-size: 14px;
-  font-family: inherit;
-  resize: none;
-  max-height: 120px;
-  transition: border-color 0.2s;
-}
-
-.message-input:focus {
-  outline: none;
-  border-color: #fe9700;
-}
-
-.send-button {
-  width: 48px;
-  height: 48px;
-  background: linear-gradient(135deg, #fe9700 0%, #ff7a00 100%);
-  color: #fff;
-  border: none;
-  border-radius: 12px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  flex-shrink: 0;
-}
-
-.send-button:hover:not(:disabled) {
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(254, 151, 0, 0.4);
-}
-
-.send-button:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
 }
 
 /* Scrollbar */

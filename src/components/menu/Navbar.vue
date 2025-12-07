@@ -221,9 +221,9 @@
               </svg>
               <span>Cart</span>
               
-              <div class="cart-badge"><div v-if="cartCount > 99" class="cart-count">99+</div>
+              <div v-if="cartCount > 0" class="cart-badge"><div v-if="cartCount > 99" class="cart-count">99+</div>
                   <div v-else >
-                   {{ cartCount }}
+                   {{ cartCount  }}
                    </div></div>
             </router-link>
 
