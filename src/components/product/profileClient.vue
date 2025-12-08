@@ -289,7 +289,14 @@
                 <div class="boutique-header">
                   <div class="boutique-info">
                     <div class="boutique-logo-wrapper">
-                      <img :src="group.boutique_logo" :alt="group.boutique_name" class="boutique-logo">
+                      <img v-if="group.boutique_logo" :src="group.boutique_logo" :alt="group.boutique_name" class="boutique-logo">
+                      
+                      <div v-else class="primary-color">
+                        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                          <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                          <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                      </div>
                     </div>
                     <div class="boutique-details">
                       <h3 class="boutique-name">{{ group.boutique_name || `Boutique ${group.boutique_id}` }}</h3>

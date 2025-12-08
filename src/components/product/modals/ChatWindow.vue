@@ -23,20 +23,16 @@
   >
 
     <div
-      class="flex items-center justify-between px-4 py-3 text-white relative overflow-hidden"
-      style="background: linear-gradient(160deg, #0c0c0c, #fc4618, #0c0c0c)"
+      class="flex items-center justify-between px-4 py-3 text-white relative overflow-hidden bg-degrade-orange"
     >
-
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
       </div>
-
-
       <button
         @click="toggleSidebar"
-        class="md:hidden relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
+        class="md:hidden relative z-10  transition-colors btn-gray mr-4 rounded-full w-11 h-11"
       >
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="3" y1="12" x2="21" y2="12"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <line x1="3" y1="18" x2="21" y2="18"/>
@@ -44,11 +40,11 @@
       </button>
 
     
-      <div class="flex items-center gap-3 flex-1 relative z-10">
+      <div class="flex items-center gap-3 flex-1 relative z-10 ">
         <img
           :src="activeConversation.avatar"
           :alt="activeConversation.name"
-          class="w-10 h-10 rounded-full object-cover"
+          class="w-11 h-11 rounded-full object-cover"
         />
         <div>
           <h3 class="font-semibold text-base">{{ activeConversation.name }}</h3>
@@ -58,7 +54,7 @@
 
       <button
         @click="toggleChat"
-        class="relative z-10 p-2 hover:bg-white/20 rounded-lg transition-colors"
+        class="relative z-10 p-2 rounded-full transition-colors btn-gray w-11 h-11"
       >
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
           <line x1="18" y1="6" x2="6" y2="18"/>
@@ -79,7 +75,7 @@
           <h2 class="font-semibold text-gray-800">Conversations</h2>
           <button
             @click="toggleSidebar"
-            class="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+            class="p-2 hover:bg-gray-100 rounded-lg transition-colors btn-gray w-11 h-11"
           >
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"/>
@@ -92,8 +88,8 @@
           <input
             v-model="searchQuery"
             type="text"
-            placeholder="Rechercher..."
-            class="w-full px-3 py-2 bg-gray-100 border border-gray-200 rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
+            placeholder="Research..."
+            class="input-style"
           />
         </div>
 
@@ -192,7 +188,7 @@
               <div class="rounded-2xl overflow-hidden">
                 <img
                   :src="message.message"
-                  alt="Image partagée"
+                  alt="Image shared"
                   class="max-w-full h-auto rounded-lg cursor-pointer shadow-md"
                   @click="openImage(message.message)"
                 />
@@ -225,8 +221,8 @@
             <!-- Bouton upload image -->
             <button
               @click="triggerFileInput"
-              class="p-3 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0"
-              title="Envoyer une image"
+              class="p-3 rounded-full hover:bg-gray-100 transition-colors flex-shrink-0 btn-gray h-12 w-12"
+              title="Send an image"
             >
               <svg class="w-6 h-6 text-gray-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16l4.586-4.586a2 2 0 012.828 0L16 16m-2-2l1.586-1.586a2 2 0 012.828 0L20 14m-6-6h.01M6 20h12a2 2 0 002-2V6a2 2 0 00-2-2H6a2 2 0 00-2 2v12a2 2 0 002 2z" />
@@ -245,20 +241,18 @@
               v-model="newMessage"
               @keypress.enter="sendMessage"
               type="text"
-              placeholder="Tapez votre message..."
+              placeholder="Type your message..."
               class="flex-1 px-4 py-3 bg-gray-50 border border-gray-200 rounded-full text-sm focus:outline-none focus:ring-2 focus:ring-orange-500 text-gray-800"
             />
             <button
               @click="sendMessage"
               :disabled="!newMessage.trim()"
-              class="w-12 h-12 rounded-full flex items-center justify-center transition-transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed"
-              style="background: linear-gradient(160deg, #fe9700, #fc4618)"
+              class="w-12 h-12 btn-degrade-orange"
             >
               <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="white" stroke-width="2">
                 <line x1="22" y1="2" x2="11" y2="13"/>
                 <polygon points="22,2 15,22 11,13 2,9 22,2"/>
               </svg>
-
             </button>
           </div>
         </div>
@@ -273,6 +267,7 @@ import { useRouter } from 'vue-router'
 import { useChatStore } from '../../../stores/chat'
 import { useImageUpload } from '../../../composables/useImageUpload'
 import axios from 'axios' // ✅ on utilise axios (tu peux remplacer par fetch)
+import { formatPrice } from '../../../services/formatPrice'
 
 const router = useRouter()
 
@@ -397,7 +392,7 @@ watch(() => chatStore.chatMessages, (newMessages) => {
   })
 
   const lastMsg = conversation.messages[conversation.messages.length - 1]
-  conversation.lastMessage = lastMsg?.text || 'Nouveau message'
+  conversation.lastMessage = lastMsg?.text || 'New message'
   conversation.lastMessageTime = formatTime(new Date())
   activeConversationId.value = conversation.id
 
@@ -415,7 +410,7 @@ watch(() => chatStore.isChatOpen, (newValue) => {
 
 const toggleChat = () => {
   if (!isLoggedIn.value) {
-    alert("Veuillez vous connecter pour accéder au chat.")
+    alert("Please log in to access the chat.")
     return
   }
 
@@ -472,7 +467,7 @@ const handleImageUpload = async (event) => {
       const activeConv = conversations.value.find(c => c.id === sessionId)
       if (activeConv) {
         activeConv.messages.push(imageMessage)
-        activeConv.lastMessage = 'Image partagée'
+        activeConv.lastMessage = 'Image shared'
         activeConv.lastMessageTime = formatTime(new Date())
       }
 
@@ -491,7 +486,7 @@ const handleImageUpload = async (event) => {
     }
   } catch (error) {
     console.error('❌ Erreur upload image:', error)
-    alert('Erreur lors de l\'upload de l\'image. Veuillez réessayer.')
+    alert('Error to load image. please try again.')
   }
 
   // Reset l'input
@@ -546,15 +541,8 @@ const sendMessage = async () => {
     console.log('✅ Message envoyé au backend !')
   } catch (error) {
     console.error('❌ Erreur lors de l\'envoi du message :', error)
-    alert('Erreur lors de l\'envoi du message. Veuillez réessayer.')
+    alert('Error to send message. Please try again.')
   }
-}
-
-const formatPrice = (price) => {
-  return new Intl.NumberFormat('fr-FR', {
-    style: 'currency',
-    currency: 'EUR'
-  }).format(price)
 }
 
 const formatTime = (timestamp) => {
@@ -603,60 +591,6 @@ onMounted(async () => {
 
 .overflow-y-auto::-webkit-scrollbar-thumb:hover {
   background: #a8a8a8;
-}
-
-.multi-chat-container {
-  display: flex;
-  height: 600px;
-  max-width: 1200px;
-  margin: 20px auto;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.15);
-  overflow: hidden;
-}
-
-/* Sidebar des conversations */
-.conversations-sidebar {
-  width: 320px;
-  border-right: 1px solid #e0e0e0;
-  display: flex;
-  flex-direction: column;
-  background: #f8f9fa;
-}
-
-.sidebar-header {
-  background: linear-gradient(160deg, #0c0c0c, #fc4618, #0c0c0c);
-  color: white;
-  padding: 20px;
-}
-
-.header-title {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-
-.messenger-icon {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
-}
-
-.header-title h2 {
-  margin: 0;
-  font-size: 18px;
-  font-weight: 600;
-  flex: 1;
-}
-
-.total-unread-badge {
-  background: #fe9700;
-  color: white;
-  padding: 2px 8px;
-  border-radius: 12px;
-  font-size: 12px;
-  font-weight: 600;
 }
 
 .conversations-list {
@@ -901,130 +835,6 @@ onMounted(async () => {
   flex-shrink: 0;
 }
 
-.product-image {
-  width: 80px;
-  height: 80px;
-  object-fit: cover;
-  border-radius: 8px;
-  background: #f8f9fa;
-}
-
-.product-details {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-}
-
-.product-name {
-  margin: 0 0 4px 0;
-  font-size: 14px;
-  font-weight: 600;
-  color: #333;
-  line-height: 1.3;
-}
-
-.product-shop {
-  margin: 0 0 8px 0;
-  font-size: 12px;
-  color: #666;
-}
-
-.product-price-rating {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 8px;
-}
-
-.product-price {
-  font-size: 16px;
-  font-weight: 700;
-  color: #fe9700;
-}
-
-.product-rating {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-  font-size: 12px;
-}
-
-.rating-stars {
-  color: #ffc107;
-}
-
-.rating-value {
-  color: #666;
-  font-weight: 500;
-}
-
-.message-input-container {
-  padding: 16px 20px;
-  border-top: 1px solid #f0f0f0;
-  background: white;
-}
-
-.input-wrapper {
-  display: flex;
-  gap: 8px;
-  align-items: center;
-}
-
-.input-style {
-  flex: 1;
-  color: black;
-  border: 1px solid #d1d5db;
-  border-radius: 25px;
-  padding: 12px 16px;
-  transition: border-color 0.2s, box-shadow 0.2s;
-  font-size: 14px;
-}
-
-.input-style:focus {
-  outline: none;
-  border-color: #fe7900;
-  box-shadow: 0 0 0 0.5px #fe7900;
-}
-
-.send-btn {
-  background: linear-gradient(160deg, #fe9700, #fc4618);
-  border: none;
-  color: white;
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  cursor: pointer;
-  transition: transform 0.2s;
-  flex-shrink: 0;
-}
-
-.send-btn:hover:not(:disabled) {
-  transform: scale(1.05);
-}
-
-.send-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.no-conversation-selected {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  color: #999;
-  gap: 16px;
-}
-
-.no-conversation-selected p {
-  font-size: 16px;
-  margin: 0;
-}
 
 /* Scrollbar */
 .messages-container::-webkit-scrollbar,

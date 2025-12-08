@@ -40,7 +40,7 @@
         </button>
         <button
           v-else
-          class="btn-in-cart flex-1"
+          class="btn-gray flex-1"
           disabled
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -58,8 +58,6 @@
         </button>
       </div>
     </div>
-
-    
   </div>
 </template>
 

@@ -33,12 +33,14 @@ import Navbar from './components/menu/Navbar.vue'
 import Footer from './components/menu/Footer.vue'
 import AutoTranslator from './components/traduction/AutoTranslator.vue'
 import { useChatStore } from './stores/chat'
+import TabBar from './components/menu/TabBar.vue'
 
 export default {
   name: 'App',
   components: {
     Navbar,
     Footer,
+    TabBar,
     AutoTranslator
   },
   setup() {

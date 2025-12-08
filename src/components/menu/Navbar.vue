@@ -178,14 +178,6 @@
               </div>
             </div>
             
-            <!-- <div class="user-account" @click="goToBoutique">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                <circle cx="12" cy="7" r="4"/>
-              </svg>
-              <span>Se connecter / S'inscrire</span>
-              <span>Mon Dashboard</span>
-            </div> -->
             <div class="user-account">
               <div class="flex items-center">
                 <!-- Si l'utilisateur n'a pas de photo -->
@@ -213,7 +205,7 @@
               </div>
             </div>
             
-            <router-link :to="{ name: 'profile_client', query: { tab: 'cart' } }" class="cart" @click="goToCart">
+            <router-link :to="{ name: 'profile_client', query: { tab: 'cart' } }" class="cart">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/>
                 <circle cx="20" cy="21" r="1"/>
@@ -252,7 +244,7 @@
             </div>
             
             <div class="mobile-actions">
-              <button class="mobile-cart-btn">
+              <button class="mobile-cart-btn " @click="goToCart">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <circle cx="9" cy="21" r="1"/>
                   <circle cx="20" cy="21" r="1"/>
@@ -434,7 +426,7 @@
     </div>
     
     <!-- Mobile Search Modal -->
-    <div v-if="showMobileSearch" class="mobile-search-modal">
+    <!-- <div v-if="showMobileSearch" class="mobile-search-modal">
       <div class="mobile-modal-header">
         <button class="mobile-back-btn" @click="closeMobileSearch">
           <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -442,12 +434,10 @@
             <polyline points="12,19 5,12 12,5"/>
           </svg>
         </button>
-        
         <div class="mobile-search-input-container">
           <input 
             type="text" 
             placeholder="Research..." 
-            
             class="input-style"
             v-model="searchQuery"
             @input="handleSearchInput"
@@ -474,13 +464,11 @@
       </div>
       
       <div class="mobile-search-content">
-        <!-- Indicateur de chargement -->
         <div v-if="isSearching" class="mobile-search-loading">
           <div class="loading-spinner"></div>
           <span>Researching...</span>
         </div>
         
-        <!-- Résultats de recherche -->
         <div v-else-if="searchResults.length > 0" class="mobile-search-results">
           <div class="mobile-results-count">{{ searchResults.length }} resultats found</div>
           
@@ -498,7 +486,6 @@
               />
             </div>
             <div class="mobile-result-content">
-              <!-- Using method instead of inline logic to avoid linter confusion -->
               <div class="mobile-result-name" v-html="getResultDisplayName(result)"></div>
               <div class="mobile-result-category">
                 <span class="mobile-category-badge">{{ result.category_name }}</span>
@@ -512,7 +499,6 @@
           </button>
         </div>
         
-        <!-- Suggestions de recherche -->
         <div v-else-if="filteredSuggestions.length > 0" class="mobile-suggestions">
           <div class="mobile-suggestions-header">Popular Suggestions</div>
           
@@ -530,7 +516,6 @@
           </div>
         </div>
         
-        <!-- Aucun résultat -->
         <div v-else-if="searchQuery && searchQuery.length >= 2" class="mobile-no-results">
           <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
             <circle cx="11" cy="11" r="8"/>
@@ -540,7 +525,6 @@
           <small>Try again with other keywords</small>
         </div>
         
-        <!-- Recherches récentes et populaires -->
         <div v-else class="mobile-search-suggestions">
           <div class="mobile-section-title">Recent Research</div>
           <div class="mobile-recent-searches">
@@ -565,7 +549,8 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
+    <SearchPageMobile ref="searchMobileRef" />
     
     <!-- Mobile Menu Modal -->
     <div v-if="showMobileMenu" class="mobile-menu-modal">
@@ -744,9 +729,11 @@ import { LogOut } from 'lucide-vue-next';
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { useCurrencyStore } from '../../stores/currency.js'
 import { useCartStore } from '../../stores/cart'
+import SearchPageMobile from './SearchPageMobile.vue';
 
 const currencyStore = useCurrencyStore()
 const cart = useCartStore()
+const searchMobileRef = ref(null)
 
 const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
 const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
@@ -1369,6 +1356,10 @@ function getBeforeChar(str, char) {
   return idx !== -1 ? str.slice(0, idx) : str;
 }
 
+const goToCart = () => {
+  router.push({ path: "/profile_client", query:{tab: 'cart'} })
+};
+
 // New navigation functions for categories
 const navigateToCategory = (category) => {
   console.log('Navigation vers catégorie:', category);
@@ -1601,7 +1592,8 @@ const reloadCategories = () => {
 
 // New functions for mobile version
 const openMobileSearch = () => {
-  showMobileSearch.value = true;
+  // showMobileSearch.value = true;
+  searchMobileRef.value.openMobileSearch()
   document.body.style.overflow = 'hidden';
   
   // Focus on input after DOM render

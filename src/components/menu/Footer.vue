@@ -131,13 +131,17 @@
   /> -->
 
   <!-- Fenêtre desktop -->
-  <ChatDesktop
-    :is-open="chat.isDesktopChatOpen"
-    :supplier="chat.supplier"
-    :chat-messages="chat.chatMessages"
-    @close="chat.closeDesktopChat"
-    @send-message="chat.handleSendMessage"
-  />
+    <ChatDesktop
+      :is-open="chat.isDesktopChatOpen"
+      :supplier="chat.supplier"
+      :chat-messages="chat.chatMessages"
+      @close="chat.closeDesktopChat"
+      @send-message="chat.handleSendMessage"
+    />
+    <div class="mobile-only">
+      <TabBar />
+    </div>
+
 </template>
 
 <script setup>
@@ -145,6 +149,7 @@ import { onMounted, onBeforeUnmount } from 'vue'
 import { useChatStore } from '../../stores/chat'
 import ChatModal from '../product/modals/ChatModal2.vue'
 import ChatDesktop from '../product/modals/ChatWindow.vue'
+import TabBar from './TabBar.vue'
 
 const chat = useChatStore()
 
@@ -158,6 +163,17 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+  /* Styles mobiles cachés par défaut */
+.mobile-only {
+  display: none;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex;
+  }
+}
 .primary-color{
   color: #fe7900;
 }
