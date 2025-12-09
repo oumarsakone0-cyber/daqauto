@@ -1,6 +1,6 @@
 <template>
   <button
-    v-if="!isOpen"
+    v-if="!isOpen && !isMobile"
     @click="toggleChat"
     class="fixed bottom-6 right-6 w-16 h-16 rounded-full shadow-lg flex items-center justify-center z-50 transition-transform hover:scale-110"
     style="background: linear-gradient(160deg, #fe9700, #fc4618)"
@@ -272,6 +272,7 @@ import { formatPrice } from '../../../services/formatPrice'
 const router = useRouter()
 
 const isOpen = ref(false)
+const isMobile = ref(false)
 const showSidebar = ref(false)
 const newMessage = ref('')
 const searchQuery = ref('')
@@ -564,6 +565,7 @@ watch(() => activeConversation.value?.messages, scrollToBottom, { deep: true })
 
 onMounted(async () => {
   chatStore.checkMobile()
+  isMobile.value = chatStore.isMobile
   window.addEventListener('resize', chatStore.checkMobile)
 
   checkUserLogin()

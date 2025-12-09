@@ -18,8 +18,8 @@
     </nav>
 </template>
 <script setup>
-import { ref } from 'vue'
-import { useRouter } from 'vue-router'
+import { ref, onMounted, watch } from 'vue'
+import { useRouter, useRoute } from 'vue-router'
 import { HomeIcon, MessageSquareText, SearchIcon, ShoppingCartIcon, User } from 'lucide-vue-next'
 import { useChatStore } from '../../stores/chat'
 import SearchPageMobile from './SearchPageMobile.vue'
@@ -27,6 +27,7 @@ import SearchPageMobile from './SearchPageMobile.vue'
 const activeTab = ref(0)
 const chat = useChatStore()
 const router = useRouter()
+const route = useRoute()
 const searchMobileRef = ref(null)
 
 
@@ -39,8 +40,35 @@ const navTabs = [
   { label: 'Profile', route: '/profile_client', query: {tab: 'profile'}, icon: User }
 ]
 
-// Fonction pour changer d’onglet et naviguer
-const handleNavClick =(index) =>{
+const updateActiveTabFromRoute = () => {
+  const currentPath = route.path
+  const currentQuery = route.query
+
+  // 1) Cherche d'abord un onglet qui correspond à la fois au path ET aux query (si l'onglet en attend)
+  let tabIndex = navTabs.findIndex(tab => {
+    if (typeof tab.route !== 'string') return false
+    if (tab.route !== currentPath) return false
+    if (tab.query) {
+      return Object.keys(tab.query).every(
+        key => String(currentQuery[key] || '') === String(tab.query[key] || '')
+      )
+    }
+    return false
+  })
+
+  // 2) Si pas trouvé, cherche un onglet qui correspond au path sans prendre la query en compte
+  if (tabIndex === -1) {
+    tabIndex = navTabs.findIndex(tab => typeof tab.route === 'string' && tab.route === currentPath && !tab.query)
+  }
+
+  // 3) Mise à jour de activeTab si on a trouvé un index valide
+  if (tabIndex !== -1) {
+    activeTab.value = tabIndex
+  }
+}
+
+// Fonction pour changer d'onglet et naviguer
+const handleNavClick = (index) => {
   activeTab.value = index
   const tab = navTabs[index]
   
@@ -50,6 +78,7 @@ const handleNavClick =(index) =>{
   }
   if (tab.label === 'Search') {
     searchMobileRef.value.openMobileSearch()
+     updateActiveTabFromRoute()
     return
   }
   
@@ -63,10 +92,21 @@ const handleNavClick =(index) =>{
   }
 }
 
+// Mettre à jour activeTab au montage et à chaque changement de route
+onMounted(() => {
+  updateActiveTabFromRoute()
+})
+
+watch(() => route.path, () => {
+  updateActiveTabFromRoute()
+})
+
+watch(() => route.query, () => {
+  updateActiveTabFromRoute()
+})
+
 </script>
 <style scoped>
-
-
 .mobile-bottom-nav {
   position: fixed;
   bottom: 0;
