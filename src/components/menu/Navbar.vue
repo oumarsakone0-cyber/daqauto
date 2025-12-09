@@ -179,26 +179,28 @@
             </div>
             
             <div class="user-account">
-              <div class="flex items-center">
-                <!-- Si l'utilisateur n'a pas de photo -->
-                <svg v-if="!currentUser?.picture || currentUser.picture === '0'" 
-                    width="18" height="18" viewBox="0 0 24 24" 
-                    fill="none" stroke="currentColor" stroke-width="2">
-                  <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
-                  <circle cx="12" cy="7" r="4"/>
-                </svg>
-
-                <!-- Si l'utilisateur a une photo -->
-                <img v-else 
-                    :src="currentUser.picture" 
-                    alt="Profile" 
-                    class="h-8 w-8 rounded-full object-cover" />
-              </div>
-              <div @click="goToProfile" v-if="currentUser">
-                
-                <span v-if="currentUser && currentUser.email">
-                  {{ currentUser.full_name }}
-                </span>
+              <div v-if="currentUser">
+                <router-link :to="{ name: 'profile_client' }">
+                <div class="flex items-center" >
+                  <!-- Si l'utilisateur n'a pas de photo -->
+                  <svg v-if="!currentUser?.picture || currentUser.picture === '0'" 
+                      width="18" height="18" viewBox="0 0 24 24" 
+                      fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
+                    <circle cx="12" cy="7" r="4"/>
+                  </svg>
+  
+                  <!-- Si l'utilisateur a une photo -->
+                  <img v-else 
+                      :src="currentUser.picture" 
+                      alt="Profile" 
+                      class="h-8 w-8 rounded-full object-cover" />
+  
+                  <span v-if="currentUser && currentUser.email" class="ml-2">
+                    {{ currentUser.full_name }}
+                  </span>
+                </div>
+                </router-link>
               </div>
               <div v-else>
                  <span @click="goToAuthentication">Login / Register</span>
@@ -212,16 +214,13 @@
                 <path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/>
               </svg>
               <span>Cart</span>
-              
               <div v-if="cartCount > 0" class="cart-badge"><div v-if="cartCount > 99" class="cart-count">99+</div>
                   <div v-else >
                    {{ cartCount  }}
                    </div></div>
             </router-link>
-
           </div>
           <div class="user-account" @click="handleLogout()" >
-            
             <LogOut  v-if="currentUser && currentUser.email" class="h-6 w-6 text-gray-600 cursor-pointer" />
           </div>
         </div>
@@ -424,163 +423,47 @@
         </div>
       </div>
     </div>
-    
-    <!-- Mobile Search Modal -->
-    <!-- <div v-if="showMobileSearch" class="mobile-search-modal">
-      <div class="mobile-modal-header">
-        <button class="mobile-back-btn" @click="closeMobileSearch">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12,19 5,12 12,5"/>
-          </svg>
-        </button>
-        <div class="mobile-search-input-container">
-          <input 
-            type="text" 
-            placeholder="Research..." 
-            class="input-style"
-            v-model="searchQuery"
-            @input="handleSearchInput"
-            ref="mobileSearchInput"
-            @keydown.enter="performSearch"
-            @keydown.escape="closeMobileSearch"
-          />
-          
-          <button v-if="searchQuery" class="mobile-clear-btn" @click="clearSearch">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="15" y1="9" x2="9" y2="15"/>
-              <line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-          </button>
-        </div>
-        
-        <button class="mobile-camera-search-btn" @click="toggleImageSearch">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
-            <circle cx="12" cy="13" r="3"/>
-          </svg>
-        </button>
-      </div>
-      
-      <div class="mobile-search-content">
-        <div v-if="isSearching" class="mobile-search-loading">
-          <div class="loading-spinner"></div>
-          <span>Researching...</span>
-        </div>
-        
-        <div v-else-if="searchResults.length > 0" class="mobile-search-results">
-          <div class="mobile-results-count">{{ searchResults.length }} resultats found</div>
-          
-          <div 
-            v-for="result in searchResults" 
-            :key="result.id"
-            class="mobile-result-item"
-            @click="goToProduct(result)"
-          >
-            <div class="mobile-result-image">
-              <img 
-                :src="result.primary_image" 
-                :alt="result.product_name"
-                @error="handleImageError"
-              />
-            </div>
-            <div class="mobile-result-content">
-              <div class="mobile-result-name" v-html="getResultDisplayName(result)"></div>
-              <div class="mobile-result-category">
-                <span class="mobile-category-badge">{{ result.category_name }}</span>
-                <span v-if="result.subcategory_name" class="mobile-category-badge">{{ result.subcategory_name }}</span>
-              </div>
-            </div>
-          </div>
-          
-          <button @click="viewAllResults" class="mobile-view-all-btn">
-            See all results for "{{ searchQuery }}"
-          </button>
-        </div>
-        
-        <div v-else-if="filteredSuggestions.length > 0" class="mobile-suggestions">
-          <div class="mobile-suggestions-header">Popular Suggestions</div>
-          
-          <div 
-            v-for="(suggestion, index) in filteredSuggestions" 
-            :key="index"
-            class="mobile-suggestion-item"
-            @click="selectSuggestion(suggestion)"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="m21 21-4.35-4.35"/>
-            </svg>
-            <span v-html="highlightMatch(suggestion)"></span>
-          </div>
-        </div>
-        
-        <div v-else-if="searchQuery && searchQuery.length >= 2" class="mobile-no-results">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="m21 21-4.35-4.35"/>
-          </svg>
-          <span>No results for "{{ searchQuery }}"</span>
-          <small>Try again with other keywords</small>
-        </div>
-        
-        <div v-else class="mobile-search-suggestions">
-          <div class="mobile-section-title">Recent Research</div>
-          <div class="mobile-recent-searches">
-            <div v-for="(search, index) in recentSearches" :key="index" class="mobile-recent-item" @click="selectSuggestion(search)">
-              <svg width="20" height="20"  viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12,6 12,12 16,14"/>
-              </svg>
-              <span>{{ search }}</span>
-            </div>
-            <div v-if="recentSearches.length === 0" class="mobile-no-recent">
-              <small>No recent Research</small>
-            </div>
-          </div>
-          
-          <div class="mobile-section-title">Popular searches</div>
-          <div class="mobile-popular-searches">
-            <div v-for="(search, index) in popularSearches" :key="index" class="mobile-popular-item" @click="selectSuggestion(search)">
-              <span class="mobile-popular-rank">{{ index + 1 }}</span>
-              <span>{{ search }}</span>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div> -->
     <SearchPageMobile ref="searchMobileRef" />
     
     <!-- Mobile Menu Modal -->
     <div v-if="showMobileMenu" class="mobile-menu-modal">
-      <div class="mobile-menu-header">
-        <button class="mobile-close-btn" @click="toggleMobileMenu">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="18" y1="6" x2="6" y2="18"/>
-            <line x1="6" y1="6" x2="18" y2="18"/>
-          </svg>
-        </button>
-        <h3>Menu</h3>
+      <div class="flex items-center justify-between py-4 px-2">
+        <div  class="mobile-menu-header">
+          <button class="mobile-close-btn" @click="toggleMobileMenu">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <line x1="18" y1="6" x2="6" y2="18"/>
+              <line x1="6" y1="6" x2="18" y2="18"/>
+            </svg>
+          </button>
+          <h3>Menu</h3>
+        </div>
+        <div class="mobile-close-btn">
+          <LogOut  v-if="currentUser && currentUser.email" class="h-6 w-6 text-gray-600 cursor-pointer" @click="handleLogout()" />
+        </div>
       </div>
-      
       <div class="mobile-menu-user">
-        <div class="mobile-user-avatar">
+        <div v-if="!currentUser?.picture || currentUser.picture === '0'" class="mobile-user-avatar" >
           <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
         </div>
+        <!-- Si l'utilisateur a une photo -->
+        <img v-else 
+            :src="currentUser.picture" 
+            alt="Profile" 
+            class="h-8 w-8 rounded-full object-cover" />
+
         <div class="mobile-user-info">
           <div class="mobile-user-welcome">Welcome</div>
-          <div class="mobile-user-actions">
-            <a href="#" class="mobile-login-btn">Login</a>
-            <span class="mobile-separator">/</span>
-            <a href="#" class="mobile-register-btn">Register</a>
+          <span v-if="currentUser && currentUser.email" class="font-semibold text-xl">
+              {{ currentUser.full_name }}
+          </span>
+          <div v-else class="cursor-pointer">
+              <span @click="goToAuthentication">Login / Register</span>
           </div>
         </div>
       </div>
-      
       <div class="mobile-menu-categories">
         <div class="mobile-menu-title">Categories</div>
         
@@ -613,9 +496,7 @@
               </svg>
               <span>Back</span>
             </div>
-            
             <div class="mobile-subcategory-title">{{ selectedMobileCategory.name }}</div>
-            
             <div 
               v-for="subcategory in selectedMobileCategory.subcategories" 
               :key="subcategory.id"
@@ -658,27 +539,21 @@
       </div>
       
       <div class="mobile-menu-links">
-        <router-link to="/" class="mobile-menu-link">
+        <div class="mobile-menu-link " @click="goToHome">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/>
             <polyline points="9,22 9,12 15,12 15,22"/>
           </svg>
-          <span>Welcome</span>
-        </router-link>
-        <a href="#" class="mobile-menu-link">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M22 12h-4l-3 9L9 3l-3 9H2"/>
-          </svg>
-          <span>Offers of the day</span>
-        </a>
-        <a href="#" class="mobile-menu-link">
+          <span>Home</span>
+        </div>
+        <div class="mobile-menu-link" @click="goToProfile">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
             <circle cx="12" cy="7" r="4"/>
           </svg>
           <span>My Account</span>
-        </a>
-        <a href="#" class="mobile-menu-link">
+        </div>
+        <a class="mobile-menu-link" @click="goToCart">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="9" cy="21" r="1"/>
             <circle cx="20" cy="21" r="1"/>
@@ -686,35 +561,51 @@
           </svg>
           <span>Cart</span>
         </a>
-        <a href="#" class="mobile-menu-link">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M4 11a9 9 0 0 1 9 9"/>
-            <path d="M4 4a16 16 0 0 1 16 16"/>
-            <circle cx="5" cy="19" r="1"/>
-          </svg>
-          <span>Blog</span>
-        </a>
-        <a href="#" class="mobile-menu-link">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="12" cy="12" r="10"/>
-            <path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/>
-            <line x1="12" y1="17" x2="12.01" y2="17"/>
-          </svg>
-          <span>Help</span>
-        </a>
       </div>
-      
       <div class="mobile-menu-footer">
-        <div class="mobile-language">
-          <img src="https://ae-pic-a1.aliexpress-media.com/kf/Sb900db0ad7604a83b297a51d9222905bm/624x160.png" alt="FR" class="flag" />
-          <span>Français / EUR</span>
-        </div>
-        <div class="mobile-app-download">
+         <div class="language-selector relative" :class="{ open: showLanguageDropdown }" ref="languageSelectorRef">
+              <div class="flex items-center cursor-pointer gap-2" @click="toggleLanguageDropdown">
+                <img :src="selectedLanguage.flag" :alt="selectedLanguage.code" class="w-6 h-4" />
+                <span v-if="isTranslating">⏳ Translating...</span>
+                <span v-else>{{ selectedLanguage.Langue }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"/>
+                </svg>
+              </div>
+              
+              <div v-if="showLanguageDropdown && !isTranslating" class="absolute mt-2 bg-white shadow-md rounded-lg w-40 z-50">
+                <ul class="divide-y divide-gray-100">
+                  <li v-for="lang in uniqueLanguages" :key="lang.code" @click="selectLanguage(lang)" class="flex items-center gap-2 px-3 py-2 cursor-pointer hover:bg-gray-100">
+                    <img :src="lang.flag" :alt="lang.code" class="w-6 h-4" />
+                    <span>{{ lang.Langue }}</span>
+                  </li>
+                </ul>
+              </div>
+            </div>
+
+            <!-- Sélecteur de devise (NOUVEAU) -->
+            <div class="language-selector relative ml-4" :class="{ open: showCurrencyDropdown }" ref="currencySelectorRef">
+              <div class="flex items-center cursor-pointer gap-2" @click="toggleCurrencyDropdown">
+                <span>{{ selectedCurrency }}</span>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <polyline points="6,9 12,15 18,9"/>
+                </svg>
+              </div>
+              
+              <div v-if="showCurrencyDropdown" class="absolute mt-2 bg-white shadow-md rounded-lg w-32 z-50">
+                <ul class="divide-y divide-gray-100">
+                  <li v-for="curr in availableCurrencies" :key="curr" @click="selectCurrency(curr)" class="px-3 py-2 cursor-pointer hover:bg-gray-100">
+                    {{ curr }}
+                  </li>
+                </ul>
+              </div>
+            </div>
+        <div class="language-selector relative ml-4">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <rect x="5" y="2" width="14" height="20" rx="2" ry="2"/>
             <line x1="12" y1="18" x2="12" y2="18"/>
           </svg>
-          <span>Download the app</span>
+          <span>Download app</span>
         </div>
       </div>
     </div>
@@ -1356,10 +1247,6 @@ function getBeforeChar(str, char) {
   return idx !== -1 ? str.slice(0, idx) : str;
 }
 
-const goToCart = () => {
-  router.push({ path: "/profile_client", query:{tab: 'cart'} })
-};
-
 // New navigation functions for categories
 const navigateToCategory = (category) => {
   console.log('Navigation vers catégorie:', category);
@@ -1389,6 +1276,21 @@ const navigateToSubcategory = (subcategory) => {
     query: queryParams
   });
   showCategoriesMenu.value = false;
+};
+
+const goToHome = () => {
+  toggleMobileMenu();
+  router.push('/');
+};
+
+const goToProfile = () => {
+  toggleMobileMenu();
+  router.push('/profile_client');
+};
+
+const goToCart = () => {
+  toggleMobileMenu();
+  router.push({ path: "/profile_client", query:{tab: 'cart'} });
 };
 
 const navigateToSubSubcategory = (subSubcategory) => {
@@ -1654,10 +1556,6 @@ const mobileMenuBack = () => {
     selectedMobileCategory.value = null;
   }
 };
-
-const goToProfile = () => {
-  router.push('/profile_client')
-};  
 
 // Lifecycle - Load categories on component mount
 onMounted(async () => {
@@ -2112,7 +2010,7 @@ window.navbarDebug = {
   border: none;
   color: #333;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
   transition: background 0.2s ease;
 }
@@ -2132,7 +2030,7 @@ window.navbarDebug = {
   border: none;
   color: #333;
   padding: 8px;
-  border-radius: 8px;
+  border-radius: 50%;
   cursor: pointer;
   position: relative;
   transition: background 0.2s ease;
@@ -2518,7 +2416,7 @@ window.navbarDebug = {
   align-items: center;
   gap: 16px;
   padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
+  /* border-bottom: 1px solid #f0f0f0; */
   background: white;
   position: sticky;
   top: 0;
@@ -2698,6 +2596,7 @@ window.navbarDebug = {
   border-radius: 12px;
   transition: background 0.2s ease;
   margin-bottom: 4px;
+  cursor: pointer;
 }
 
 .mobile-menu-link:hover {
@@ -2705,7 +2604,7 @@ window.navbarDebug = {
 }
 
 .mobile-menu-footer {
-  padding: 16px;
+  padding: 20px 16px;
   border-top: 1px solid #f0f0f0;
   background: #f8f9fa;
 }
@@ -2718,6 +2617,7 @@ window.navbarDebug = {
   margin-bottom: 8px;
   color: #666;
   font-size: 14px;
+  cursor: pointer;
 }
 
 .categories-navbar {

@@ -28,17 +28,16 @@
       <div class="absolute inset-0 opacity-10">
         <div class="absolute top-0 left-0 w-32 h-32 bg-white rounded-full -translate-x-16 -translate-y-16"></div>
       </div>
-      <button
+      <div
         @click="toggleSidebar"
-        class="md:hidden relative z-10  transition-colors btn-gray mr-4 rounded-full w-11 h-11"
+        class="md:hidden relative z-10 mr-2 mobile-menu-btn"
       >
-        <svg width="21" height="21" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
           <line x1="3" y1="12" x2="21" y2="12"/>
           <line x1="3" y1="6" x2="21" y2="6"/>
           <line x1="3" y1="18" x2="21" y2="18"/>
         </svg>
-      </button>
-
+      </div>
     
       <div class="flex items-center gap-3 flex-1 relative z-10 ">
         <img
@@ -54,9 +53,9 @@
 
       <button
         @click="toggleChat"
-        class="relative z-10 p-2 rounded-full transition-colors btn-gray w-11 h-11"
+        class="relative z-10 p-2 rounded-full transition-colors mobile-menu-btn"
       >
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
+        <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="3">
           <line x1="18" y1="6" x2="6" y2="18"/>
           <line x1="6" y1="6" x2="18" y2="18"/>
         </svg>
@@ -75,9 +74,9 @@
           <h2 class="font-semibold text-gray-800">Conversations</h2>
           <button
             @click="toggleSidebar"
-            class="p-2 hover:bg-gray-100 rounded-lg transition-colors btn-gray w-11 h-11"
+            class="p-2 hover:bg-gray-100 rounded-lg transition-colors mobile-close-btn"
           >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="25" height="25" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
               <line x1="19" y1="12" x2="5" y2="12"/>
               <polyline points="12 19 5 12 12 5"/>
             </svg>
@@ -577,6 +576,33 @@ onMounted(async () => {
 </script>
 
 <style scoped>
+
+.mobile-menu-btn {
+  background: none;
+  border: none;
+  color: white;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mobile-close-btn {
+  background: none;
+  border: none;
+  color: #333;
+  padding: 8px;
+  border-radius: 50%;
+  cursor: pointer;
+  transition: background 0.2s ease;
+}
+
+.mobile-menu-btn:hover {
+  background: #ffffff33;
+}
+.mobile-close-btn:hover {
+  background: #f1f1f1;
+}
 /* Custom scrollbar */
 .overflow-y-auto::-webkit-scrollbar {
   width: 6px;
