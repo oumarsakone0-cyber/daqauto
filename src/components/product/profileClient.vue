@@ -511,7 +511,6 @@ const notificationTitle = ref('')
 const notificationType = ref('success')
 
 const saveProfile = () => {
-  console.log('Profile saved:', profile.value)
   isEditing.value = false
 }
 

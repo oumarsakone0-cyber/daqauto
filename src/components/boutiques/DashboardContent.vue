@@ -1631,13 +1631,6 @@ const initializeUserData = () => {
 
     // ✅ Vérifier si "Se souvenir de moi" est activé
     const rememberMe = localStorage.getItem('rememberMe') === 'true'
-    
-    console.log('✅ Données utilisateur chargées:', {
-      user: currentUser.value,
-      boutique: currentBoutique.value,
-      rememberMe,
-      token: authToken ? 'Présent' : 'Absent'
-    })
 
   } catch (err) {
     console.error('Erreur lors de la récupération des données utilisateur:', err)
@@ -1680,7 +1673,6 @@ const fetchProducts = async () => {
     
     if (response.success) {
       products.value = response.data || []
-      console.log("Produits chargés:", products.value)
     } else {
       error.value = response.error || 'Error to load products'
     }
@@ -1731,9 +1723,7 @@ const loadPremiumData = async () => {
     
     if (subscriptionResponse.success) {
       premiumSubscription.value = subscriptionResponse.data
-      console.log('✅ Abonnement boutique chargé:', premiumSubscription.value)
     } else {
-      console.log('ℹ️ Aucun abonnement Premium pour cette boutique')
       premiumSubscription.value = null
     }
 
@@ -2037,7 +2027,6 @@ const proceedToPayment = async () => {
 
 const duplicateProduct = async (product) => {
   DataDuplicate.value = product
-  console.log('Duplicate data:', DataDuplicate.value)
   showDuplicateProductModal.value = true
 }
 
@@ -2276,7 +2265,6 @@ const handleAddProduct = async (productData) => {
     })
     
     if (response.success) {
-      console.log('Produit créé avec succès:', response.data);
       showAddProductModal.value = false
       await fetchProducts()
       await loadStats(selectedPeriod.value)
@@ -2349,7 +2337,6 @@ watch(boostStartDate, updateEndDate)
 onMounted(async () => {
   
     const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-    console.log(token)
     if (!token) {
       router.replace('/boutique-admin/login')
       return

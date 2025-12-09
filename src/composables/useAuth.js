@@ -22,7 +22,6 @@ export const useAuth = () => {
         password: loginData.password,
       }
 
-      console.log("🚀 Tentative de connexion pour:", loginPayload.identifier)
 
       // Appel à l'API de connexion
       const response = await usersApi.login(loginPayload)
@@ -55,8 +54,6 @@ export const useAuth = () => {
 
         successMessage.value = "Connexion réussie ! Redirection en cours..."
 
-        console.log("✅ Connexion réussie pour:", userData.full_name)
-        console.log("📊 Boutiques disponibles:", userData.boutiques?.length || 0)
 
         // Rediriger vers le tableau de bord ou la page d'accueil
         setTimeout(() => {
@@ -127,7 +124,6 @@ export const useAuth = () => {
       // Rediriger vers la page de connexion
       router.push("/login")
 
-      console.log("✅ Déconnexion réussie")
     } catch (err) {
       console.error("❌ Erreur lors de la déconnexion:", err)
       // Même en cas d'erreur, on nettoie les données locales

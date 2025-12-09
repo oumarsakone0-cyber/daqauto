@@ -237,7 +237,6 @@
   
   // Fonction pour naviguer vers la page de détail du produit
   const navigateToProduct = (product) => {
-    console.log('🔄 Navigation vers le produit:', product)
     
     let slug = product.slug
     if (!slug && product.name) {
@@ -287,7 +286,6 @@
       isLoadingFeaturedSupplier.value = true;
       featuredSupplierError.value = null;
       
-      console.log('🔄 Chargement du fournisseur vedette...');
       const response = await productsApi.getRandomSupplier();
       
       if (response.success && response.data) {
@@ -306,7 +304,6 @@
           }))
         };
         
-        console.log('✅ Fournisseur vedette chargé:', featuredSupplier.value);
       } else {
         throw new Error(response.message || 'Erreur lors du chargement du fournisseur vedette');
       }

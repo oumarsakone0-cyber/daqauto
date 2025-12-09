@@ -803,10 +803,8 @@ const loadCache = () => {
       Object.entries(parsed).forEach(([key, value]) => {
         translationCache.set(key, value)
       })
-      console.log('[v0] Cache loaded:', translationCache.size, 'entries')
     }
   } catch (error) {
-    console.error('[v0] Error loading cache:', error)
   }
 }
 
@@ -817,9 +815,7 @@ const saveCache = () => {
       cacheObj[key] = value
     })
     localStorage.setItem('mymemory-cache', JSON.stringify(cacheObj))
-    console.log('[v0] Cache saved:', translationCache.size, 'entries')
   } catch (error) {
-    console.error('[v0] Error saving cache:', error)
   }
 }
 
@@ -850,13 +846,11 @@ const getAllTextNodes = (element = document.body) => {
     textNodes.push(node)
   }
   
-  console.log('[v0] Found text nodes:', textNodes.length)
   return textNodes
 }
 
 const translateWithMyMemory = async (texts, sourceLang = 'fr', targetLang = 'en') => {
   try {
-    console.log('[v0] Translating with MyMemory API...')
     const translations = []
     
     const batchSize = 5
@@ -875,7 +869,6 @@ const translateWithMyMemory = async (texts, sourceLang = 'fr', targetLang = 'en'
           url += `&key=${MYMEMORY_API_KEY}`
           url += `&de=${encodeURIComponent(MYMEMORY_EMAIL)}`
 
-          console.log('[v0] API call for:', text.substring(0, 50) + '...')
           const response = await fetch(url)
           
           if (!response.ok) {
@@ -919,12 +912,10 @@ const translatePage = async () => {
   isTranslating.value = true
   cacheStats.value = { cached: 0, new: 0, saved: 0 }
   
-  console.log('[v0] Starting MyMemory page translation...')
   
   await nextTick()
   
   const textNodes = getAllTextNodes()
-  console.log('[v0] Processing', textNodes.length, 'text nodes')
   
   const textsToTranslate = []
   const nodeTextMap = new Map()
@@ -942,7 +933,6 @@ const translatePage = async () => {
   })
   
   if (textsToTranslate.length > 0) {
-    console.log('[v0] Translating', textsToTranslate.length, 'texts')
     const translations = await translateWithMyMemory(textsToTranslate, 'fr', targetLang)
     
     let processedCount = 0
@@ -953,7 +943,6 @@ const translatePage = async () => {
       }
     })
     
-    console.log('[v0] Translation completed. Processed:', processedCount, 'nodes')
     
     showStats.value = true
     setTimeout(() => {
@@ -965,7 +954,6 @@ const translatePage = async () => {
 }
 
 const restoreOriginalTexts = () => {
-  console.log('[v0] Restoring original texts...')
   let restoredCount = 0
   originalTexts.forEach((originalText, node) => {
     if (node.parentElement) {
@@ -973,13 +961,11 @@ const restoreOriginalTexts = () => {
       restoredCount++
     }
   })
-  console.log('[v0] Restored', restoredCount, 'text nodes')
 }
 
 const toggleLanguageWithTranslation = async () => {
   if (isTranslating.value) return
   
-  console.log('[v0] Toggling language from', currentLanguage.value)
   
   if (currentLanguage.value === 'fr') {
     currentLanguage.value = 'en'
@@ -1039,7 +1025,6 @@ const loadCategories = async () => {
     isLoadingCategories.value = true;
     categoriesError.value = '';
     
-    console.log('🔄 Chargement des catégories depuis l\'API...');
     const response = await categoriesApi.getCategories();
     
     if (response.success && response.data) {
@@ -1050,7 +1035,6 @@ const loadCategories = async () => {
         subcategories: category.subcategories || []
       }));
       
-      console.log('✅ Catégories chargées:', categories.value);
     } else {
       throw new Error(response.message || 'Error to load categories');
     }
@@ -1154,7 +1138,6 @@ const performProductSearch = async (query) => {
     // Create a new AbortController for this request
     searchAbortController.value = new AbortController();
     
-    console.log('🔍 Recherche de produits pour:', query);
     
     const response = await productsApi.searchProducts(query, {
       limit: 8, // Limit to 8 results for preview
@@ -1162,7 +1145,6 @@ const performProductSearch = async (query) => {
     
     if (response.success && response.data) {
       searchResults.value = response.data;
-      console.log('✅ Résultats de recherche:', searchResults.value);
     } else {
       searchResults.value = [];
       console.warn('⚠️ Aucun résultat trouvé');
@@ -1206,7 +1188,6 @@ const clearSearch = () => {
 
 // Modified function to redirect to results page with product categories
 const goToProduct = (product) => {
-  console.log('Navigation vers le produit:', product);
   
   // Construct query parameters with product categories and search term
   const queryParams = {
@@ -1249,7 +1230,6 @@ function getBeforeChar(str, char) {
 
 // New navigation functions for categories
 const navigateToCategory = (category) => {
-  console.log('Navigation vers catégorie:', category);
   router.push({
     path: '/recherche_de_produit_list',
     query: { category: category.id }
@@ -1258,7 +1238,6 @@ const navigateToCategory = (category) => {
 };
 
 const navigateToSubcategory = (subcategory) => {
-  console.log('Navigation vers sous-catégorie:', subcategory);
   
   // Find parent category
   const parentCategory = activeCategory.value;
@@ -1294,7 +1273,6 @@ const goToCart = () => {
 };
 
 const navigateToSubSubcategory = (subSubcategory) => {
-  console.log('Navigation vers sous-sous-catégorie:', subSubcategory);
   
   // Find parent category and subcategory
   const parentCategory = activeCategory.value;
@@ -1485,7 +1463,6 @@ const setActiveCategory = (category) => {
 };
 
 const handleDrop = (event) => {
-  console.log('File dropped:', event.dataTransfer.files);
 };
 
 const reloadCategories = () => {
@@ -1559,7 +1536,6 @@ const mobileMenuBack = () => {
 
 // Lifecycle - Load categories on component mount
 onMounted(async () => {
-  console.log('[v0] Navbar with MyMemory Translation mounted')
   cart.loadCartFromDB();
   loadCache();
    loadCategories();
@@ -1575,7 +1551,6 @@ onMounted(async () => {
       phone: user.phone,
       boutiques: user.boutiques || []
     }
-    console.log('[v0] Current user:', currentUser.value)
   const savedSelectedLang = localStorage.getItem('selected-language')
   
   if (savedSelectedLang) {

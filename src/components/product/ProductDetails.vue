@@ -129,14 +129,12 @@ const handleOrderClick = () => {
   // Ajouter le produit au panier s'il n'y est pas déjà
   if (!isInCart.value) {
     cart.addItem(productForCart)
-    console.log('✅ Produit ajouté au panier:', productForCart)
   }
 
   // Préparer les données pour la validation de commande
   const productData = [productForCart]
 
   orders.addOrder(productData)
-  console.log('📦 Navigation vers la validation de commande avec:', orders.itemsOrdered)
 
   // Navigation vers la page du panier
   router.push({

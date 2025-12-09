@@ -37,10 +37,8 @@ adminApiClient.interceptors.request.use(
         config.params = { _cb: cacheBuster.split("=")[1] }
       }
 
-      console.log(`🔄 Admin Cache Buster ajouté: ${cacheBuster}`)
     }
 
-    console.log(`🚀 Admin API Request: ${config.method?.toUpperCase()} ${config.url}`, config.data || config.params)
     return config
   },
   (error) => {
@@ -52,7 +50,6 @@ adminApiClient.interceptors.request.use(
 // Intercepteur pour les réponses
 adminApiClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ Admin API Response: ${response.status}`, response.data)
     return response
   },
   (error) => {

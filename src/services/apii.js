@@ -39,10 +39,8 @@ apiClient.interceptors.request.use(
         config.params = { _cb: cacheBuster.split("=")[1] }
       }
 
-      console.log(`🔄 Cache Buster ajouté: ${cacheBuster}`)
     }
 
-    console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`, config.data || config.params)
     return config
   },
   (error) => {
@@ -54,7 +52,6 @@ apiClient.interceptors.request.use(
 // Intercepteur pour les réponses
 apiClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ API Response: ${response.status}`, response.data)
     return response
   },
   (error) => {
@@ -303,7 +300,6 @@ async createOrder(orderData) {
         params.location = location
       }
 
-      console.log("🔄 Récupération des produits pour résultats avec paramètres:", params)
 
       const response = await apiClient.get("/products.php", { params })
       return response.data
@@ -593,8 +589,6 @@ async createOrder(orderData) {
       // Utiliser les paramètres passés ou les paramètres de base par défaut
       const baseParams = Object.keys(getParams).length > 0 ? getParams : boutiqueUtils.buildBaseParams()
 
-      console.log("🔄 UpdateProduct - Paramètres GET:", baseParams)
-      console.log("📤 UpdateProduct - Body:", productData)
 
       const response = await apiClient.put("/products.php", productData, {
         params: {
@@ -741,7 +735,6 @@ async createOrder(orderData) {
         },
         onUploadProgress: (progressEvent) => {
           const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
-          console.log(`📤 Upload Progress: ${percentCompleted}%`)
         },
       })
 
@@ -876,7 +869,6 @@ export const boutiquesApi = {
    */
   async getBoutiqueInfo(boutiqueId) {
     try {
-      console.log("🔄 Récupération des informations de la boutique:", boutiqueId)
 
       const response = await apiClient.get("/products.php", {
         params: {
@@ -885,7 +877,6 @@ export const boutiquesApi = {
         },
       })
 
-      console.log("✅ Informations de la boutique récupérées:", response.data)
 
       return {
         success: true,
@@ -908,7 +899,6 @@ export const boutiquesApi = {
    */
   async getBoutiqueProducts(params = {}) {
     try {
-      console.log("🔄 Récupération des produits de la boutique:", params)
 
       const queryParams = {
         action: "boutique_products",
@@ -924,7 +914,6 @@ export const boutiquesApi = {
 
       const response = await apiClient.get("/products.php", { params: queryParams })
 
-      console.log("✅ Produits de la boutique récupérés:", response.data)
 
       return {
         success: true,

@@ -210,7 +210,7 @@
                           :key="product.id" 
                           :value="product.id"
                         >
-                          {{ product.name,console.log("id:",item.productId) }}
+                          {{ product.name }}
                         </option>
                       </select>
                     </div>
@@ -621,11 +621,6 @@ const initializeUserData = () => {
       return false
     }
 
-    console.log('[v0] Utilisateur initialisé:', {
-      user: currentUser.value.full_name,
-      boutique: currentBoutique.value.name
-    })
-
     return true
   } catch (err) {
     console.error('[v0] Erreur lors de l\'initialisation:', err)
@@ -677,7 +672,6 @@ const loadOrderData = async (orderId) => {
     const response = await axios.get(`${API_BASE_URL}/commandes.php?action=get&id=${orderId}`)
     if (response.data.success) {
       // traiter les données
-      console.log('Order loaded:', response.data)
     }
   } catch (error) {
     console.error('Error loading order:', error)
@@ -701,7 +695,6 @@ const fetchProducts = async () => {
     
     if (response.success) {
       products.value = response.data || []
-      console.log('[v0] Produits chargés:', products.value)
     } else {
       console.error('[v0] Erreur API:', response.error)
     }
@@ -728,13 +721,11 @@ const onProductSelect = (index) => {
   const item = invoice.value.items[index]
   
   const selectedProduct = products.value.find(p => p.id === item.productId)
-  console.log("selectedProduct:", products.value)
   item.color = ""
   item.vin = ""
   item.trim_number = ""
   
   if (selectedProduct) {
-    console.log("product:",selectedProduct)
     item.price = selectedProduct.unit_price || selectedProduct.price || 0
     item.product_type = selectedProduct.category_name || ""
     item.product_name= selectedProduct.name || ""
@@ -854,7 +845,6 @@ const removeItem = (index) => {
       invoice.value.specs.splice(specsToRemove,1)
     }
   }
-  console.log("items removed: ",invoice.value.items)
 }
 
 const resetForm = () => {

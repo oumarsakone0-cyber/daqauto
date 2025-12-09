@@ -482,7 +482,6 @@ const handleImageUpload = async (event) => {
         image_url: imageUrl
       })
 
-      console.log('✅ Image envoyée au backend avec session_id:', sessionId)
     }
   } catch (error) {
     console.error('❌ Erreur upload image:', error)
@@ -538,7 +537,6 @@ const sendMessage = async () => {
       message: messageText
     })
 
-    console.log('✅ Message envoyé au backend !')
   } catch (error) {
     console.error('❌ Erreur lors de l\'envoi du message :', error)
     alert('Error to send message. Please try again.')

@@ -294,7 +294,6 @@
   const salesChart = ref(null)
   
   const updateAnalytics = () => {
-    console.log('Mise à jour des analytics pour:', selectedPeriod.value)
     // Ici vous pourriez faire un appel API pour récupérer les nouvelles données
   }
   
@@ -305,7 +304,6 @@
   }
   
   const exportReport = (format) => {
-    console.log(`Export du rapport en ${format}`)
     // Logique d'export
   }
   

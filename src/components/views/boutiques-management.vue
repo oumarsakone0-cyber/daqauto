@@ -886,7 +886,6 @@ import { Building, Building2, CheckCircle, CheckCircle2, Clock, FileWarning, Hom
           products_count: boutique.total_products || 0
         }))
         
-        console.log('✅ Boutiques chargées depuis l\'API:', boutiques.value.length)
       } else {
         throw new Error(response.error || 'Erreur lors du chargement des boutiques')
       }
@@ -909,7 +908,6 @@ import { Building, Building2, CheckCircle, CheckCircle2, Clock, FileWarning, Hom
           boosted_boutiques: Math.floor((data.boutiques?.total_boutiques || 0) * 0.2), // 20% boostées
           pending_boosts: Math.floor((data.boutiques?.total_boutiques || 0) * 0.1) // 10% en attente
         }
-        console.log('✅ Statistiques boutiques chargées:', stats.value)
       } else {
         throw new Error(response.error || 'Erreur lors du chargement des statistiques')
       }

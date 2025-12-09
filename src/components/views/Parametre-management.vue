@@ -766,19 +766,16 @@ const handleGetUsersByBoutique = async (boutiqueId) => {
     isLoading.value = true
     error.value = ''
 
-    console.log('📤 Chargement des utilisateurs pour la boutique:', boutiqueId)
 
     const random = Math.random();
 
     const response = await fetch(`https://sastock.com/api_adjame/users.php?action=get_users_by_boutique&boutique_id=${boutiqueId}&_=${random}`);
     const data = await response.json()
 
-    console.log('📥 Réponse API getUsersByBoutique:', data)
 
     if (data.success) {
       users.value = data.data.users
       boutique.value = data.data.boutique
-      console.log('✅ Utilisateurs chargés:', users.value.length, 'utilisateurs')
     } else {
       error.value = data.error || 'Error loading users for the store.'
       users.value = []
@@ -832,7 +829,6 @@ const loadBankInfo = async (boutiqueId) => {
     )
     const data = await response.json()
 
-    console.log('📥 Informations bancaires:', data)
 
     if (data.success && data.exists && data.data) {
       bankInfoExists.value = true
@@ -847,7 +843,6 @@ const loadBankInfo = async (boutiqueId) => {
       originalBankingInfo.value = { ...bankingInfo.value }
     } else {
       bankInfoExists.value = false
-      console.log('ℹ️ Aucune information bancaire trouvée')
     }
   } catch (error) {
     console.error('❌ Erreur lors du chargement des informations bancaires:', error)
@@ -879,7 +874,6 @@ const saveBankInfo = async () => {
       bank_address: bankingInfo.value.bankAddress || ''
     }
 
-    console.log('📤 Envoi des informations bancaires:', payload)
 
     const action = bankInfoExists.value ? 'update' : 'create'
     const method = bankInfoExists.value ? 'PUT' : 'POST'
@@ -896,7 +890,6 @@ const saveBankInfo = async () => {
     )
 
     const data = await response.json()
-    console.log('📥 Réponse API:', data)
 
     if (data.success) {
       showNotificationToast('Bank information saved successfully!')
@@ -918,7 +911,6 @@ const initializeUserData = () => {
   try {
     // ✅ Récupérer le token d'authentification
     const authToken = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-    console.log('Token d\'authentification récupéré:',)
     if (!authToken) {
       error.value = 'Authentication token missing. Please login again..'
       // Rediriger vers la page de login
@@ -974,12 +966,7 @@ const initializeUserData = () => {
     // ✅ Vérifier si "Se souvenir de moi" est activé
     const rememberMe = localStorage.getItem('rememberMe') === 'true'
     
-    console.log('✅ Données utilisateur chargées:', {
-      user: currentUser.value,
-      boutique: currentBoutique.value,
-      rememberMe,
-      token: authToken ? 'Présent' : 'Absent'
-    })
+  
 
   } catch (err) {
     console.error('Erreur lors de la récupération des données utilisateur:', err)
@@ -998,7 +985,6 @@ const initializeUserData = () => {
 
 const saveAllSettings = () => {
   // Logique de sauvegarde
-  console.log('Sauvegarde des paramètres...')
   showNotificationToast('Settings saved successfully!')
   hasUnsavedChanges.value = false
 }
@@ -1019,7 +1005,6 @@ const addUser = async () => {
       boutique_id: currentBoutique.value.id
     }
 
-    console.log('📤 Envoi de la requête d\'ajout d\'utilisateur:', payload)
 
     // Appel API pour ajouter l'agent
     const response = await fetch('https://sastock.com/api_adjame/users.php?action=add_agent', {
@@ -1031,7 +1016,6 @@ const addUser = async () => {
     })
 
     const data = await response.json()
-    console.log('📥 Réponse de l\'API:', data)
 
     if (data.success) {
       showNotificationToast('User successfully added!')
@@ -1060,7 +1044,6 @@ const changePassword = () => {
   if (!canChangePassword.value) return
   
   // Logique de changement de mot de passe
-  console.log('Changement de mot de passe...')
   securityInfo.value = {
     currentPassword: '',
     newPassword: '',
@@ -1106,7 +1089,6 @@ const formatDate = (dateString) => {
 
 onMounted(async () => {
   const token = localStorage.getItem('authToken') || sessionStorage.getItem('authToken')
-  console.log('🔑 Token:', token ? 'Présent' : 'Absent')
 
   if (!token) {
     router.replace('/boutique-admin/login')

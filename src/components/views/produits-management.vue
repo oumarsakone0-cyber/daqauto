@@ -1426,11 +1426,9 @@ import {  CheckCircleIcon, ChevronDownIcon,  ClockIcon, DownloadIcon, FileTextIc
       }
       
       const response = await adminProductsApi.getAllProducts(params)
-      console.log('🧾 Liste des produits:', response.data)
       
       if (response.success) {
         products.value = response.data || []
-        console.log('✅ Produits chargés depuis l\'API:', products.value.length)
       } else {
         throw new Error(response.error || 'Erreur lors du chargement des produits')
       }
@@ -1457,7 +1455,6 @@ import {  CheckCircleIcon, ChevronDownIcon,  ClockIcon, DownloadIcon, FileTextIc
             ? Math.round((data.products.status_rejected / data.products.total_products) * 100) 
             : 0
         }
-        console.log('✅ Statistiques chargées depuis l\'API:', stats.value)
       } else {
         throw new Error(response.error || 'Erreur lors du chargement des statistiques')
       }
@@ -1480,7 +1477,6 @@ import {  CheckCircleIcon, ChevronDownIcon,  ClockIcon, DownloadIcon, FileTextIc
       
       if (response.success) {
         availableBoutiques.value = response.data || []
-        console.log('✅ Boutiques chargées depuis l\'API:', availableBoutiques.value.length)
       } else {
         console.warn('⚠️ Erreur lors du chargement des boutiques:', response.error)
         availableBoutiques.value = []

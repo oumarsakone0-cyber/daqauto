@@ -651,7 +651,6 @@
   }
   
   const updateStats = () => {
-    console.log('Mise à jour des statistiques pour:', selectedPeriod.value)
   }
   
   const toggleActionMenu = (clientId) => {
@@ -671,12 +670,10 @@
   }
   
   const sendMessage = (client) => {
-    console.log('Envoyer message à:', client.name)
     activeActionMenu.value = null
   }
   
   const viewOrders = (client) => {
-    console.log('Voir commandes de:', client.name)
     activeActionMenu.value = null
   }
   
@@ -689,7 +686,6 @@
   }
   
   const exportClients = (format) => {
-    console.log(`Export des clients en ${format}`)
     showExportDropdown.value = false
     showNotification(`Export ${format.toUpperCase()} en cours...`)
   }
@@ -718,13 +714,11 @@
   }
   
   const handleImportClients = (importData) => {
-    console.log('Import de clients:', importData)
     showImportModal.value = false
     showNotification('Clients importés avec succès!')
   }
   
   const handleSegmentation = (segmentData) => {
-    console.log('Segmentation:', segmentData)
     showSegmentModal.value = false
     showNotification('Segmentation appliquée avec succès!')
   }

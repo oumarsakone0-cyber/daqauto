@@ -71,7 +71,6 @@ export default {
       if (userRaw) {
         try {
           await chatStore.initChatStore()
-          console.log('✅ Chat store initialisé')
         } catch (error) {
           console.error('❌ Erreur initialisation chat store:', error)
         }

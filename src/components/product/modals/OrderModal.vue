@@ -216,125 +216,88 @@
   // ===== FONCTIONS PRINCIPALES =====
   
   const getTotalQuantity = () => {
-    console.log('📦 getTotalQuantity appelée')
-    console.log('- selectedVariants:', props.selectedVariants)
-    console.log('- quantity:', props.quantity)
     
     if (props.selectedVariants && props.selectedVariants.length > 0) {
       const total = props.selectedVariants.reduce((sum, variant) => sum + (variant.quantity || 0), 0)
-      console.log('- Total des variantes:', total)
       return total
     }
     return props.quantity || 1
   }
   
   const calculateSubtotal = () => {
-    console.log('💰 calculateSubtotal appelée')
     if (!props.product) return 0
   
     const unitPrice = getUnitPrice()
     const totalQuantity = getTotalQuantity()
   
-    console.log('- Prix unitaire:', unitPrice)
-    console.log('- Quantité totale:', totalQuantity)
-    console.log('- Sous-total:', unitPrice * totalQuantity)
   
     return unitPrice * totalQuantity
   }
   
   // FONCTION PRINCIPALE - Calcul des frais de livraison
   const getFinalShippingCost = () => {
-    console.log('🚛 ===== getFinalShippingCost APPELÉE =====')
-    console.log('- selectedShipping:', props.selectedShipping)
-    console.log('- selectedCommune:', props.selectedCommune)
-    console.log('- selectedVille:', props.selectedVille)
-    console.log('- product:', props.product)
     
     // Si retrait ou pas de produit
     if (!props.selectedShipping || props.selectedShipping === 'retrait' || !props.product) {
-      console.log('❌ Retrait ou pas de produit')
       return 0
     }
     
     const totalQuantity = getTotalQuantity()
-    console.log('📦 Quantité totale pour calcul:', totalQuantity)
     
     let shippingCost = 0
     
     if (props.selectedShipping === 'abidjan') {
-      console.log('🏙️ Calcul pour Abidjan...')
       shippingCost = calculateAbidjanShipping(totalQuantity)
     } else if (props.selectedShipping === 'interieur') {
-      console.log('🌍 Calcul pour Intérieur...')
       shippingCost = calculateInterieurShipping(totalQuantity)
     }
     
-    console.log('✅ RÉSULTAT getFinalShippingCost:', shippingCost)
-    console.log('🚛 ===== FIN getFinalShippingCost =====')
     return shippingCost
   }
   
   const calculateAbidjanShipping = (totalQuantity) => {
-    console.log('🏙️ calculateAbidjanShipping pour commune:', props.selectedCommune)
-    console.log('- tarifsAbidjan:', props.tarifsAbidjan)
     
     // Chercher le tarif pour la commune
     let tarif = null
     if (props.selectedCommune && props.tarifsAbidjan && props.tarifsAbidjan.length > 0) {
       tarif = props.tarifsAbidjan.find(t => t.commune === props.selectedCommune)
-      console.log('📋 Tarif trouvé pour', props.selectedCommune, ':', tarif)
     }
     
     // Tarif par défaut si pas trouvé
     if (!tarif) {
-      console.log('⚠️ Utilisation tarif par défaut Abidjan')
       tarif = { tarif_min: 1500, tarif_max: 3000 }
     }
     
     const result = applyProductShippingRules(tarif, totalQuantity)
-    console.log('🏙️ Résultat calculateAbidjanShipping:', result)
     return result
   }
   
   const calculateInterieurShipping = (totalQuantity) => {
-    console.log('🌍 calculateInterieurShipping pour ville:', props.selectedVille)
-    console.log('- tarifsInterieur:', props.tarifsInterieur)
     
     // Chercher le tarif pour la ville
     let tarif = null
     if (props.selectedVille && props.tarifsInterieur && props.tarifsInterieur.length > 0) {
       tarif = props.tarifsInterieur.find(t => t.ville === props.selectedVille)
-      console.log('📋 Tarif trouvé pour', props.selectedVille, ':', tarif)
     }
     
     // Tarif par défaut si pas trouvé
     if (!tarif) {
-      console.log('⚠️ Utilisation tarif par défaut Intérieur')
       tarif = { tarif_min: 3000, tarif_max: 6000 }
     }
     
     const result = applyProductShippingRules(tarif, totalQuantity)
-    console.log('🌍 Résultat calculateInterieurShipping:', result)
     return result
   }
   
   const applyProductShippingRules = (tarif, totalQuantity) => {
-    console.log('⚙️ ===== applyProductShippingRules =====')
-    console.log('- Tarif reçu:', JSON.stringify(tarif))
-    console.log('- Quantité:', totalQuantity)
-    console.log('- product.tp:', props.product?.tp)
-    console.log('- product.qtp:', props.product?.qtp)
     
     if (!props.product || !tarif) {
-      console.log('❌ Pas de produit ou tarif')
       return 0
     }
   
     const tp = Number(props.product.tp) || 1
     const qtp = Number(props.product.qtp) || 1
     
-    console.log('- Type transport (tp) converti:', tp, typeof tp)
-    console.log('- Quantité transportable (qtp) converti:', qtp, typeof qtp)
   
     // Déterminer le tarif de base selon le type de transport
     let baseTarif = 0
@@ -343,25 +306,18 @@
     const tarifMax = Number(tarif.tarif_max) || 0
     const tarifGeneral = Number(tarif.tarif) || 0
   
-    console.log('- tarif_min converti:', tarifMin, typeof tarifMin)
-    console.log('- tarif_max converti:', tarifMax, typeof tarifMax)
-    console.log('- tarif converti:', tarifGeneral, typeof tarifGeneral)
   
     if (tp === 1) {
       // Moto - tarif minimum
       baseTarif = tarifMin || tarifGeneral || 1500
-      console.log('🏍️ Moto - tarif minimum choisi:', baseTarif)
     } else if (tp === 2) {
       // Mini-camion - tarif maximum
       baseTarif = tarifMax || tarifGeneral || 3000
-      console.log('🚐 Mini-camion - tarif maximum choisi:', baseTarif)
     } else if (tp === 3) {
       // Gros camion - tarif maximum × 2
       baseTarif = (tarifMax || tarifGeneral || 3000) * 2
-      console.log('🚛 Gros camion - tarif maximum × 2 choisi:', baseTarif)
     }
   
-    console.log('💵 Tarif de base final:', baseTarif, typeof baseTarif)
   
     // Calculer le coût selon la règle de quantité (qtp)
     let finalCost = 0
@@ -369,21 +325,16 @@
     if (qtp === 1) {
       // 1 article = 1 fois le tarif, 2 articles = 2 fois le tarif, etc.
       finalCost = baseTarif * totalQuantity
-      console.log(`📦 Règle qtp=1: ${baseTarif} × ${totalQuantity} = ${finalCost}`)
     } else {
       // Pour qtp > 1, tarif valide pour 1 à qtp articles
       if (totalQuantity <= qtp) {
         finalCost = baseTarif
-        console.log(`📦 Règle qtp=${qtp}: quantité ${totalQuantity} <= ${qtp}, coût = ${baseTarif}`)
       } else {
         const multiplier = Math.ceil(totalQuantity / qtp)
         finalCost = baseTarif * multiplier
-        console.log(`📦 Règle qtp=${qtp}: quantité ${totalQuantity} > ${qtp}, multiplier = ${multiplier}, coût = ${finalCost}`)
       }
     }
   
-    console.log('✅ Coût final applyProductShippingRules:', finalCost, typeof finalCost)
-    console.log('⚙️ ===== FIN applyProductShippingRules =====')
     return finalCost
   }
   
@@ -393,7 +344,6 @@
     
     // Ne pas traiter si désactivé
     if (!props.canConfirmOrder || props.orderLoading) {
-      console.log('❌ Bouton désactivé, arrêt')
       return
     }
     
@@ -483,12 +433,6 @@
       })) : null
     }
     
-    console.log('✅ Données finales buildOrderData:', orderData)
-    console.log('🔍 Vérification frais dans orderData:')
-    console.log('- frais_livraison:', orderData.frais_livraison)
-    console.log('- shipping_cost:', orderData.shipping_cost)
-    console.log('- total:', orderData.total)
-    console.log('🏗️ ===== FIN buildOrderData =====')
     
     return orderData
   }
@@ -587,23 +531,15 @@
   // ===== FONCTIONS DE DEBUG =====
   
   const testShippingCalculation = () => {
-    console.log('🧪 ===== TEST CALCUL LIVRAISON =====')
     const result = getFinalShippingCost()
-    console.log('🎯 Résultat test:', result)
-    console.log('🧪 ===== FIN TEST CALCUL LIVRAISON =====')
   }
   
   const testBuildOrderData = () => {
-    console.log('🧪 ===== TEST BUILD ORDER DATA =====')
     const result = buildOrderData()
-    console.log('🎯 Résultat test:', result)
-    console.log('🧪 ===== FIN TEST BUILD ORDER DATA =====')
   }
   
   const testSubmitOrder = () => {
-    console.log('🧪 ===== TEST SUBMIT ORDER =====')
     handleSubmitOrder()
-    console.log('🧪 ===== FIN TEST SUBMIT ORDER =====')
   }
   </script>
   

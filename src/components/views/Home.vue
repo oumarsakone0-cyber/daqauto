@@ -410,7 +410,6 @@ function handleNavClick(index) {
   
   // Fonction pour naviguer vers la page de détail du produit
   const navigateToProduct = (product) => {
-  console.log('🔄 Navigation vers le produit:', product)
   
   // Générer un slug si le produit n'en a pas
   let slug = product.slug
@@ -423,7 +422,6 @@ function handleNavClick(index) {
     slug = `produit-${product.id || Date.now()}`
   }
   
-  console.log('🔗 Slug généré:', slug)
   
   // Navigation vers la page de détail
   router.push(`/detail_resultat_produit/${slug}`)
@@ -451,17 +449,14 @@ function handleNavClick(index) {
   
   // Fonctions pour les actions des boutons
   const toggleFavorite = (product) => {
-  console.log('❤️ Toggle favorite pour:', product.name)
   // Ici vous pouvez ajouter la logique pour gérer les favoris
   }
   
   const contactSupplier = (product) => {
-  console.log('📞 Contact supplier pour:', product.name)
   // Ici vous pouvez ajouter la logique pour contacter le fournisseur
   }
   
   const chatWithSupplier = (product) => {
-  console.log('💬 Chat avec supplier pour:', product.name)
   // Ici vous pouvez ajouter la logique pour le chat
   }
   
@@ -532,7 +527,6 @@ function handleNavClick(index) {
     isLoadingCategories.value = true;
     categoriesError.value = null;
     
-    console.log('🔄 Chargement des catégories depuis l\'API...');
     const response = await categoriesApi.getCategories();
     
     if (response.success && response.data) {
@@ -545,7 +539,6 @@ function handleNavClick(index) {
         subcategories: category.subcategories || []
       }));
       
-      console.log('✅ Catégories chargées:', categories.value);
     } else {
       throw new Error(response.message || 'Error to load categories');
     }
@@ -599,7 +592,6 @@ function handleNavClick(index) {
     isLoadingFeaturedSupplier.value = true;
     featuredSupplierError.value = null;
     
-    console.log('🔄 Chargement du fournisseur vedette...');
     const response = await productsApi.getRandomSupplier();
     
     if (response.success && response.data) {
@@ -618,7 +610,6 @@ function handleNavClick(index) {
         }))
       };
       
-      console.log('✅ Fournisseur vedette chargé:', featuredSupplier.value);
     } else {
       throw new Error(response.message || 'Error to load supplier');
     }
@@ -649,7 +640,6 @@ function handleNavClick(index) {
     isLoadingRecommendedProducts.value = true;
     recommendedProductsError.value = null;
     
-    console.log('🔄 Chargement des produits recommandés...');
     const response = await productsApi.getMostViewedProductsForHomepage({ limit: 15 });
     
     if (response.success && response.data) {
@@ -668,7 +658,6 @@ function handleNavClick(index) {
         experience: product.experience || Math.floor(Math.random() * 8) + 2
       }));
       
-      console.log('✅ Produits recommandés chargés:', recommendedProducts.value);
     } else {
       throw new Error(response.message || 'Error to load products');
     }

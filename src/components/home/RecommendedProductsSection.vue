@@ -130,7 +130,6 @@
   
   // Fonction pour naviguer vers la page de détail du produit
   const navigateToProduct = (product) => {
-    console.log('🔄 Navigation vers le produit:', product)
     
     let slug = product.slug
     if (!slug && product.name) {
@@ -146,15 +145,12 @@
   
   // Fonctions pour les actions des boutons
   const toggleFavorite = (product) => {
-    console.log('❤️ Toggle favorite pour:', product.name)
   }
   
   const contactSupplier = (product) => {
-    console.log('📞 Contact supplier pour:', product.name)
   }
   
   const chatWithSupplier = (product) => {
-    console.log('💬 Chat avec supplier pour:', product.name)
   }
   
   // Fonction pour charger les produits recommandés (15 derniers avec plus de vues)
@@ -163,7 +159,6 @@
       isLoadingRecommendedProducts.value = true;
       recommendedProductsError.value = null;
       
-      console.log('🔄 Chargement des produits recommandés...');
       const response = await productsApi.getMostViewedProductsForHomepage({ limit: 18 });
       
       if (response.success && response.data) {
@@ -189,7 +184,6 @@
          
         }));
         
-        console.log('✅ Produits recommandés chargés:', recommendedProducts.value);
       } else {
         throw new Error(response.message || 'Error to load Recommended products');
       }

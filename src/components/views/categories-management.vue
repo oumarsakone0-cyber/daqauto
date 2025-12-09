@@ -657,12 +657,10 @@ const getValidIconName = (iconValue) => {
 // API Methods - Mise à jour pour utiliser categorie.php
 const loadStats = async () => {
   try {
-    console.log('🔄 Chargement des statistiques...')
     const response = await axios.get(`${API_BASE_URL}/categorie.php?action=stats&_=${Date.now()}`)
     
     if (response.data.success) {
       stats.value = response.data.data
-      console.log('✅ Statistiques chargées:', stats.value)
     } else {
       console.error('❌ Erreur lors du chargement des statistiques:', response.data.error)
       alert('Erreur lors du chargement des statistiques: ' + (response.data.error || 'Erreur inconnue'))
@@ -675,10 +673,8 @@ const loadStats = async () => {
   
   const loadCategories = async () => {
     try {
-      console.log('🔄 Chargement des catégories...')
       const response = await axios.get(`${API_BASE_URL}/categorie.php?action=categories&limit=100&_=${Date.now()}`)
     
-      console.log('📡 Réponse API categories:', response.data)
     
       if (response.data && response.data.success) {
         // Transformer les données pour correspondre à la structure attendue
@@ -691,7 +687,6 @@ const loadStats = async () => {
           // Convertir les emojis en noms de composants valides ou utiliser une icône par défaut
           icon: getValidIconName(category.icon)
         }))
-        console.log('✅ Catégories transformées:', categories.value.length)
       } else {
         console.error('❌ Réponse API invalide pour les catégories:', response.data)
         categories.value = []
@@ -705,14 +700,12 @@ const loadStats = async () => {
   
   const loadSubcategories = async () => {
     try {
-      console.log('🔄 Chargement des sous-catégories...')
       const url = selectedCategoryFilter.value 
         ? `${API_BASE_URL}/categorie.php?action=subcategories&category_id=${selectedCategoryFilter.value}&limit=1000&_=${Date.now()}`
         : `${API_BASE_URL}/categorie.php?action=subcategories&limit=1000&_=${Date.now()}`
     
       const response = await axios.get(url)
     
-      console.log('📡 Réponse API subcategories:', response.data)
     
       if (response.data && response.data.success) {
         // Transformer les données pour correspondre à la structure attendue
@@ -725,7 +718,6 @@ const loadStats = async () => {
           category_name: subcategory.category_name || 'Catégorie inconnue',
           icon: getValidIconName(subcategory.icon)
         }))
-        console.log('✅ Sous-catégories transformées:', subcategories.value.length)
       } else {
         console.error('❌ Réponse API invalide pour les sous-catégories:', response.data)
         subcategories.value = []
@@ -739,14 +731,12 @@ const loadStats = async () => {
   
   const loadSubSubcategories = async () => {
     try {
-      console.log('🔄 Chargement des sous-sous-catégories...')
       const url = selectedSubcategoryFilter.value 
         ? `${API_BASE_URL}/categorie.php?action=sub_subcategories&subcategory_id=${selectedSubcategoryFilter.value}&limit=1000&_=${Date.now()}`
         : `${API_BASE_URL}/categorie.php?action=sub_subcategories&limit=1000&_=${Date.now()}`
     
       const response = await axios.get(url)
     
-      console.log('📡 Réponse API sub_subcategories:', response.data)
     
       if (response.data && response.data.success) {
         // Transformer les données pour correspondre à la structure attendue
@@ -758,7 +748,6 @@ const loadStats = async () => {
           subcategory_name: subSubcategory.subcategory_name || 'Sous-catégorie inconnue',
           icon: getValidIconName(subSubcategory.icon)
         }))
-        console.log('✅ Sous-sous-catégories transformées:', subSubcategories.value.length)
       } else {
         console.error('❌ Réponse API invalide pour les sous-sous-catégories:', response.data)
         subSubcategories.value = []
@@ -772,14 +761,12 @@ const loadStats = async () => {
   
   const loadLevel4Categories = async () => {
     try {
-      console.log('🔄 Chargement des catégories niveau 4...')
       const url = selectedSubSubcategoryFilter.value 
         ? `${API_BASE_URL}/categorie.php?action=sub_sub_subcategories&sub_subcategory_id=${selectedSubSubcategoryFilter.value}&limit=1000&_=${Date.now()}`
         : `${API_BASE_URL}/categorie.php?action=sub_sub_subcategories&limit=1000&_=${Date.now()}`
     
       const response = await axios.get(url)
     
-      console.log('📡 Réponse API level4:', response.data)
     
       if (response.data && response.data.success) {
         // Transformer les données pour correspondre à la structure attendue
@@ -791,7 +778,6 @@ const loadStats = async () => {
           sub_subcategory_name: level4.sub_subcategory_name || 'Sous-sous-catégorie inconnue',
           icon: getValidIconName(level4.icon)
         }))
-        console.log('✅ Catégories niveau 4 transformées:', level4Categories.value.length)
       } else {
         console.error('❌ Réponse API invalide pour les catégories niveau 4:', response.data)
         level4Categories.value = []
@@ -805,7 +791,6 @@ const loadStats = async () => {
   
   const loadAllData = async () => {
     dataLoading.value = true
-    console.log('🚀 Début du chargement de toutes les données...')
     
     try {
       // Charger les statistiques en premier
@@ -828,17 +813,14 @@ const loadStats = async () => {
         if (result.status === 'rejected') {
           console.error(`❌ Erreur lors du chargement de ${names[index]}:`, result.reason)
         } else {
-          console.log(`✅ ${names[index]} chargées avec succès`)
         }
       })
       
-      console.log('✅ Chargement de toutes les données terminé')
     } catch (error) {
       console.error('❌ Erreur générale lors du chargement des données:', error)
     } finally {
       // S'assurer que le loading se termine toujours
       dataLoading.value = false
-      console.log('🏁 dataLoading mis à false')
     }
   }
   
@@ -1229,7 +1211,6 @@ const loadStats = async () => {
   }
   
   onMounted(() => {
-    console.log('🚀 Initialisation de la page de gestion des catégories')
     loadAllData()
   })
 </script>

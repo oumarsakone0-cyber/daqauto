@@ -1529,7 +1529,6 @@ const setMainImages = (index) => {
 
   // Retirer l'image de sa position
   editData.value.all_images.splice(index, 1)
-  console.log("0",editData.value.all_images)
   // La mettre en première position
   editData.value.all_images.unshift(selected)
 }

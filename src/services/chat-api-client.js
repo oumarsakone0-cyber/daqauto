@@ -36,7 +36,6 @@ class ChatApiClient {
 
   // Créer ou récupérer un utilisateur
 async createOrGetUser() {
-  console.log("Creating or getting user with data:", this.userCode);
 
   try {
 

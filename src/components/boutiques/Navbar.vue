@@ -234,17 +234,14 @@ const initializeUserData = () => {
     const storedUser = localStorage.getItem('user') || sessionStorage.getItem('user')
 
     if (!authToken || !storedUser) {
-      console.log('[v0] No auth token or user found')
       return null
     }
 
     const parsedUser = JSON.parse(storedUser)
     user.value = parsedUser
-    console.log('lalao ', user.value)
     
     // Validate user object
     if (!parsedUser.id || !parsedUser.full_name) {
-      console.log('[v0] Invalid user data')
       return null
     }
 

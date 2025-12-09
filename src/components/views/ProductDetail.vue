@@ -342,13 +342,11 @@ import { useCartStore } from '../../stores/cart'
         throw new Error('Slug du produit manquant')
       }
       
-      console.log('🔍 Chargement du produit avec slug:', productSlug.value)
       
       const response = await productsApi.getProduct(productSlug.value, 'slug')
       
       if (response.success && response.data) {
         product.value = response.data
-        console.log('✅ Produit chargé:', product.value)
         await loadStoreProducts()
         await loadTarifs()
       } else {
@@ -366,7 +364,6 @@ import { useCartStore } from '../../stores/cart'
     try {
       if (!product.value || !product.value.boutique_id) return
       
-      console.log('🏪 Chargement des produits de la boutique:', product.value.boutique_id)
       
       const response = await productsApi.getProducts({
         boutique_id: product.value.boutique_id,
@@ -376,7 +373,6 @@ import { useCartStore } from '../../stores/cart'
       
       if (response.success && response.data) {
         storeProducts.value = response.data.filter(p => p.id !== product.value.id)
-        console.log('✅ Produits de la boutique chargés:', storeProducts.value.length)
       }
     } catch (err) {
       console.error('❌ Erreur lors du chargement des produits de la boutique:', err)
@@ -385,7 +381,6 @@ import { useCartStore } from '../../stores/cart'
   
   const loadTarifs = async () => {
     try {
-      console.log('🔄 Chargement des tarifs de livraison...')
       
       const responseAbidjan = await productsApi.getTarifsAbidjan()
       if (responseAbidjan.success) {
@@ -397,15 +392,10 @@ import { useCartStore } from '../../stores/cart'
         tarifsInterieur.value = responseInterieur.data.filter(tarif => tarif.actif === true)
       }
   
-      console.log('✅ Tarifs chargés:', { 
-        abidjan: tarifsAbidjan.value.length, 
-        interieur: tarifsInterieur.value.length 
-      })
       
       // Initialiser une commune par défaut si pas encore définie
       if (!selectedCommune.value && selectedShipping.value === 'abidjan' && tarifsAbidjan.value.length > 0) {
         selectedCommune.value = tarifsAbidjan.value[0].commune
-        console.log('🏙️ Commune par défaut définie:', selectedCommune.value)
         updateShippingCost()
       }
       
@@ -560,14 +550,10 @@ const toggleCart = async () => {
     }
     
     const user = JSON.parse(userData)
-    console.log("[v0] User found:", user.id)
-    console.log("[v0] Product to add:", product.value.id)
     
     // Appeler le store pour ajouter au panier
     await cart.addItem(product.value)
     
-    console.log("[v0] Item added to cart successfully")
-      
     displayNotification(
       'success',
       'Added to Cart',
@@ -622,14 +608,11 @@ const toggleCart = async () => {
   }
   
   const confirmOrder = async (orderDataFromModal) => {
-  console.log("📦 ===== DÉBUT confirmOrder =====")
-  console.log("📦 Données reçues du modal:", orderDataFromModal)
 
   formSubmitted.value = true
 
   // Validation des champs obligatoires
   if (!orderForm.value.customerContact || !orderForm.value.adresse_complete) {
-    console.log("❌ Validation échouée - champs manquants")
     return
   }
 
@@ -640,13 +623,9 @@ const toggleCart = async () => {
     let finalOrderData
 
     if (orderDataFromModal && typeof orderDataFromModal === "object") {
-      console.log("✅ Utilisation des données du modal")
-      console.log("💰 frais_livraison reçu du modal:", orderDataFromModal.frais_livraison)
-      console.log("💰 total reçu du modal:", orderDataFromModal.total)
 
       finalOrderData = orderDataFromModal
     } else {
-      console.log("⚠️ Pas de données du modal, reconstruction manuelle")
 
       // Fallback : reconstruction manuelle (comme avant)
       finalOrderData = {
@@ -674,19 +653,13 @@ const toggleCart = async () => {
         statut: "en_attente",
       }
 
-      console.log("💰 frais_livraison calculé manuellement:", finalOrderData.frais_livraison)
     }
 
-    console.log("📤 Données finales à envoyer:", finalOrderData)
-    console.log("🔍 Vérification finale:")
-    console.log("- frais_livraison:", finalOrderData.frais_livraison)
-    console.log("- total:", finalOrderData.total)
 
     // Envoi à l'API
     const result = await productsApi.createOrder(finalOrderData)
 
     if (result.success) {
-      console.log("✅ Commande créée avec succès:", result)
       orderLoading.value = false
       closeOrderModal()
       showOrderSuccessNotification(finalOrderData)
@@ -699,7 +672,6 @@ const toggleCart = async () => {
     displayNotification("error", "Erreur", error.message)
   }
 
-  console.log("📦 ===== FIN confirmOrder =====")
 }
 
   
@@ -819,7 +791,6 @@ const toggleCart = async () => {
         { commune: 'Yopougon', tarif_min: 3000, tarif_max: 6000, actif: true },
         { commune: 'Abobo', tarif_min: 3500, tarif_max: 7000, actif: true }
       ]
-      console.log('📦 Tarifs Abidjan par défaut chargés')
     }
     
     if (tarifsInterieur.value.length === 0) {
@@ -828,13 +799,11 @@ const toggleCart = async () => {
         { ville: 'Daloa', tarif_min: 6000, tarif_max: 12000, actif: true },
         { ville: 'Yamoussoukro', tarif_min: 4500, tarif_max: 9000, actif: true }
       ]
-      console.log('🏘️ Tarifs Intérieur par défaut chargés')
     }
     
     // Initialiser une commune par défaut pour tester
     if (!selectedCommune.value && selectedShipping.value === 'abidjan') {
       selectedCommune.value = 'Cocody'
-      console.log('🏙️ Commune par défaut: Cocody')
       // updateShippingCost()
     }
     
