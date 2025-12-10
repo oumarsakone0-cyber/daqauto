@@ -93,7 +93,7 @@
 
       <div class="alibaba-action-buttons">
         <button class="btn-outline flex-1" @click.stop="handleProductClick">View</button>
-        <button class="btn-outline-with-background flex-1" @click.stop="handleChatClick">Chat now</button>
+        <button class="btn-outline-with-background flex-1" style="font-size: 12px" @click.stop="handleChatClick">Chat now</button>
       </div>
     </div>
 

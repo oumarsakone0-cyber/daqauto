@@ -3145,10 +3145,15 @@ const handleProformaDownload = (order) => {
         address: order.boutique_adresse
       },
 
-      // Produit avec prix ajusté
+      // Produit avec prix ajusté et détails complets
       items: [{
         productId: order.produit_id,
         product_name: order.produit_nom_complet || order.produit_nom,
+        product_type: order.product_type || order.produit_type || '',
+        trim_number: order.trim_number || order.modele || '',
+        vin: order.vin || order.chassis || '',
+        stock_number: order.stock_number || order.numero_stock || '',
+        color: order.color || order.couleur || '',
         quantity: order.quantite,
         unit_price: parseFloat(order.ajust_price || order.produit_prix),
         total: parseFloat(order.ajust_price || order.produit_prix) * order.quantite
@@ -3223,16 +3228,21 @@ const handleContractDownload = (order) => {
         address: order.boutique_adresse
       },
 
-      // Produit avec prix ajusté
+      // Produit avec prix ajusté et détails complets
       items: [{
         productId: order.produit_id,
         product_name: order.produit_nom_complet || order.produit_nom,
+        product_type: order.product_type || order.produit_type || '',
+        trim_number: order.trim_number || order.modele || '',
+        vin: order.vin || order.chassis || '',
+        stock_number: order.stock_number || order.numero_stock || '',
+        color: order.color || order.couleur || '',
         quantity: order.quantite,
         unit_price: parseFloat(order.ajust_price || order.produit_prix),
         total: parseFloat(order.ajust_price || order.produit_prix) * order.quantite
       }],
 
-      // <CHANGE> Ajout des spécifications produit
+      // Spécifications produit
       specs: order.specs || order.specifications || [],
 
       // Informations de livraison/transport

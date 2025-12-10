@@ -430,7 +430,10 @@ const termsAndConditions = ()=>{
     doc.text('1.3 The payment currency under the agreement is :  ', margin, yPos+10)
 
     doc.setFont('helvetica', 'normal')
-    doc.text('100% T/T in advance', margin+35, yPos)
+    // Afficher les termes de paiement depuis payment_terms
+    const pt = contract.payment_terms || {}
+    const paymentText = `${pt.deposit_percent || 30}% deposit, ${pt.before_shipping_percent || 40}% before shipping, ${pt.against_bl_percent || 30}% against BL`
+    doc.text(paymentText, margin+35, yPos)
     doc.text('180 (One hundred eighty) calendar days from the date of non-delivery of the goods.', margin+70, yPos+5)
     doc.text('USD', margin+70, yPos+10)
 
@@ -451,8 +454,13 @@ const termsAndConditions = ()=>{
     doc.text('2.5 Delivery time:', margin, yPos+20)
 
     doc.setFont('helvetica', 'normal')
-    doc.text('XXX, XXXX  From Chongqing,via XXX China, to XXXX', margin+35, yPos)
-    doc.text('BY SEA', margin+35, yPos+5)
+    // Afficher les informations de transport depuis shipping
+    const ship = contract.shipping || {}
+    const routeText = ship.loading_port && ship.destination_port
+      ? `From ${ship.loading_port} to ${ship.destination_port}`
+      : 'To be specified'
+    doc.text(routeText, margin+35, yPos)
+    doc.text(ship.method || 'BY SEA', margin+35, yPos+5)
     doc.text('DURING 30 CALENDAR DAYS FROM THE DATE OF THE SELLER RECEIVES THE FULL PAYMENT.', margin+35, yPos+10)
     doc.text('NOT ALLOWED', margin+35, yPos+15)
     doc.text('during 90 (ninety) calendar days from the date of shipment of cars.', margin+35, yPos+20)
@@ -581,7 +589,27 @@ const signature = ()=>{
   doc.setTextColor(107, 114, 128)
   doc.setFont('helvetica', 'normal')
   doc.text('Signature of the Buyer : ___________________',  margin , yPos + 12)
-  doc.text('Signature of the Seller : ___________________', pageWidth - margin - 60, yPos + 12)
+
+  // Seller signature with APPROVED status if contract is signed
+  const sellerSignatureText = 'Signature of the Seller : ___________________'
+  doc.text(sellerSignatureText, pageWidth - margin - 60, yPos + 12)
+
+  // Add APPROVED stamp if contract is signed
+  if (contract.contract_signed) {
+    doc.setFont('helvetica', 'bold')
+    doc.setFontSize(10)
+    doc.setTextColor(0, 128, 0) // Green color
+    doc.text('APPROVED', pageWidth - margin - 55, yPos + 20)
+
+    // Add signature date if available
+    if (contract.contract_signed_date) {
+      doc.setFont('helvetica', 'normal')
+      doc.setFontSize(7)
+      doc.setTextColor(107, 114, 128)
+      doc.text(`Date: ${formatDate(contract.contract_signed_date)}`, pageWidth - margin - 55, yPos + 25)
+    }
+  }
+
   footer()
 }
 
