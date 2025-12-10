@@ -33,7 +33,6 @@
       <div class="main-product-section ">
         <div class="container">
           <div class="product-main-content">
-            <!-- Galerie d'images -->
             <ProductImageGallery 
               :product="product"
               :product-images="productImages"
@@ -44,13 +43,11 @@
               @add-to-compare="addToCompare"
             />
   
-            <!-- Informations du produit -->
             <ProductDetails 
               :product="product"
               @toggle-cart="toggleCart"
             />
   
-            <!-- Informations du fournisseur -->
             <SupplierCard 
               v-if="supplier"
               :supplier="supplier"
@@ -63,7 +60,6 @@
       <div class="product-details-section ">
         <div class="container">
           <div class="two-column-layout">
-            <!-- Colonne de gauche: Détails du produit -->
             <div class="left-column">
               <ProductDescriptionCard 
                 :product="product"
@@ -74,7 +70,6 @@
               />
             </div>
             
-            <!-- Colonne de droite: Produits de la boutique -->
             <div class="right-column">
               <StoreProducts 
                 :store-products="storeProducts"
@@ -95,7 +90,6 @@
         @prev="prevModalImage"
         @next="nextModalImage"
       />
-      
       <ShareModal 
         v-if="showShareModal"
         :product="product"
@@ -104,7 +98,6 @@
         @share="shareOn"
         @copy-link="copyShareLink"
       />
-  
       <OrderModal 
         v-if="showOrderModal"
         :product="product"
@@ -125,24 +118,11 @@
         @confirm-order="confirmOrder"
         @update-form="updateOrderForm"
       />
-  
       <OrderSuccessModal 
         v-if="showOrderSuccessModal"
         :order-data="orderSuccessData"
         @close="closeOrderSuccessModal"
       />
-  
-      <!-- <ChatModal 
-        v-if="showChatModal"
-        :supplier="supplier"
-        :chat-messages="chatMessages"
-        :new-message="newMessage"
-        @close="closeChatModal"
-        @send-message="sendMessage"
-        @update-message="updateNewMessage"
-      /> -->
-     
-      
       <!-- Notification Toast -->
       <NotificationToast 
         v-if="showNotification"
@@ -151,7 +131,6 @@
         :message="notificationMessage"
         @close="closeNotification"
       />
-      
       <!-- Cart Badge -->
       <CartBadge 
         v-if="cartCount > 0"
@@ -818,8 +797,9 @@ const toggleCart = async () => {
   
   <style scoped>
   .product-detail-page {
-    background: #f5f5f5;
+    background: #f9f9f9;
     min-height: 100vh;
+    min-width: 100vw;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
     position: relative;
   }
@@ -936,6 +916,7 @@ const toggleCart = async () => {
   .page-header {
     background: #fff;
     border-bottom: 1px solid #e8e8e8;
+    width: 100%;
     padding: 12px 0;
     padding-top: 40px;
   }

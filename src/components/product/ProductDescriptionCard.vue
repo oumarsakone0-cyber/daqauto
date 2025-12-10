@@ -6,7 +6,7 @@
             <button 
               v-for="(tab, index) in productTabs" 
               :key="index"
-              class="tab-button" 
+              class="tab-button sm:mx-4 sm:py-2 px-1.5" 
               :class="{ active: activeTab === index }"
               @click="activeTab = index"
             >
@@ -17,7 +17,7 @@
           <div class="tab-content">
              <!-- Onglet Spécifications -->
               <div v-if="activeTab === 0" >
-                <div class="specifications-table grid grid-cols-2 ">
+                <div class="specifications-table grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Overview</h3>
                     <div class="spec-row">
@@ -40,11 +40,11 @@
                         <span v-else>N/A</span>
                       </div>
                     </div>
-                    <div class="spec-row">
+                    <div class="spec-row overflow-scroll">
                       <div class="spec-name">Couleurs</div>
                       <div v-for="color in product.colors" :key="color.id" >
                         <div  class="spec-value">
-                          <div class="pl-3">
+                          <div class="pl-2 flex items-center">
                             <span 
                               class="inline-block w-6 h-6 rounded-full border border-gray-300 mr-2" 
                               :style="{ backgroundColor: color.hex_value || '#FFFFFF' }"
@@ -398,12 +398,13 @@
   
   .tabs-header {
     display: flex;
+    width: 100%;
     border-bottom: 2px solid #f0f0f0;
     margin-bottom: 24px;
   }
   
   .tab-button {
-    padding: 12px 24px;
+    /* padding: 12px 14px; */
     border: none;
     background: transparent;
     font-size: 16px;
