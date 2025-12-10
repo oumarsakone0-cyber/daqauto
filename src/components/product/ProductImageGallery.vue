@@ -501,16 +501,17 @@ const prevThumbnailSet = () => {
 }
 
 .mobile-thumbnails {
-  padding: 12px 16px;
+  padding: 12px 1px;
   background: #fff;
 }
 
 .thumbnails-scroll {
   display: flex;
-  gap: 8px;
+  gap: 1px;
   overflow-x: auto;
   padding-bottom: 4px;
-  -webkit-overflow-scrolling: touch;
+  width: 77vw;
+  -webkit-overflow-scrolling: inherit;
 }
 
 .mobile-thumbnail {

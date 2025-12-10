@@ -1,6 +1,6 @@
 <template>
     <!-- Version Mobile -->
-    <section class="mobile-recommended mobile-only">
+    <!-- <section class="mobile-recommended mobile-only">
       <div class="section-header-mobile">
         <h2>🔥 Recommanded for you</h2>
         <a v-if="!recommendedProductsError" href="#" class="btn-outline">See all</a>
@@ -18,17 +18,16 @@
           @chat-click="chatWithSupplier"
         />
       </div>
-    </section>
+    </section> -->
   
     <!-- Version Desktop -->
-    <section class="more-products-section desktop-only">
+    <section class="more-products-section">
       <div class="section-content">
         <div class="section-header">
-          <h2 class="section-title">🔥 Recommended products</h2>
+          <h2 class="section-title text-2xs sm:text-2xl">🔥 Recommended products</h2>
           <a v-if="!recommendedProductsError" href="#" class="btn-outline">See all →</a>
         </div>
         
-        <!-- État de chargement des produits recommandés -->
         <div v-if="isLoadingRecommendedProducts" class="loading-products">
           <div class="loading-product-skeleton" v-for="i in 15" :key="i">
             <div class="skeleton-product-image"></div>
@@ -39,14 +38,12 @@
           </div>
         </div>
   
-        <!-- État d'erreur des produits recommandés -->
         <div v-else-if="recommendedProductsError" class="error-products">
           <p class="error-message error-color">{{ recommendedProductsError }}</p>
           <button @click="loadRecommendedProducts" class="btn-gray">Try again</button>
         </div>
   
-        <!-- Produits recommandés chargés -->
-        <div v-else class="products-grid-dense">
+        <div v-else class="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-6">
           <ProductCard
             v-for="(product, index) in recommendedProducts" 
             :key="product.id || index"
@@ -251,7 +248,7 @@
   }
   
   .section-title {
-    font-size: 28px;
+    /* font-size: 28px; */
     font-weight: 700;
     color: #333;
     margin: 0;
@@ -263,8 +260,7 @@
   /* Grille de produits dense */
   .products-grid-dense {
     display: grid;
-    grid-template-columns: repeat(5, 1fr);
-    gap: 20px;
+    grid-template-columns: repeat(2, 1fr);
   }
   
   /* États de chargement */
