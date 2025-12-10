@@ -17,7 +17,7 @@
           <div class="tab-content">
              <!-- Onglet Spécifications -->
               <div v-if="activeTab === 0" >
-                <div class="specifications-table grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-4 gap-6">
+                <div class="specifications-table grid grid-cols-1 sm:grid-cols-2 gap-6">
                   <div class="spec-group ">
                     <h3 class="spec-group-title">Overview</h3>
                     <div class="spec-row">
