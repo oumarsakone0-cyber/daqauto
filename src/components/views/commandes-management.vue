@@ -316,7 +316,7 @@
                     <div v-if="order.statut === 'send'" class="flex gap-1 mt-2 flex-wrap">
                       <button
                         @click="handleProformaDownload(order)"
-                        class="px-2 py-1 bg-blue-100 text-blue-700 rounded text-[10px] font-medium hover:bg-blue-200 transition-colors flex items-center gap-1"
+                        class="btn-outline text-[10px] h-6"
                         title="Download Proforma PDF"
                       >
                         <FileTextIcon class="w-3 h-3" />
@@ -324,7 +324,7 @@
                       </button>
                       <button
                         @click="handleContractDownload(order)"
-                        class="px-2 py-1 bg-green-100 text-green-700 rounded text-[10px] font-medium hover:bg-green-200 transition-colors flex items-center gap-1"
+                        class="btn-degrade-orange text-[10px] h-6"
                         title="Download Contract PDF"
                       >
                         <FileTextIcon class="w-3 h-3" />

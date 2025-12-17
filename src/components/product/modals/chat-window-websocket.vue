@@ -200,7 +200,6 @@ const connectWebSocket = () => {
     ws.value = new WebSocket(props.websocketUrl)
     
     ws.value.onopen = () => {
-      console.log('[v0] WebSocket connected')
       connectionStatus.value = 'connected'
       reconnectAttempts.value = 0
       
@@ -222,7 +221,6 @@ const connectWebSocket = () => {
     }
     
     ws.value.onclose = (event) => {
-      console.log('[v0] WebSocket disconnected:', event.code, event.reason)
       connectionStatus.value = 'disconnected'
       
       // Attempt to reconnect if not manually closed
@@ -245,14 +243,12 @@ const connectWebSocket = () => {
 
 const scheduleReconnect = () => {
   if (reconnectAttempts.value >= maxReconnectAttempts) {
-    console.log('[v0] Max reconnection attempts reached')
     return
   }
   
   const delay = Math.min(1000 * Math.pow(2, reconnectAttempts.value), 30000)
   reconnectAttempts.value++
   
-  console.log(`[v0] Scheduling reconnect attempt ${reconnectAttempts.value} in ${delay}ms`)
   
   reconnectTimeout.value = setTimeout(() => {
     connectWebSocket()
@@ -268,11 +264,9 @@ const sendWebSocketMessage = (message) => {
 }
 
 const handleWebSocketMessage = (data) => {
-  console.log('[v0] Received WebSocket message:', data)
   
   switch (data.type) {
     case 'connection_confirmed':
-      console.log('[v0] Connection confirmed for room:', data.room)
       break
       
     case 'new_message':

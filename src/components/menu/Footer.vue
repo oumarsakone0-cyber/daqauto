@@ -68,7 +68,7 @@
     </div>
 
     <!-- Bottom Footer -->
-    <div class="border-t border-gray-300 py-18 md:py-6">
+    <div class="border-t border-gray-300 py-22 md:py-6">
       <div class="container mx-auto px-4">
         <div class="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <div class="flex items-center gap-2">
@@ -83,68 +83,27 @@
     </div>
   </footer>
 
-  <!-- Bouton flottant mobile uniquement -->
-  <!-- <button 
-    v-if="!chat.isChatOpen && chat.isMobile"
-    @click="chat.openChat"
-    class="fixed bottom-18 right-2 w-14 h-14 rounded-full shadow-lg z-50 flex items-center justify-center text-white hover:scale-105 transition-transform md:hidden bg-degrade"
-  >
-    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg> -->
-    <!-- Badge de notification -->
-    <!-- <span 
-       v-if="chat.unreadCount > 0"
-      class="absolute -top-2 -right-2 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold " style="background-color: #fe7900;"
-    >
-      {{ chat.unreadCount > 9 ? '9+' : chat.unreadCount }}
-    </span>
-  </button> -->
-
-  <!-- Bouton flottant desktop style Facebook -->
-  <!-- <button 
-    v-if="!chat.isDesktopChatOpen && !chat.isMobile"
-    @click="chat.openDesktopChat"
-    class="fixed bottom-6 right-4 text-white px-4 py-3 rounded-full shadow-lg z-50 flex items-center gap-2 hover:scale-105 transition-transform md:flex bg-degrade"
-  >
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-      <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-    </svg>
-    <span class="text-sm font-medium">Chat</span> -->
-    <!-- Badge de notification -->
-    <!-- <span 
-      v-if="chat.unreadCount > 0" 
-      class="absolute -top-2 -right-2 text-white text-xs rounded-full w-6 h-6 flex items-center justify-center font-bold" 
-      style="background-color: #fe7900;"
-    >
-      {{ chat.unreadCount > 9 ? '9+' : chat.unreadCount }}
-    </span>
-  </button> -->
-
-  <!-- Modal mobile -->
-  <!-- <ChatModal
-    v-if="chat.isChatOpen && chat.isMobile"
-    :supplier="chat.supplier"
-    :chatMessages="chat.chatMessages"
-    @close="chat.closeChat"
-    @sendMessage="chat.handleSendMessage"
-  /> -->
-
   <!-- Fenêtre desktop -->
-  <ChatDesktop
-    :is-open="chat.isDesktopChatOpen"
-    :supplier="chat.supplier"
-    :chat-messages="chat.chatMessages"
-    @close="chat.closeDesktopChat"
-    @send-message="chat.handleSendMessage"
-  />
+     <ChatDesktop
+       :is-open="chat.isDesktopChatOpen"
+       :supplier="chat.supplier"
+       :chat-messages="chat.chatMessages"
+       @close="chat.closeDesktopChat"
+       @send-message="chat.handleSendMessage"
+     />
+      
+    <div class="mobile-only">
+      <TabBar />
+    </div>
+
 </template>
 
 <script setup>
-import { onMounted, onBeforeUnmount } from 'vue'
+import { onMounted, onBeforeUnmount, ref } from 'vue'
 import { useChatStore } from '../../stores/chat'
 import ChatModal from '../product/modals/ChatModal2.vue'
 import ChatDesktop from '../product/modals/ChatWindow.vue'
+import TabBar from './TabBar.vue'
 
 const chat = useChatStore()
 
@@ -158,6 +117,17 @@ onBeforeUnmount(() => {
 </script>
 
 <style scoped>
+  /* Styles mobiles cachés par défaut */
+.mobile-only {
+  display: none;
+}
+
+/* Responsive Mobile */
+@media (max-width: 768px) {
+  .mobile-only {
+    display: flex;
+  }
+}
 .primary-color{
   color: #fe7900;
 }

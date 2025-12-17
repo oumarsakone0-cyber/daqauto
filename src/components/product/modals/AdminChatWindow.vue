@@ -213,9 +213,7 @@ const unreadCount = computed(() => {
 
 // Debug: Log les messages pour voir leur structure
 watch(() => chatStore.chatMessages, (messages) => {
-  console.log('🔍 Messages dans le chat admin:', messages)
   messages.forEach(msg => {
-    console.log(`Message ${msg.id}: sender=${msg.sender}, type=${msg.message_type}`)
   })
 }, { immediate: true, deep: true })
 

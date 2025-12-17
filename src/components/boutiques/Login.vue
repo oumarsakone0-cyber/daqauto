@@ -339,7 +339,6 @@
       }
   
       const response = await usersApi.login(loginPayload)
-      console.log('Réponse login API:', response)
   
       if (response.success) {
         const userData = response.data
@@ -413,7 +412,6 @@ const handleForgotPassword = async () => {
     isLoadingForgot.value = true
     error.value = ''
 
-    console.log('Email envoyé:', email)
 
     // Appel API -> on envoie juste la valeur
     const response = await usersApi.forgotPassword(email)

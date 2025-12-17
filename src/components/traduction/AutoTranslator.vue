@@ -69,7 +69,6 @@ const loadCache = () => {
       Object.entries(parsed).forEach(([key, value]) => {
         translationCache.set(key, value)
       })
-      console.log('[v0] Cache loaded:', translationCache.size, 'entries')
     }
   } catch (error) {
     console.error('[v0] Error loading cache:', error)
@@ -83,7 +82,6 @@ const saveCache = () => {
       cacheObj[key] = value
     })
     localStorage.setItem('mymemory-cache', JSON.stringify(cacheObj))
-    console.log('[v0] Cache saved:', translationCache.size, 'entries')
   } catch (error) {
     console.error('[v0] Error saving cache:', error)
   }
@@ -116,13 +114,11 @@ const getAllTextNodes = (element = document.body) => {
     textNodes.push(node)
   }
   
-  console.log('[v0] Found text nodes:', textNodes.length)
   return textNodes
 }
 
 const translateWithMyMemory = async (texts, sourceLang = 'fr', targetLang = 'en') => {
   try {
-    console.log('[v0] Translating with MyMemory API...')
     const translations = []
     
     // Traiter par petits lots pour respecter les limites
@@ -142,7 +138,6 @@ const translateWithMyMemory = async (texts, sourceLang = 'fr', targetLang = 'en'
           url += `&key=${MYMEMORY_API_KEY}`
           url += `&de=${encodeURIComponent(MYMEMORY_EMAIL)}`
 
-          console.log('[v0] API call for:', text.substring(0, 50) + '...')
           const response = await fetch(url)
           
           if (!response.ok) {
@@ -187,12 +182,10 @@ const translatePage = async () => {
   isTranslating.value = true
   cacheStats.value = { cached: 0, new: 0, saved: 0 }
   
-  console.log('[v0] Starting MyMemory page translation...')
   
   await nextTick()
   
   const textNodes = getAllTextNodes()
-  console.log('[v0] Processing', textNodes.length, 'text nodes')
   
   // Collecter tous les textes uniques
   const textsToTranslate = []
@@ -211,7 +204,6 @@ const translatePage = async () => {
   })
   
   if (textsToTranslate.length > 0) {
-    console.log('[v0] Translating', textsToTranslate.length, 'texts')
     const translations = await translateWithMyMemory(textsToTranslate, 'fr', 'en')
     
     // Appliquer les traductions aux nœuds
@@ -223,7 +215,6 @@ const translatePage = async () => {
       }
     })
     
-    console.log('[v0] Translation completed. Processed:', processedCount, 'nodes')
     
     showStats.value = true
     setTimeout(() => {
@@ -235,7 +226,6 @@ const translatePage = async () => {
 }
 
 const restoreOriginalTexts = () => {
-  console.log('[v0] Restoring original texts...')
   let restoredCount = 0
   originalTexts.forEach((originalText, node) => {
     if (node.parentElement) {
@@ -243,11 +233,9 @@ const restoreOriginalTexts = () => {
       restoredCount++
     }
   })
-  console.log('[v0] Restored', restoredCount, 'text nodes')
 }
 
 const toggleLanguage = async () => {
-  console.log('[v0] Toggling language from', currentLanguage.value)
   
   if (currentLanguage.value === 'fr') {
     currentLanguage.value = 'en'
@@ -261,7 +249,6 @@ const toggleLanguage = async () => {
 }
 
 onMounted(async () => {
-  console.log('[v0] MyMemory Translator mounted')
   
   loadCache()
   

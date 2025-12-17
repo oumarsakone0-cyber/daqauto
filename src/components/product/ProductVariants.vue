@@ -137,32 +137,20 @@
   }
   
   const calculateShippingCost = () => {
-    console.log('🚛 Calcul des frais de livraison...')
-    console.log('Product:', props.product)
-    console.log('Selected shipping:', props.selectedShipping)
-    console.log('Selected commune:', props.selectedCommune)
-    console.log('Selected ville:', props.selectedVille)
-    console.log('Tarifs Abidjan:', props.tarifsAbidjan)
-    console.log('Tarifs Intérieur:', props.tarifsInterieur)
     
     if (!props.product || props.selectedShipping === 'retrait') return 0
     
     const totalQuantity = props.selectedVariants.reduce((sum, variant) => sum + variant.quantity, 0)
-    console.log('Total quantity:', totalQuantity)
     
     // Logique de calcul avec tp et qtp
     const tp = props.product.tp || 1
     const qtp = props.product.qtp || 1
-    console.log('Transport type (tp):', tp, 'Quantity per tarif (qtp):', qtp)
     
     let tarif = getTarif()
-    console.log('Tarif trouvé:', tarif)
     
     let baseTarif = getBaseTarif(tarif, tp)
-    console.log('Base tarif:', baseTarif)
     
     let finalCost = calculateFinalCost(baseTarif, totalQuantity, qtp)
-    console.log('Final cost:', finalCost)
     
     return finalCost
   }

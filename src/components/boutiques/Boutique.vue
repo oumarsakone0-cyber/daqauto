@@ -335,7 +335,6 @@ const filteredProducts = computed(() => {
 const addToCart = (product) => {
   cartCount.value++
   // Animation ou notification d'ajout au panier
-  console.log(`${product.name} ajouté au panier`)
 }
 </script>
 

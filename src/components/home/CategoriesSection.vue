@@ -141,7 +141,6 @@
       isLoadingCategories.value = true;
       categoriesError.value = null;
       
-      console.log('🔄 Chargement des catégories depuis l\'API...');
       const response = await categoriesApi.getCategories();
       
       if (response.success && response.data) {
@@ -154,7 +153,6 @@
           subcategories: category.subcategories || []
         }));
         
-        console.log('✅ Catégories chargées:', categories.value);
       } else {
         throw new Error(response.message || 'Error to load categories');
       }

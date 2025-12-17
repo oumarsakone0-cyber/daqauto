@@ -455,14 +455,12 @@
             return
           }
   
-          console.log('🔄 Chargement de la boutique ID:', boutiqueId.value)
           
           const response = await boutiquesApi.getBoutiqueInfo(boutiqueId.value)
           
           if (response.success) {
             boutiqueInfo.value = response.data
             isFollowing.value = response.data.is_following || false
-            console.log('✅ Boutique chargée:', boutiqueInfo.value)
           } else {
             throw new Error(response.error || 'Boutique introuvable')
           }
@@ -488,7 +486,6 @@
             order: sortBy.value.includes('_desc') ? 'DESC' : 'ASC'
           }
   
-          console.log('🔄 Chargement des produits de la boutique:', params)
           
           const response = await boutiquesApi.getBoutiqueProducts(params)
           
@@ -537,7 +534,6 @@
               totalPages.value = Math.ceil(totalProducts.value / itemsPerPage.value)
             }
             
-            console.log('✅ Produits chargés:', products.value.length)
           } else {
             throw new Error(response.error || 'Erreur lors du chargement des produits')
           }
@@ -583,7 +579,6 @@
           
           if (response.success) {
             isFollowing.value = !isFollowing.value
-            console.log(`✅ Boutique ${isFollowing.value ? 'suivie' : 'non suivie'}:`, boutiqueInfo.value.name)
           } else {
             throw new Error(response.error)
           }
@@ -605,7 +600,6 @@
           const response = await boutiquesApi.contactBoutique(boutiqueId.value, messageData)
           
           if (response.success) {
-            console.log('✅ Message envoyé à la boutique:', boutiqueInfo.value.name)
             alert('Message envoyé avec succès!')
           } else {
             throw new Error(response.error)
@@ -697,16 +691,13 @@
   
       const toggleFavorite = (product) => {
         product.isFavorite = !product.isFavorite
-        console.log('Toggle favori:', product.name, product.isFavorite)
       }
   
       const addToCart = (product) => {
-        console.log('Ajout au panier:', product.name)
         // Implémenter la logique d'ajout au panier
       }
   
       const contactSupplier = (product) => {
-        console.log('Contact fournisseur:', product.name)
         // Implémenter la logique de contact fournisseur
       }
   

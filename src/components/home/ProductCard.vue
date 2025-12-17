@@ -161,7 +161,6 @@ const handleFavoriteClick = () => emit('favorite-click', props.product)
 const handleContactClick = () => emit('contact-click', props.product)
 
 const handleChatClick = async () => {
-  console.log("🎯 Chat click détecté", props.product)
   try {
     await chatStore.setSupplier(props.product)
     if (chatStore.isMobile) {

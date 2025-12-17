@@ -707,7 +707,7 @@
                             <polyline points="22 4 12 14.01 9 11.01" stroke="#52c41a" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
                           </svg>
                         </div>
-                        <h3 class="delivered-title">Commande terminée</h3>
+                        <h3 class="delivered-title">Order completed</h3>
                         <p class="delivered-message">Your order has been successfully delivered. Thank you for your purchase!</p>
                       </div>
 
@@ -1567,9 +1567,7 @@ const fetchOrders = async () => {
     const parsedUser = JSON.parse(userData)
     const userId = parsedUser.id
 
-    console.log('Fetching orders for user:', userId)
     const response = await ordersApi.getMyOrders(userId)
-    console.log('Orders response:', response)
 
     if (response.success) {
       orders.value = response.data || []
@@ -1672,7 +1670,6 @@ const handleChatClick = async (order) => {
       rating: 0
     }
 
-    console.log('📞 Ouverture du chat avec le vendeur:', product, 'Commande:', order.id)
 
     // Utiliser setSupplier pour créer/ouvrir la conversation avec le vendeur et passer le numéro de commande
     await chatStore.setSupplier(product, order.id)

@@ -389,7 +389,6 @@
   
   // Fonction pour naviguer vers la page de détail du produit
   const navigateToProduct = (product) => {
-    console.log('🔄 Navigation vers le produit:', product)
     
     let slug = product.slug
     if (!slug && product.name) {
@@ -405,15 +404,12 @@
   
   // Fonctions pour les actions des boutons
   const toggleFavorite = (product) => {
-    console.log('❤️ Toggle favorite pour:', product.name)
   }
   
   const contactSupplier = (product) => {
-    console.log('📞 Contact supplier pour:', product.name)
   }
   
   const chatWithSupplier = (product) => {
-    console.log('💬 Chat avec supplier pour:', product.name)
   }
   
   onMounted(() => {

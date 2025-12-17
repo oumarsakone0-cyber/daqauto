@@ -40,7 +40,6 @@ apiClient.interceptors.request.use(
       }
     }
 
-    console.log(`🚀 API Request: ${config.method?.toUpperCase()} ${config.url}`, config.data || config.params)
     return config
   },
   (error) => {
@@ -52,7 +51,6 @@ apiClient.interceptors.request.use(
 // Intercepteur pour les réponses
 apiClient.interceptors.response.use(
   (response) => {
-    console.log(`✅ API Response: ${response.status}`, response.data)
     return response
   },
   (error) => {
@@ -158,7 +156,6 @@ export const resultsApi = {
       params.sort = sort;
       params.order = order;
 
-      console.log('🔄 Récupération des produits avec paramètres:', params);
 
       const response = await apiClient.get("/products.php", { params });
       return response.data;
@@ -268,7 +265,6 @@ export const resultsApi = {
         order
       };
 
-      console.log('🔍 Recherche de produits avec paramètres:', params);
 
       const response = await apiClient.get("/products.php", { params });
       return response.data;

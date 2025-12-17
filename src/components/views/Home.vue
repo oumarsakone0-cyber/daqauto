@@ -1,59 +1,5 @@
   <template>
   <div class="home-page">
-    <!-- Header Mobile (affiché seulement sur mobile) -->
-    <!--
-    <header class="mobile-header">
-      <div class="header-top">
-        <div class="location-selector">
-          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/>
-            <circle cx="12" cy="10" r="3"/>
-          </svg>
-          <span>Abidjan, CI</span>
-          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="6,9 12,15 18,9"/>
-          </svg>
-        </div>
-        <div class="header-actions">
-          <button class="notification-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/>
-              <path d="M13.73 21a2 2 0 0 1-3.46 0"/>
-            </svg>
-            <span class="notification-badge">3</span>
-          </button>
-          <button class="message-btn">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-      
-      <div class="search-container">
-        <div class="search-bar">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <circle cx="11" cy="11" r="8"/>
-            <path d="M21 21l-4.35-4.35"/>
-          </svg>
-          <input type="text" placeholder="Rechercher des produits..." />
-          <button class="camera-search">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
-              <circle cx="12" cy="13" r="4"/>
-            </svg>
-          </button>
-        </div>
-      </div>
-    </header>
-  -->
-    <!-- Header Mobile (si nécessaire) -->
-    <!-- 
-    <header class="mobile-header">
-      // Votre header mobile ici
-    </header>
-    -->
-
     <!-- Contenu Principal -->
     <main class="home-main">
       <!-- Bannière Hero -->
@@ -61,8 +7,7 @@
         <MarketingBanner />
       </section>
 
-      <!-- Section des avantages compacte (Desktop uniquement) -->
-      <section class="benefits-section desktop-only">
+      <section class="benefits-section">
         <div class="section-content">
           <div class="benefits-grid">
             <div class="benefit-item" v-for="(benefit, index) in benefits" :key="index">
@@ -92,7 +37,7 @@
       <RecommendedProductsSection />
 
       <!-- Section newsletter compacte (Desktop uniquement) -->
-      <section class="bg-degrade-orange py-10 desktop-only">
+      <section class="bg-degrade-orange py-10">
         <div class="section-content">
           <div class="newsletter-container">
             <div class="newsletter-content">
@@ -106,23 +51,10 @@
           </div>
         </div>
       </section>
-
-      <!-- Services Mobile -->
-      <section class="mobile-services mobile-only">
-        <div class="services-grid-mobile">
-          <div class="service-item-mobile" v-for="(service, index) in mobileServices" :key="index">
-            <div class="service-icon-mobile bg-orange" v-html="service.icon"></div>
-            <div class="service-text-mobile">
-              <h4>{{ service.title }}</h4>
-              <p>{{ service.description }}</p>
-            </div>
-          </div>
-        </div>
-      </section>
     </main>
   
     <!-- Navigation Bottom Mobile -->
-    <nav class="mobile-bottom-nav mobile-only">
+    <!-- <nav class="mobile-bottom-nav mobile-only">
        <div
           v-for="(tab, index) in navTabs"
           :key="tab.label"
@@ -131,13 +63,11 @@
         >
         <component :is="tab.icon" class="h-6 w-6 " />
             
-            <!-- Place ici ton SVG selon tab.icon ou garde les SVG existants -->
             <span>{{ tab.label }}</span>
-            <!-- Exemple pour le badge du panier -->
             <span v-if="tab.label === 'Panier'" class="cart-badge bg-orange">2</span>
         </div>
       
-    </nav>
+    </nav> -->
     
 
   </div>
@@ -480,7 +410,6 @@ function handleNavClick(index) {
   
   // Fonction pour naviguer vers la page de détail du produit
   const navigateToProduct = (product) => {
-  console.log('🔄 Navigation vers le produit:', product)
   
   // Générer un slug si le produit n'en a pas
   let slug = product.slug
@@ -493,7 +422,6 @@ function handleNavClick(index) {
     slug = `produit-${product.id || Date.now()}`
   }
   
-  console.log('🔗 Slug généré:', slug)
   
   // Navigation vers la page de détail
   router.push(`/detail_resultat_produit/${slug}`)
@@ -521,17 +449,14 @@ function handleNavClick(index) {
   
   // Fonctions pour les actions des boutons
   const toggleFavorite = (product) => {
-  console.log('❤️ Toggle favorite pour:', product.name)
   // Ici vous pouvez ajouter la logique pour gérer les favoris
   }
   
   const contactSupplier = (product) => {
-  console.log('📞 Contact supplier pour:', product.name)
   // Ici vous pouvez ajouter la logique pour contacter le fournisseur
   }
   
   const chatWithSupplier = (product) => {
-  console.log('💬 Chat avec supplier pour:', product.name)
   // Ici vous pouvez ajouter la logique pour le chat
   }
   
@@ -602,7 +527,6 @@ function handleNavClick(index) {
     isLoadingCategories.value = true;
     categoriesError.value = null;
     
-    console.log('🔄 Chargement des catégories depuis l\'API...');
     const response = await categoriesApi.getCategories();
     
     if (response.success && response.data) {
@@ -615,7 +539,6 @@ function handleNavClick(index) {
         subcategories: category.subcategories || []
       }));
       
-      console.log('✅ Catégories chargées:', categories.value);
     } else {
       throw new Error(response.message || 'Error to load categories');
     }
@@ -669,7 +592,6 @@ function handleNavClick(index) {
     isLoadingFeaturedSupplier.value = true;
     featuredSupplierError.value = null;
     
-    console.log('🔄 Chargement du fournisseur vedette...');
     const response = await productsApi.getRandomSupplier();
     
     if (response.success && response.data) {
@@ -688,7 +610,6 @@ function handleNavClick(index) {
         }))
       };
       
-      console.log('✅ Fournisseur vedette chargé:', featuredSupplier.value);
     } else {
       throw new Error(response.message || 'Error to load supplier');
     }
@@ -719,7 +640,6 @@ function handleNavClick(index) {
     isLoadingRecommendedProducts.value = true;
     recommendedProductsError.value = null;
     
-    console.log('🔄 Chargement des produits recommandés...');
     const response = await productsApi.getMostViewedProductsForHomepage({ limit: 15 });
     
     if (response.success && response.data) {
@@ -738,7 +658,6 @@ function handleNavClick(index) {
         experience: product.experience || Math.floor(Math.random() * 8) + 2
       }));
       
-      console.log('✅ Produits recommandés chargés:', recommendedProducts.value);
     } else {
       throw new Error(response.message || 'Error to load products');
     }

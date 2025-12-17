@@ -142,7 +142,6 @@ export const useChatStore = defineStore('chat', () => {
     )
 
     if (existingConversation) {
-      console.log('✅ Session existante trouvée avec ce vendeur:', existingConversation.id)
 
       // Activer la conversation existante
       activeProductId.value = product.id
@@ -171,7 +170,6 @@ export const useChatStore = defineStore('chat', () => {
       product_rating: product.rating || 0
     }
 
-    console.log('📤 Envoi nouvelle session au backend:', payload)
 
     try {
       const response = await fetch('https://sastock.com/api_adjame/chat_UPDATED.php?action=create_session_chat', {
@@ -181,7 +179,6 @@ export const useChatStore = defineStore('chat', () => {
       })
       const data = await response.json()
 
-      console.log('📥 Réponse du backend:', data)
 
       if (data.success && data.session_id) {
         localStorage.setItem("chat_session_id", data.session_id)
@@ -466,7 +463,6 @@ export const useChatStore = defineStore('chat', () => {
       })
 
       const data = await response.json()
-      console.log('📤 Message envoyé:', data)
 
       if (data.success && data.message) {
         // Mettre à jour l'ID du message local avec celui du serveur
@@ -541,7 +537,6 @@ const startPolling = () => {
       })
 
       const data = await response.json()
-      console.log('📤 Image envoyée:', data)
 
       if (data.success && data.message) {
         const messageIndex = chatMessages.value.findIndex(m => m.id === imageMessage.id)

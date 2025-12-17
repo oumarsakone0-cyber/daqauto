@@ -22,14 +22,11 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
       )
       const data = await response.json()
 
-      console.log('📥 Sessions reçues pour le vendeur:', data)
 
       // Debug: Log les messages bruts du backend
       if (data.sessions && data.sessions.length > 0) {
         data.sessions.forEach(session => {
-          console.log(`Session ${session.id}:`)
           session.messages?.forEach(msg => {
-            console.log(`  Message ${msg.id}: sender="${msg.sender}", type="${msg.message_type}", text="${msg.text || msg.message}"`)
           })
         })
       }
@@ -151,7 +148,6 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
       })
 
       const data = await response.json()
-      console.log('📤 Message vendeur envoyé:', data)
 
       if (data.success && data.message) {
         // Mettre à jour l'ID du message local avec celui du serveur
@@ -198,7 +194,6 @@ export const useChatAdminStore = defineStore('chatAdmin', () => {
       })
 
       const data = await response.json()
-      console.log('📤 Image vendeur envoyée:', data)
 
       if (data.success && data.message) {
         const messageIndex = chatMessages.value.findIndex(m => m.id === imageMessage.id)

@@ -17,12 +17,13 @@
       </div>
     </div>
     <div class="order-section">
-      <div class=" w-full bg-gray-50 justify-end py-6 mb-4 rounded-lg">
-        <div class="quantity-selector ">
-          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.vehicle_condition || "N/A" }}</span>
-          <span v-if="product.vehicle_mileage" class="bg-white py-2 px-10 rounded-full" >{{ product.vehicle_mileage }} km</span> <span v-else class="bg-white py-2 px-10 rounded-full">N/A</span>
-          <span class="capitalize bg-white py-2 px-10 rounded-full">{{ product.fuel_type || "N/A" }}</span>
-      </div>
+      <div class="vehicle-info-container">
+        <div class="vehicle-specs">
+          <span class="vehicle-spec-badge">{{ product.vehicle_condition || "N/A" }}</span>
+          <span v-if="product.vehicle_mileage" class="vehicle-spec-badge">{{ product.vehicle_mileage }} km</span>
+          <span v-else class="vehicle-spec-badge">N/A</span>
+          <span class="vehicle-spec-badge">{{ product.fuel_type || "N/A" }}</span>
+        </div>
       </div>
       
       <div class="quantity-selector mb-15">
@@ -40,7 +41,7 @@
         </button>
         <button
           v-else
-          class="btn-in-cart flex-1"
+          class="btn-gray flex-1"
           disabled
         >
           <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -58,8 +59,6 @@
         </button>
       </div>
     </div>
-
-    
   </div>
 </template>
 
@@ -131,14 +130,12 @@ const handleOrderClick = () => {
   // Ajouter le produit au panier s'il n'y est pas déjà
   if (!isInCart.value) {
     cart.addItem(productForCart)
-    console.log('✅ Produit ajouté au panier:', productForCart)
   }
 
   // Préparer les données pour la validation de commande
   const productData = [productForCart]
 
   orders.addOrder(productData)
-  console.log('📦 Navigation vers la validation de commande avec:', orders.itemsOrdered)
 
   // Navigation vers la page du panier
   router.push({
@@ -173,6 +170,7 @@ const handleOrderClick = () => {
   color: #333;
   line-height: 1.4;
   margin: 0 0 16px 0;
+  overflow: hidden;
 }
 
 .product-rating {
@@ -284,12 +282,36 @@ const handleOrderClick = () => {
   margin-bottom: 24px;
   margin-top: 30px;
 }
+.vehicle-info-container {
+  width: 100%;
+  background-color: #f9fafb;
+  display: flex;
+  justify-content: center;
+  padding: 24px 0;
+  margin-bottom: 16px;
+  border-radius: 8px;
+}
+
+.vehicle-specs {
+  display: flex;
+  gap: 20px;
+}
+
+.vehicle-spec-badge {
+  background-color: #ffffff;
+  color: #333;
+  padding: 8px 16px;
+  border: 1px solid #d9d9d9;
+  font-size: 14px;
+  border-radius: 9999px;
+  text-transform: capitalize;
+}
 
 .quantity-selector {
   display: flex;
-  justify-content: space-around;
+  justify-content: space-between;
   color: #333;
-  /* margin-bottom: 16px; */
+  margin-bottom: 16px;
   gap: 20px;
 }
 
