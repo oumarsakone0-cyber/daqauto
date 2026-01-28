@@ -7,7 +7,7 @@
             <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" />
           </div>
           <h2 class="text-3xl font-bold text-gray-900 mb-2">Create an account</h2>
-          <p class="text-gray-600">Join DaqAuto</p>
+          <p class="text-gray-600">Join Wabili</p>
         </div>
   
         <!-- Form -->
@@ -219,7 +219,7 @@
                       'input-style',
                       validationErrors.phone ? 'border-red-300 bg-red-50' : 'border-gray-300'
                     ]"
-                    placeholder="+225 XX XX XX XX XX"
+                    placeholder="+86 XX XX XX XX XX"
                   >
                 </div>
                 <div v-if="validationErrors.phone" class="mt-1 text-sm error-color">
@@ -542,7 +542,7 @@
         <div class="bg-white rounded-lg p-6 max-w-2xl w-full max-h-[80vh] overflow-y-auto" @click.stop>
           <h3 class="text-lg font-medium text-gray-900 mb-4">Terms of Use</h3>
           <div class="text-sm text-gray-600 space-y-4">
-            <p>By using Daq Auto, you agree to the following conditions...</p>
+            <p>By using Wabili, you agree to the following conditions...</p>
             <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
             <!-- Ajoutez ici le contenu complet des conditions -->
           </div>

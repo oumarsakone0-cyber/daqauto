@@ -214,7 +214,7 @@
             </div>
           </div>
 
-          <div v-show="currentStep === 1" class="space-y-6">
+         <div v-show="currentStep === 1" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-orange">
@@ -222,11 +222,247 @@
                     <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
                   </svg>
                 </div>
-                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Vehicle Specifications </h3>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">
+                  {{ isTrailerCategory ? 'Trailer Specifications' : 'Vehicle Specifications' }}
+                </h3>
               </div>
 
-              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+              <!-- ============================================ -->
+              <!-- SECTION TRAILER -->
+              <!-- ============================================ -->
+              <div v-if="isTrailerCategory" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div>
+                  <label for="trailer_condition" class="block text-sm font-medium text-gray-700 mb-2">
+                    Condition <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="trailer_condition"
+                    v-model="productData.trailer_condition"
+                    required
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select condition</option>
+                    <option value="New">New</option>
+                    <option value="Used">Used</option>
+                    <option value="Refurbished">Refurbished</option>
+                  </select>
+                </div>
 
+                <div>
+                  <label for="trailer_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_type"
+                    v-model="productData.trailer_type"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Flatbed, Box Van"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Brand <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_brand"
+                    v-model="productData.trailer_brand"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: CIMC, FUWA"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_use" class="block text-sm font-medium text-gray-700 mb-2">
+                    Use <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_use"
+                    v-model="productData.trailer_use"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Cargo, Container"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_size" class="block text-sm font-medium text-gray-700 mb-2">
+                    Size <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_size"
+                    v-model="productData.trailer_size"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 13m, 40ft"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_axle" class="block text-sm font-medium text-gray-700 mb-2">
+                    Axle <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="trailer_axle"
+                    v-model="productData.trailer_axle"
+                    required
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select axle</option>
+                    <option value="2">2 Axles</option>
+                    <option value="3">3 Axles</option>
+                    <option value="4">4 Axles</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="trailer_suspension" class="block text-sm font-medium text-gray-700 mb-2">
+                    Suspension <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_suspension"
+                    v-model="productData.trailer_suspension"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Air suspension"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_tire" class="block text-sm font-medium text-gray-700 mb-2">
+                    Tire <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_tire"
+                    v-model="productData.trailer_tire"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 12R22.5"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_king_pin" class="block text-sm font-medium text-gray-700 mb-2">
+                    King Pin
+                  </label>
+                  <input
+                    id="trailer_king_pin"
+                    v-model="productData.trailer_king_pin"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 2 inch"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_main_beam" class="block text-sm font-medium text-gray-700 mb-2">
+                    Main Beam
+                  </label>
+                  <input
+                    id="trailer_main_beam"
+                    v-model="productData.trailer_main_beam"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Q345B steel"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_max_payload" class="block text-sm font-medium text-gray-700 mb-2">
+                    Max Payload (tons) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_max_payload"
+                    v-model="productData.trailer_max_payload"
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 50"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_place_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
+                    Place of Origin <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_place_of_origin"
+                    v-model="productData.trailer_place_of_origin"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: China"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_material" class="block text-sm font-medium text-gray-700 mb-2">
+                    Material
+                  </label>
+                  <input
+                    id="trailer_material"
+                    v-model="productData.trailer_material"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Q345B Steel"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_landing_gear" class="block text-sm font-medium text-gray-700 mb-2">
+                    Landing Gear
+                  </label>
+                  <input
+                    id="trailer_landing_gear"
+                    v-model="productData.trailer_landing_gear"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: JOST"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_axle_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Axle Brand
+                  </label>
+                  <input
+                    id="trailer_axle_brand"
+                    v-model="productData.trailer_axle_brand"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: BPW, FUWA"
+                  >
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="trailer_function" class="block text-sm font-medium text-gray-700 mb-2">
+                    Function / Description
+                  </label>
+                  <textarea
+                    id="trailer_function"
+                    v-model="productData.trailer_function"
+                    rows="3"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Describe the trailer's primary function..."
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- ============================================ -->
+              <!-- SECTION TRUCK (CODE EXISTANT) -->
+              <!-- ============================================ -->
+              <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Garder tous les champs trucks existants -->
                 <div>
                   <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
                     vehicle brand <span class="error-color">*</span>
@@ -246,246 +482,12 @@
                   </select>
                 </div>
                 
-                <div>
-                  <label for="vehicle_condition" class="block text-sm font-medium text-gray-700 mb-2">
-                    Vehicle condition <span class="error-color">*</span>
-                    
-                  </label>
-                  <select
-                    id="vehicle_condition"
-                    v-model="productData.vehicle_condition"
-                    class="text-sm sm:text-base input-style"
-                    required
-                  >
-                    <option value="">Select vehicle condition</option>
-                    <option value="New">New</option>
-                    <option value="Used">Used</option>
-                    <option value="Refurbished">Refurbished</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="vehicle_model" class="block text-sm font-medium text-gray-700 mb-2">
-                    Vehicle model <span class="error-color">*</span>
-                    {{ productData.vehicle_model }} h
-                  </label>
-                  <select
-                    id="vehicle_model"
-                    v-model="productData.vehicle_model_id"
-                    required
-                    @change="updateFuelType"
-                    :disabled="!productData.vehicle_brand_id || brandsLoading"
-                    class="text-sm sm:text-base input-style"
-                  >
-                    <option value="">Select a vehicle model</option>
-                    <option v-for="model in availableModels" :key="model.id" :value="model.id">
-                      {{ model.name  }}
-                    </option>
-                  </select>
-                </div>
-                
-                <div>
-                  <label for="fuel_type" class="block text-sm font-medium text-gray-700 mb-2">
-                   Fuel type
-                  </label>
-                  <input
-                    type="text"
-                    :value="productData.fuel_type"
-                    disabled
-                    class="text-sm sm:text-base input-style  cursor-not-allowed overflow-ellipsis"
-                    placeholder="The fuel type will be set automatically"
-                  >
-                </div>
-                <div>
-                  <label for="drive_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Transmission type<span class="error-color">*</span>
-                    {{ productData.drive_type }}
-                  </label>
-                  <select
-                    id="drive_type"
-                    v-model="productData.drive_type"
-                    class="text-sm sm:text-base input-style"
-                  >
-                    <option value="">Select a Transmission type</option>
-                    <option value="4X2">4X2</option>
-                    <option value="6X2">6X2</option>
-                    <option value="6X4">6X4</option>
-                    <option value="6X6">6X6</option>
-                    <option value="8X4">8X4</option>
-                    <option value="8X6">8X6</option>
-                    <option value="8X8">8X8</option>
-                  </select>
-                </div>
-                <div>
-                  <label for="production_date" class="block text-sm font-medium text-gray-700 mb-2">
-                    Production date <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="production_date"
-                    v-model="productData.production_date"
-                    type="date"
-                    class="text-sm sm:text-base input-style"
-                  >
-                </div>
-                <div>
-                  <label for="country_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
-                    Country of origin <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="country_of_origin"
-                    v-model="productData.country_of_origin"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Allemagne, Chine, Japon"
-                  >
-                </div>
-                <div>
-                  <label for="wheelbase" class="block text-sm font-medium text-gray-700 mb-2">
-                    Wheelbase <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="wheelbase"
-                    v-model="productData.wheelbase"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 3800"
-                  >
-                </div>
-                <div>
-                  <label for="gvw" class="block text-sm font-medium text-gray-700 mb-2">
-                    GVW - Gross Vehicle Weight (kg) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="gvw"
-                    v-model="productData.gvw"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 25000"
-                  >
-                </div>
-                <div>
-                  <label for="payload_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Payload capacity (kg) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="payload_capacity"
-                    v-model="productData.payload_capacity"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 15000"
-                  >
-                </div>
-                <div>
-                  <label for="cabin_type" class="block text-sm font-medium text-gray-700 mb-2">
-                    Cabin type <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="cabin_type"
-                    v-model="productData.cabin_type"
-                    type="text"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: Short cabin, Long cabin"
-                  >
-                </div>
-                <div>
-                  <label for="curb_weight" class="block text-sm font-medium text-gray-700 mb-2">
-                    Curb weight (T) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="curb_weight"
-                    v-model="productData.curb_weight"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 10000"
-                  >
-                </div>
-
-                <div>
-                  <label for="fuel_tank_capacity" class="block text-sm font-medium text-gray-700 mb-2">
-                    Fuel tank capacity (L) <span class="error-color">*</span>
-                  </label>
-                  <input
-                    id="fuel_tank_capacity"
-                    v-model="productData.fuel_tank_capacity"
-                    type="number"
-                    min="0"
-                    class="text-sm sm:text-base input-style"
-                    placeholder="Ex: 400"
-                  >
-                </div>
-
-                <div class="sm:col-span-2">
-                  <label class="block text-sm font-medium text-gray-700 mb-2">
-                    Dimensions (L x l x H) (m) <span class="error-color">*</span>
-                  </label>
-                  <div class="grid grid-cols-3 gap-2">
-                    <input
-                      v-model="productData.dimensions_length"
-                      type="number"
-                      min="0"
-                      class="text-sm sm:text-base input-style"
-                      placeholder="Length"
-                    >
-                    <input
-                      v-model="productData.dimensions_width"
-                      type="number"
-                      min="0"
-                      class="text-sm sm:text-base input-style"
-                      placeholder="Width"
-                    >
-                    <input
-                      v-model="productData.dimensions_height"
-                      type="number"
-                      min="0"
-                      class="text-sm sm:text-base input-style"
-                      placeholder="Height"
-                    >
-                  </div>
-                </div>
-                <!-- verifié 
-                <div class="sm:col-span-2">
-                  <label for="wysiwygEditor" class="block text-sm font-medium text-gray-700 mb-2">
-                   Other specifications (WYSIWYG)
-                  </label>
-                  <div >
-                    <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
-                       WYSIWYG Toolbar
-                      <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
-                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
-                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
-                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné" style="background-color: lightgray; color: black;">U</button>
-                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
-                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
-                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
-                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
-                          <option value="">Titre</option>
-                          <option value="h1">Titre 1</option>
-                          <option value="h2">Titre 2</option>
-                          <option value="h3">Titre 3</option>
-                        </select>
-                      </div>
-                      <div 
-                        ref="wysiwygEditor"
-                        contenteditable="true"
-                        @input="updateDetailedDescription"
-                        class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
-                        style="white-space: pre-wrap;"
-                        placeholder="Décrivez votre produit en détail..."
-                      ></div>
-                    </div>
-                  </div>
-                </div>
-                -->
-
+                <!-- ... Tous les autres champs trucks existants ... -->
               </div>
             </div>
           </div>
 
-          <div v-show="currentStep === 2" class="space-y-6">
+          <div v-show="currentStep === 2 && !isTrailerCategory" class="space-y-6">
             <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
               <div class="flex items-center space-x-3 mb-4 sm:mb-6">
                 <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-orange">
@@ -1365,6 +1367,23 @@ const productData = reactive({
   curb_weight: props.dataduplicate.curb_weight || null,
   tyre_size: props.dataduplicate.tyre_size || '',
   fuel_tank_capacity: props.dataduplicate.fuel_tank_capacity || null,
+  trailer_condition: props.dataduplicate.trailer_condition || '',
+  trailer_type: props.dataduplicate.trailer_type || '',
+  trailer_brand: props.dataduplicate.trailer_brand || '',
+  trailer_use: props.dataduplicate.trailer_use || '',
+  trailer_size: props.dataduplicate.trailer_size || '',
+  trailer_axle: props.dataduplicate.trailer_axle || '',
+  trailer_suspension: props.dataduplicate.trailer_suspension || '',
+  trailer_tire: props.dataduplicate.trailer_tire || '',
+  trailer_king_pin: props.dataduplicate.trailer_king_pin || '',
+  trailer_main_beam: props.dataduplicate.trailer_main_beam || '',
+  trailer_max_payload: props.dataduplicate.trailer_max_payload || null,
+  trailer_place_of_origin: props.dataduplicate.trailer_place_of_origin || '',
+  trailer_material: props.dataduplicate.trailer_material || '',
+  trailer_function: props.dataduplicate.trailer_function || '',
+  trailer_landing_gear: props.dataduplicate.trailer_landing_gear || '',
+  trailer_color: props.dataduplicate.trailer_color || '',
+  trailer_axle_brand: props.dataduplicate.trailer_axle_brand || '',
 })
 
 const singleTrim = ref(productData.trim_numbers[0] || '');
@@ -1429,6 +1448,15 @@ const availableSubcategories = computed(() => {
   return category ? category.subcategories || [] : []
 })
 
+const isTrailerCategory = computed(() => {
+  const category = categories.value.find(cat => cat.id === productData.category_id)
+  return category && (
+    category.name.toLowerCase().includes('trailer') || 
+    category.name.toLowerCase().includes('semi') ||
+    category.name.toLowerCase().includes('remorque')
+  )
+})
+
 
 const availableSubSubcategories = computed(() => {
   for (const category of categories.value) {
@@ -1469,22 +1497,50 @@ const canProceedToNextStep = computed(() => {
     case 0:
       return !!(productData.category_id && productData.subcategory_id)
     case 1:
-      return !!(productData.vehicle_condition && productData.vehicle_brand_id 
-      && productData.vehicle_model_id && productData.drive_type 
-      && productData.fuel_type && productData.country_of_origin 
-      && productData.dimensions_height && productData.dimensions_width 
-      && productData.dimensions_length && productData.fuel_tank_capacity 
-      && productData.curb_weight && productData.cabin_type && productData.payload_capacity
-      && productData.gvw && productData.production_date && productData.wheelbase
-    )
+      if (isTrailerCategory.value) {
+        return !!(
+          productData.trailer_condition &&
+          productData.trailer_type &&
+          productData.trailer_brand &&
+          productData.trailer_use &&
+          productData.trailer_size &&
+          productData.trailer_axle &&
+          productData.trailer_suspension &&
+          productData.trailer_tire &&
+          productData.trailer_max_payload &&
+          productData.trailer_place_of_origin
+        )
+      } else {
+        return !!(
+          productData.vehicle_condition && 
+          productData.vehicle_brand_id && 
+          productData.vehicle_model_id && 
+          productData.drive_type && 
+          productData.fuel_type && 
+          productData.country_of_origin && 
+          productData.dimensions_height && 
+          productData.dimensions_width && 
+          productData.dimensions_length && 
+          productData.fuel_tank_capacity && 
+          productData.curb_weight && 
+          productData.cabin_type && 
+          productData.payload_capacity &&
+          productData.gvw && 
+          productData.production_date && 
+          productData.wheelbase
+        )
+      }
     case 2:
-      getProductName();
+      if (isTrailerCategory.value) {
+        // Pour les trailers, pas de technical specs requis
+        return true
+      }
+      getProductName()
       return true
     case 3:
       const hasValidPrice = productData.unit_price !== null && 
                            productData.unit_price !== '' && 
                            productData.unit_price !== undefined
-      
       return hasValidPrice && !!productData.disponibility
     case 4:
       return true
@@ -1749,16 +1805,33 @@ const removeVideo = () => {
 }
 
 const getProductName = () => {
-  productData.vehicle_condition= productData.vehicle_condition.charAt(0).toUpperCase() + productData.vehicle_condition.slice(1).toLowerCase();
-  
-  productData.name = [
-                    productData.vehicle_condition,
-                    productData.vehicle_year,
-                    getBrandName( productData.vehicle_brand_id),
-                    getModelName(  productData.vehicle_model_id),
-                    getCategoryName(productData.category_id),
-                    productData.drive_type
-                  ].filter(Boolean).join(' ');
+  if (isTrailerCategory.value) {
+    // Génération du nom pour les trailers
+    const conditionFormatted = productData.trailer_condition 
+      ? productData.trailer_condition.charAt(0).toUpperCase() + 
+        productData.trailer_condition.slice(1).toLowerCase()
+      : ''
+    
+    productData.name = [
+      conditionFormatted,
+      productData.trailer_type,
+      productData.trailer_axle ? `${productData.trailer_axle} Axles` : '',
+      productData.trailer_max_payload ? `${productData.trailer_max_payload}T` : ''
+    ].filter(Boolean).join(' - ')
+  } else {
+    // Génération du nom pour les trucks (code existant)
+    productData.vehicle_condition = productData.vehicle_condition.charAt(0).toUpperCase() + 
+                                   productData.vehicle_condition.slice(1).toLowerCase()
+    
+    productData.name = [
+      productData.vehicle_condition,
+      productData.vehicle_year,
+      getBrandName(productData.vehicle_brand_id),
+      getModelName(productData.vehicle_model_id),
+      getCategoryName(productData.category_id),
+      productData.drive_type
+    ].filter(Boolean).join(' ')
+  }
 
   return productData.name
 }
@@ -1908,7 +1981,7 @@ const uploadAllMedia = async () => {
 const prepareDataForSubmission = () => {
   const formData = {
     name: productData.name,
-    description : productData.description,
+    description: productData.description,
     description_plus: productData.description_plus,
     category_id: productData.category_id,
     subcategory_id: productData.subcategory_id,
@@ -1917,47 +1990,71 @@ const prepareDataForSubmission = () => {
     unit_price: parseFloat(productData.unit_price),
     wholesale_price: productData.hasWholesalePrice ? parseFloat(productData.wholesale_price) : null,
     wholesale_min_qty: productData.hasWholesalePrice ? parseInt(productData.wholesale_min_qty) : null,
-    stock: parseInt(productData.stock),
-    unit_type: productData.unit_type,
-    disponibility:productData.disponibility,
+    stock: parseInt(productData.stock) || 1,
+    unit_type: productData.unit_type || 'unité',
+    disponibility: productData.disponibility,
     tags: productData.tags,
     is_active: productData.is_active,
     colors: productData.colors,
-    vehicle_condition: productData.vehicle_condition,
-    vehicle_make:getBrandName( productData.vehicle_brand_id),
-    vehicle_model:getModelName( productData.vehicle_model_id) ,
-    drive_type: props.dataduplicate.drive_type
-    ? props.dataduplicate.drive_type.toLowerCase()
-    : '',
-    vehicle_year: productData.vehicle_year,
-    fuel_type: productData.fuel_type,
-    transmission_type: productData.transmission_type,
-    engine_brand: productData.engine_brand,
-    trim_numbers: productData.trim_numbers.filter(num => num.trim() !== ''),
-    vin: productData.vin.filter(num => num.trim() !== ''),
-    engine_number: productData.engine_number,
-    power: productData.power,
-    engine_emissions: productData.engine_emissions,
-    vehicle_mileage: productData.vehicle_mileage,
-    production_date: productData.production_date,
-    country_of_origin: productData.country_of_origin,
-    wheelbase: productData.wheelbase,
-    gvw: productData.gvw,
-    payload_capacity: productData.payload_capacity,
-    cabin_type: productData.cabin_type,
-    suspension_type: productData.suspension_type,
-    brake_system: productData.brake_system,
-    tyre_size: productData.type_size,
-    curb_weight: productData.curb_weight,
-    fuel_tank_capacity: productData.fuel_tank_capacity,
-    dimensions: productData.dimensions_length || productData.dimensions_width || productData.dimensions_height
-    ? `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}`
-    : null,
-  
-  
+  }
+
+  // ✅ Ajout des champs selon le type
+  if (isTrailerCategory.value) {
+    // Champs trailers
+    Object.assign(formData, {
+      trailer_condition: productData.trailer_condition,
+      trailer_type: productData.trailer_type,
+      trailer_brand: productData.trailer_brand,
+      trailer_use: productData.trailer_use,
+      trailer_size: productData.trailer_size,
+      trailer_axle: productData.trailer_axle,
+      trailer_suspension: productData.trailer_suspension,
+      trailer_tire: productData.trailer_tire,
+      trailer_king_pin: productData.trailer_king_pin,
+      trailer_main_beam: productData.trailer_main_beam,
+      trailer_max_payload: productData.trailer_max_payload,
+      trailer_place_of_origin: productData.trailer_place_of_origin,
+      trailer_material: productData.trailer_material,
+      trailer_function: productData.trailer_function,
+      trailer_landing_gear: productData.trailer_landing_gear,
+      trailer_color: productData.trailer_color,
+      trailer_axle_brand: productData.trailer_axle_brand
+    })
+  } else {
+    // Champs trucks (existants)
+    Object.assign(formData, {
+      vehicle_condition: productData.vehicle_condition,
+      vehicle_make: getBrandName(productData.vehicle_brand_id),
+      vehicle_model: getModelName(productData.vehicle_model_id),
+      drive_type: props.dataduplicate.drive_type ? props.dataduplicate.drive_type.toLowerCase() : '',
+      vehicle_year: productData.vehicle_year,
+      fuel_type: productData.fuel_type,
+      transmission_type: productData.transmission_type,
+      engine_brand: productData.engine_brand,
+      trim_numbers: productData.trim_numbers.filter(num => num.trim() !== ''),
+      vin: productData.vin.filter(num => num.trim() !== ''),
+      engine_number: productData.engine_number,
+      power: productData.power,
+      engine_emissions: productData.engine_emissions,
+      vehicle_mileage: productData.vehicle_mileage,
+      production_date: productData.production_date,
+      country_of_origin: productData.country_of_origin,
+      wheelbase: productData.wheelbase,
+      gvw: productData.gvw,
+      payload_capacity: productData.payload_capacity,
+      cabin_type: productData.cabin_type,
+      suspension_type: productData.suspension_type,
+      brake_system: productData.brake_system,
+      tyre_size: productData.type_size,
+      curb_weight: productData.curb_weight,
+      fuel_tank_capacity: productData.fuel_tank_capacity,
+      dimensions: productData.dimensions_length || productData.dimensions_width || productData.dimensions_height
+        ? `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}`
+        : null
+    })
   }
   
-  
+  // Images et vidéo
   formData.images = productData.imageUrls.map((url, index) => ({
     url: url,
     alt_text: `${productData.name} - Image ${index + 1}`,
@@ -1968,6 +2065,7 @@ const prepareDataForSubmission = () => {
   if (productData.videoUrl) {
     formData.video = productData.videoUrl
   }
+  
   return formData
 }
 

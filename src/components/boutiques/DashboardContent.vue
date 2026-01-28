@@ -86,7 +86,7 @@
             ]"
           >
             <PlusIcon class="w-4 h-4" />
-            <span class="hidden sm:inline">{{ canAddMoreProducts() ? 'Add produit' : 'Limit reached' }}</span>
+            <span class="hidden sm:inline">{{ canAddMoreProducts() ? 'Add product' : 'Limit reached' }}</span>
             <span class="sm:hidden">{{ canAddMoreProducts() ? 'Add' : 'Limit' }}</span>
           </button>
 
@@ -1586,6 +1586,7 @@ const initializeUserData = () => {
 
     // ✅ Récupérer les données utilisateur
     const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+    console.log('lalalalalal : ', userData)
     
     if (!userData) {
       error.value = 'Data user missing. Please reconnect.'
@@ -1616,6 +1617,7 @@ const initializeUserData = () => {
       // Prendre la première boutique par défaut
       currentBoutique.value = user.boutiques[0]
       
+      
       // Ou récupérer la boutique sélectionnée précédemment
       const savedBoutiqueId = localStorage.getItem('selectedBoutiqueId')
       if (savedBoutiqueId) {
@@ -1626,6 +1628,7 @@ const initializeUserData = () => {
       }
     } else {
       error.value = 'No store associated with this account.'
+      router.push('/boutique-admin/login')
       return
     }
 

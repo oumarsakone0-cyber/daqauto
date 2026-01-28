@@ -26,6 +26,9 @@ import OrderValidation from "../components/product/OrderValidation.vue"
 import MesCommandes from "../components/product/MesCommandes.vue"
 import MessagesManagement from "../components/views/Messages-management.vue"
 import ProfileClient from "../components/product/profileClient.vue"
+import Boutique_page from "../components/views/Boutique_page.vue"
+import SellOnDaqAuto from "../components/views/SellOnDaqAuto.vue"
+import Boutique_overview from "../components/views/Boutique_overview.vue"
 
 
 const routes = [
@@ -168,6 +171,33 @@ const routes = [
     path: "/detail_resultat_produit/:slug",
     name: "detail_resultat_produit",
     component: DetailProduct,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/boutique_page/:boutique_id",
+    name: "boutique_page",
+    component: Boutique_page,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/boutique_overview/:boutique_id",
+    name: "boutique_overview",
+    component: Boutique_overview,
+    meta: {
+      requiresAuth: false,
+      hideNavigation: false,
+    },
+  },
+  {
+    path: "/sell-on-daqauto",
+    name: "sell-on-daqauto",
+    component: SellOnDaqAuto,
     meta: {
       requiresAuth: false,
       hideNavigation: false,

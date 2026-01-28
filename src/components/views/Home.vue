@@ -7,7 +7,22 @@
         <MarketingBanner />
       </section>
 
-      <section class="benefits-section">
+     
+
+      <!-- 1. Section Catégories
+      <CategoriesSection />
+
+      <!-- 2. Section Fournisseur Vedette 
+      <FeaturedSupplierSection />
+      -->
+
+      <!-- 3. Section Deal du Jour 
+      <DealsSection />
+       -->
+      <!-- 4. Section Produits Recommandés -->
+      <RecommendedProductsSection />
+      <hr style="color: #bbbaba"/>
+       <section class="benefits-section">
         <div class="section-content">
           <div class="benefits-grid">
             <div class="benefit-item" v-for="(benefit, index) in benefits" :key="index">
@@ -22,19 +37,8 @@
           </div>
         </div>
       </section>
-
-      <!-- 1. Section Catégories -->
-      <CategoriesSection />
-
-      <!-- 2. Section Fournisseur Vedette 
-      <FeaturedSupplierSection />
-      -->
-
-      <!-- 3. Section Deal du Jour 
-      <DealsSection />
-       -->
-      <!-- 4. Section Produits Recommandés -->
-      <RecommendedProductsSection />
+      <hr style="color: #bbbaba"/>
+      <br />
 
       <!-- Section newsletter compacte (Desktop uniquement) -->
       <section class="bg-degrade-orange py-10">

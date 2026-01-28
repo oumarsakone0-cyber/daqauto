@@ -502,7 +502,7 @@ import { useCartStore } from '../../stores/cart'
         isFavorite.value ? 'success' : 'info',
         isFavorite.value ? 'Added to favorites' : 'Removed from favorites',
         isFavorite.value
-          ? 'Product added to your favorites.'
+          ? 'This vehicle was saved in Favorite cars in your account.'
           : 'Product removed from your favorites.'
       );
     } else {
@@ -687,7 +687,7 @@ const toggleCart = async () => {
   
   const visitStore = () => {
     if (product.value && product.value.boutique_id) {
-      router.push(`/boutique_resultat/${product.value.boutique_id}`)
+      router.push(`/boutique_page/${product.value.boutique_id}`)
     } else {
       displayNotification('info', 'Visit store', `Redirect to the store ${supplier.value.name}.`)
     }

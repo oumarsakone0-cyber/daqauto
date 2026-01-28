@@ -73,7 +73,9 @@
         <div class="flex flex-col md:flex-row items-center justify-between gap-3 md:gap-4">
           <div class="flex items-center gap-2">
             <div class="w-6 h-6 md:w-8 md:h-8 rounded" style="background-color: #fe7900;"></div>
-            <span class="font-bold text-lg md:text-xl">Wabili</span>
+            <router-link to="/">
+              <img src="../../assets/logo.png" alt="DaqAuto Logo" class="logo" style="width: 160px;" />
+            </router-link>
           </div>
           <div class="text-xs md:text-sm text-black text-center md:text-left">
             WABILI are responsible for Wabili offers.

@@ -29,7 +29,7 @@
             <span class="amazon-title-text">Popular categories</span>
           </h2>
           <span class="amazon-title-right">
-            <a v-if="!categoriesError" href="#" class="btn-outline">See all →</a>
+            <a  @click="navigateToCategoryAll()" class="btn-outline">See all →</a>
           </span>
         </div>
         
@@ -134,6 +134,8 @@
         query: { category: category.id }
       });
     };
+  
+  
   
   // Fonction pour charger les catégories depuis l'API
   const loadCategories = async () => {

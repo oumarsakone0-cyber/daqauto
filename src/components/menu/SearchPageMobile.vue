@@ -1,145 +1,144 @@
-<template >
-    <div v-if="showMobileSearch" class="mobile-search-modal">
-      <div class="mobile-modal-header">
-        <button class="mobile-back-btn" @click="closeMobileSearch">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <line x1="19" y1="12" x2="5" y2="12"/>
-            <polyline points="12,19 5,12 12,5"/>
-          </svg>
-        </button>
+<template>
+  <div v-if="showMobileSearch" class="mobile-search-modal">
+    <div class="mobile-modal-header">
+      <button class="mobile-back-btn" @click="closeMobileSearch">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <line x1="19" y1="12" x2="5" y2="12"/>
+          <polyline points="12,19 5,12 12,5"/>
+        </svg>
+      </button>
+      
+      <div class="mobile-search-input-container">
+        <input 
+          type="text" 
+          placeholder="Research..." 
+          class="input-style"
+          v-model="searchQuery"
+          @input="handleSearchInput"
+          ref="mobileSearchInput"
+          @keydown.enter="submitSearch"
+          @keydown.escape="closeMobileSearch"
+        />
         
-        <div class="mobile-search-input-container">
-          <input 
-            type="text" 
-            placeholder="Research..." 
-            class="input-style"
-            v-model="searchQuery"
-            @input="handleSearchInput"
-            ref="mobileSearchInput"
-            @keydown.enter="performSearch"
-            @keydown.escape="closeMobileSearch"
-          />
-          
-          <button v-if="searchQuery" class="mobile-clear-btn" @click="clearSearch">
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="12" cy="12" r="10"/>
-              <line x1="15" y1="9" x2="9" y2="15"/>
-              <line x1="9" y1="9" x2="15" y2="15"/>
-            </svg>
-          </button>
-        </div>
-        
-        <button class="mobile-camera-search-btn" @click="toggleImageSearch">
-          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
-            <circle cx="12" cy="13" r="3"/>
+        <button v-if="searchQuery" class="mobile-clear-btn" @click="clearSearch">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <circle cx="12" cy="12" r="10"/>
+            <line x1="15" y1="9" x2="9" y2="15"/>
+            <line x1="9" y1="9" x2="15" y2="15"/>
           </svg>
         </button>
       </div>
       
-      <div class="mobile-search-content">
-        <!-- Indicateur de chargement -->
-        <div v-if="isSearching" class="mobile-search-loading">
-          <div class="loading-spinner"></div>
-          <span>Researching...</span>
-        </div>
+      <button class="mobile-camera-search-btn" @click="toggleImageSearch">
+        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"/>
+          <circle cx="12" cy="13" r="3"/>
+        </svg>
+      </button>
+    </div>
+    
+    <div class="mobile-search-content">
+      <!-- Indicateur de chargement -->
+      <div v-if="isSearching" class="mobile-search-loading">
+        <div class="loading-spinner"></div>
+        <span>Researching...</span>
+      </div>
+      
+      <!-- Resultats de recherche -->
+      <div v-else-if="searchResults.length > 0" class="mobile-search-results">
+        <div class="mobile-results-count">{{ searchResults.length }} resultats found</div>
         
-        <!-- Résultats de recherche -->
-        <div v-else-if="searchResults.length > 0" class="mobile-search-results">
-          <div class="mobile-results-count">{{ searchResults.length }} resultats found</div>
-          
-          <div 
-            v-for="result in searchResults" 
-            :key="result.id"
-            class="mobile-result-item"
-            @click="goToProduct(result)"
-          >
-            <div class="mobile-result-image">
-              <img 
-                :src="result.primary_image" 
-                :alt="result.product_name"
-                @error="handleImageError"
-              />
-            </div>
-            <div class="mobile-result-content">
-              <!-- Using method instead of inline logic to avoid linter confusion -->
-              <div class="mobile-result-name" v-html="getResultDisplayName(result)"></div>
-              <div class="mobile-result-category">
-                <span class="mobile-category-badge">{{ result.category_name }}</span>
-                <span v-if="result.subcategory_name" class="mobile-category-badge">{{ result.subcategory_name }}</span>
-              </div>
-            </div>
+        <div 
+          v-for="result in searchResults" 
+          :key="result.id"
+          class="mobile-result-item"
+          @click="goToProduct(result)"
+        >
+          <div class="mobile-result-image">
+            <img 
+              :src="result.primary_image" 
+              :alt="result.product_name"
+              @error="handleImageError"
+            />
           </div>
-          
-          <button @click="viewAllResults" class="mobile-view-all-btn">
-            See all results for "{{ searchQuery }}"
-          </button>
-        </div>
-        
-        <!-- Suggestions de recherche -->
-        <div v-else-if="filteredSuggestions.length > 0" class="mobile-suggestions">
-          <div class="mobile-suggestions-header">Popular Suggestions</div>
-          
-          <div 
-            v-for="(suggestion, index) in filteredSuggestions" 
-            :key="index"
-            class="mobile-suggestion-item"
-            @click="selectSuggestion(suggestion)"
-          >
-            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-              <circle cx="11" cy="11" r="8"/>
-              <path d="m21 21-4.35-4.35"/>
-            </svg>
-            <span v-html="highlightMatch(suggestion)"></span>
+          <div class="mobile-result-content">
+            <div class="mobile-result-name" v-html="getResultDisplayName(result)"></div>
+            <div class="mobile-result-category">
+              <span class="mobile-category-badge">{{ result.category_name }}</span>
+              <span v-if="result.subcategory_name" class="mobile-category-badge">{{ result.subcategory_name }}</span>
+            </div>
           </div>
         </div>
         
-        <!-- Aucun résultat -->
-        <div v-else-if="searchQuery && searchQuery.length >= 2" class="mobile-no-results">
-          <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+        <button @click="viewAllResults" class="mobile-view-all-btn">
+          See all results for "{{ searchQuery }}"
+        </button>
+      </div>
+      
+      <!-- Suggestions de recherche -->
+      <div v-else-if="filteredSuggestions.length > 0" class="mobile-suggestions">
+        <div class="mobile-suggestions-header">Popular Suggestions</div>
+        
+        <div 
+          v-for="(suggestion, index) in filteredSuggestions" 
+          :key="index"
+          class="mobile-suggestion-item"
+          @click="selectSuggestion(suggestion)"
+        >
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
             <circle cx="11" cy="11" r="8"/>
             <path d="m21 21-4.35-4.35"/>
           </svg>
-          <span>No results for "{{ searchQuery }}"</span>
-          <small>Try again with other keywords</small>
-        </div>
-        
-        <!-- Recherches récentes et populaires -->
-        <div v-else class="mobile-search-suggestions">
-          <div class="mobile-section-title">Recent Research</div>
-          <div class="mobile-recent-searches">
-            <div v-for="(search, index) in recentSearches" :key="index" class="mobile-recent-item" @click="selectSuggestion(search)">
-              <svg width="20" height="20"  viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
-                <circle cx="12" cy="12" r="10"/>
-                <polyline points="12,6 12,12 16,14"/>
-              </svg>
-              <span>{{ search }}</span>
-            </div>
-            <div v-if="recentSearches.length === 0" class="mobile-no-recent">
-              <small>No recent Research</small>
-            </div>
-          </div>
-          
-          <div class="mobile-section-title">Popular searches</div>
-          <div class="mobile-popular-searches">
-            <div v-for="(search, index) in popularSearches" :key="index" class="mobile-popular-item" @click="selectSuggestion(search)">
-              <span class="mobile-popular-rank">{{ index + 1 }}</span>
-              <span>{{ search }}</span>
-            </div>
-          </div>
+          <span v-html="highlightMatch(suggestion)"></span>
         </div>
       </div>
+      
+      <!-- Aucun resultat -->
+      <div v-else-if="searchQuery && searchQuery.length >= 2 && !isSearching" class="mobile-no-results">
+        <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+          <circle cx="11" cy="11" r="8"/>
+          <path d="m21 21-4.35-4.35"/>
+        </svg>
+        <span>No results for "{{ searchQuery }}"</span>
+        <small>Try again with other keywords</small>
+      </div>
+      
+      <!-- Recherches recentes et populaires -->
+      <div v-else class="mobile-search-suggestions">
+        <div class="mobile-section-title">Recent Research</div>
+        <div class="mobile-recent-searches">
+          <div v-for="(search, index) in recentSearches" :key="index" class="mobile-recent-item" @click="selectSuggestion(search)">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fe7900" stroke-width="2">
+              <circle cx="12" cy="12" r="10"/>
+              <polyline points="12,6 12,12 16,14"/>
+            </svg>
+            <span>{{ search }}</span>
+          </div>
+          <div v-if="recentSearches.length === 0" class="mobile-no-recent">
+            <small>No recent Research</small>
+          </div>
+        </div>
+        
+        <div class="mobile-section-title">Popular searches</div>
+        
+      </div>
     </div>
+  </div>
 </template>
+
 <script setup>
-import { ref, computed, watch, onMounted, nextTick } from 'vue'
+import { ref, computed, onMounted, nextTick } from 'vue'
 import { useRouter } from 'vue-router'
+import { productsApi } from '../../services/api.js';
 
 const showMobileSearch = ref(false)
 const searchQuery = ref('')
 const searchResults = ref([])
 const isSearching = ref(false)
 const recentSearches = ref([])
+const searchTimeout = ref(null)
+const searchAbortController = ref(null)
+
 const popularSearches = ref([
   'Brake Pads',
   'Oil Filter',
@@ -150,119 +149,224 @@ const popularSearches = ref([
   'Tires',
   'Windshield Wipers'
 ])
+
 const router = useRouter()
 const mobileSearchInput = ref(null)
+
 const filteredSuggestions = computed(() => {
-  if (!searchQuery.value) return []
+  if (!searchQuery.value || searchQuery.value.length < 2) return []
   const query = searchQuery.value.toLowerCase()
   return popularSearches.value.filter(suggestion =>
     suggestion.toLowerCase().includes(query)
   )
 })
+
 const openMobileSearch = () => {
   showMobileSearch.value = true
   nextTick(() => {
-    mobileSearchInput.value.focus()
+    mobileSearchInput.value?.focus()
   })
 }
+
 const closeMobileSearch = () => {
   showMobileSearch.value = false
   searchQuery.value = ''
   searchResults.value = []
+  
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+    searchTimeout.value = null
+  }
+  if (searchAbortController.value) {
+    searchAbortController.value.abort()
+    searchAbortController.value = null
+  }
 }
+
 const clearSearch = () => {
   searchQuery.value = ''
   searchResults.value = []
-  mobileSearchInput.value.focus()
+  mobileSearchInput.value?.focus()
 }
+
+// Debounced search input handler
 const handleSearchInput = () => {
-  if (searchQuery.value.length < 2) {
+  if (searchTimeout.value) {
+    clearTimeout(searchTimeout.value)
+  }
+  
+  if (searchAbortController.value) {
+    searchAbortController.value.abort()
+  }
+  
+  const query = searchQuery.value.trim()
+  
+  if (query.length < 2) {
     searchResults.value = []
+    isSearching.value = false
     return
   }
-  performSearch()
-}
-const performSearch = async () => {
+  
   isSearching.value = true
-  // Simuler une requête API avec un délai
-  setTimeout(() => {
-    // Exemple de résultats simulés
-    searchResults.value = [
-      {
-        id: 1,
-        product_name: 'Brake Pads Set',
-        category_name: 'Brakes',
-        subcategory_name: 'Brake Pads',
-        primary_image: 'https://via.placeholder.com/150'
-      },
-      {
-        id: 2,
-        product_name: 'Oil Filter Premium',
-        category_name: 'Engine',
-        subcategory_name: 'Filters',
-        primary_image: 'https://via.placeholder.com/150'
-      }
-    ]
+  searchTimeout.value = setTimeout(async () => {
+    await performProductSearch(query)
+  }, 300)
+}
+
+// ✅ GARDER searchProducts pour l'autocomplétion
+const performProductSearch = async (query) => {
+  try {
+    searchAbortController.value = new AbortController()
+    
+    const response = await productsApi.searchProducts(query, {
+      limit: 8
+    })
+    
+    if (response.success && response.data) {
+      searchResults.value = response.data
+      
+      // 🔍 Debug: Vérifier si l'API retourne maintenant les IDs
+      console.log('🔍 Search results with IDs:', response.data[0])
+    } else {
+      searchResults.value = []
+    }
+  } catch (error) {
+    if (error.name !== 'AbortError') {
+      console.error('Search error:', error)
+      searchResults.value = []
+    }
+  } finally {
     isSearching.value = false
-  }, 1000)
+  }
 }
+
+// Submit search on Enter - search by product name
+const submitSearch = () => {
+  const query = searchQuery.value.trim()
+  if (query) {
+    addToRecentSearches(query)
+    router.push({
+      path: '/recherche_de_produit_list',
+      query: { search: query }
+    })
+    closeMobileSearch()
+  }
+}
+
+// ✅ VERSION FINALE: Utiliser les IDs (maintenant que le backend les retourne)
 const goToProduct = (product) => {
+  console.log('📦 Product clicked:', product)
+  
+  const queryParams = {}
+  
+  // ✅ Maintenant l'API backend retourne les IDs, on les utilise !
+  if (product.category_id) {
+    queryParams.category = product.category_id
+    console.log('✅ Using category_id:', product.category_id)
+  }
+  
+  if (product.subcategory_id) {
+    queryParams.subcategory = product.subcategory_id
+    console.log('✅ Using subcategory_id:', product.subcategory_id)
+  }
+  
+  if (product.sub_subcategory_id) {
+    queryParams.sub_subcategory = product.sub_subcategory_id
+    console.log('✅ Using sub_subcategory_id:', product.sub_subcategory_id)
+  }
+  
+  // Si aucun ID n'est disponible (ne devrait plus arriver après la correction backend)
+  if (Object.keys(queryParams).length === 0) {
+    console.warn('⚠️ No category IDs found, using product name as fallback')
+    queryParams.search = product.product_name || product.name
+  }
+  
+  addToRecentSearches(searchQuery.value.trim())
+  
+  console.log('🔗 Navigation URL params:', queryParams)
+  
+  router.push({
+    path: '/recherche_de_produit_list',
+    query: queryParams
+  })
+  
   closeMobileSearch()
-  router.push({ name: 'product_details', params: { id: product.id } })
 }
+
 const getResultDisplayName = (result) => {
   const query = searchQuery.value.trim()
   if (!query) return result.product_name
-  const regex = new RegExp(`(${query})`, 'gi')
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
   return result.product_name.replace(regex, '<strong>$1</strong>')
 }
+
 const highlightMatch = (suggestion) => {
   const query = searchQuery.value.trim()
   if (!query) return suggestion
-  const regex = new RegExp(`(${query})`, 'gi')
+  const regex = new RegExp(`(${query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')})`, 'gi')
   return suggestion.replace(regex, '<strong>$1</strong>')
 }
+
 const selectSuggestion = (suggestion) => {
   searchQuery.value = suggestion
-  performSearch()
+  handleSearchInput()
 }
+
+// View all results - search by product name
 const viewAllResults = () => {
-  closeMobileSearch()
-  router.push({ name: 'search_results', query: { q: searchQuery.value } })
+  const query = searchQuery.value.trim()
+  if (query) {
+    addToRecentSearches(query)
+    router.push({
+      path: '/recherche_de_produit_list',
+      query: { search: query }
+    })
+    closeMobileSearch()
+  }
 }
+
+const addToRecentSearches = (query) => {
+  if (!query) return
+  
+  const index = recentSearches.value.indexOf(query)
+  if (index > -1) {
+    recentSearches.value.splice(index, 1)
+  }
+  
+  recentSearches.value.unshift(query)
+  
+  if (recentSearches.value.length > 5) {
+    recentSearches.value.pop()
+  }
+  
+  localStorage.setItem('recentSearches', JSON.stringify(recentSearches.value))
+}
+
 const handleImageError = (event) => {
-  event.target.src = 'https://via.placeholder.com/150?text=No+Image'
+  event.target.src = 'https://www.svgrepo.com/show/422038/product.svg'
 }
+
 const toggleImageSearch = () => {
-  // Logique pour la recherche par image
   alert('Image search feature coming soon!')
 }
+
 onMounted(() => {
-  // Charger les recherches récentes depuis le localStorage
   const storedSearches = localStorage.getItem('recentSearches')
   if (storedSearches) {
-    recentSearches.value = JSON.parse(storedSearches)
-  }
-})
-watch(searchQuery, (newQuery) => {
-  if (newQuery && !recentSearches.value.includes(newQuery)) {
-    recentSearches.value.unshift(newQuery)
-    if (recentSearches.value.length > 5) {
-      recentSearches.value.pop()
+    try {
+      recentSearches.value = JSON.parse(storedSearches)
+    } catch (e) {
+      recentSearches.value = []
     }
-    localStorage.setItem('recentSearches', JSON.stringify(recentSearches.value))
   }
 })
-// Expose la fonction pour ouvrir la recherche mobile
+
 defineExpose({
   openMobileSearch
 })
-
-
 </script>
-<style scoped>
 
-/* Mobile Search Modal */
+<style scoped>
 .mobile-search-modal {
   position: fixed;
   top: 0;
@@ -308,9 +412,9 @@ defineExpose({
   align-items: center;
 }
 
-.mobile-search-input {
+.input-style {
   width: 100%;
-  padding: 12px 16px;
+  padding: 12px 40px 12px 16px;
   border: 1px solid #e0e0e0;
   border-radius: 25px;
   font-size: 16px;
@@ -318,7 +422,7 @@ defineExpose({
   background: #f8f9fa;
 }
 
-.mobile-search-input:focus {
+.input-style:focus {
   border-color: #fe7900;
   background: white;
 }
@@ -378,6 +482,11 @@ defineExpose({
   height: 32px;
   animation: spin 1s linear infinite;
   margin-bottom: 16px;
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
 }
 
 .mobile-search-results {
@@ -542,7 +651,7 @@ defineExpose({
   display: flex;
   flex-direction: column;
   gap: 8px;
-  color: #333 ;
+  color: #333;
 }
 
 .mobile-recent-item, .mobile-popular-item {
@@ -585,5 +694,4 @@ defineExpose({
   text-align: center;
   color: #999;
 }
-    
 </style>

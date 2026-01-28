@@ -21,44 +21,44 @@
     </section> -->
   
     <!-- Version Desktop -->
-    <section class="more-products-section">
-      <div class="section-content">
-        <div class="section-header">
-          <h2 class="section-title text-2xs sm:text-2xl">🔥 Recommended products</h2>
-          <a v-if="!recommendedProductsError" href="#" class="btn-outline">See all →</a>
-        </div>
-        
-        <div v-if="isLoadingRecommendedProducts" class="loading-products">
-          <div class="loading-product-skeleton" v-for="i in 15" :key="i">
-            <div class="skeleton-product-image"></div>
-            <div class="skeleton-product-content">
-              <div class="skeleton-product-title"></div>
-              <div class="skeleton-product-price"></div>
-            </div>
+      <section class="more-products-section">
+    <div class="section-content">
+      <div class="section-header">
+        <h2 class="section-title text-2xs sm:text-2xl">🔥 Our products</h2>
+        <a v-if="!recommendedProductsError" href="#" @click="navigateToCategoryAll" class="btn-outline">See all →</a>
+      </div>
+      
+      <div v-if="isLoadingRecommendedProducts" class="loading-products">
+        <div class="loading-product-skeleton" v-for="i in 15" :key="i">
+          <div class="skeleton-product-image"></div>
+          <div class="skeleton-product-content">
+            <div class="skeleton-product-title"></div>
+            <div class="skeleton-product-price"></div>
           </div>
         </div>
-  
-        <div v-else-if="recommendedProductsError" class="error-products">
-          <p class="error-message error-color">{{ recommendedProductsError }}</p>
-          <button @click="loadRecommendedProducts" class="btn-gray">Try again</button>
-        </div>
-  
-        <div v-else class="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-6">
-          <ProductCard
-            v-for="(product, index) in recommendedProducts" 
-            :key="product.id || index"
-            :product="product"
-            :is-mobile="false"
-            :card-height="240"
-            :image-height="200"
-            @product-click="navigateToProduct"
-            @favorite-click="toggleFavorite"
-            @contact-click="contactSupplier"
-            @chat-click="chatWithSupplier"
-          />
-        </div>
       </div>
-    </section>
+
+      <div v-else-if="recommendedProductsError" class="error-products">
+        <p class="error-message error-color">{{ recommendedProductsError }}</p>
+        <button @click="loadRecommendedProducts" class="btn-gray">Try again</button>
+      </div>
+
+      <div v-else class="grid grid-cols-1 sm:grid-cols-4 md:grid-cols-5 lg:grid-cols-6 xl:grid-cols-6 2xl:grid-cols-6">
+        <ProductCard
+          v-for="(product, index) in recommendedProducts" 
+          :key="product.id || index"
+          :product="product"
+          :is-mobile="false"
+          :card-height="250"
+          :image-height="200"
+          @product-click="navigateToProduct"
+          @favorite-click="toggleFavorite"
+          @contact-click="contactSupplier"
+          @chat-click="chatWithSupplier"
+        />
+      </div>
+    </div>
+  </section>
   </template>
   
   <script setup>
@@ -66,6 +66,9 @@
   import { useRouter } from 'vue-router'
   import { productsApi } from '../../services/api.js'
   import ProductCard from './ProductCard.vue'
+  import { useFavoritesStore } from '../../stores/favorites'
+
+  const favoritesStore = useFavoritesStore()
   
   const router = useRouter()
   
@@ -149,55 +152,67 @@
   
   const chatWithSupplier = (product) => {
   }
+
+  const navigateToCategoryAll = () => {
+      router.push({
+        path: '/recherche_de_produit_list',
+        query: { category: 13 }
+      });
+    };
   
   // Fonction pour charger les produits recommandés (15 derniers avec plus de vues)
   const loadRecommendedProducts = async () => {
-    try {
-      isLoadingRecommendedProducts.value = true;
-      recommendedProductsError.value = null;
+  try {
+    isLoadingRecommendedProducts.value = true;
+    recommendedProductsError.value = null;
+    
+    const response = await productsApi.getMostViewedProductsForHomepage({ limit: 18 });
+    console.log('✅ Produits recommandés chargés avec succès:', response.data);
+    
+    if (response.success && response.data) {
+      recommendedProducts.value = response.data.map(product => ({
+        id: product.id,
+        boutique_id: product.boutique_id,
+        name: product.name,
+        slug: product.slug || generateSlug(product.name),
+        unit_price: product.unit_price,
+        wholesale_price: product.wholesale_price,
+        wholesale_min_qty: product.wholesale_min_qty,
+        primary_image: product.primary_image,
+        views: product.views,
+        market: product.boutique_market?.toLowerCase(),
+        boutique_name: product.boutique_name,
+        rating: product.rating || (Math.random() * 2 + 3).toFixed(1),
+        experience: product.experience || Math.floor(Math.random() * 8) + 2,
+        vehicle_condition: product.vehicle_condition,
+        vehicle_mileage: product.vehicle_mileage,
+        fuel_type: product.fuel_type,
+        likedByUser: product.likedByUser || 0
+      }));
       
-      const response = await productsApi.getMostViewedProductsForHomepage({ limit: 18 });
-      
-      if (response.success && response.data) {
-        recommendedProducts.value = response.data.map(product => ({
-          id: product.id,
-          boutique_id: product.boutique_id,
-          name: product.name,
-          slug: product.slug || generateSlug(product.name),
-          unit_price: product.unit_price,
-          wholesale_price: product.wholesale_price,
-          wholesale_min_qty: product.wholesale_min_qty,
-          primary_image: product.primary_image,
-          views: product.views,
-          market: product.boutique_market.toLowerCase(),
-          boutique_name: product.boutique_name,
-          rating: product.rating || (Math.random() * 2 + 3).toFixed(1),
-          experience: product.experience || Math.floor(Math.random() * 8) + 2,
-          vehicle_condition: product.vehicle_condition,
-          vehicle_mileage : product.vehicle_mileage,
-          fuel_type: product.fuel_type
-
-
-         
-        }));
-        
-      } else {
-        throw new Error(response.message || 'Error to load Recommended products');
-      }
-    } catch (error) {
-      console.error('❌ Erreur lors du chargement des produits recommandés:', error);
-      recommendedProductsError.value = error.message;
-      
-      // Fallback avec des produits par défaut
-      recommendedProducts.value = [];
-    } finally {
-      isLoadingRecommendedProducts.value = false;
+    } else {
+      throw new Error(response.message || 'Error to load Recommended products');
     }
-  };
+  } catch (error) {
+    console.error('❌ Erreur lors du chargement des produits recommandés:', error);
+    recommendedProductsError.value = error.message;
+    recommendedProducts.value = [];
+  } finally {
+    isLoadingRecommendedProducts.value = false;
+  }
+};
   
-  onMounted(() => {
-    loadRecommendedProducts()
-  })
+  onMounted(async () => {
+  const currentUser = JSON.parse(localStorage.getItem('user') || '{}')
+
+  // Charger produits recommandés
+  await loadRecommendedProducts()
+
+  // Charger favoris uniquement si utilisateur connecté
+  if (currentUser.id) {
+    await favoritesStore.fetchFavorites(currentUser.id)
+  }
+})
   </script>
   
   <style scoped>

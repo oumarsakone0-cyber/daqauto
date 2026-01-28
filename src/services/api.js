@@ -57,16 +57,19 @@ apiClient.interceptors.response.use(
   (error) => {
     console.error("❌ Response Error:", error.response?.data || error.message)
 
-    // Rediriger uniquement si ce n'est pas une tentative de login
     const isLoginRequest = error.config?.url?.includes("action=login")
 
     if (error.response?.status === 401 && !isLoginRequest) {
       localStorage.removeItem("auth_token")
       localStorage.removeItem("user_data")
+      localStorage.removeItem("user")
+      sessionStorage.removeItem("auth_token")
+      sessionStorage.removeItem("user_data")
+      sessionStorage.removeItem("user")
       window.location.href = "/login"
     }
 
-    return Promise.reject(error) // important pour laisser le .catch() du frontend gérer
+    return Promise.reject(error)
   },
 )
 
@@ -78,10 +81,36 @@ export const boutiqueUtils = {
    */
   getCurrentUser() {
     try {
-      const userData = localStorage.getItem("user_data")
-      return userData ? JSON.parse(userData) : null
+      let userData = localStorage.getItem("user") || localStorage.getItem("user_data")
+      if (!userData) {
+        userData = sessionStorage.getItem("user") || sessionStorage.getItem("user_data")
+      }
+
+      if (userData) {
+        const parsed = JSON.parse(userData)
+        console.log("[v0] Current user found:", parsed)
+        return parsed
+      }
+      console.log("[v0] No user data found in storage")
+      return null
     } catch (error) {
-      console.error("Erreur lors de la récupération des données utilisateur:", error)
+      console.error("❌ Erreur lors de la récupération des données utilisateur:", error)
+      return null
+    }
+  },
+
+  /**
+   * Récupérer l'ID de l'utilisateur connecté
+   * @returns {number|null} ID utilisateur
+   */
+  getCurrentUserId() {
+    try {
+      const user = this.getCurrentUser()
+      const userId = user?.id || user?.user_id || null
+      console.log("[v0] Current user ID:", userId)
+      return userId
+    } catch (e) {
+      console.warn("❌ Erreur récupération user_id", e)
       return null
     }
   },
@@ -93,7 +122,6 @@ export const boutiqueUtils = {
   getCurrentBoutique() {
     const user = this.getCurrentUser()
     if (user && user.boutiques && user.boutiques.length > 0) {
-      // Retourner la première boutique par défaut
       return user.boutiques[0]
     }
     return null
@@ -108,18 +136,20 @@ export const boutiqueUtils = {
     const user = this.getCurrentUser()
     const boutique = this.getCurrentBoutique()
 
-    if (!user || !boutique) {
-      console.warn(
-        "Utilisateur ou boutique non trouvé. Certaines fonctionnalités pourraient ne pas fonctionner correctement.",
-      )
-      return additionalParams
+    const params = { ...additionalParams }
+
+    if (user?.id) {
+      params.user_id = user.id
+      console.log("[v0] Adding user_id to params:", user.id)
+    } else {
+      console.log("[v0] No user_id to add to params")
     }
 
-    return {
-      user_id: user.id,
-      boutique_id: boutique.id,
-      ...additionalParams,
+    if (boutique?.id) {
+      params.boutique_id = boutique.id
     }
+
+    return params
   },
 
   /**
@@ -193,7 +223,7 @@ export const productsApi = {
         wholesaleAvailable,
         viewsSort,
         inStock,
-        // Ajouter les nouveaux paramètres de filtrage de camions
+        // Paramètres de filtrage de camions
         boutique_market,
         vehicle_make,
         vehicle_condition,
@@ -209,6 +239,12 @@ export const productsApi = {
         gvw_max,
         stock,
         boutique_verified,
+        // NOUVEAUX PARAMÈTRES POUR VOITURES
+        car_exterior_color,
+        car_interior_color,
+        car_body_type,
+        vehicle_mileage_min,
+        vehicle_mileage_max,
       } = options
 
       // Construire les paramètres pour l'API
@@ -218,6 +254,9 @@ export const productsApi = {
         limit,
         sort: sort || "created_at",
         order: order || "DESC",
+      }
+      if (options.user_id) {
+        params.user_id = options.user_id
       }
 
       // Appliquer les filtres par priorité (sous-sous-catégorie > sous-catégorie > catégorie)
@@ -278,24 +317,19 @@ export const productsApi = {
         params.location = location
       }
 
-      // Nouveaux filtres
-
-      // Filtre par marchés
+      // Filtres de marché et disponibilité
       if (markets) {
         params.markets = markets
       }
 
-      // Filtre par disponibilité en gros
       if (wholesaleAvailable) {
         params.wholesale_available = "true"
       }
 
-      // Tri par vues
       if (viewsSort) {
         params.views_sort = viewsSort
       }
 
-      // Filtre par stock disponible
       if (inStock) {
         params.in_stock = "true"
       }
@@ -304,6 +338,7 @@ export const productsApi = {
         params.boutique_market = boutique_market
       }
 
+      // Filtres communs aux camions et voitures
       if (vehicle_make) {
         params.vehicle_make = vehicle_make
       }
@@ -336,6 +371,7 @@ export const productsApi = {
         params.vehicle_year_max = vehicle_year_max
       }
 
+      // Filtres spécifiques aux camions
       if (payload_capacity_min) {
         params.payload_capacity_min = payload_capacity_min
       }
@@ -352,6 +388,28 @@ export const productsApi = {
         params.gvw_max = gvw_max
       }
 
+      // NOUVEAUX FILTRES POUR VOITURES
+      if (car_exterior_color) {
+        params.car_exterior_color = car_exterior_color
+      }
+
+      if (car_interior_color) {
+        params.car_interior_color = car_interior_color
+      }
+
+      if (car_body_type) {
+        params.car_body_type = car_body_type
+      }
+
+      if (vehicle_mileage_min) {
+        params.vehicle_mileage_min = vehicle_mileage_min
+      }
+
+      if (vehicle_mileage_max) {
+        params.vehicle_mileage_max = vehicle_mileage_max
+      }
+
+      // Filtres booléens
       if (stock) {
         params.stock = "true"
       }
@@ -359,7 +417,6 @@ export const productsApi = {
       if (boutique_verified) {
         params.boutique_verified = "true"
       }
-
 
       const response = await apiClient.get("/products.php", { params })
       return response.data
@@ -428,6 +485,7 @@ export const productsApi = {
       color: product.color,
       size: product.size,
       brand: product.brand,
+      likedByUser: product.likedByUser,
       condition: product.condition || "Neuf",
     }))
   },
@@ -595,65 +653,57 @@ export const productsApi = {
    */
   async getMostViewedProducts(params = {}) {
     try {
-      // Déterminer quelle action utiliser selon les paramètres
-      const action = params.useNewFormat ? "most_viewed" : "most_viewed_products"
+      // ✅ injecte automatiquement user_id et boutique_id si dispo
+      const baseParams = boutiqueUtils.buildBaseParams()
 
       const response = await apiClient.get("/products.php", {
         params: {
-          action: action,
+          action: params.useNewFormat ? "most_viewed" : "most_viewed_products",
           limit: params.limit || (params.useNewFormat ? 15 : 7),
-          period: params.period || "all", // all, week, month
+          period: params.period || "all",
+          user_id: baseParams.user_id,
+          data: getCurrentUser(),
+          ...baseParams,
           ...params,
         },
       })
+
       return response.data
     } catch (error) {
       throw this.handleError(error, "Erreur lors de la récupération des produits les plus vus")
     }
   },
-
-  /**
-   * Récupérer les produits les plus vus pour la page d'accueil (NOUVEAU FORMAT)
-   * @param {Object} params - Paramètres optionnels (limit, period, etc.)
-   * @returns {Promise} Produits les plus vus avec rating et expérience
-   */
-  async getMostViewedProductsForHomepage(params = {}) {
-    try {
-      const response = await apiClient.get("/products.php", {
-        params: {
-          action: "most_viewed",
-          limit: params.limit || 15,
-          period: params.period || "all", // all, week, month
-          ...params,
-        },
-      })
-      return response.data
-    } catch (error) {
-      throw this.handleError(error, "Erreur lors de la récupération des produits les plus vus")
-    }
-  },
-
   /**
    * Récupérer la liste des produits avec filtres et pagination
    * @param {Object} params - Paramètres de filtrage et pagination
    * @returns {Promise} Réponse de l'API
    */
-  async getProducts(params = {}) {
+  async getMostViewedProductsForHomepage(params = {}) {
     try {
-      // Ajouter boutique_id et user_id aux paramètres
-      const enhancedParams = boutiqueUtils.buildBaseParams(params)
+      const baseParams = boutiqueUtils.buildBaseParams(params)
+
+      const requestParams = {
+        action: "most_viewed",
+        limit: params.limit || 18,
+        period: params.period || "all",
+        ...baseParams,
+      }
+
+      console.log("[v0] 📡 GET MOST VIEWED PARAMS:", requestParams)
 
       const response = await apiClient.get("/products.php", {
-        params: {
-          action: "list",
-          ...enhancedParams,
-        },
+        params: requestParams,
       })
+
+      console.log("[v0] ✅ Response received:", response.data)
+
       return response.data
     } catch (error) {
-      throw this.handleError(error, "Erreur lors de la récupération des produits")
+      console.error("[v0] ❌ Erreur getMostViewedProductsForHomepage:", error)
+      throw error
     }
   },
+
 
   /**
    * Booster un produit
@@ -856,7 +906,7 @@ async getFavorites(userId) {
    * @param {Object} filters - Filtres additionnels
    * @returns {Promise} Résultats de recherche
    */
-  async searchProducts(query, filters = {}) {y
+  async searchProducts(query, filters = {}) {
     try {
       // Ajouter boutique_id et user_id aux paramètres
       const baseParams = boutiqueUtils.buildBaseParams()
@@ -1161,6 +1211,39 @@ export const premiumApi = {
     } catch (error) {
       console.error("Erreur getPlans:", error)
       throw error
+    }
+  },
+}
+
+// Service API pour les trailers
+export const trailersApi = {
+  /**
+   * Récupérer toutes les marques de trailers
+   * @returns {Promise} Liste des marques
+   */
+  async getTrailerBrands() {
+    try {
+      const response = await apiClient.get("/products.php", {
+        params: { action: "trailer_brands" },
+      })
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de la récupération des marques de trailers")
+    }
+  },
+
+  /**
+   * Récupérer tous les types de trailers
+   * @returns {Promise} Liste des types
+   */
+  async getTrailerTypes() {
+    try {
+      const response = await apiClient.get("/products.php", {
+        params: { action: "trailer_types" },
+      })
+      return response.data
+    } catch (error) {
+      throw productsApi.handleError(error, "Erreur lors de la récupération des types de trailers")
     }
   },
 }

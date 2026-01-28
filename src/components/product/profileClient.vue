@@ -56,6 +56,18 @@
           <a
             href="#"
             class="nav-item"
+            :class="{ active: activeTab === 'shop' }"
+            @click.prevent="activeTab = 'shop'"
+          >
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+              <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+            </svg>
+            <span>Shops</span>
+            <span v-if="userFavorites.length > 0" class="badge">{{ userFavorites.length }}</span>
+          </a>
+          <a
+            href="#"
+            class="nav-item"
             :class="{ active: activeTab === 'orders' }"
             @click.prevent="activeTab = 'orders'"
           >
@@ -375,12 +387,7 @@
                     </svg>
                     Continue Shopping
                   </button>
-                  <button class="btn-checkout-boutique" @click="checkoutBoutique(group)">
-                    Order from this Shop
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                      <polyline points="9 18 15 12 9 6"></polyline>
-                    </svg>
-                  </button>
+                  
                 </div>
               </div>
             </div>
@@ -459,6 +466,35 @@
           </div>
         </div>
 
+        <div v-if="activeTab === 'shop'" class="tab-content">
+          <div class="section-card">
+            <h2 class="section-title">My Shop</h2>
+            <div v-if="userFavorites.length === 0" class="empty-state flex flex-col">
+              <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="2" class="opacity-50">
+                <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+              </svg>
+              <p>You don't have any shop in your shop favorites yet.</p>
+            </div>
+            <div v-else class="favorites-list">
+              <div v-for="item in userFavorites" :key="item.favorite_id" class="favorite-item">
+                <div @click="goToProduct(item.slug)" style="display: flex; align-items: center; flex: 1; cursor: pointer;">
+                  <img :src="item.primary_image" :alt="item.name" class="favorite-image">
+                  <div class="favorite-info">
+                    <h3 class="favorite-name">{{ item.name }}</h3>
+                    <p class="favorite-price">{{ formatPrice(item.unit_price, {showFOB:true}) }}</p>
+                  </div>
+                </div>
+                <button class="remove-btn" @click="removeFavorite(item.product_id)">
+                  <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                  </svg>
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
         <!-- Orders Tab -->
         <div v-if="activeTab === 'orders'" class="tab-content">
           <Commandes/>
@@ -477,9 +513,13 @@ import { ElMessageBox, ElMessage } from 'element-plus'
 import { ListOrderedIcon, RefreshCcw as RefreshIcon, Trash2Icon } from 'lucide-vue-next'
 import { formatPrice } from '../../services/formatPrice'
 import { useCartStore } from '../../stores/cart'
+import { useFavoritesStore } from '../../stores/favorites'
 import { useOrdersStore } from '../../stores/orders.js'
+import { storeToRefs } from 'pinia'
 
 const cart = useCartStore()
+const { items: cartItems } = storeToRefs(cart) 
+
 const ordersStore = useOrdersStore()
 const router = useRouter()
 const route = useRoute()
@@ -491,12 +531,13 @@ const dataLoading = ref(false)
 const currentUser = ref(null)
 const orders = ref([])
 
-const userFavorites = ref([])
+const favoritesStore = useFavoritesStore()
+const { favorites: userFavorites } = storeToRefs(favoritesStore)
 
 const profile = ref({
   id: 1,
   full_name: 'Doe',
-  email: 'john.doe@example.com',
+  email: 't@',
   pays: 'Côte d\'Ivoire',
   adresse: '123 Rue de la Paix, Abidjan',
   boutique: [],
@@ -518,9 +559,6 @@ const cancelEdit = () => {
   isEditing.value = false
 }
 
-const cartItems = computed(() => {
-  return cart.items
-})
 
 const groupedCart = computed(() => {
   return cart.groupedByBoutique  // <CHANGE> Utiliser le bon nom du store
@@ -578,18 +616,8 @@ const fetchCartItems = async () => {
 }
 
 const fetchFavorites = async () => {
-  try {
-    const userId = profile.value.id
-    const result = await productsApi.getFavorites(userId)
-
-    if (result.success) {
-      userFavorites.value = result.data
-    } else {
-      console.error('Erreur backend:', result.error)
-    }
-  } catch (error) {
-    console.error('Erreur fetchFavorites:', error)
-  }
+  const userId = profile.value.id
+  await favoritesStore.fetchFavorites(userId)
 }
 
 const fetchOrders = async () => {
@@ -623,45 +651,32 @@ const goToProduct = (product) => {
 
 const removeFavorite = async (idProduit) => {
   try {
-    if (isFavorite.value) {
-      await ElMessageBox.confirm(
-        'Are you sure you want to remove this product from your favorites?',
-        'Confirmation',
-        {
-          confirmButtonText: 'Confirm',
-          cancelButtonText: 'Cancel',
-          type: 'warning',
-        }
-      )
-    }
+    await ElMessageBox.confirm(
+      'Are you sure you want to remove this product from your favorites?',
+      'Confirmation',
+      {
+        confirmButtonText: 'Confirm',
+        cancelButtonText: 'Cancel',
+        type: 'warning',
+      }
+    )
 
-    isFavorite.value = !isFavorite.value
+    const user = JSON.parse(localStorage.getItem('user') || sessionStorage.getItem('user'))
 
-    const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
-    const user = JSON.parse(userData)
-
-    const likeData = { id_produit: idProduit, user_id: user.id }
-    const result = await productsApi.addLike(likeData)
+    const result = await favoritesStore.toggleFavorite(idProduit, user.id)
 
     if (result.success) {
-      ElMessage({
-        type: isFavorite.value ? 'success' : 'info',
-        message: isFavorite.value ? 'Product added to favorites.' : 'Product removed from favorites.',
-      })
-
-      fetchFavorites()
+      ElMessage.success('Product removed from favorites')
     } else {
-      isFavorite.value = !isFavorite.value
-      ElMessage({ type: 'error', message: result.error || 'Unable to update favorites.' })
+      ElMessage.error(result.error || 'Action failed')
     }
-  } catch (error) {
-    if (error !== 'cancel') {
-      console.error('Erreur toggleFavorite:', error)
-      isFavorite.value = !isFavorite.value
-      ElMessage({ type: 'error', message: 'An error occurred during the update.' })
+  } catch (e) {
+    if (e !== 'cancel') {
+      ElMessage.error('An error occurred')
     }
   }
 }
+
 
 const goBack = () => {
   window.history.back()
@@ -687,7 +702,8 @@ watch(
 )
 
 onMounted(async () => {
-  cart.loadCartFromDB();
+  cart.loadCartFromDB()
+
   const qTab = route.query.tab
   const h = route.hash ? route.hash.replace('#', '') : null
 
@@ -697,8 +713,25 @@ onMounted(async () => {
     activeTab.value = String(h)
   }
 
-  const userData = localStorage.getItem('user') || sessionStorage.getItem('user')
+  const userData =
+    localStorage.getItem('user') || sessionStorage.getItem('user')
+
+  // 🔴 Si aucun user → login
+  if (!userData) {
+    console.log('No user logged in, redirecting to login page.')
+    router.push('/login').catch(() => {})
+    return
+  }
+
   const user = JSON.parse(userData)
+  console.log('Loaded user data:', user)
+
+  // 🔴 Sécurité supplémentaire (au cas où)
+  if (!user?.email) {
+    router.push('/login').catch(() => {})
+    return
+  }
+
   profile.value = {
     id: user.id,
     full_name: user.full_name,
@@ -710,6 +743,7 @@ onMounted(async () => {
 
   loadAllData()
 })
+
 </script>
 
 <style scoped>
@@ -1285,6 +1319,7 @@ onMounted(async () => {
   .navbar-brand {
     order: 1;
     min-width: auto;
+    flex: 1;
   }
 
   .navbar-actions {
@@ -1292,23 +1327,126 @@ onMounted(async () => {
     min-width: auto;
   }
 
+  /* NOUVEAU : Menu en bottom navigation bar sur mobile */
   .nav-menu {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
     order: 3;
     width: 100%;
-    margin-top: 16px;
-    justify-content: flex-start;
-    overflow-x: auto;
-    padding-bottom: 8px;
+    margin-top: 0;
+    justify-content: space-around;
+    overflow-x: visible;
+    padding: 12px 8px;
+    gap: 4px;
+    background: linear-gradient(135deg, #ffffff 0%, #fafbfc 100%);
+    border-top: 2px solid #e8ecf1;
+    box-shadow: 0 -4px 20px rgba(0, 0, 0, 0.08);
+    z-index: 1000;
+    /* Forcer l'affichage du menu */
+    display: flex !important;
+    backdrop-filter: blur(10px);
   }
 
-  .nav-item span {
+  /* Cacher seulement le texte, PAS les badges */
+  .nav-item span:not(.badge) {
     display: none;
   }
 
   .nav-item {
-    padding: 12px;
-    min-width: 44px;
+    padding: 10px 12px;
+    min-width: auto;
+    flex: 1;
     justify-content: center;
+    flex-shrink: 0;
+    position: relative;
+    border-radius: 12px;
+  }
+
+  /* Positionner les badges en absolu */
+  .nav-item .badge {
+    position: absolute;
+    top: 2px;
+    right: 8px;
+    min-width: 16px;
+    height: 16px;
+    padding: 2px 4px;
+    font-size: 9px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .brand-title {
+    font-size: 18px;
+  }
+
+  .back-btn {
+    padding: 8px 12px;
+  }
+
+  /* Ajouter du padding en bas du contenu pour éviter que le menu fixe cache le contenu */
+  .content-container {
+    padding-bottom: 80px;
+  }
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    padding: 12px 16px;
+  }
+
+  .user-info-mini {
+    display: none;
+  }
+
+  .user-profile-mini {
+    padding: 8px;
+  }
+
+  .refresh-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .brand-title {
+    font-size: 16px;
+  }
+
+  .stats-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .content-container {
+    padding: 0 16px 80px 16px; /* Ajout du padding-bottom pour le menu fixe */
+  }
+
+  /* Menu mobile encore plus compact */
+  .nav-menu {
+    padding: 10px 4px;
+    position: relative;
+  }
+
+  .nav-item {
+    padding: 8px 6px;
+  }
+
+  .nav-item svg {
+    width: 22px;
+    height: 22px;
+  }
+
+  .nav-item .badge {
+    top: 0;
+    right: 4px;
+    min-width: 14px;
+    height: 14px;
+    font-size: 8px;
   }
 }
 

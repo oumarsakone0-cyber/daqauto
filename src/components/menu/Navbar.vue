@@ -177,25 +177,27 @@
                 </ul>
               </div>
             </div>
-            
+
+            <!-- Sell on Daq Auto Button -->
+
             <div class="user-account">
               <div v-if="currentUser">
                 <router-link :to="{ name: 'profile_client' }">
                 <div class="flex items-center" >
                   <!-- Si l'utilisateur n'a pas de photo -->
-                  <svg v-if="!currentUser?.picture || currentUser.picture === '0'" 
-                      width="18" height="18" viewBox="0 0 24 24" 
+                  <svg v-if="!currentUser?.picture || currentUser.picture === '0'"
+                      width="18" height="18" viewBox="0 0 24 24"
                       fill="none" stroke="currentColor" stroke-width="2">
                     <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"/>
                     <circle cx="12" cy="7" r="4"/>
                   </svg>
-  
+
                   <!-- Si l'utilisateur a une photo -->
-                  <img v-else 
-                      :src="currentUser.picture" 
-                      alt="Profile" 
+                  <img v-else
+                      :src="currentUser.picture"
+                      alt="Profile"
                       class="h-8 w-8 rounded-full object-cover" />
-  
+
                   <span v-if="currentUser && currentUser.email" class="ml-2">
                     {{ currentUser.full_name }}
                   </span>
@@ -206,8 +208,27 @@
                  <span @click="goToAuthentication">Login / Register</span>
               </div>
             </div>
+
+            <router-link v-if="currentUser && currentUser.email" :to="{ name: 'profile_client', query: { tab: 'favorites' } }" class="cart">
+              <svg xmlns="http://www.w3.org/2000/svg"
+                  width="18" height="18"
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  stroke-linecap="round"
+                  stroke-linejoin="round">
+                <path d="M20.8 4.6a5.5 5.5 0 0 0-7.8 0L12 5.6l-1-1a5.5 5.5 0 0 0-7.8 7.8l1 1L12 21l7.8-7.6 1-1a5.5 5.5 0 0 0 0-7.8z"/>
+              </svg>
+
+              <span>Favorites</span>
+              <div v-if="favoriteCount > 0" class="cart-badge"><div v-if="favoriteCount  > 99" class="cart-count">99+</div>
+                  <div v-else >
+                   {{ favoriteCount }}
+                   </div></div>
+            </router-link>
             
-            <router-link :to="{ name: 'profile_client', query: { tab: 'cart' } }" class="cart">
+            <router-link v-if="currentUser && currentUser.email" :to="{ name: 'profile_client', query: { tab: 'cart' } }" class="cart">
               <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <circle cx="9" cy="21" r="1"/>
                 <circle cx="20" cy="21" r="1"/>
@@ -347,6 +368,7 @@
                     :key="subcategory.id"
                     class="subcategory-column"
                   >
+                  <img :src="subcategory.image" alt="" class="subcategory-image" style="width: 100px; height: 100px; object-fit: cover; margin-bottom: 8px; border-radius: 10px" />
                     <div class="subcategory-title" @click="navigateToSubcategory(subcategory)">{{getBeforeChar(subcategory.name, '→') }}</div>
                     <ul class="sub-subcategories-list">
                       <li 
@@ -380,7 +402,7 @@
           <a href="#" class="nav-item hot">Top Deals</a>
           <a href="#" class="nav-item">Track an order</a>
           <a href="#" class="nav-item">complain</a>
-          <a href="#" class="nav-item">Sell on Daq Auto</a>
+          <a href="#" class="nav-item">Sell On Wabili.com</a>
           <a href="/boutique-admin/dashboard" class="nav-item">Supplier area</a>
         </nav>
       </div>
@@ -620,11 +642,16 @@ import { LogOut } from 'lucide-vue-next';
 import { ElMessageBox, ElMessage } from 'element-plus'
 import { useCurrencyStore } from '../../stores/currency.js'
 import { useCartStore } from '../../stores/cart'
+import { useFavoritesStore } from '../../stores/favorites'
 import SearchPageMobile from './SearchPageMobile.vue';
+import { storeToRefs } from 'pinia'
 
 const currencyStore = useCurrencyStore()
 const cart = useCartStore()
 const searchMobileRef = ref(null)
+
+const favoritesStore = useFavoritesStore()
+const { count: favoriteCount } = storeToRefs(favoritesStore)
 
 const MYMEMORY_API_KEY = 'f8d4739abb435aefc95f'
 const MYMEMORY_EMAIL = 'oumarsakone0@gmail.com'
@@ -783,6 +810,7 @@ const uniqueLanguages = computed(() => {
 
 // === États pour le panier ===
 const cartCount = computed(() => cart.items.length)
+
 
 // Devises disponibles selon la langue sélectionnée
 const availableCurrencies = computed(() => {
@@ -1102,6 +1130,7 @@ const loadCategories = async () => {
 
 // New functions for product search
 const handleSearchInput = () => {
+  console.log('Search input changed:', searchQuery.value);
   // Clear previous timeout
   if (searchTimeout.value) {
     clearTimeout(searchTimeout.value);
@@ -1187,32 +1216,42 @@ const clearSearch = () => {
 };
 
 // Modified function to redirect to results page with product categories
+// Modified function to redirect to results page with product categories
 const goToProduct = (product) => {
+  console.log('📦 Product clicked:', product)
   
-  // Construct query parameters with product categories and search term
-  const queryParams = {
-    search: searchQuery.value.trim()
-  };
+  const queryParams = {}
   
-  // Add categories if available
+  // ✅ Utiliser les IDs (maintenant que le backend les retourne)
   if (product.category_id) {
-    queryParams.category = product.category_id;
+    queryParams.category = product.category_id
+    console.log('✅ Using category_id:', product.category_id)
   }
+  
   if (product.subcategory_id) {
-    queryParams.subcategory = product.subcategory_id;
+    queryParams.subcategory = product.subcategory_id
+    console.log('✅ Using subcategory_id:', product.subcategory_id)
   }
+  
   if (product.subsubcategory_id) {
-    queryParams.sub_subcategory = product.subsubcategory_id;
+    queryParams.sub_subcategory = product.subsubcategory_id
+    console.log('✅ Using sub_subcategory_id:', product.subsubcategory_id)
+  }
+  
+  // Si aucun ID n'est disponible (ne devrait plus arriver après la correction backend)
+  if (Object.keys(queryParams).length === 0) {
+    console.warn('⚠️ No category IDs found, using product name as fallback')
+    queryParams.search = product.product_name || product.name
   }
   
   router.push({
     path: '/recherche_de_produit_list',
     query: queryParams
-  });
+  })
   
-  clearSearch();
-  closeMobileSearch();
-};
+  clearSearch()
+  closeMobileSearch()
+}
 
 const viewAllResults = () => {
   router.push({
@@ -1551,6 +1590,10 @@ onMounted(async () => {
       phone: user.phone,
       boutiques: user.boutiques || []
     }
+  
+  if (user?.id) {
+    await favoritesStore.fetchFavorites(user.id)
+  }
   const savedSelectedLang = localStorage.getItem('selected-language')
   
   if (savedSelectedLang) {
@@ -1915,7 +1958,7 @@ window.navbarDebug = {
   font-size: 13px;
 }
 
-.app-download, .language-selector, .user-account, .cart {
+.app-download, .language-selector, .user-account, .cart, .sell-btn {
   display: flex;
   align-items: center;
   gap: 6px;
@@ -1924,11 +1967,31 @@ window.navbarDebug = {
   border-radius: 25px;
   transition: all 0.2s ease;
   color: #333;
+  text-decoration: none;
 }
 
 .app-download:hover, .language-selector:hover, .user-account:hover, .cart:hover {
   background: #f8f8f8;
   color: #fe7900;
+}
+
+/* Sell on Daq Auto Button - Special styling */
+.sell-btn {
+  background: linear-gradient(135deg, #fe7900, #ff9f40);
+  color: white;
+  font-weight: 600;
+  padding: 10px 20px;
+  box-shadow: 0 2px 8px rgba(254, 121, 0, 0.2);
+}
+
+.sell-btn:hover {
+  background: linear-gradient(135deg, #e56d00, #ff8c1a);
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(254, 121, 0, 0.3);
+}
+
+.sell-btn svg {
+  stroke: white;
 }
 
 .flag {
@@ -2710,6 +2773,7 @@ window.navbarDebug = {
   background: white;
   padding: 24px;
   min-height: 400px;
+  width: 1050px;
   display: flex;
   align-items: flex-start;
   justify-content: flex-start;
@@ -2736,13 +2800,13 @@ window.navbarDebug = {
 
 .subcategory-column {
   flex: 1;
-  min-width: 200px;
-  max-width: 300px;
+  min-width: 100px;
+  max-width: 200px;
 }
 
 .subcategory-title {
   font-weight: 600;
-  font-size: 16px;
+  font-size: 13px;
   color: #333;
   margin-bottom: 12px;
   padding-bottom: 8px;

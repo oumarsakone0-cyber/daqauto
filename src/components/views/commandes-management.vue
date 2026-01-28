@@ -109,29 +109,7 @@
       </div>
 
       <!-- Order Lifecycle Progress -->
-      <div class="bg-white rounded-xl shadow-lg p-4 sm:p-6 mb-6 border border-gray-100" v-if="!dataLoading && !hasError">
-        <h3 class="text-sm font-semibold text-gray-700 mb-4">Order Lifecycle Pipeline</h3>
-        <div class="flex flex-wrap items-center justify-between gap-2">
-          <div 
-            v-for="(stage, index) in lifecycleStages" 
-            :key="stage.key"
-            @click="handleFilterChange(stage.filterValue)"
-            :class="[
-              'flex-1 min-w-[100px] p-3 rounded-xl cursor-pointer transition-all border-2',
-              activeFilter === stage.filterValue 
-                ? 'primary-color bg-orange-50' 
-                : 'border-transparent bg-gray-50 hover:bg-gray-100'
-            ]"
-          >
-            <div class="flex items-center gap-2 mb-2">
-              <span class="text-xl">{{ stage.emoji }}</span>
-              <span class="text-xs font-medium text-gray-700">{{ stage.label }}</span>
-            </div>
-            <div class="text-2xl font-bold text-gray-900">{{ stage.count }}</div>
-            <div class="text-[10px] text-gray-500">{{ stage.description }}</div>
-          </div>
-        </div>
-      </div>
+      
 
       <!-- Main Content Card -->
       <div class="bg-white shadow-lg rounded-xl overflow-hidden border border-gray-100" v-if="!dataLoading && !hasError">

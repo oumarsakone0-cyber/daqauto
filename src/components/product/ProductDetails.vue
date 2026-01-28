@@ -17,23 +17,65 @@
       </div>
     </div>
     <div class="order-section">
-      <div class="vehicle-info-container">
+     <div class="vehicle-info-container"
+      v-if="product?.trailer_type?.length >= 2">
+
         <div class="vehicle-specs">
-          <span class="vehicle-spec-badge">{{ product.vehicle_condition || "N/A" }}</span>
-          <span v-if="product.vehicle_mileage" class="vehicle-spec-badge">{{ product.vehicle_mileage }} km</span>
+          <span class="vehicle-spec-badge">
+            {{ product?.trailer_condition || "N/A" }}
+          </span>
+
+          <span v-if="product?.trailer_max_payload"
+                class="vehicle-spec-badge">
+            {{ product.trailer_max_payload }} T
+          </span>
           <span v-else class="vehicle-spec-badge">N/A</span>
-          <span class="vehicle-spec-badge">{{ product.fuel_type || "N/A" }}</span>
         </div>
       </div>
-      
+
+      <div class="vehicle-info-container" v-else>
+        <div class="vehicle-specs">
+          <span class="vehicle-spec-badge">
+            {{ product?.vehicle_condition || product?.car_condition || "N/A" }}
+          </span>
+
+          <span v-if="product?.vehicle_mileage"
+                class="vehicle-spec-badge">
+            {{ product.vehicle_mileage  }} km
+          </span>
+          
+          <span v-if="product?.car_mileage"
+                class="vehicle-spec-badge">
+            {{ product.car_mileage  }} km
+          </span>
+          
+
+          <span class="vehicle-spec-badge">
+            {{ product?.fuel_type || product?.car_fuel_type || "N/A" }}
+          </span>
+        </div>
+      </div>
+
+
       <div class="quantity-selector mb-15">
-        <span class="flex-1 capitalize"><span class="text-gray-500">VIN: </span>  {{  product.vin_numbers[0] || "N/A" }}</span>
-        <span class="flex-1" ><span class="text-gray-500">Stock ID: </span> {{ product.stock_number || "N/A"}}</span>
+        <div v-if="product?.vin_numbers?.[0]?.length > 5">
+          <span class="flex-1 capitalize">
+            <span class="text-gray-500">VIN: </span>
+            {{ product.vin_numbers[0] }}
+          </span>
+        </div>
+
+        <div>
+          <span class="flex-1">
+            <span class="text-gray-500">Stock ID: </span>
+            {{ product?.stock_number || "N/A" }}
+          </span>
+        </div>
       </div>
       <div class="action-buttons">
         <button
           v-if="!isInCart"
-          class="btn-outline flex-1"
+          class="btn-outline-with-background flex-1"
           @click="$emit('toggleCart')"
         >
           <PlusIcon class="w-5 h-5" />
@@ -69,6 +111,7 @@ import { formatPrice } from '../../services/formatPrice'
 import { PlusIcon } from 'lucide-vue-next'
 import { useOrdersStore } from '../../stores/orders'
 import { useCartStore } from '../../stores/cart'
+import { nextTick } from 'vue'
 
 const router = useRouter()
 const orders = useOrdersStore()
@@ -95,8 +138,7 @@ const goToProfile = () => {
   router.push('/profile_client')
 };
 
-const handleOrderClick = () => {
-  // Créer l'objet produit pour le panier
+const handleOrderClick = async () => {
   const productForCart = {
     id: props.product.id,
     boutique_name: props.product.boutique_name,
@@ -116,30 +158,32 @@ const handleOrderClick = () => {
     vehicle_make: props.product.vehicle_make,
     vehicle_model: props.product.vehicle_model,
     vehicle_year: props.product.vehicle_year,
-    vin_number: props.product.vin_numbers[0],
-    trim_number: props.product.trim_numbers[0],
-    stock_number: props.product.stock_number,
-    color: props.product.colors[0].name,
-    colorHex: props.product.colors[0].hex_value,
+
+    // 🔒 sécurisation importante
+    vin_number: props.product?.vin_numbers?.[0] || null,
+    trim_number: props.product?.trim_numbers?.[0] || null,
+    stock_number: props.product.stock_number || null,
+    color: props.product?.colors?.[0]?.name || null,
+    colorHex: props.product?.colors?.[0]?.hex_value || null,
+
     quantity: 1,
     slug: props.product.slug,
     vehicle_mileage: props.product.vehicle_mileage,
     fuel_type: props.product.fuel_type
   }
 
-  // Ajouter le produit au panier s'il n'y est pas déjà
   if (!isInCart.value) {
     cart.addItem(productForCart)
   }
 
-  // Préparer les données pour la validation de commande
-  const productData = [productForCart]
+  orders.addOrder([productForCart])
 
-  orders.addOrder(productData)
+  // 🔑 attendre la mise à jour réactive
+  await nextTick()
 
-  // Navigation vers la page du panier
   router.push({
-    path: '/cart',
+    name: 'profile_client',
+    query: { tab: 'cart' }
   })
 }
 </script>

@@ -8,7 +8,7 @@
           <span class="breadcrumb-separator">></span>
           <a href="#" class="breadcrumb-link">Toutes les catégories</a>
           <span class="breadcrumb-separator">></span>
-          <span class="breadcrumb-current">{{ appliedFilters.filter_name || 'Produits' }}</span>
+          <span class="breadcrumb-current">{{ appliedFilters.filter_name || getCategoryTitle }}</span>
         </div>
       </div>
     </div>
@@ -17,7 +17,7 @@
     <div class="page-title-section" :style="{ backgroundImage: bannerBackgroundImage }">
       <div class="container">
         <h1 class="main-title">{{ getPageTitle() }}</h1>
-        <p class="main-subtitle">Découvrez notre sélection de produits de qualité avec les meilleurs prix de gros</p>
+        <p class="main-subtitle">{{ getSubtitle() }}</p>
       </div>
     </div>
 
@@ -27,7 +27,7 @@
         <div class="content-wrapper">
           <!-- Sidebar des filtres - visible uniquement sur desktop -->
           <div class="desktop-only">
-            <SideBar @filter-change="handleFilterChange" />
+            <FilterSide @filter-change="handleFilterChange" />
           </div>
 
           <!-- Zone des produits -->
@@ -39,6 +39,7 @@
                   <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
                 </svg>
                 <span>Filtres</span>
+                <span v-if="activeFiltersCount > 0" class="mobile-filter-count">{{ activeFiltersCount }}</span>
               </button>
               
               <div class="mobile-sort-dropdown">
@@ -61,7 +62,7 @@
                 </div>
                 
                 <div class="filter-sidebar-content">
-                  <SideBar @filter-change="handleMobileFilterChange" />
+                  <FilterSide @filter-change="handleMobileFilterChange" />
                 </div>
                 
                 <div class="filter-sidebar-actions">
@@ -93,16 +94,16 @@
                   <button @click="clearAllFilters" class="clear-all-btn">Effacer tous</button>
                 </div>
                 <div class="filters-list">
+                  <!-- Type de véhicule -->
+                  <div v-if="activeFilters.vehicleType" class="filter-tag">
+                    <span>Type: {{ activeFilters.vehicleType === 'truck' ? 'Camions' : 'Voitures' }}</span>
+                    <button @click="removeFilter('vehicleType')" class="remove-filter">×</button>
+                  </div>
+
                   <!-- Sous-catégories -->
                   <div v-if="activeFilters.subcategories" class="filter-tag">
                     <span>Sous-catégories: {{ activeFilters.subcategories }}</span>
                     <button @click="removeFilter('subcategories')" class="remove-filter">×</button>
-                  </div>
-                  
-                  <!-- Marchés -->
-                  <div v-if="activeFilters.boutiqueMarket" class="filter-tag">
-                    <span>Marchés: {{ activeFilters.boutiqueMarket }}</span>
-                    <button @click="removeFilter('boutiqueMarket')" class="remove-filter">×</button>
                   </div>
                   
                   <!-- Prix -->
@@ -135,16 +136,10 @@
                     <button @click="removeFilter('transmissionType')" class="remove-filter">×</button>
                   </div>
                   
-                  <!-- Type de conduite -->
+                  <!-- Type de traction -->
                   <div v-if="activeFilters.driveType" class="filter-tag">
-                    <span>Conduite: {{ activeFilters.driveType }}</span>
+                    <span>Traction: {{ activeFilters.driveType }}</span>
                     <button @click="removeFilter('driveType')" class="remove-filter">×</button>
-                  </div>
-                  
-                  <!-- Marque du moteur -->
-                  <div v-if="activeFilters.engineBrand" class="filter-tag">
-                    <span>Moteur: {{ activeFilters.engineBrand }}</span>
-                    <button @click="removeFilter('engineBrand')" class="remove-filter">×</button>
                   </div>
                   
                   <!-- Année -->
@@ -153,55 +148,36 @@
                     <button @click="removeFilter('year')" class="remove-filter">×</button>
                   </div>
                   
-                  <!-- Capacité de charge -->
-                  <div v-if="activeFilters.payloadCapacityMin || activeFilters.payloadCapacityMax" class="filter-tag">
-                    <span>Charge: {{ formatRange(activeFilters.payloadCapacityMin, activeFilters.payloadCapacityMax) }} kg</span>
-                    <button @click="removeFilter('payload')" class="remove-filter">×</button>
+                  <!-- Kilométrage -->
+                  <div v-if="activeFilters.vehicleMileageMin || activeFilters.vehicleMileageMax" class="filter-tag">
+                    <span>Kilométrage: {{ formatRange(activeFilters.vehicleMileageMin, activeFilters.vehicleMileageMax) }} km</span>
+                    <button @click="removeFilter('mileage')" class="remove-filter">×</button>
                   </div>
-                  
-                  <!-- GVW -->
-                  <div v-if="activeFilters.gvwMin || activeFilters.gvwMax" class="filter-tag">
-                    <span>GVW: {{ formatRange(activeFilters.gvwMin, activeFilters.gvwMax) }} kg</span>
-                    <button @click="removeFilter('gvw')" class="remove-filter">×</button>
+
+                  <!-- Couleur extérieure (voitures) -->
+                  <div v-if="activeFilters.carExteriorColor" class="filter-tag">
+                    <span>Couleur ext.: {{ activeFilters.carExteriorColor }}</span>
+                    <button @click="removeFilter('carExteriorColor')" class="remove-filter">×</button>
                   </div>
-                  
-                  <!-- Livraison gratuite -->
-                  <div v-if="activeFilters.freeShipping" class="filter-tag">
-                    <span>Livraison gratuite</span>
-                    <button @click="removeFilter('freeShipping')" class="remove-filter">×</button>
+
+                  <!-- Couleur intérieure (voitures) -->
+                  <div v-if="activeFilters.carInteriorColor" class="filter-tag">
+                    <span>Couleur int.: {{ activeFilters.carInteriorColor }}</span>
+                    <button @click="removeFilter('carInteriorColor')" class="remove-filter">×</button>
                   </div>
-                  
-                  <!-- En stock -->
-                  <div v-if="activeFilters.stock" class="filter-tag">
-                    <span>En stock</span>
-                    <button @click="removeFilter('stock')" class="remove-filter">×</button>
-                  </div>
-                  
-                  <!-- Fournisseur vérifié -->
-                  <div v-if="activeFilters.boutiqueVerified" class="filter-tag">
-                    <span>Fournisseur vérifié</span>
-                    <button @click="removeFilter('boutiqueVerified')" class="remove-filter">×</button>
-                  </div>
-                  
-                  <!-- Note minimum -->
-                  <div v-if="activeFilters.minRating" class="filter-tag">
-                    <span>Note: {{ activeFilters.minRating }}+ étoiles</span>
-                    <button @click="removeFilter('minRating')" class="remove-filter">×</button>
+
+                  <!-- Type de carrosserie (voitures) -->
+                  <div v-if="activeFilters.carBodyType" class="filter-tag">
+                    <span>Carrosserie: {{ activeFilters.carBodyType }}</span>
+                    <button @click="removeFilter('carBodyType')" class="remove-filter">×</button>
                   </div>
                 </div>
               </div>
 
-              <AlibabaStyleSection 
-                  @product-click="goToProduct"
-                  @chat-click="handleChatClick"
-                  @contact-click="handleContactClick"
-                  :categories="categoryMap"
-                />
-
               <!-- Barre d'outils - visible uniquement sur desktop -->
               <div class="toolbar desktop-only">
                 <div class="toolbar-left">
-                  <h2 class="section-title">{{ appliedFilters.filter_name || 'Produits' }}</h2>
+                  <h2 class="section-title">{{ getCategoryTitle }}</h2>
                   <span class="results-count">{{ totalProducts.toLocaleString() }} produits trouvés</span>
                 </div>
                 
@@ -262,19 +238,7 @@
               <!-- Grille de produits -->
               <div v-else>
                 <!-- Version Mobile - Grille de produits -->
-                <div class="mobile-products-grid mobile-only desktop-hidden">
-                  <ProductCard
-                    v-for="(product, index) in formattedProducts" 
-                    :key="product.id"
-                    :product="adaptProductData(product)"
-                    :is-mobile="true"
-                    :show-ad-badge="index % 5 === 0"
-                    @product-click="goToProduct"
-                    @favorite-click="toggleFavorite"
-                    @contact-click="contactSupplier"
-                    @chat-click="addToCart"
-                  />
-                </div>
+               
 
                 <!-- Version Desktop - Vue unifiée des produits qui s'adapte au format -->
                 <div class="products-container desktop-only" :class="{ 'list-view': viewMode === 'list' }">
@@ -296,24 +260,24 @@
                 </div>
 
                 <!-- Pagination -->
-                <div class="pagination" v-if="totalPages > 1">
+                <div class="pagination" v-if="totalPages > 1" style="position: absolute;">
                   <button class="page-btn prev-btn" :disabled="currentPage === 1" @click="goToPage(currentPage - 1)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                       <polyline points="15,18 9,12 15,6"></polyline>
                     </svg>
                   </button>
                   
-                  <button 
-                    v-for="page in visiblePages" 
-                    :key="page"
-                    class="page-btn"
-                    :class="{ active: page === currentPage }"
-                    @click="goToPage(page)"
-                    v-if="page !== '...'"
-                  >
-                    {{ page }}
-                  </button>
-                  <span v-else class="page-ellipsis">...</span>
+                  <template v-for="page in visiblePages" :key="page">
+                    <button 
+                      v-if="page !== '...'"
+                      class="page-btn"
+                      :class="{ active: page === currentPage }"
+                      @click="goToPage(page)"
+                    >
+                      {{ page }}
+                    </button>
+                    <span v-else class="page-ellipsis">...</span>
+                  </template>
                   
                   <button class="page-btn next-btn" :disabled="currentPage === totalPages" @click="goToPage(currentPage + 1)">
                     <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -333,22 +297,24 @@
 <script>
 import { ref, computed, onMounted, watch } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
-import SideBar from '../menu/FilterSide.vue'
-import { productsApi, categoriesApi } from '../../services/api.js'
+import FilterSide from '../menu/FilterSide.vue'
+import { productsApi, categoriesApi, boutiqueUtils } from '../../services/api.js'
 import ProductCard from '../home/ProductCard.vue'
-import AlibabaStyleSection from '../pages/AlibabaStyleSection.vue'
 import { formatPrice } from '../../services/formatPrice'
 
 export default {
   name: 'ResultatView',
   components: {
-    SideBar,
-    ProductCard,
-    AlibabaStyleSection
+    FilterSide,
+    ProductCard
   },
   setup() {
     const route = useRoute()
     const router = useRouter()
+
+    // Constants - CATEGORY IDs
+    const TRUCK_CATEGORY_ID = '13'
+    const CAR_CATEGORY_ID = '20'
 
     // États
     const loading = ref(false)
@@ -367,7 +333,7 @@ export default {
     const activeFilters = ref({})
     const categoryMap = ref({})
 
-    // Paramètres de filtrage selon votre API
+    // Paramètres de filtrage depuis l'URL
     const categoryId = ref(null)
     const subcategoryId = ref(null)
     const subSubcategoryId = ref(null)
@@ -379,13 +345,57 @@ export default {
 
     // Computed
     const hasActiveFilters = computed(() => {
-      return Object.keys(activeFilters.value).length > 0
+      return Object.keys(activeFilters.value).some(key => {
+        const value = activeFilters.value[key]
+        return value !== null && value !== undefined && value !== '' && key !== 'category' && key !== 'vehicleType'
+      })
     })
 
-    const handleImageError = (event) => {
-      event.target.src = 'https://t3.ftcdn.net/jpg/00/38/91/48/360_F_38914811_jQRpNpxUHrAlJs6lVzKYZPQAPE0A3CKc.jpg'
+    const activeFiltersCount = computed(() => {
+      let count = 0
+      const f = activeFilters.value
+      
+      if (f.subcategories) count++
+      if (f.minPrice || f.maxPrice) count++
+      if (f.vehicleMake) count++
+      if (f.vehicleCondition) count++
+      if (f.fuelType) count++
+      if (f.transmissionType) count++
+      if (f.driveType) count++
+      if (f.vehicleYearMin || f.vehicleYearMax) count++
+      if (f.vehicleMileageMin || f.vehicleMileageMax) count++
+      if (f.carExteriorColor) count++
+      if (f.carInteriorColor) count++
+      if (f.carBodyType) count++
+      
+      return count
+    })
+
+    const getCategoryTitle = computed(() => {
+      const catId = activeFilters.value.category || route.query.category
+      
+      if (catId === TRUCK_CATEGORY_ID) {
+        return 'Camions (Trucks)'
+      } else if (catId === CAR_CATEGORY_ID) {
+        return 'Voitures (Cars)'
+      }
+      
+      return 'Tous les véhicules'
+    })
+
+    const getSubtitle = () => {
+      const catId = activeFilters.value.category || route.query.category
+      
+      if (catId === TRUCK_CATEGORY_ID) {
+        return 'Découvrez notre sélection de camions lourds de qualité'
+      } else if (catId === CAR_CATEGORY_ID) {
+        return 'Explorez notre sélection de voitures de qualité'
+      }
+      
+      return 'Découvrez notre sélection de véhicules de qualité'
     }
 
+    // Construire les options de filtrage pour l'API
     const buildFilterOptions = () => {
       const options = {
         page: currentPage.value,
@@ -394,79 +404,78 @@ export default {
         order: sortBy.value.includes('_desc') ? 'DESC' : 'ASC'
       }
 
-      // Ajouter les filtres de base depuis l'URL
-      if (categoryId.value) options.category = categoryId.value
+      const userId = boutiqueUtils.getCurrentUserId()
+      if (userId) {
+        options.user_id = userId
+      }
+
+      // IMPORTANT: Toujours utiliser la catégorie depuis activeFilters (qui vient du FilterSide)
+      // Cela garantit que le switch entre Truck et Car fonctionne correctement
+      if (activeFilters.value.category) {
+        options.category = activeFilters.value.category
+      } else if (categoryId.value) {
+        options.category = categoryId.value
+      }
+
+      // Autres paramètres de base depuis l'URL
       if (subcategoryId.value) options.subcategory = subcategoryId.value
       if (subSubcategoryId.value) options.sub_subcategory = subSubcategoryId.value
       if (productSelect.value) options.product_select = productSelect.value
 
-      
-      // Sous-catégories (déjà en comma-separated depuis FilterSide)
+      // Sous-catégories (depuis FilterSide)
       if (activeFilters.value.subcategories) {
         options.subcategories = activeFilters.value.subcategories
-      }
-
-      // Marchés (déjà en comma-separated depuis FilterSide) -> boutique_market
-      if (activeFilters.value.boutiqueMarket) {
-        options.boutique_market = activeFilters.value.boutiqueMarket
       }
 
       // Prix
       if (activeFilters.value.minPrice) options.min_price = activeFilters.value.minPrice
       if (activeFilters.value.maxPrice) options.max_price = activeFilters.value.maxPrice
 
-      // Marques de véhicules (déjà en comma-separated depuis FilterSide) -> vehicle_make
+      // Marques de véhicules
       if (activeFilters.value.vehicleMake) {
         options.vehicle_make = activeFilters.value.vehicleMake
       }
 
-      // État du véhicule (single value depuis FilterSide) -> vehicle_condition
+      // État du véhicule
       if (activeFilters.value.vehicleCondition) {
         options.vehicle_condition = activeFilters.value.vehicleCondition
       }
 
-      // Type de carburant (déjà en comma-separated depuis FilterSide) -> fuel_type
+      // Type de carburant
       if (activeFilters.value.fuelType) {
         options.fuel_type = activeFilters.value.fuelType
       }
 
-      // Type de transmission (déjà en comma-separated depuis FilterSide) -> transmission_type
+      // Type de transmission
       if (activeFilters.value.transmissionType) {
         options.transmission_type = activeFilters.value.transmissionType
       }
 
-      // Type de traction (déjà en comma-separated depuis FilterSide) -> drive_type
+      // Type de traction
       if (activeFilters.value.driveType) {
         options.drive_type = activeFilters.value.driveType
       }
 
-      // Marque du moteur (déjà en comma-separated depuis FilterSide) -> engine_brand
-      if (activeFilters.value.engineBrand) {
-        options.engine_brand = activeFilters.value.engineBrand
-      }
-
-      // Année du véhicule -> vehicle_year_min / vehicle_year_max
+      // Année du véhicule
       if (activeFilters.value.vehicleYearMin) options.vehicle_year_min = activeFilters.value.vehicleYearMin
       if (activeFilters.value.vehicleYearMax) options.vehicle_year_max = activeFilters.value.vehicleYearMax
 
-      // Capacité de charge -> payload_capacity_min / payload_capacity_max
-      if (activeFilters.value.payloadCapacityMin) options.payload_capacity_min = activeFilters.value.payloadCapacityMin
-      if (activeFilters.value.payloadCapacityMax) options.payload_capacity_max = activeFilters.value.payloadCapacityMax
+      // Kilométrage
+      if (activeFilters.value.vehicleMileageMin) options.vehicle_mileage_min = activeFilters.value.vehicleMileageMin
+      if (activeFilters.value.vehicleMileageMax) options.vehicle_mileage_max = activeFilters.value.vehicleMileageMax
 
-      // GVW -> gvw_min / gvw_max
-      if (activeFilters.value.gvwMin) options.gvw_min = activeFilters.value.gvwMin
-      if (activeFilters.value.gvwMax) options.gvw_max = activeFilters.value.gvwMax
+      // Filtres spécifiques aux voitures
+      if (activeFilters.value.carExteriorColor) {
+        options.car_exterior_color = activeFilters.value.carExteriorColor
+      }
+      if (activeFilters.value.carInteriorColor) {
+        options.car_interior_color = activeFilters.value.carInteriorColor
+      }
+      if (activeFilters.value.carBodyType) {
+        options.car_body_type = activeFilters.value.carBodyType
+      }
 
-      // Note minimum -> min_rating
-      if (activeFilters.value.minRating) options.min_rating = activeFilters.value.minRating
-
-      // Options booléennes
-      if (activeFilters.value.freeShipping) options.free_shipping = true
-      if (activeFilters.value.stock) options.stock = true
-      if (activeFilters.value.boutiqueVerified) options.boutique_verified = true
-
-      console.log('[v0] Active Filters:', activeFilters.value)
-      console.log('[v0] Built Options for API:', options)
+      console.log('[ResultatView] Options de requête construites:', options)
       return options
     }
 
@@ -477,8 +486,6 @@ export default {
 
       try {
         const options = buildFilterOptions()
-        console.log('🔄 Chargement des produits avec paramètres:', options)
-
         const response = await productsApi.getProductsForResults(options)
 
         if (response && response.data) {
@@ -507,17 +514,12 @@ export default {
             }
           })
 
-          console.log('✅ Produits chargés:', {
-            raw: rawProducts.value.length,
-            formatted: formattedProducts.value.length,
-            total: totalProducts.value,
-            filters: appliedFilters.value
-          })
+          console.log('[ResultatView] Produits chargés:', formattedProducts.value.length)
         } else {
           throw new Error('Format de réponse invalide')
         }
       } catch (err) {
-        console.error('❌ Erreur chargement produits:', err)
+        console.error('[ResultatView] Erreur:', err)
         error.value = err.message || 'Erreur lors du chargement des produits'
         rawProducts.value = []
         formattedProducts.value = []
@@ -529,7 +531,7 @@ export default {
 
     // Gérer le changement de filtres depuis la sidebar
     const handleFilterChange = (filters) => {
-      console.log('[v0] Filtres reçus de FilterSide:', filters)
+      console.log('[ResultatView] Filtres reçus:', filters)
       activeFilters.value = { ...filters }
       currentPage.value = 1
       loadProducts()
@@ -550,74 +552,105 @@ export default {
       const newFilters = { ...activeFilters.value }
       
       switch(filterType) {
+        case 'vehicleType':
+          delete newFilters.vehicleType
+          // Remettre la catégorie par défaut (trucks)
+          newFilters.category = TRUCK_CATEGORY_ID
+          break
         case 'subcategories':
           delete newFilters.subcategories
-          break
-        case 'boutiqueMarket': // Changed from 'markets' to 'boutiqueMarket'
-          delete newFilters.boutiqueMarket
           break
         case 'price':
           delete newFilters.minPrice
           delete newFilters.maxPrice
           break
-        case 'vehicleMake': // Changed from 'vehicleMakes' to 'vehicleMake'
+        case 'vehicleMake':
           delete newFilters.vehicleMake
           break
         case 'vehicleCondition':
           delete newFilters.vehicleCondition
           break
-        case 'fuelType': // Changed from 'fuelTypes' to 'fuelType'
+        case 'fuelType':
           delete newFilters.fuelType
           break
-        case 'transmissionType': // Changed from 'transmissionTypes' to 'transmissionType'
+        case 'transmissionType':
           delete newFilters.transmissionType
           break
-        case 'driveType': // Changed from 'driveTypes' to 'driveType'
+        case 'driveType':
           delete newFilters.driveType
-          break
-        case 'engineBrand': // Changed from 'engineBrands' to 'engineBrand'
-          delete newFilters.engineBrand
           break
         case 'year':
           delete newFilters.vehicleYearMin
           delete newFilters.vehicleYearMax
           break
-        case 'payload':
-          delete newFilters.payloadCapacityMin
-          delete newFilters.payloadCapacityMax
+        case 'mileage':
+          delete newFilters.vehicleMileageMin
+          delete newFilters.vehicleMileageMax
           break
-        case 'gvw':
-          delete newFilters.gvwMin
-          delete newFilters.gvwMax
+        case 'carExteriorColor':
+          delete newFilters.carExteriorColor
           break
-        case 'freeShipping':
-          delete newFilters.freeShipping
+        case 'carInteriorColor':
+          delete newFilters.carInteriorColor
           break
-        case 'stock': // Changed from 'inStock' to 'stock'
-          delete newFilters.stock
-          break
-        case 'boutiqueVerified': // Changed from 'verifiedSupplier' to 'boutiqueVerified'
-          delete newFilters.boutiqueVerified
-          break
-        case 'minRating':
-          delete newFilters.minRating
+        case 'carBodyType':
+          delete newFilters.carBodyType
           break
       }
 
       activeFilters.value = newFilters
+      
+      // Mettre à jour l'URL
+      updateURLFromFilters(newFilters)
+      
       loadProducts()
     }
 
     // Effacer tous les filtres
     const clearAllFilters = () => {
-      activeFilters.value = {}
+      // Garder seulement la catégorie actuelle
+      const currentCategory = activeFilters.value.category || TRUCK_CATEGORY_ID
+      activeFilters.value = { category: currentCategory }
       mobileFilters.value = {}
       currentPage.value = 1
+      
+      // Nettoyer l'URL
+      router.replace({ 
+        path: route.path, 
+        query: { category: currentCategory, page: '1' } 
+      })
+      
       loadProducts()
       
       if (showFilterDialog.value) {
         showFilterDialog.value = false
       }
+    }
+
+    // Mettre à jour l'URL depuis les filtres actifs
+    const updateURLFromFilters = (filters) => {
+      const query = {}
+      
+      if (filters.category) query.category = filters.category
+      if (filters.minPrice) query.min_price = filters.minPrice
+      if (filters.maxPrice) query.max_price = filters.maxPrice
+      if (filters.vehicleMake) query.vehicle_make = filters.vehicleMake
+      if (filters.vehicleCondition) query.vehicle_condition = filters.vehicleCondition
+      if (filters.fuelType) query.fuel_type = filters.fuelType
+      if (filters.transmissionType) query.transmission_type = filters.transmissionType
+      if (filters.driveType) query.drive_type = filters.driveType
+      if (filters.vehicleYearMin) query.vehicle_year_min = filters.vehicleYearMin
+      if (filters.vehicleYearMax) query.vehicle_year_max = filters.vehicleYearMax
+      if (filters.vehicleMileageMin) query.vehicle_mileage_min = filters.vehicleMileageMin
+      if (filters.vehicleMileageMax) query.vehicle_mileage_max = filters.vehicleMileageMax
+      if (filters.subcategories) query.subcategories = filters.subcategories
+      if (filters.carExteriorColor) query.car_exterior_color = filters.carExteriorColor
+      if (filters.carInteriorColor) query.car_interior_color = filters.carInteriorColor
+      if (filters.carBodyType) query.car_body_type = filters.carBodyType
+      
+      query.page = '1'
+      
+      router.replace({ path: route.path, query })
     }
 
     // Formater la plage de prix
@@ -643,37 +676,13 @@ export default {
       return ''
     }
 
-    // Obtenir les noms des catégories
-    const getCategoryNames = (categoryIds) => {
-      if (!categoryIds) return ''
-      
-      const ids = categoryIds.split(',')
-      const names = ids.map(id => categoryMap.value[id] || `Cat. ${id}`)
-      return names.join(', ')
-    }
-
-    // Charger la correspondance des catégories
-    const loadCategoryMap = async () => {
-      try {
-        const response = await categoriesApi.getCategories()
-        
-        if (response && response.data) {
-          response.data.forEach(category => {
-            categoryMap.value[category.id] = category.name
-          })
-        }
-      } catch (err) {
-        console.error('Erreur lors du chargement des catégories:', err)
-      }
-    }
-
     const getPageTitle = () => {
       if (route.query.search) {
         return `Résultats pour "${route.query.search}"`
       } else if (appliedFilters.value.filter_name) {
         return appliedFilters.value.filter_name
       }
-      return 'Tous les produits'
+      return getCategoryTitle.value
     }
 
     const handleSortChange = () => {
@@ -700,7 +709,6 @@ export default {
 
     const toggleFavorite = (product) => {
       product.isFavorite = !product.isFavorite
-      console.log('Toggle favori:', product.name, product.isFavorite)
     }
 
     const addToCart = (product) => {
@@ -719,28 +727,32 @@ export default {
       productSelect.value = route.query.search || ''
       currentPage.value = parseInt(route.query.page) || 1
 
-      // Initialiser les filtres actifs depuis l'URL si nécessaire
+      // Initialiser les filtres actifs depuis l'URL
       const filters = {}
+      
+      if (route.query.category) filters.category = route.query.category
       if (route.query.subcategories) filters.subcategories = route.query.subcategories
-      if (route.query.boutiqueMarket) filters.boutiqueMarket = route.query.boutiqueMarket // Updated key
-      if (route.query.minPrice) filters.minPrice = route.query.minPrice
-      if (route.query.maxPrice) filters.maxPrice = route.query.maxPrice
-      if (route.query.vehicleMake) filters.vehicleMake = route.query.vehicleMake // Updated key
-      if (route.query.vehicleCondition) filters.vehicleCondition = route.query.vehicleCondition
-      if (route.query.fuelType) filters.fuelType = route.query.fuelType // Updated key
-      if (route.query.transmissionType) filters.transmissionType = route.query.transmissionType // Updated key
-      if (route.query.driveType) filters.driveType = route.query.driveType // Updated key
-      if (route.query.engineBrand) filters.engineBrand = route.query.engineBrand // Updated key
-      if (route.query.vehicleYearMin) filters.vehicleYearMin = route.query.vehicleYearMin
-      if (route.query.vehicleYearMax) filters.vehicleYearMax = route.query.vehicleYearMax
-      if (route.query.payloadCapacityMin) filters.payloadCapacityMin = route.query.payloadCapacityMin
-      if (route.query.payloadCapacityMax) filters.payloadCapacityMax = route.query.payloadCapacityMax
-      if (route.query.gvwMin) filters.gvwMin = route.query.gvwMin
-      if (route.query.gvwMax) filters.gvwMax = route.query.gvwMax
-      if (route.query.freeShipping) filters.freeShipping = route.query.freeShipping === 'true' // Ensure boolean conversion
-      if (route.query.stock) filters.stock = route.query.stock === 'true' // Updated key and ensure boolean
-      if (route.query.boutiqueVerified) filters.boutiqueVerified = route.query.boutiqueVerified === 'true' // Updated key and ensure boolean
-      if (route.query.minRating) filters.minRating = route.query.minRating
+      if (route.query.min_price) filters.minPrice = parseFloat(route.query.min_price)
+      if (route.query.max_price) filters.maxPrice = parseFloat(route.query.max_price)
+      if (route.query.vehicle_make) filters.vehicleMake = route.query.vehicle_make
+      if (route.query.vehicle_condition) filters.vehicleCondition = route.query.vehicle_condition
+      if (route.query.fuel_type) filters.fuelType = route.query.fuel_type
+      if (route.query.transmission_type) filters.transmissionType = route.query.transmission_type
+      if (route.query.drive_type) filters.driveType = route.query.drive_type
+      if (route.query.vehicle_year_min) filters.vehicleYearMin = parseInt(route.query.vehicle_year_min)
+      if (route.query.vehicle_year_max) filters.vehicleYearMax = parseInt(route.query.vehicle_year_max)
+      if (route.query.vehicle_mileage_min) filters.vehicleMileageMin = parseInt(route.query.vehicle_mileage_min)
+      if (route.query.vehicle_mileage_max) filters.vehicleMileageMax = parseInt(route.query.vehicle_mileage_max)
+      if (route.query.car_exterior_color) filters.carExteriorColor = route.query.car_exterior_color
+      if (route.query.car_interior_color) filters.carInteriorColor = route.query.car_interior_color
+      if (route.query.car_body_type) filters.carBodyType = route.query.car_body_type
+
+      // Déterminer le type de véhicule depuis la catégorie
+      if (filters.category === TRUCK_CATEGORY_ID) {
+        filters.vehicleType = 'truck'
+      } else if (filters.category === CAR_CATEGORY_ID) {
+        filters.vehicleType = 'car'
+      }
 
       activeFilters.value = filters
     }
@@ -778,42 +790,16 @@ export default {
 
     // Computed pour l'image de bannière
     const bannerBackgroundImage = computed(() => {
+      const catId = activeFilters.value.category || route.query.category
+      
       const categoryImages = {
-        'smartphones': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'ordinateurs': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1496181133206-80ce9b88a853?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'tablettes': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1544244015-0df4b3ffc6b0?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'accessoires': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1583394838336-acd977736f90?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'audio': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1505740420928-5e560c06d30e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'gaming': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1542751371-adc38448a05e?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'montres': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1523275335684-37898b6baf30?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'cameras': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1502920917128-1aa500764cbd?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'drones': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1473968512647-3e447244af8f?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
-        'electronique': 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")'
+        [TRUCK_CATEGORY_ID]: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1601584115197-04ecc0da31d7?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")',
+        [CAR_CATEGORY_ID]: 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1494976388531-d1058494cdd8?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")'
       }
 
       const defaultImage = 'linear-gradient(rgba(0, 0, 0, 0.5), rgba(0, 0, 0, 0.5)), url("https://images.unsplash.com/photo-1518709268805-4e9042af2176?ixlib=rb-4.0.3&auto=format&fit=crop&w=2000&q=80")'
 
-      if (formattedProducts.value.length > 0) {
-        const firstProduct = formattedProducts.value[0]
-        const category = firstProduct.category?.toLowerCase() || firstProduct.categoryName?.toLowerCase()
-        
-        for (const [key, image] of Object.entries(categoryImages)) {
-          if (category && category.includes(key)) {
-            return image
-          }
-        }
-      }
-
-      if (appliedFilters.value.filter_name) {
-        const filterName = appliedFilters.value.filter_name.toLowerCase()
-        for (const [key, image] of Object.entries(categoryImages)) {
-          if (filterName.includes(key)) {
-            return image
-          }
-        }
-      }
-
-      return defaultImage
+      return categoryImages[catId] || defaultImage
     })
 
     // Adapter les données du produit pour le composant ProductCard
@@ -822,40 +808,57 @@ export default {
         id: product.id,
         name: product.name,
         slug: product.slug,
-        unit_price: product.unitPrice,
-        wholesale_price: product.wholesalePrice,
-        wholesale_min_qty: product.minQuantity,
-        primary_image: product.images?.[0],
+        unit_price: product.unitPrice || product.unit_price,
+        wholesale_price: product.wholesalePrice || product.wholesale_price,
+        wholesale_min_qty: product.minQuantity || product.wholesale_min_qty,
+        primary_image: product.images?.[0] || product.primary_image,
         images: product.images || [],
-        views: product.reviews,
-        market: product.supplier?.country?.toLowerCase() || 'ci',
-        boutique_name: product.shopName,
-        rating: product.rating || 4.5,
-        experience: product.supplier?.years || 3,
-        freeShipping: product.freeShipping,
-        originalPrice: product.originalPrice
+        views: product.reviews || product.views,
+        market: product.supplier?.country?.toLowerCase() || product.boutique_market || 'local',
+        boutique_name: product.supplier?.name || product.boutique_name || product.shopName,
+        boutique_verified: product.supplier?.verified || product.boutique_verified,
+        stock: product.stock,
+        rating: product.rating,
+        sales_count: product.sales_count,
+        free_shipping: product.freeShipping || product.free_shipping,
+        category_name: product.category || product.category_name,
+        vehicle_make: product.vehicle_make || product.vehicleMake,
+        vehicle_model: product.vehicle_model || product.vehicleModel,
+        vehicle_year: product.vehicle_year || product.vehicleYear,
+        car_make: product.car_make,
+        car_model: product.car_model,
+        car_year: product.car_year,
+        car_mileage: product.car_mileage,
+        car_condition: product.car_condition
       }
     }
 
-    const handleChatClick = (supplier) => {
-      console.log('Chat avec le fournisseur:', supplier.name)
+    // Charger les catégories
+    const loadCategoryMap = async () => {
+      try {
+        const response = await categoriesApi.getCategories()
+        
+        if (response && response.data) {
+          response.data.forEach(category => {
+            categoryMap.value[category.id] = category.name
+          })
+        }
+      } catch (err) {
+        console.error('Erreur lors du chargement des catégories:', err)
+      }
     }
 
-    const handleContactClick = (supplier) => {
-      console.log('Contact fournisseur:', supplier.name)
-    }
-
-    // Watchers
+    // Surveiller les changements de route
     watch(() => route.query, () => {
       initializeFromRoute()
       loadProducts()
     }, { deep: true })
 
-    // Lifecycle
     onMounted(() => {
       loadCategoryMap()
       initializeFromRoute()
       loadProducts()
+      // Les produits seront chargés automatiquement quand FilterSide émet filter-change
     })
 
     return {
@@ -867,18 +870,21 @@ export default {
       currentPage,
       totalPages,
       totalProducts,
+      showFilterDialog,
+      
+      // Données
       formattedProducts,
       appliedFilters,
       activeFilters,
-      hasActiveFilters,
-      showFilterDialog,
-
+      
       // Computed
+      hasActiveFilters,
+      activeFiltersCount,
+      getCategoryTitle,
       visiblePages,
       bannerBackgroundImage,
-
+      
       // Méthodes
-      handleImageError,
       loadProducts,
       handleFilterChange,
       handleMobileFilterChange,
@@ -887,128 +893,295 @@ export default {
       clearAllFilters,
       formatPriceRange,
       formatRange,
-      getCategoryNames,
       getPageTitle,
+      getSubtitle,
       handleSortChange,
       goToPage,
       goToProduct,
       toggleFavorite,
       addToCart,
       contactSupplier,
-      adaptProductData,
-      handleChatClick,
-      handleContactClick
+      adaptProductData
     }
   }
 }
 </script>
 
 <style scoped>
+/* Container */
 .product-list-page {
-  background: #f5f5f5;
   min-height: 100vh;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-}
-
-.page-header {
-  background: #fff;
-  border-bottom: 1px solid #e8e8e8;
-  padding: 12px 0;
+  background: #f5f5f5;
 }
 
 .container {
   max-width: 1500px;
-  min-width: 1200px;
   margin: 0 auto;
-  padding: 0 16px;
+  padding: 0 20px;
+}
+
+/* Page Header */
+.page-header {
+  background: white;
+  padding: 15px 0;
+  border-bottom: 1px solid #e5e7eb;
 }
 
 .breadcrumb {
-  font-size: 13px;
-  color: #666;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 14px;
 }
 
 .breadcrumb-link {
-  color: #ff6b35;
+  color: #6b7280;
   text-decoration: none;
+  transition: color 0.2s;
 }
 
 .breadcrumb-link:hover {
-  text-decoration: underline;
+  color: #fe7900;
 }
 
 .breadcrumb-separator {
-  margin: 0 8px;
-  color: #ccc;
+  color: #d1d5db;
 }
 
 .breadcrumb-current {
-  color: #333;
+  color: #111827;
+  font-weight: 500;
 }
 
+/* Page Title Section */
 .page-title-section {
   background-size: cover;
   background-position: center;
-  background-repeat: no-repeat;
-  background-attachment: fixed;
-  color: white;
   padding: 60px 0;
   text-align: center;
-  position: relative;
-}
-
-.page-title-section::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.3);
-  z-index: 1;
-}
-
-.page-title-section .container {
-  position: relative;
-  z-index: 2;
+  color: white;
 }
 
 .main-title {
   font-size: 36px;
   font-weight: 700;
-  margin: 0 0 12px 0;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  margin-bottom: 12px;
 }
 
 .main-subtitle {
-  font-size: 18px;
-  margin: 0;
+  font-size: 16px;
   opacity: 0.9;
 }
 
+/* Main Content */
 .main-content {
-  padding: 16px 0;
-  background: #f5f5f5;
+  padding: 30px 0;
 }
 
 .content-wrapper {
   display: flex;
-  gap: 16px;
-  background: #f5f5f5;
-  border-radius: 4px;
-  overflow: hidden;
+  gap: 30px;
+  align-items: flex-start;
 }
 
+/* Desktop filter container - stretches with content */
+.desktop-only {
+  position: sticky;
+  top: 20px;
+  flex-shrink: 0;
+}
+
+/* Products Area */
 .products-area {
   flex: 1;
-  padding: 16px;
-  background: #f5f5f5fa;
+  min-width: 0;
 }
 
-.active-filters {
-  background: #fff;
-  border: 1px solid #e8e8e8;
+/* Mobile Filter Bar */
+.mobile-filter-bar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+
+.mobile-filter-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
   border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.mobile-filter-btn:hover {
+  border-color: #fe7900;
+  color: #fe7900;
+}
+
+.mobile-filter-count {
+  background: #fe7900;
+  color: white;
+  font-size: 11px;
+  padding: 2px 6px;
+  border-radius: 10px;
+}
+
+.mobile-sort-dropdown {
+  flex: 1;
+}
+
+.mobile-sort-select {
+  width: 100%;
+  padding: 12px 16px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  cursor: pointer;
+}
+
+/* Filter Sidebar Panel (Mobile) */
+.filter-sidebar-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 1000;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.filter-sidebar-panel {
+  width: 340px;
+  max-width: 90vw;
+  background: white;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: slideIn 0.3s ease;
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(100%);
+  }
+  to {
+    transform: translateX(0);
+  }
+}
+
+.filter-sidebar-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+  border-bottom: 1px solid #e5e7eb;
+}
+
+.filter-sidebar-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin: 0;
+}
+
+.filter-sidebar-close {
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #f3f4f6;
+  border: none;
+  border-radius: 8px;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.filter-sidebar-content {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.filter-sidebar-actions {
+  display: flex;
+  gap: 12px;
+  padding: 20px;
+  border-top: 1px solid #e5e7eb;
+}
+
+.filter-sidebar-reset {
+  flex: 1;
+  padding: 14px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+}
+
+.filter-sidebar-apply {
+  flex: 1;
+  padding: 14px;
+  background: #fe7900;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Loading */
+.loading-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 60px 20px;
+  gap: 16px;
+  color: #6b7280;
+}
+
+.loading-spinner {
+  width: 40px;
+  height: 40px;
+  border: 3px solid #e5e7eb;
+  border-top-color: #fe7900;
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Error */
+.error-container {
+  text-align: center;
+  padding: 60px 20px;
+}
+
+.retry-btn {
+  margin-top: 16px;
+  padding: 12px 24px;
+  background: #fe7900;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Active Filters */
+.active-filters {
+  background: white;
+  border-radius: 12px;
   padding: 16px;
   margin-bottom: 20px;
 }
@@ -1021,22 +1194,18 @@ export default {
 }
 
 .filters-title {
-  font-weight: 600;
-  color: #333;
   font-size: 14px;
+  font-weight: 600;
+  color: #374151;
 }
 
 .clear-all-btn {
+  font-size: 13px;
+  color: #dc2626;
   background: none;
   border: none;
-  color: #fe9700;
   cursor: pointer;
-  font-size: 12px;
-  text-decoration: underline;
-}
-
-.clear-all-btn:hover {
-  color: #ff8c61;
+  font-weight: 500;
 }
 
 .filters-list {
@@ -1048,127 +1217,51 @@ export default {
 .filter-tag {
   display: flex;
   align-items: center;
-  background: #f0f0f0;
-  border: 1px solid #d9d9d9;
-  border-radius: 16px;
-  padding: 4px 12px;
-  font-size: 12px;
-  color: #333;
-}
-
-.filter-tag span {
-  margin-right: 6px;
+  gap: 6px;
+  padding: 6px 12px;
+  background: linear-gradient(135deg, #fff7ed, #ffedd5);
+  border: 1px solid #fed7aa;
+  border-radius: 20px;
+  font-size: 13px;
+  color: #9a3412;
 }
 
 .remove-filter {
   background: none;
   border: none;
-  color: #999;
-  cursor: pointer;
   font-size: 16px;
+  cursor: pointer;
+  color: #9a3412;
   line-height: 1;
-  padding: 0;
-  width: 16px;
-  height: 16px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
 }
 
-.remove-filter:hover {
-  background: #e6e6e6;
-  color: #666;
-}
-
-.loading-container {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  padding: 60px 20px;
-  color: #666;
-}
-
-.loading-spinner {
-  width: 40px;
-  height: 40px;
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #ff6b35;
-  border-radius: 50%;
-  animation: spin 1s linear infinite;
-  margin-bottom: 16px;
-}
-
-@keyframes spin {
-  0% { transform: rotate(0deg); }
-  100% { transform: rotate(360deg); }
-}
-
-.error-container {
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
-}
-
-.retry-btn {
-  padding: 8px 16px;
-  background: #ff6b35;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 16px;
-}
-
-.no-results {
-  text-align: center;
-  padding: 60px 20px;
-  color: #666;
-}
-
-.no-results-icon {
-  width: 64px;
-  height: 64px;
-  margin: 0 auto 16px;
-  color: #ccc;
-}
-
-.clear-filters-btn {
-  padding: 8px 16px;
-  background: #ff6b35;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-  margin-top: 16px;
-}
-
+/* Toolbar */
 .toolbar {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  background: white;
+  border-radius: 12px;
+  padding: 16px 20px;
   margin-bottom: 20px;
-  padding-bottom: 16px;
-  border-bottom: 1px solid #f0f0f0;
 }
 
 .toolbar-left {
   display: flex;
-  align-items: baseline;
+  align-items: center;
   gap: 16px;
 }
 
 .section-title {
-  font-size: 24px;
+  font-size: 20px;
   font-weight: 600;
-  color: #333;
+  color: #111827;
   margin: 0;
 }
 
 .results-count {
   font-size: 14px;
-  color: #666;
+  color: #6b7280;
 }
 
 .toolbar-right {
@@ -1178,41 +1271,76 @@ export default {
 }
 
 .sort-select {
-  padding: 8px 12px;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
+  padding: 10px 16px;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   font-size: 14px;
-  background: #fff;
+  cursor: pointer;
+  background: white;
 }
 
 .view-toggle {
   display: flex;
-  border: 1px solid #d9d9d9;
-  border-radius: 4px;
-  overflow: hidden;
+  gap: 4px;
 }
 
 .view-btn {
-  padding: 8px 12px;
-  border: none;
-  background: #fff;
+  padding: 10px;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
   cursor: pointer;
-  color: #666;
-  transition: all 0.3s ease;
+  transition: all 0.2s;
 }
 
-.view-btn:hover {
-  background: #f5f5f5;
-}
-
+.view-btn:hover,
 .view-btn.active {
-  background: #ff6b35;
-  color: #fff;
+  background: #fe7900;
+  border-color: #fe7900;
+  color: white;
 }
 
+/* No Results */
+.no-results {
+  text-align: center;
+  padding: 60px 20px;
+  background: white;
+  border-radius: 12px;
+}
+
+.no-results-icon {
+  width: 64px;
+  height: 64px;
+  color: #d1d5db;
+  margin-bottom: 16px;
+}
+
+.no-results h3 {
+  font-size: 20px;
+  font-weight: 600;
+  color: #111827;
+  margin-bottom: 8px;
+}
+
+.no-results p {
+  color: #6b7280;
+  margin-bottom: 20px;
+}
+
+.clear-filters-btn {
+  padding: 12px 24px;
+  background: #fe7900;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+}
+
+/* Products Container - Desktop: 4 columns */
 .products-container {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  grid-template-columns: repeat(4, 1fr);
   gap: 16px;
   margin-bottom: 32px;
 }
@@ -1221,331 +1349,7 @@ export default {
   grid-template-columns: 1fr;
 }
 
-.product-card {
-  background: white;
-  border-radius: 12px;
-  overflow: hidden;
-  transition: all 0.3s ease;
-  cursor: pointer;
-  position: relative;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-.product-card:hover {
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-  transform: translateY(-2px);
-}
-
-.product-card.list-card {
-  flex-direction: row;
-  padding: 16px;
-  align-items: flex-start;
-}
-
-.product-card.list-card :deep(.alibaba-image-area) {
-  width: 200px;
-  height: 200px;
-  margin-right: 16px;
-  flex-shrink: 0;
-}
-
-.product-card.list-card :deep(.alibaba-card-content) {
-  flex: 1;
-  height: auto;
-}
-
-.pagination {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 8px;
-  margin-top: 32px;
-}
-
-.page-btn {
-  padding: 8px 12px;
-  border: 1px solid #d9d9d9;
-  background: #fff;
-  color: #333;
-  border-radius: 4px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.page-btn:hover:not(:disabled) {
-  border-color: #ff6b35;
-  color: #ff6b35;
-}
-
-.page-btn.active {
-  background: #ff4757;
-  color: #fff;
-  border-color: #ff4757;
-}
-
-.page-btn:disabled {
-  opacity: 0.5;
-  cursor: not-allowed;
-}
-
-.prev-btn,
-.next-btn {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-
-.page-ellipsis {
-  padding: 8px 4px;
-  color: #666;
-}
-
-.mobile-only {
-  display: none;
-}
-
-.desktop-only {
-  display: grid;
-}
-
-.mobile-filter-bar {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  background: white;
-  padding: 12px;
-  margin-bottom: 16px;
-  border-radius: 8px;
-  border-bottom: 1px solid #8080803b;
-}
-
-.mobile-filter-btn {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  background: #f5f5f5;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  padding: 8px 16px;
-  font-size: 14px;
-  font-weight: 500;
-  color: #333;
-}
-
-.mobile-sort-dropdown {
-  position: relative;
-}
-
-.mobile-sort-select {
-  padding: 8px 12px;
-  border: 1px solid #e0e0e0;
-  border-radius: 20px;
-  background: #f5f5f5;
-  font-size: 14px;
-  color: #333;
-  appearance: none;
-  padding-right: 28px;
-  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23333' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
-  background-repeat: no-repeat;
-  background-position: right 10px center;
-}
-
-.filter-sidebar-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  z-index: 1000;
-  display: flex;
-}
-
-.filter-sidebar-panel {
-  width: 85%;
-  max-width: 320px;
-  background: white;
-  height: 100%;
-  overflow-y: auto;
-  animation: slideIn 0.3s ease-out;
-}
-
-@keyframes slideIn {
-  from {
-    transform: translateX(-100%);
-  }
-  to {
-    transform: translateX(0);
-  }
-}
-
-.filter-sidebar-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #f0f0f0;
-  position: sticky;
-  top: 0;
-  background: white;
-  z-index: 10;
-}
-
-.filter-sidebar-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin: 0;
-}
-
-.filter-sidebar-close {
-  background: none;
-  border: none;
-  font-size: 24px;
-  color: #666;
-  cursor: pointer;
-  width: 32px;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 50%;
-}
-
-.filter-sidebar-close:active {
-  background: #f5f5f5;
-}
-
-.filter-sidebar-content {
-  padding-bottom: 80px;
-}
-
-.filter-sidebar-actions {
-  position: fixed;
-  bottom: 0;
-  left: 0;
-  width: 85%;
-  max-width: 320px;
-  display: flex;
-  gap: 12px;
-  padding: 16px;
-  background: white;
-  border-top: 1px solid #f0f0f0;
-  z-index: 10;
-}
-
-.filter-sidebar-reset,
-.filter-sidebar-apply {
-  flex: 1;
-  padding: 12px;
-  border-radius: 20px;
-  font-size: 14px;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.filter-sidebar-reset {
-  background: white;
-  border: 1px solid #d9d9d9;
-  color: #666;
-}
-
-.filter-sidebar-apply {
-  background: #ff6b35;
-  border: none;
-  color: white;
-}
-
-@media (min-width: 769px) {
-  .desktop-hidden {
-    display: none !important;
-  }
-}
-
-@media (max-width: 768px) {
-  .container {
-    max-width: 100%;
-    min-width: auto;
-    padding: 0 12px;
-  }
-
-  .mobile-only {
-    display: block;
-  }
-
-  .desktop-only {
-    display: none;
-  }
-
-  .content-wrapper {
-    flex-direction: column;
-  }
-
-  .page-header {
-    padding: 8px 0;
-  }
-
-  .breadcrumb {
-    font-size: 11px;
-    white-space: nowrap;
-    overflow-x: auto;
-    padding-bottom: 4px;
-  }
-
-  .page-title-section {
-    padding: 20px 0;
-  }
-
-  .main-title {
-    font-size: 20px;
-    margin-bottom: 8px;
-  }
-
-  .main-subtitle {
-    font-size: 13px;
-  }
-
-  .products-area {
-    padding: 0px;
-  }
-
-  .products-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-}
-
-@media (max-width: 480px) {
-  .products-container {
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-}
-
-.search-product-card {
-  transition: all 0.3s ease;
-}
-
-.search-product-card.list-card {
-  display: flex;
-  flex-direction: row;
-  padding: 16px;
-  align-items: flex-start;
-}
-
-.search-product-card.list-card :deep(.alibaba-image-area) {
-  width: 200px;
-  height: 200px;
-  margin-right: 16px;
-  flex-shrink: 0;
-}
-
-.search-product-card.list-card :deep(.alibaba-card-content) {
-  flex: 1;
-  height: auto;
-}
-
+/* Mobile Products Grid - 2 columns */
 .mobile-products-grid {
   display: grid;
   grid-template-columns: repeat(2, 1fr);
@@ -1553,17 +1357,128 @@ export default {
   margin-bottom: 32px;
 }
 
+/* Pagination */
+.pagination {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 8px;
+  margin-top: 30px;
+}
+
+.page-btn {
+  min-width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: white;
+  border: 1px solid #e5e7eb;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.page-btn:hover:not(:disabled) {
+  border-color: #fe7900;
+  color: #fe7900;
+}
+
+.page-btn.active {
+  background: #fe7900;
+  border-color: #fe7900;
+  color: white;
+}
+
+.page-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.page-ellipsis {
+  padding: 0 8px;
+  color: #6b7280;
+}
+
+/* Responsive - Desktop first */
+.desktop-only {
+  display: block;
+}
+
+.mobile-only {
+  display: none !important;
+}
+
+.desktop-hidden {
+  display: none !important;
+}
+
+/* Products grid - desktop only, always grid display */
+.products-container.desktop-only {
+  display: grid !important;
+}
+
+@media (max-width: 1200px) {
+  .products-container {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}
+
+@media (max-width: 900px) {
+  .products-container {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+/* Tablet and Mobile breakpoint */
 @media (max-width: 768px) {
+  .content-wrapper {
+    flex-direction: column;
+  }
+  
+  /* Hide desktop elements */
+  .desktop-only {
+    display: none !important;
+  }
+  
+  /* Show mobile elements */
+  .mobile-only {
+    display: flex !important;
+  }
+  
+  .desktop-hidden {
+    display: grid !important;
+  }
+  
+  /* Mobile products grid */
   .mobile-products-grid {
+    display: grid !important;
     grid-template-columns: repeat(2, 1fr);
     gap: 12px;
+  }
+}
+
+@media (max-width: 640px) {
+  .main-title {
+    font-size: 24px;
+  }
+  
+  .page-title-section {
+    padding: 40px 0;
+  }
+  
+  .mobile-products-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
 }
 
 @media (max-width: 480px) {
   .mobile-products-grid {
     grid-template-columns: repeat(2, 1fr);
-    gap: 10px;
+    gap: 8px;
   }
 }
 </style>
