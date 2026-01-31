@@ -172,11 +172,42 @@
             <!-- Truck Overview (default) -->
             <div v-else class="specifications-table grid grid-cols-1 sm:grid-cols-2 gap-6">
               <div class="spec-group">
-                <h3 class="spec-group-title">Overview</h3>
+                <!-- <h3 class="spec-group-title">Overview</h3> -->
+                 <div class="spec-row">
+                  <div class="spec-name">Brand</div>
+                  <div class="spec-value">{{ product.vehicle_make || 'N/A' }}</div>
+                </div>
+                <div class="spec-row">
+                  <div class="spec-name">Model</div>
+                  <div class="spec-value">{{ product.vehicle_model || 'N/A' }}</div>
+                </div>
+                <div class="spec-row">
+                  <div class="spec-name">Category</div>
+                  <div class="spec-value">{{ product.category_name || 'N/A'}}</div>
+                </div>
+                <div class="spec-row">
+                  <div class="spec-name">Vehicle Model (Trim)</div>
+                  <div class="spec-value">
+                    <ul v-if="product.trim_numbers && product.trim_numbers.length">
+                      <li v-for="vin in product.trim_numbers" :key="vin.id">
+                        {{ vin}}
+                      </li>
+                    </ul>
+                    <span v-else>N/A</span>
+                  </div>
+                </div>
+                <div class="spec-row">
+                  <div class="spec-name">Drive Type</div>
+                  <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
+                </div>
                 <div class="spec-row">
                   <div class="spec-name">Conditions</div>
                   <div class="spec-value">{{ capitalizeFirst(product.vehicle_condition) || 'N/A'}}</div>
                 </div>
+                
+              </div>
+              <div class="spec-group">
+                <!-- <h3 class="spec-group-title">Specification</h3> -->
                 <div class="spec-row">
                   <div class="spec-name">Mileage</div>
                   <div v-if="product.vehicle_mileage" class="spec-value">{{formatNumber(product.vehicle_mileage)}} km </div>
@@ -207,10 +238,10 @@
                     </div>
                   </div>
                 </div>
-                <div class="spec-row">
+                <!-- <div class="spec-row">
                   <div class="spec-name">Production date</div>
                   <div class="spec-value">{{ product.production_date || 'N/A' }}</div>
-                </div>
+                </div> -->
                 <div class="spec-row">
                   <div class="spec-name">Year</div>
                   <div class="spec-value">{{ product.vehicle_year || 'N/A'}}</div>
@@ -223,48 +254,18 @@
                   <div class="spec-name">Stock Number</div>
                   <div class="spec-value">{{ product.stock_number || 'N/A' }}</div>
                 </div>
-              </div>
-              <div class="spec-group">
-                <h3 class="spec-group-title">Specification</h3>
-                <div class="spec-row">
-                  <div class="spec-name">Brand</div>
-                  <div class="spec-value">{{ product.vehicle_make || 'N/A' }}</div>
-                </div>
-                <div class="spec-row">
-                  <div class="spec-name">Model</div>
-                  <div class="spec-value">{{ product.vehicle_model || 'N/A' }}</div>
-                </div>
-                <div class="spec-row">
-                  <div class="spec-name">Category</div>
-                  <div class="spec-value">{{ product.category_name || 'N/A'}}</div>
-                </div>
-                <div class="spec-row">
-                  <div class="spec-name">Vehicle Model (Trim)</div>
-                  <div class="spec-value">
-                    <ul v-if="product.trim_numbers && product.trim_numbers.length">
-                      <li v-for="vin in product.trim_numbers" :key="vin.id">
-                        {{ vin}}
-                      </li>
-                    </ul>
-                    <span v-else>N/A</span>
-                  </div>
-                </div>
-                <div class="spec-row">
-                  <div class="spec-name">Drive Type</div>
-                  <div class="spec-value">{{ product.drive_type || 'N/A'}}</div>
-                </div>
-                <div class="spec-row">
+                <!-- <div class="spec-row">
                   <div class="spec-name">Cabin Type</div>
                   <div class="spec-value">{{ product.cabin_type || 'N/A' }}</div>
-                </div>
-                <div class="spec-row">
+                </div> -->
+                <!-- <div class="spec-row">
                   <div class="spec-name">Wheelbase (mm)</div>
                   <div class="spec-value">{{ product.wheelbase || 'N/A' }}</div>
-                </div>
-                <div class="spec-row">
+                </div> -->
+                <!-- <div class="spec-row">
                   <div class="spec-name">Economic speed/Maximum speed (km/h)</div>
                   <div class="spec-value">{{ product.speed || 'N/A' }}</div>
-                </div>
+                </div> -->
               </div>
             </div>
           </div>

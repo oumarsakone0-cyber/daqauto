@@ -617,6 +617,58 @@
           </transition>
         </div>
 
+        <!-- Model for Cars -->
+        <div class="filter-section">
+          <button class="filter-section-header" @click="toggleSection('model')">
+            <div class="header-left">
+              <div class="icon-wrapper">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                  <circle cx="12" cy="12" r="10"></circle>
+                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
+                  <path d="M2 12h20"></path>
+                </svg>
+              </div>
+              <h4 class="filter-section-title">Model</h4>
+            </div>
+            <div class="header-right">
+              <span v-if="currentFilters.model.length > 0" class="count-badge">{{ currentFilters.model.length }}</span>
+              <svg 
+                class="chevron-icon" 
+                :class="{ rotated: expandedSections.model }"
+                width="16" 
+                height="16" 
+                viewBox="0 0 24 24" 
+                fill="none" 
+                stroke="currentColor" 
+                stroke-width="2"
+              >
+                <polyline points="6 9 12 15 18 9"></polyline>
+              </svg>
+            </div>
+          </button>
+          <transition name="slide-fade">
+            <div v-show="expandedSections.model" class="filter-section-content">
+              <div class="scrollable-list">
+                <label 
+                  v-for="model in currentData.model" 
+                  :key="model" 
+                  class="filter-checkbox-label"
+                >
+                  <input 
+                    type="checkbox" 
+                    :value="model" 
+                    v-model="currentFilters.model"
+                    @change="emitFilters"
+                    class="custom-checkbox"
+                  />
+                  <span class="checkbox-custom"></span>
+                  <span class="checkbox-text">{{ model }}</span>
+                </label>
+              </div>
+            </div>
+          </transition>
+        </div>
+
         <!-- Vehicle Condition -->
         <div class="filter-section">
           <button class="filter-section-header" @click="toggleSection('condition')">
@@ -1172,6 +1224,7 @@ export default {
     const expandedSections = ref({
       category: true,
       brand: true,
+      model: true,
       condition: true,
       drivetrain: true,
       price: true,
@@ -1201,6 +1254,7 @@ export default {
       },
       car: {
         makes: [],
+        model: [],
         conditions: [],
         priceMin: null,
         priceMax: null,
@@ -1228,6 +1282,7 @@ export default {
       },
       car: {
         makes: ['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia', 'Mercedes-Benz', 'BMW', 'Audi', 'Volkswagen', 'Ford', 'Chevrolet', 'Peugeot', 'Renault', 'Mazda', 'Suzuki'],
+        model:['Toyota', 'Honda', 'Nissan', 'Hyundai', 'Kia'],
         conditions: ['New', 'Used', 'Certified Pre-Owned', 'Refurbished'],
         colors: ['Black', 'White', 'Silver', 'Gray', 'Red', 'Blue', 'Green', 'Brown', 'Beige', 'Gold', 'Orange', 'Yellow'],
         bodyTypes: ['Sedan', 'SUV', 'Hatchback', 'Coupe', 'Convertible', 'Wagon', 'Van', 'Pickup Truck', 'Minivan', 'Crossover'],
@@ -1279,6 +1334,7 @@ export default {
         if (f.yearMax !== null && f.yearMax !== '') count++
       } else {
         count += f.makes?.length || 0
+        count += f.model?.length || 0
         count += f.conditions?.length || 0
         count += f.exteriorColors?.length || 0
         count += f.interiorColors?.length || 0
@@ -1349,6 +1405,7 @@ export default {
       
       // Filtres spécifiques aux voitures
       if (activeTab.value === 'car') {
+        if (query.car_model) f.model = query.car_model.split(',')
         if (query.car_exterior_color) f.exteriorColors = query.car_exterior_color.split(',')
         if (query.car_interior_color) f.interiorColors = query.car_interior_color.split(',')
         if (query.car_body_type) f.bodyTypes = query.car_body_type.split(',')
@@ -1409,6 +1466,9 @@ export default {
       
       // Filtres spécifiques aux voitures
       if (activeTab.value === 'car') {
+        if (f.model && f.model.length > 0) {
+          filterObj.carModel = f.model.join(',')
+        }
         if (f.exteriorColors && f.exteriorColors.length > 0) {
           filterObj.carExteriorColor = f.exteriorColors.join(',')
         }
@@ -1473,6 +1533,10 @@ export default {
       if (filterObj.subcategories) query.subcategories = filterObj.subcategories
       else delete query.subcategories
       
+      if (filterObj.carModel) 
+      query.car_model = filterObj.carModel
+      else delete query.car_model
+
       if (filterObj.carExteriorColor) query.car_exterior_color = filterObj.carExteriorColor
       else delete query.car_exterior_color
       
@@ -1507,6 +1571,7 @@ export default {
       } else {
         filters.value.car = {
           makes: [],
+          model: [],
           conditions: [],
           priceMin: null,
           priceMax: null,

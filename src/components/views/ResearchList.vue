@@ -34,7 +34,7 @@
           <div class="products-area">
             <!-- Mobile Filter & Sort Bar -->
             <div class="mobile-filter-bar mobile-only desktop-hidden">
-              <button class="mobile-filter-btn" @click="showFilterDialog = true">
+              <button class="mobile-filter-btn input-style" @click="showFilterDialog = true">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                   <path d="M22 3H2l8 9.46V19l4 2v-8.54L22 3z"></path>
                 </svg>
@@ -43,7 +43,7 @@
               </button>
               
               <div class="mobile-sort-dropdown">
-                <select v-model="sortBy" @change="handleSortChange" class="mobile-sort-select">
+                <select v-model="sortBy" @change="handleSortChange" class="mobile-sort-select input-style">
                   <option value="created_at">Plus récents</option>
                   <option value="unit_price">Prix croissant</option>
                   <option value="unit_price_desc">Prix décroissant</option>
@@ -66,7 +66,7 @@
                 </div>
                 
                 <div class="filter-sidebar-actions">
-                  <button class="filter-sidebar-reset" @click="clearAllFilters">Réinitialiser</button>
+                  <button class="filter-sidebar-reset btn-gray" @click="clearAllFilters">Réinitialiser</button>
                   <button class="filter-sidebar-apply" @click="applyMobileFilters">Appliquer</button>
                 </div>
               </div>
@@ -116,6 +116,11 @@
                   <div v-if="activeFilters.vehicleMake" class="filter-tag">
                     <span>Marques: {{ activeFilters.vehicleMake }}</span>
                     <button @click="removeFilter('vehicleMake')" class="remove-filter">×</button>
+                  </div>
+                  <!-- Model de véhicules -->
+                  <div v-if="activeFilters.carModel" class="filter-tag">
+                    <span>Models: {{ activeFilters.carModel }}</span>
+                    <button @click="removeFilter('carModel')" class="remove-filter">×</button>
                   </div>
                   
                   <!-- État du véhicule -->
@@ -358,6 +363,7 @@ export default {
       if (f.subcategories) count++
       if (f.minPrice || f.maxPrice) count++
       if (f.vehicleMake) count++
+      if (f.carModel) count++
       if (f.vehicleCondition) count++
       if (f.fuelType) count++
       if (f.transmissionType) count++
@@ -434,6 +440,9 @@ export default {
       // Marques de véhicules
       if (activeFilters.value.vehicleMake) {
         options.vehicle_make = activeFilters.value.vehicleMake
+      }
+      if (activeFilters.value.carModel) {
+        options.car_model = activeFilters.value.carModel
       }
 
       // État du véhicule
@@ -567,6 +576,9 @@ export default {
         case 'vehicleMake':
           delete newFilters.vehicleMake
           break
+        case 'carModel':
+          delete newFilters.carModel
+          break
         case 'vehicleCondition':
           delete newFilters.vehicleCondition
           break
@@ -635,6 +647,7 @@ export default {
       if (filters.minPrice) query.min_price = filters.minPrice
       if (filters.maxPrice) query.max_price = filters.maxPrice
       if (filters.vehicleMake) query.vehicle_make = filters.vehicleMake
+      if (filters.carModel) query.car_model = filters.carModel
       if (filters.vehicleCondition) query.vehicle_condition = filters.vehicleCondition
       if (filters.fuelType) query.fuel_type = filters.fuelType
       if (filters.transmissionType) query.transmission_type = filters.transmissionType
@@ -649,7 +662,6 @@ export default {
       if (filters.carBodyType) query.car_body_type = filters.carBodyType
       
       query.page = '1'
-      
       router.replace({ path: route.path, query })
     }
 
@@ -735,6 +747,7 @@ export default {
       if (route.query.min_price) filters.minPrice = parseFloat(route.query.min_price)
       if (route.query.max_price) filters.maxPrice = parseFloat(route.query.max_price)
       if (route.query.vehicle_make) filters.vehicleMake = route.query.vehicle_make
+      if (route.query.car_model) filters.carModel = route.query.car_model
       if (route.query.vehicle_condition) filters.vehicleCondition = route.query.vehicle_condition
       if (route.query.fuel_type) filters.fuelType = route.query.fuel_type
       if (route.query.transmission_type) filters.transmissionType = route.query.transmission_type
@@ -753,7 +766,6 @@ export default {
       } else if (filters.category === CAR_CATEGORY_ID) {
         filters.vehicleType = 'car'
       }
-
       activeFilters.value = filters
     }
 
@@ -1039,7 +1051,7 @@ export default {
   width: 100%;
   padding: 12px 16px;
   background: white;
-  border: 1px solid #e5e7eb;
+  /* border: 1px solid #e5e7eb; */
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
@@ -1086,16 +1098,19 @@ export default {
   font-size: 18px;
   font-weight: 600;
   margin: 0;
+  color: black;
 }
 
 .filter-sidebar-close {
   width: 32px;
-  height: 32px;
+  height: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
   background: #f3f4f6;
+  color: black;
   border: none;
+  padding-bottom: 5px;
   border-radius: 8px;
   font-size: 24px;
   cursor: pointer;
