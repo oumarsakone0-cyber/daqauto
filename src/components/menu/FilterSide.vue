@@ -622,10 +622,13 @@
           <button class="filter-section-header" @click="toggleSection('model')">
             <div class="header-left">
               <div class="icon-wrapper">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                  <circle cx="12" cy="12" r="10"></circle>
-                  <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"></path>
-                  <path d="M2 12h20"></path>
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                  <path d="m21 8-2 2-1.5-3.7A2 2 0 0 0 15.646 5H8.4a2 2 0 0 0-1.903 1.257L5 10 3 8"></path>
+                  <path d="M7 14h.01"></path>
+                  <path d="M17 14h.01"></path>
+                  <rect width="18" height="8" x="3" y="10" rx="2"></rect>
+                  <path d="M5 18v2"></path>
+                  <path d="M19 18v2"></path>
                 </svg>
               </div>
               <h4 class="filter-section-title">Model</h4>

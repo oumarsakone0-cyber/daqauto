@@ -189,7 +189,7 @@
                 <div class="toolbar-right">
                   <!-- Tri -->
                   <div class="sort-dropdown">
-                    <select v-model="sortBy" @change="handleSortChange" class="sort-select">
+                    <select v-model="sortBy" @change="handleSortChange" class="sort-select input-style">
                       <option value="created_at">Plus récents</option>
                       <option value="unit_price">Prix croissant</option>
                       <option value="unit_price_desc">Prix décroissant</option>
@@ -1287,7 +1287,6 @@ export default {
 
 .sort-select {
   padding: 10px 16px;
-  border: 1px solid #e5e7eb;
   border-radius: 8px;
   font-size: 14px;
   cursor: pointer;
@@ -1302,6 +1301,7 @@ export default {
 .view-btn {
   padding: 10px;
   background: white;
+  color: black;
   border: 1px solid #e5e7eb;
   border-radius: 8px;
   cursor: pointer;
