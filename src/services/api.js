@@ -2531,6 +2531,122 @@ export const authUtils = {
   },
 }
 
+// Service API pour sauvegarder et récupérer les données VIN dans la base de données
+export const vinDataApi = {
+  /**
+   * Récupérer les données VIN depuis la base de données
+   * @param {string} vin - Numéro VIN
+   * @returns {Promise} Données VIN ou null si non trouvé
+   */
+  async getVinData(vin) {
+    try {
+      // 确保VIN是17位字符
+      const cleanVin = String(vin).trim().replace(/\s+/g, '')
+      if (cleanVin.length !== 17) {
+        console.warn("⚠️ VIN长度不正确:", cleanVin.length)
+        return { success: false, data: null }
+      }
+      
+      // URL编码VIN参数
+      const encodedVin = encodeURIComponent(cleanVin)
+      const url = `https://daqauto.com/apitest/save_vin_data.php?action=get&vin=${encodedVin}`
+      
+      console.log("🔍 查询VIN数据:", cleanVin)
+      const response = await axios.get(url, {
+        timeout: 10000,
+        headers: {
+          'Accept': 'application/json'
+        }
+      })
+      
+      if (response.data && response.data.success && response.data.data) {
+        console.log("✅ 从数据库找到VIN数据")
+        return response.data
+      } else {
+        console.log("ℹ️ 数据库中未找到VIN数据")
+        return { success: true, data: null }
+      }
+    } catch (error) {
+      console.warn("⚠️ 查询VIN数据时出错:", error.message)
+      if (error.response) {
+        console.warn("⚠️ 响应状态:", error.response.status)
+        console.warn("⚠️ 响应数据:", error.response.data)
+      }
+      return { success: false, data: null }
+    }
+  },
+
+  /**
+   * Sauvegarder les données VIN décodées dans la base de données (en anglais)
+   * @param {Object} vinData - Données VIN décodées
+   * @returns {Promise} Résultat de la sauvegarde
+   */
+  async saveVinData(vinData) {
+    try {
+      const apiUrl = "https://daqauto.com/apitest/save_vin_data.php"
+      console.log("💾 开始保存VIN数据到数据库:", vinData.vin)
+      console.log("💾 API URL:", apiUrl)
+      console.log("💾 要保存的数据:", JSON.stringify(vinData, null, 2))
+      
+      // 使用专门的VIN数据保存端点
+      const response = await axios.post(apiUrl, vinData, {
+        headers: {
+          "Content-Type": "application/json",
+          "Accept": "application/json"
+        },
+        timeout: 30000,
+        validateStatus: function (status) {
+          // 接受200-299的状态码
+          return status >= 200 && status < 300
+        }
+      })
+      
+      console.log("✅ VIN数据保存API响应状态:", response.status)
+      console.log("✅ VIN数据保存API响应数据:", response.data)
+      
+      if (response.data && response.data.success) {
+        return response.data
+      } else {
+        return {
+          success: false,
+          error: response.data?.error || "Unknown error from server"
+        }
+      }
+    } catch (error) {
+      console.error("❌❌❌ 保存VIN数据时发生错误:", error)
+      console.error("❌ 错误类型:", error.constructor.name)
+      console.error("❌ 错误消息:", error.message)
+      console.error("❌ 错误代码:", error.code)
+      
+      if (error.response) {
+        // 服务器返回了响应，但状态码不在2xx范围内
+        console.error("❌ 响应状态:", error.response.status)
+        console.error("❌ 响应数据:", error.response.data)
+        console.error("❌ 响应头:", error.response.headers)
+        return {
+          success: false,
+          error: error.response.data?.error || `Server error: ${error.response.status} - ${error.response.statusText}`
+        }
+      } else if (error.request) {
+        // 请求已发出，但没有收到响应
+        console.error("❌ 请求已发出，但未收到响应")
+        console.error("❌ 请求详情:", error.request)
+        return {
+          success: false,
+          error: "Network Error: No response from server. Please check if the API endpoint is accessible."
+        }
+      } else {
+        // 设置请求时出错
+        console.error("❌ 设置请求时出错:", error.message)
+        return {
+          success: false,
+          error: `Request setup error: ${error.message}`
+        }
+      }
+    }
+  },
+}
+
 // Export par défaut de l'instance Axios configurée
 export default apiClient
 
