@@ -1,0 +1,2292 @@
+<template>
+  <div 
+    class="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 p-0 sm:p-4 sm:flex sm:items-center sm:justify-center"
+    @click="handleBackdropClick"
+  >
+    <div 
+      class="bg-white w-full h-screen sm:h-auto sm:max-h-[90vh] sm:max-w-4xl sm:rounded-2xl shadow-2xl overflow-hidden transform transition-all duration-300 ease-out sm:mx-auto"
+      @click.stop
+    >
+      <div class="absolute inset-0 overflow-hidden pointer-events-none sm:rounded-2xl" style="background-color: #ffffff00;">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-gradient-to-br from-orange-200/30 to-orange-300/20 rounded-full blur-2xl animate-pulse"></div>
+        <div class="absolute -bottom-10 -left-10 w-40 h-40 bg-gradient-to-br from-blue-200/25 to-indigo-200/15 rounded-full blur-2xl animate-pulse" style="animation-delay: 1s;"></div>
+      </div>
+
+      <div class="sticky top-0 z-10 bg-white/95 backdrop-blur-sm border-b border-gray-200 px-4 sm:px-6 py-4 sm:rounded-t-2xl">
+        <div class="flex items-center justify-between">
+          <div class="flex items-center space-x-3">
+            <div class="w-10 h-10 rounded-lg flex items-center justify-center btn-degrade-orange">
+              <PlusIcon class="w-5 h-5 text-white" />
+            </div>
+            <div>
+              <h2 class="text-xl sm:text-2xl font-bold text-gray-900">Duplicate a product</h2>
+              <p class="text-sm text-gray-600 hidden sm:block">Create a new product for your store</p>
+            </div>
+          </div>
+          
+          <XIcon @click="closeModal" class="w-7 h-7 text-gray-500 cursor-pointer" />
+        </div>
+
+        <div v-if="error || isLoading || categoriesError || categoriesLoading" class="mt-4">
+          <div v-if="error" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
+            <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
+            <span class="text-sm">{{ error }}</span>
+          </div>
+
+          <div v-if="categoriesError" class="mb-3 p-3 bg-red-50 border border-red-200 error-color rounded-lg flex items-center space-x-2">
+            <AlertCircleIcon class="w-4 h-4 error-color flex-shrink-0" />
+            <div class="flex-1">
+              <span class="text-sm">{{ categoriesError }}</span>
+              <button 
+                @click="fetchCategories" 
+                class="ml-2 px-2 py-1 text-xs error-background-color"
+              >
+                Try again
+              </button>
+            </div>
+          </div>
+
+          <div v-if="isLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-orange-400 rounded-lg flex items-center space-x-2">
+            <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full flex-shrink-0"></div>
+            <span class="text-sm">{{ loadingMessage }}</span>
+          </div>
+
+          <div v-if="categoriesLoading" class="mb-3 p-3 bg-blue-50 border border-blue-200 text-orange-400 rounded-lg flex items-center space-x-2">
+            <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full flex-shrink-0"></div>
+            <span class="text-sm">Loading categories...</span>
+          </div>
+        </div>
+
+        <div class="mt-4">
+          <div class="flex items-center justify-between">
+            <div 
+              v-for="(step, index) in steps" 
+              :key="index"
+              class="flex items-center"
+              :class="{ 'flex-1': index < steps.length - 1 }"
+            >
+              <div class="flex items-center">
+                <div 
+                  :class="[
+                    'w-10 h-10 rounded-full flex items-center justify-center text-xs sm:text-sm font-medium transition-all duration-200',
+                    currentStep > index 
+                      ? 'bg-step-color text-white shadow-lg' 
+                      : currentStep === index 
+                        ? 'bg-orange shadow-lg' 
+                        : 'bg-gray-200 text-gray-500'
+                  ]"
+                >
+                  <CheckIcon v-if="currentStep > index" class="w-4 h-4 sm:w-4 sm:h-4" />
+                  <span v-else>{{ index + 1 }}</span>
+                </div>
+                <span 
+                  :class="[
+                    'ml-2 text-xs sm:text-sm font-medium transition-colors hidden sm:inline',
+                    currentStep >= index ? 'text-gray-900' : 'text-gray-500'
+                  ]"
+                >
+                  {{ step.title }}
+                </span>
+              </div>
+             
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="overflow-y-auto h-[calc(100vh-200px)] sm:h-auto sm:max-h-[calc(60vh)] px-4 sm:px-6 py-6 relative z-5" style="color: white;">
+        <form @submit.prevent="handleSubmit" class="space-y-6 sm:space-y-8">
+          
+          <div v-show="currentStep === 0" class="space-y-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
+                  <InfoIcon class="w-4 h-4 text-white" />
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Basic Informations</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div class="sm:col-span-2">
+                  <label for="name" class="block text-sm font-medium text-gray-700 mb-2">
+                    Product name 
+                  </label>
+                  <input
+                    id="name"
+                    v-model="productData.name"
+                    type="text"
+                    required
+                    disabled="true"
+                    class=" text-sm sm:text-base  input-style"
+                    placeholder="The product name will be generated automatically"
+                  >
+                </div>
+
+                <div>
+                  <label for="category" class="block text-sm font-medium text-gray-700 mb-2">
+                    Category <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="category"
+                    v-model="productData.category_id"
+                    @change="updateSubcategories"
+                    required
+                    :disabled="categoriesLoading"
+                    class="text-sm sm:text-base input-style"
+                    placeholder=""
+                  >
+                    <option value="">{{ categoriesLoading ? 'Loading...' : 'Select a category' }}</option>
+                    <option v-for="category in categories" :key="category.id" :value="category.id">
+                      {{ category.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="subcategory" class="block text-sm font-medium text-gray-700 mb-2">
+                    Subcategory <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="subcategory"
+                    v-model="productData.subcategory_id"
+                    @change="updateSubSubcategories"
+                    required
+                    :disabled="!productData.category_id || categoriesLoading"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select a subcategory</option>
+                    <option v-for="subcategory in availableSubcategories" :key="subcategory.id" :value="subcategory.id">
+                      {{ subcategory.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div v-if="availableSubSubcategories.length > 0" class="sm:col-span-1">
+                  <label for="subsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
+                    Subsubcategory
+                  </label>
+                  <select
+                    id="subsubcategory"
+                    v-model="productData.subsubcategory_id"
+                    @change="updateSubSubSubcategories"
+                    :disabled="!productData.subcategory_id || categoriesLoading"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select a subsubcategory (optional)</option>
+                    <option v-for="subsubcategory in availableSubSubcategories" :key="subsubcategory.id" :value="subsubcategory.id">
+                      {{ subsubcategory.name }}
+                    </option>
+                  </select>
+                </div>
+
+                <div v-if="availableSubSubSubcategories.length > 0" class="sm:col-span-1">
+                  <label for="subsubsubcategory" class="block text-sm font-medium text-gray-700 mb-2">
+                    Subsubsubcategory
+                  </label>
+                  <select
+                    id="subsubsubcategory"
+                    v-model="productData.subsubsubcategory_id"
+                    :disabled="!productData.subsubcategory_id || categoriesLoading"
+                    class="text-sm sm:text-base input-style"
+                    style="color: black"
+                  >
+                    <option value="">Select a subsubsubcategory (optional)</option>
+                    <option v-for="subsubsubcategory in availableSubSubSubcategories" :key="subsubsubcategory.id" :value="subsubsubcategory.id">
+                      {{ subsubsubcategory.name }}
+                    </option>
+                  </select>
+                </div>
+                
+
+                <div class="sm:col-span-2">
+                  <label for="tags" class="block text-sm font-medium text-gray-700 mb-2">
+                    Tags (optional)
+                  </label>
+                  <input
+                    id="tags"
+                    v-model="productData.tags"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: new, trending, promotion (separated by commas)"
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+
+         <div v-show="currentStep === 1" class="space-y-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-orange">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">
+                  {{ isTrailerCategory ? 'Trailer Specifications' : 'Vehicle Specifications' }}
+                </h3>
+              </div>
+
+              <!-- ============================================ -->
+              <!-- SECTION TRAILER -->
+              <!-- ============================================ -->
+              <div v-if="isTrailerCategory" class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div>
+                  <label for="trailer_condition" class="block text-sm font-medium text-gray-700 mb-2">
+                    Condition <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="trailer_condition"
+                    v-model="productData.trailer_condition"
+                    required
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select condition</option>
+                    <option value="New">New</option>
+                    <option value="Used">Used</option>
+                    <option value="Refurbished">Refurbished</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="trailer_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Type <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_type"
+                    v-model="productData.trailer_type"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Flatbed, Box Van"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Brand <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_brand"
+                    v-model="productData.trailer_brand"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: CIMC, FUWA"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_use" class="block text-sm font-medium text-gray-700 mb-2">
+                    Use <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_use"
+                    v-model="productData.trailer_use"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Cargo, Container"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_size" class="block text-sm font-medium text-gray-700 mb-2">
+                    Size <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_size"
+                    v-model="productData.trailer_size"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 13m, 40ft"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_axle" class="block text-sm font-medium text-gray-700 mb-2">
+                    Axle <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="trailer_axle"
+                    v-model="productData.trailer_axle"
+                    required
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select axle</option>
+                    <option value="2">2 Axles</option>
+                    <option value="3">3 Axles</option>
+                    <option value="4">4 Axles</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="trailer_suspension" class="block text-sm font-medium text-gray-700 mb-2">
+                    Suspension <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_suspension"
+                    v-model="productData.trailer_suspension"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Air suspension"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_tire" class="block text-sm font-medium text-gray-700 mb-2">
+                    Tire <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_tire"
+                    v-model="productData.trailer_tire"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 12R22.5"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_king_pin" class="block text-sm font-medium text-gray-700 mb-2">
+                    King Pin
+                  </label>
+                  <input
+                    id="trailer_king_pin"
+                    v-model="productData.trailer_king_pin"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 2 inch"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_main_beam" class="block text-sm font-medium text-gray-700 mb-2">
+                    Main Beam
+                  </label>
+                  <input
+                    id="trailer_main_beam"
+                    v-model="productData.trailer_main_beam"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Q345B steel"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_max_payload" class="block text-sm font-medium text-gray-700 mb-2">
+                    Max Payload (tons) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_max_payload"
+                    v-model="productData.trailer_max_payload"
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 50"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_place_of_origin" class="block text-sm font-medium text-gray-700 mb-2">
+                    Place of Origin <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="trailer_place_of_origin"
+                    v-model="productData.trailer_place_of_origin"
+                    type="text"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: China"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_material" class="block text-sm font-medium text-gray-700 mb-2">
+                    Material
+                  </label>
+                  <input
+                    id="trailer_material"
+                    v-model="productData.trailer_material"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Q345B Steel"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_landing_gear" class="block text-sm font-medium text-gray-700 mb-2">
+                    Landing Gear
+                  </label>
+                  <input
+                    id="trailer_landing_gear"
+                    v-model="productData.trailer_landing_gear"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: JOST"
+                  >
+                </div>
+
+                <div>
+                  <label for="trailer_axle_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Axle Brand
+                  </label>
+                  <input
+                    id="trailer_axle_brand"
+                    v-model="productData.trailer_axle_brand"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: BPW, FUWA"
+                  >
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="trailer_function" class="block text-sm font-medium text-gray-700 mb-2">
+                    Function / Description
+                  </label>
+                  <textarea
+                    id="trailer_function"
+                    v-model="productData.trailer_function"
+                    rows="3"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Describe the trailer's primary function..."
+                  ></textarea>
+                </div>
+              </div>
+
+              <!-- ============================================ -->
+              <!-- SECTION TRUCK (CODE EXISTANT) -->
+              <!-- ============================================ -->
+              <div v-else class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <!-- Garder tous les champs trucks existants -->
+                <div>
+                  <label for="vehicle_make" class="block text-sm font-medium text-gray-700 mb-2">
+                    vehicle brand <span class="error-color">*</span>
+                  </label>
+                  <select
+                    id="vehicle_make"
+                    required
+                    @change="updateModelid"
+                    :disabled="brandsLoading"
+                    v-model="productData.vehicle_brand_id"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">{{ brandsLoading ? 'Loading...' : 'Select a vehicle brand' }}</option>
+                    <option v-for="brand in brands" :key="brand.id" :value="brand.id">
+                      {{ brand.name }}
+                    </option>
+                  </select>
+                </div>
+                
+                <!-- ... Tous les autres champs trucks existants ... -->
+              </div>
+            </div>
+          </div>
+
+          <div v-show="currentStep === 2 && !isTrailerCategory" class="space-y-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-gradient-to-br bg-orange">
+                  <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"></path>
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"></path>
+                  </svg>
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Technical Specifications</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+                <div>
+                  <label for="transmission_type" class="block text-sm font-medium text-gray-700 mb-2">
+                   Gearbox
+                  </label>
+                  <select
+                    id="transmission_type"
+                    v-model="productData.transmission_type"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select a Transmission type</option>
+                    <option value="automatic">Automatic</option>
+                    <option value="manual">Manual</option>
+                  </select>
+                </div>
+
+                <div>
+                  <label for="engine_brand" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine brand
+                  </label>
+                  <select
+                    id="engine_brand"
+                    v-model="productData.engine_brand"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option value="">Select a brand</option>
+                    <option value="weichai">Weichai</option>
+                    <option value="yuchai">Yuchai</option>
+                    <option value="sinotruck">Sinotruck</option>
+                    <option value="man">MAN</option>
+                  </select>
+                </div>
+                <div>
+                  <label for="power" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine Power (ch/kW)
+                  </label>
+                  <input
+                    id="power"
+                    v-model="productData.power"
+                    type="number"
+                    min="0"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 400"
+                  >
+                </div>
+                <div>
+                  <label for="engine_emissions" class="block text-sm font-medium text-gray-700 mb-2">
+                    Emission Standards
+                  </label>
+                  <input
+                    id="engine_emissions"
+                    v-model="productData.engine_emissions"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Euro II"
+                  >
+                </div>
+                <div>
+                  <label for="vin_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    VIN Number / Chassis Number
+                  </label>
+                  <input
+                    id="vin_number"
+                    v-model="singleVin"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Enter VIN or Chassis number"
+                  >
+                </div>
+                
+
+                <div>
+                  <label for="trim_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    Vehicle Model (Trim)
+                    
+                  </label>
+                  <input
+                    id="trim_number"
+                    v-model="singleTrim"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Enter vehicle model trim"
+                  >
+                </div>
+                <div >
+                  <label for="vehicle_number" class="block text-sm font-medium text-gray-700 mb-2">
+                    Engine Number
+                  </label>
+                  <input
+                    id="vehicle_number"
+                    v-model="productData.engine_number"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: FHEGEJGE776JH8"
+                  >
+                </div>
+
+                <div >
+                  <label for="vehicle_mileage" class="block text-sm font-medium text-gray-700 mb-2">
+                    Mileage (km)
+                  </label>
+                  <input
+                    id="vehicle_mileage"
+                    v-model="productData.vehicle_mileage"
+                    type="number"
+                    min="0"
+                    max="200000"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 150000"
+                  >
+                  <p class="text-xs text-gray-500 mt-1">Between 0 and 200,000 km</p>
+                </div>
+
+                <div>
+                  <label for="suspension_type" class="block text-sm font-medium text-gray-700 mb-2">
+                    Suspension Type
+                  </label>
+                  <input
+                    id="suspension_type"
+                    v-model="productData.suspension_type"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: Pneumatic, Mechanical"
+                  >
+                </div>
+
+                <div>
+                  <label for="brake_system" class="block text-sm font-medium text-gray-700 mb-2">
+                    Brake System
+                  </label>
+                  <input
+                    id="brake_system"
+                    v-model="productData.brake_system"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: ABS, EBS"
+                  >
+                </div>
+
+                <div>
+                  <label for="tyre_size" class="block text-sm font-medium text-gray-700 mb-2">
+                    Tire Size
+                  </label>
+                  <input
+                    id="tyre_size"
+                    v-model="productData.tyre_size"
+                    type="text"
+                    class="text-sm sm:text-base input-style"
+                    placeholder="Ex: 315/80R22.5"
+                  >
+                </div>
+
+                <div class="sm:col-span-2">
+                  <label for="wysiwygEditor2" class="block text-sm font-medium text-gray-700 mb-2">
+                   Product Associated Terms (WYSIWYG)
+                  </label>
+                  <div >
+                    <div class="border border-gray-300 rounded-lg focus-within:ring-1 focus-within:ring-orange-400 focus-within:border-orange-400 transition-all duration-200">
+                       WYSIWYG Toolbar 
+                      <div class="flex items-center gap-1 p-2 border-b border-gray-200 bg-gray-50 rounded-t-lg flex-wrap">
+                        <button type="button" @click="formatText('bold')" class="p-2 hover:bg-gray-200 rounded text-sm font-bold" title="Gras" style="background-color: lightgray; color: black;">B</button>
+                        <button type="button" @click="formatText('italic')" class="p-2 hover:bg-gray-200 rounded text-sm italic" title="Italique" style="background-color: lightgray; color: black;">I</button>
+                        <button type="button" @click="formatText('underline')" class="p-2 hover:bg-gray-200 rounded text-sm underline" title="Souligné" style="background-color: lightgray; color: black;">U</button>
+                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                        <button type="button" @click="formatText('insertUnorderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste à puces" style="background-color: lightgray; color: black;">•</button>
+                        <button type="button" @click="formatText('insertOrderedList')" class="p-2 hover:bg-gray-200 rounded text-sm" title="Liste numérotée" style="background-color: lightgray; color: black;">1.</button>
+                        <div class="w-px h-6 bg-gray-300 mx-1"></div>
+                        <select @change="formatHeading($event)" class="text-sm border border-gray-300 rounded px-4 py-2 text-black">
+                          <option value="">Titre</option>
+                          <option value="h1">Titre 1</option>
+                          <option value="h2">Titre 2</option>
+                          <option value="h3">Titre 3</option>
+                        </select>
+                      </div>
+                      <div 
+                        ref="wysiwygEditor2"
+                        contenteditable="true"
+                        @input="updateOtherDescription"
+                        class="min-h-[200px] p-4 focus:outline-none text-black rounded-b-lg"
+                        style="white-space: pre-wrap;"
+                        placeholder="Décrivez votre produit en détail..."
+                      ></div>
+                    </div>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+
+          <div v-show="currentStep === 3" class="space-y-6">
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
+                  <DollarSignIcon class="w-4 h-4 text-white" />
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Price and Stock</h3>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-1 sm:gap-6">
+                 <!-- Prix unitaire  -->
+                <div>
+                  <label for="unit_price" class="block text-sm font-medium text-gray-700 mb-2">
+                    Unit Price (FOB) <span class="error-color">*</span>
+                  </label>
+                  <input
+                    id="unit_price"
+                    v-model.number="productData.unit_price"
+                    type="number"
+                    min="0"
+                    step="1"
+                    required
+                    class="text-sm sm:text-base input-style"
+                    placeholder="15000"
+                  >
+                </div>
+
+                <div>
+                  <label for="available" class="block text-sm font-medium text-gray-700 mb-2">
+                    Product availability
+                  </label>
+                  <select
+                    id="available"
+                    v-model="productData.disponibility"
+                    class="text-sm sm:text-base input-style"
+                  >
+                    <option v-for="available in availability" :key="available.value" :value="available.value">
+                      {{ available.label }}
+                    </option>
+                  </select>
+                </div>
+              </div>
+
+              <div class="mt-6">
+                
+                
+                <div v-if="productData.hasWholesalePrice" class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                  <div>
+                    <label for="wholesale_price" class="block text-sm font-medium text-gray-700 mb-2">
+                      Wholesale price
+                    </label>
+                    <input
+                      id="wholesale_price"
+                      v-model.number="productData.wholesale_price"
+                      type="number"
+                      min="0"
+                      class="text-sm sm:text-base input-style"
+                      placeholder="12000"
+                    >
+                  </div>
+                  <div>
+                    <label for="wholesale_min_qty" class="block text-sm font-medium text-gray-700 mb-2">
+                      Minimum quantity
+                    </label>
+                    <input
+                      id="wholesale_min_qty"
+                      v-model.number="productData.wholesale_min_qty"
+                      type="number"
+                      min="1"
+                      class="text-sm sm:text-base input-style"
+                      placeholder="10"
+                    >
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <div v-show="currentStep === 4" class="space-y-6">
+             Colors 
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
+                  <PaletteIcon class="w-4 h-4 text-white " />
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Colors</h3>
+              </div>
+
+              <div class="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-6 gap-3 mb-6">
+                <div 
+                  v-for="color in availableColors" 
+                  :key="color.value"
+                  class="flex flex-col items-center space-y-2 cursor-pointer p-2 rounded-lg hover:bg-gray-50 transition-colors"
+                  @click="toggleColor(color.value)"
+                >
+                  <div class="relative">
+                    <div 
+                      class="w-10 h-10 sm:w-12 sm:h-12 rounded-lg border-2 transition-all duration-200 hover:scale-110"
+                      :style="{ backgroundColor: color.value }"
+                      :class="productData.colors.includes(color.value) ? 'border-orange-500 ring-2 ring-orange-200' : 'border-gray-300'"
+                    ></div>
+                    <CheckIcon 
+                      v-if="productData.colors.includes(color.value)"
+                      class="absolute inset-0 w-5 h-5 m-auto text-white drop-shadow-lg"
+                    />
+                  </div>
+                  <span class="text-xs text-gray-700 text-center">{{ color.name }}</span>
+                </div>
+              </div>
+
+              <div class="border-t border-gray-200 pt-4">
+                <label class="block text-sm font-medium text-gray-700 mb-2">Add a custom color</label>
+                <div class="flex gap-2">
+                  <input 
+                    v-model="customColor.name"
+                    type="text" 
+                    placeholder="Color name"
+                    class="flex-1  text-sm input-style"
+                  >
+                  <input 
+                    v-model="customColor.value"
+                    type="color" 
+                    class="w-12 h-10 border text-orange-500  border-gray-300 rounded-lg cursor-pointer"
+                  >
+                  <button 
+                    @click="addCustomColor"
+                    type="button"
+                    class="px-4 py-2 font-medium text-sm btn-degrade-orange"
+                  >
+                    Add
+                  </button>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <div v-show="currentStep === 5" class="space-y-6">
+             Images 
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8 rounded-lg flex items-center justify-center bg-orange">
+                  <ImageIcon class="w-4 h-4 text-white" />
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Product images</h3>
+              </div>
+
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 sm:p-8 text-center hover:border-orange-400 transition-colors">
+                <div class="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <UploadIcon class="w-6 h-6 sm:w-8 sm:h-8 text-gray-400" />
+                </div>
+                <p class="text-sm sm:text-base text-gray-600 mb-2">Drag your images here or</p>
+                <input
+                  ref="fileInput"
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  @change="handleImageUpload"
+                  class="hidden"
+                >
+                <button
+                  type="button"
+                  @click="$refs.fileInput.click()"
+                  style="display: inline-block;"
+                  class="btn-degrade-orange "
+                >
+                  Browse the files
+                </button>
+                <p class="text-xs text-gray-500 mt-2">PNG, JPG up to 10MB per image (max 8)</p>
+              </div>
+
+              <div v-if="productData.images.length > 0" class="mt-6">
+                <h4 class="text-sm font-medium text-gray-700 mb-3">Selected images</h4>
+                <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                 <div 
+                      v-for="(image, index) in productData.images" 
+                      :key="index"
+                      class="relative group"
+                    >
+                      <img 
+                        :src="image.preview" 
+                        :alt="`Image ${index + 1}`"
+                        class="w-full h-24 sm:h-32 object-cover rounded-lg border border-gray-200"
+                      >
+
+                      <!-- Supprimer -->
+                      <button
+                      style="background-color: red;"
+                        type="button"
+                        @click="removeImage(index)"
+                        class="absolute top-2 right-2 bg-red-500 text-white text-xs rounded-md p-1"
+                      >
+                        <XIcon class="w-4 h-4" />
+                      </button>
+
+                      <!-- Set Main -->
+                      <button
+                      style="background-color: gray; font-size: 10px"
+                        v-if="index !== 0"
+                        @click="setMainImage(index)"
+                        class="absolute bottom-2 right-2 px-2 py-1 bg-blue-600 text-white text-xs rounded-md group-hover:opacity-100 transition"
+                      >
+                        Set Main
+                      </button>
+
+                      <!-- Indicateur Main -->
+                      <div 
+                        v-if="index === 0"
+                        class="absolute bottom-2 left-2 px-2 py-1 bg-orange text-white text-xs rounded-md "
+                      >
+                        Main
+                      </div>
+                    </div>
+
+                </div>
+              </div>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center space-x-3 mb-4 sm:mb-6">
+                <div class="w-8 h-8  rounded-lg flex items-center justify-center bg-orange">
+                  <VideoIcon class="w-4 h-4 text-white" />
+                </div>
+                <h3 class="text-lg sm:text-xl font-semibold text-gray-900">Video (optional)</h3>
+              </div>
+
+              <div class="border-2 border-dashed border-gray-300 rounded-xl p-6 text-center hover:border-orange-400 transition-colors">
+                <VideoIcon class="mx-auto h-12 w-12 text-gray-400 mb-4" />
+                <div>
+                  <label for="video-upload" class="cursor-pointer">
+                    <span class="block text-sm text-gray-600 mb-2">
+                      Click to download a video
+                    </span>
+                    <span class="block text-xs text-gray-500">
+                      MP4, MOV, AVI files up to 50MB
+                    </span>
+                  </label>
+                  <input 
+                    id="video-upload" 
+                    type="file" 
+                    accept="video/*" 
+                    @change="handleVideoUpload"
+                    class="sr-only"
+                  >
+                </div>
+              </div>
+
+              <div v-if="productData.video" class="mt-6">
+                <video :src="productData.video.preview" controls class="w-full max-w-md mx-auto rounded-lg shadow-lg">
+                 Your browser does not support video playback.
+                </video>
+                
+                <div v-if="productData.video.uploading" class="mt-4 bg-blue-50 border border-blue-200 rounded-lg p-3">
+                  <div class="flex items-center space-x-2">
+                    <div class="animate-spin w-4 h-4 border-2 border-orange-400 border-t-transparent rounded-full"></div>
+                    <span class="text-sm text-gray-700">Downloading the video: {{ productData.video.uploadProgress }}%</span>
+                  </div>
+                </div>
+                
+                <div v-if="productData.video.uploaded" class="mt-4 bg-green-50 border border-green-200 rounded-lg p-3 flex items-center space-x-2">
+                  <CheckIcon class="w-4 h-4 text-green-600" />
+                  <span class="text-sm text-green-700">Video successfully downloaded</span>
+                </div>
+                
+                <button 
+                  @click="removeVideo"
+                  type="button"
+                  class="mt-4 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors font-medium"
+                >
+                  Delete video
+                </button>
+              </div>
+            </div>
+
+            <div class="bg-white/80 backdrop-blur-sm rounded-xl p-4 sm:p-6 border border-gray-100 shadow-sm">
+              <div class="flex items-center mb-6">
+                <input 
+                  v-model="productData.is_active"
+                  id="is-active"
+                  type="checkbox"
+                  class="checkbox-style "
+                >
+                <label for="is-active" class="ml-3 text-sm font-medium text-gray-700 flex items-center">
+                  <CheckCircleIcon class="w-4 h-4 text-green-600 mr-1" />
+                  Publish this product immediately
+                </label>
+              </div>
+
+              <div class="bg-gray-50 rounded-lg p-4">
+                <h4 class="font-semibold text-gray-900 mb-4 flex items-center">
+                  <FileTextIcon class="w-5 h-5  mr-2 primary-color" />
+                  Product summary
+                </h4>
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 text-sm">
+                  <div class="space-y-2">
+                    <p><span class="font-medium text-gray-700">Product name:</span> <span class="text-gray-900">{{ productData.name || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Category:</span> <span class="text-gray-900">{{ getCategoryName(productData.category_id) || 'Non définie' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Unit price (FOB):</span> <span class="text-gray-900">{{ productData.unit_price ? productData.unit_price  : 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Initial Stock:</span> <span class="text-gray-900">{{ productData.stock || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Wholesale price:</span> <span class="text-gray-900">{{ productData.wholesale_price || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Minimum quantity:</span> <span class="text-gray-900">{{ productData.wholesale_min_qty || 'Non défini' }}</span></p>
+                  </div>
+                  <div class="space-y-2">
+                    <p><span class="font-medium text-gray-700">Product availability:</span> <span class="text-gray-900">{{ productData.disponibility }}</span></p>
+                    <p><span class="font-medium text-gray-700">Tags:</span> <span class="text-gray-900">{{ productData.tags }}</span></p>
+                    <p><span class="font-medium text-gray-700">Unit:</span> <span class="text-gray-900">{{ productData.unit_type || 'Non défini' }}</span></p>
+                    <p><span class="font-medium text-gray-700">Images:</span> <span class="text-gray-900">{{ productData.images.length }}/8</span></p>
+                    <p><span class="font-medium text-gray-700">Video:</span> <span class="text-gray-900">{{ productData.video ? 'Oui' : 'Non' }}</span></p>
+                  </div>
+                </div>
+              </div>
+
+
+              <div class="specifications-table two-columns">
+                  <div class="spec-group">
+                    <h3 class="spec-group-title">General Information</h3>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Vehicle Condition</div>
+                      <div class="spec-value">{{ productData.vehicle_condition || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Vehicle Brand</div>
+                      <div class="spec-value">{{getBrandName( productData.vehicle_brand_id) || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Vehicle Model</div>
+                      <div class="spec-value">{{getModelName( productData.vehicle_model_id) || 'N/A' }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Transmission Type</div>
+                      <div class="spec-value">  {{ productData.drive_type || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Year</div>
+                      <div class="spec-value">{{ productData.vehicle_year || 'N/A'}}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Fuel type</div>
+                      <div class="spec-value">{{ productData.fuel_type || 'N/A' }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Transmission type</div>
+                      <div class="spec-value">{{ productData.transmission_type || 'N/A' }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Engine brand</div>
+                      <div class="spec-value">{{ productData.engine_brand || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Engine Power (ch/kW)</div>
+                      <div class="spec-value">{{ productData.power || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Engine Emissions (g/km)</div>
+                      <div class="spec-value">{{ productData.engine_emissions || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Mileage (km)</div>
+                      <div class="spec-value">{{ productData.vehicle_mileage || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name">Brake System</div>
+                      <div class="spec-value">{{ productData.brake_system || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Tire Size</div>
+                      <div class="spec-value">{{ productData.tyre_size || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Dimensions (L x l x H) (m)</div>
+                      <div class="spec-value">{{ `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}` }}</div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row overflow-x-auto items-center">
+                      <div class="spec-name">Colors</div>
+                      <div v-for="color in productData.colors" :key="color.hex_value" >
+                        <div  class="spec-value ">
+                          <div>
+                            <span 
+                              class="inline-block w-6 h-6 rounded-full border border-gray-300 mr-2" 
+                              :style="{ backgroundColor: color || '#FFFFFF' }"
+                            ></span>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                    
+                  </div>
+                  <div class="spec-group">
+                    <h3 class="spec-group-title">Technical details</h3>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Engine number</div>
+                      <div class="spec-value">{{ productData.engine_number || 'N/A' }}</div>
+                    </div>
+                    <div class="spec-row">
+                      <div class="spec-name"> VIN number / chassis number </div>
+                      <div class="spec-value">
+                        <ul v-if="productData.vin_numbers && productData.vin_numbers.length">
+                          <li v-for="vin in productData.vin_numbers" :key="vin">
+                            {{ vin }}
+                          </li>
+                        </ul>
+                        <span v-else>N/A</span>
+                      </div>
+                    </div>
+                    <!-- TODO: parcourir la liste des numéros de moteur -->
+                    <div class="spec-row">
+                      <div class="spec-name">Trim number</div>
+                      <div class="spec-value">
+                        <ul v-if="productData.trim_numbers && productData.trim_numbers.length">
+                          <li v-for="trim in productData.trim_numbers" :key="trim.id">
+                            {{ trim }}
+                          </li>
+                        </ul>
+                        <span v-else>N/A</span>
+                      </div>
+                    </div>
+                    <!-- verifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Production date</div>
+                      <div class="spec-value">{{ productData.production_date || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Country of origin</div>
+                      <div class="spec-value">{{ productData.country_of_origin || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Wheelbase</div>
+                      <div class="spec-value">{{ productData.wheelbase || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">GVW - Gross Vehicle Weight (kg)</div>
+                      <div class="spec-value">{{ productData.gvw || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Payload Capacity (kg)</div>
+                      <div class="spec-value">{{ productData.payload_capacity || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Cabin Type</div>
+                      <div class="spec-value">{{ productData.cabin_type || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Suspension Type</div>
+                      <div class="spec-value">{{ productData.suspension_type || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Curb Weight (Tonnes)</div>
+                      <div class="spec-value">{{ productData.curb_weight || 'N/A' }}</div>
+                    </div>
+                    <!-- vérifié -->
+                    <div class="spec-row">
+                      <div class="spec-name">Fuel Tank Capacity (L)</div>
+                      <div class="spec-value">{{ productData.fuel_tank_capacity || 'N/A' }}</div>
+                    </div>
+                  </div>
+                </div>
+            </div>
+          </div>
+
+        </form>
+      </div>
+
+      <div class="sticky bottom-0 bg-white/95 backdrop-blur-sm border-t border-gray-200 px-4 sm:px-6 py-4 sm:rounded-b-2xl z-50">
+        <div class="flex flex-row gap-3 justify-between">
+          <div class="flex gap-2">
+            <button
+              v-if="currentStep > 0"
+              type="button"
+              @click.prevent="handlePreviousStep"
+              :disabled="isLoading"
+              class=" btn-gray"
+            >
+              <ChevronLeftIcon class="w-4 h-4 inline" />
+              Previous
+            </button>
+          </div>
+
+          <div class="flex gap-2  ">
+            <button
+              type="button"
+              @click.prevent="handleCloseModal"
+              :disabled="isLoading"
+              class="btn-gray"
+            >
+              Cancel
+            </button>
+            
+            <button
+              v-if="currentStep < steps.length - 1"
+              type="button"
+              @click.prevent="handleNextStep"
+              :disabled="!canProceedToNextStep || isLoading"
+              class="btn-degrade-orange block"
+            >
+              Next ({{ currentStep + 1 }}/{{ steps.length }})
+              <ChevronRightIcon class="w-4 h-4 inline" />
+            </button>
+
+            <button
+              v-else
+              type="button"
+              @click.prevent="handleSubmit"
+              :disabled="isLoading || !canSubmit"
+              class="submit-btn"
+            >
+              <div v-if="isLoading" class="flex items-center justify-center">
+                <div class="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent mr-2"></div>
+                Creation...
+              </div>
+              <div v-else class="flex items-center justify-center">
+                <CheckIcon class="w-4 h-4" />
+                Create produit
+              </div>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</template>
+
+<script setup>
+import { ref, defineProps, reactive, computed, onMounted, nextTick, watch } from 'vue'
+import axios from 'axios'
+import { categoriesApi , brandsApi } from '../../services/api'
+import { 
+  Plus as PlusIcon,
+  X as XIcon,
+  Info as InfoIcon,
+  DollarSign as DollarSignIcon,
+  Palette as PaletteIcon,
+  Image as ImageIcon,
+  Upload as UploadIcon,
+  Check as CheckIcon,
+  CheckCircle as CheckCircleIcon,
+  ChevronLeft as ChevronLeftIcon,
+  ChevronRight as ChevronRightIcon,
+  AlertCircle as AlertCircleIcon,
+  Edit as EditIcon,
+  Zap as ZapIcon,
+  Ruler as RulerIcon,
+  Video as VideoIcon,
+  FileText as FileTextIcon
+} from 'lucide-vue-next'
+
+const props = defineProps({
+  boutiqueId: {
+    type: [String, Number],
+    required: true
+  },
+  userId: {
+    type: [String, Number],
+    required: true
+  },
+  dataduplicate: {
+    type: Object,
+    default: () => ({})
+  }
+})
+
+const emit = defineEmits(['close', 'save'])
+
+const currentStep = ref(0)
+const customColor = ref({ name: '', value: '#000000' })
+const isLoading = ref(false)
+const loadingMessage = ref('')
+const error = ref(null)
+const wysiwygEditor = ref(null)
+const wysiwygEditor2 = ref(null)
+
+// États pour les catégories API
+const categories = ref([])
+const categoriesLoading = ref(false)
+const categoriesError = ref(null)
+
+//Models
+const brands = ref([])
+const brandsLoading = ref(false)
+const brandsError = ref(null)
+
+// Configuration Cloudinary
+const cloudinaryConfig = {
+  cloudName: 'daaavha4z',
+  uploadPreset: 'aliadjame',
+  apiKey: 'wy0Eh-uA0Y0Ci3nyODix0b3WejA',
+  imageUploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/image/upload',
+  videoUploadUrl: 'https://api.cloudinary.com/v1_1/daaavha4z/video/upload'
+}
+
+const steps = [
+  { title: 'Informations' },
+  { title: 'Overviews' },
+  { title: 'Technical Specification' },
+  { title: 'Price & Stock' },
+  { title: 'Color' },
+  { title: 'Pictures' }
+]
+
+//  Added new fields to productData
+const productData = reactive({
+  name: props.dataduplicate.name || '',
+  description: '',
+  hasDetailedDescription: false,
+  description_plus: '',
+  category_id: props.dataduplicate.category_id || '',
+  subcategory_id: props.dataduplicate.subcategory_id || '',
+  subsubcategory_id: '',
+  subsubsubcategory_id: '',
+  tags: props.dataduplicate.tags || '',
+  unit_price: props.dataduplicate.unit_price || null,
+  stock: '',
+  unit_type: 'quantity',
+  disponibility: props.dataduplicate.disponibility || 'In Stock',
+  hasWholesalePrice: false,
+  wholesale_price: null,
+  wholesale_min_qty: null,
+  colors_names: props.dataduplicate.colors_names || [],
+  colors: props.dataduplicate.colors || [],
+  images: props.dataduplicate.images || [],
+  imageUrls: [],
+  video: null,
+  videoUrl: '',
+  is_active: true,
+  vehicle_condition: props.dataduplicate.vehicle_condition
+  ? props.dataduplicate.vehicle_condition.charAt(0).toUpperCase() +
+    props.dataduplicate.vehicle_condition.slice(1).toLowerCase()
+  : '',
+  vehicle_brand_id: props.dataduplicate.vehicle_brand_id || '',
+  vehicle_brand_name: props.dataduplicate.vehicle_make || '',
+  vehicle_model_id: props.dataduplicate.vehicle_model_id || '',
+  vehicle_model_name: props.dataduplicate.vehicle_model || '',
+  drive_type: props.dataduplicate.drive_type || '',
+  vehicle_year: props.dataduplicate.vehicle_year || '',
+  fuel_type: props.dataduplicate.fuel_type || '',
+  transmission_type: props.dataduplicate.transmission_type || '',
+  engine_brand: props.dataduplicate.engine_brand || '',
+  trim_numbers: props.dataduplicate.trim_numbers || [0],
+  vin: props.dataduplicate.vin || [0],
+  vin_numbers: props.dataduplicate.vin_numbers || [0],
+  engine_number: props.dataduplicate.engine_number || '',
+  power: props.dataduplicate.power || '',
+  engine_emissions: props.dataduplicate.engine_emissions || '',
+  vehicle_mileage: props.dataduplicate.vehicle_mileage || null,
+  production_date: props.dataduplicate.production_date || '',
+  country_of_origin: props.dataduplicate.country_of_origin || ''    ,
+  wheelbase: props.dataduplicate.wheelbase || null,
+  gvw: props.dataduplicate.gvw || null,
+  payload_capacity: props.dataduplicate.payload_capacity || null,
+  cabin_type: props.dataduplicate.cabin_type || '',
+  suspension_type: props.dataduplicate.suspension_type || '',
+  brake_system: props.dataduplicate.brake_system || '',
+  type_size: props.dataduplicate.type_size || '',
+  dimensions_length: props.dataduplicate.dimensions_length || null,
+  dimensions_width: props.dataduplicate.dimensions_width || null,
+  dimensions_height: props.dataduplicate.dimensions_height || null,
+  curb_weight: props.dataduplicate.curb_weight || null,
+  tyre_size: props.dataduplicate.tyre_size || '',
+  fuel_tank_capacity: props.dataduplicate.fuel_tank_capacity || null,
+  trailer_condition: props.dataduplicate.trailer_condition || '',
+  trailer_type: props.dataduplicate.trailer_type || '',
+  trailer_brand: props.dataduplicate.trailer_brand || '',
+  trailer_use: props.dataduplicate.trailer_use || '',
+  trailer_size: props.dataduplicate.trailer_size || '',
+  trailer_axle: props.dataduplicate.trailer_axle || '',
+  trailer_suspension: props.dataduplicate.trailer_suspension || '',
+  trailer_tire: props.dataduplicate.trailer_tire || '',
+  trailer_king_pin: props.dataduplicate.trailer_king_pin || '',
+  trailer_main_beam: props.dataduplicate.trailer_main_beam || '',
+  trailer_max_payload: props.dataduplicate.trailer_max_payload || null,
+  trailer_place_of_origin: props.dataduplicate.trailer_place_of_origin || '',
+  trailer_material: props.dataduplicate.trailer_material || '',
+  trailer_function: props.dataduplicate.trailer_function || '',
+  trailer_landing_gear: props.dataduplicate.trailer_landing_gear || '',
+  trailer_color: props.dataduplicate.trailer_color || '',
+  trailer_axle_brand: props.dataduplicate.trailer_axle_brand || '',
+})
+
+const singleTrim = ref(productData.trim_numbers[0] || '');
+const singleVin = ref(productData.vin_numbers[0] || '');
+
+watch(singleTrim, (newVal) => {
+  productData.trim_numbers = newVal ? [newVal] : []
+});
+
+watch(singleVin, (newVal) => {
+  productData.vin_numbers = newVal ? [newVal] : []
+});
+
+if (props.dataduplicate.dimensions) {
+  const dims = props.dataduplicate.dimensions.split('x').map(Number)
+  productData.dimensions_length = dims[0] || null
+  productData.dimensions_width = dims[1] || null
+  productData.dimensions_height = dims[2] || null
+}
+
+watch(
+  () => [productData.dimensions_length, productData.dimensions_width, productData.dimensions_height],
+  ([l, w, h]) => {
+    if (l != null && w != null && h != null) {
+      productData.dimensions = `${l}x${w}x${h}`
+    } else {
+      productData.dimensions = ''
+    }
+  }
+)
+
+const availableModels = computed(() => {
+ const  models = brands.value.find(cat => cat.id === productData.vehicle_brand_id)
+ return models ? models.models || [] : []
+})
+
+watch(
+  [() => productData.vehicle_brand_name, () => brands.value],
+  ([newName, newBrands]) => {
+    if (newName && newBrands.length > 0) {
+      const match = newBrands.find(b => b.name === newName);
+      if (match) productData.vehicle_brand_id = match.id;
+    }
+  },
+  { immediate: true }
+);
+
+watch(
+  [() => productData.vehicle_model_name, () => availableModels.value],
+  ([newName, models]) => {
+    if (newName && models.length > 0) {
+      const match = models.find(m => m.name === newName)
+      if (match) productData.vehicle_model_id = match.id
+    }
+  },
+  { immediate: true }
+)
+
+
+const availableSubcategories = computed(() => {
+  const category = categories.value.find(cat => cat.id === productData.category_id)
+  return category ? category.subcategories || [] : []
+})
+
+const isTrailerCategory = computed(() => {
+  const category = categories.value.find(cat => cat.id === productData.category_id)
+  return category && (
+    category.name.toLowerCase().includes('trailer') || 
+    category.name.toLowerCase().includes('semi') ||
+    category.name.toLowerCase().includes('remorque')
+  )
+})
+
+
+const availableSubSubcategories = computed(() => {
+  for (const category of categories.value) {
+    const subcategory = (category.subcategories || []).find(sub => sub.id === productData.subcategory_id)
+    if (subcategory && subcategory.sub_subcategories) {
+      return subcategory.sub_subcategories
+    }
+  }
+  return []
+})
+
+const availableSubSubSubcategories = computed(() => {
+  for (const category of categories.value) {
+    for (const subcategory of (category.subcategories || [])) {
+      if (subcategory.sub_subcategories) {
+        const subsubcategory = subcategory.sub_subcategories.find(subsub => subsub.id === productData.subsubcategory_id)
+        if (subsubcategory && subsubcategory.sub_sub_subcategories) {
+          return subsubcategory.sub_sub_subcategories
+        }
+      }
+    }
+  }
+  return []
+})
+
+// Les types de models en focntion de la marque
+
+const availableFuelType = computed(() => {
+  const  modelsObject = availableModels.value 
+ const  fuelType =modelsObject.find(model => model.id === productData.vehicle_model_id)
+ productData.fuel_type= fuelType ? fuelType.fuel_type || '' : ''
+  return fuelType ? fuelType.fuel_type || '' : ''
+})
+
+// Validation des étapes
+const canProceedToNextStep = computed(() => {
+  switch (currentStep.value) {
+    case 0:
+      return !!(productData.category_id && productData.subcategory_id)
+    case 1:
+      if (isTrailerCategory.value) {
+        return !!(
+          productData.trailer_condition &&
+          productData.trailer_type &&
+          productData.trailer_brand &&
+          productData.trailer_use &&
+          productData.trailer_size &&
+          productData.trailer_axle &&
+          productData.trailer_suspension &&
+          productData.trailer_tire &&
+          productData.trailer_max_payload &&
+          productData.trailer_place_of_origin
+        )
+      } else {
+        return !!(
+          productData.vehicle_condition && 
+          productData.vehicle_brand_id && 
+          productData.vehicle_model_id && 
+          productData.drive_type && 
+          productData.fuel_type && 
+          productData.country_of_origin && 
+          productData.dimensions_height && 
+          productData.dimensions_width && 
+          productData.dimensions_length && 
+          productData.fuel_tank_capacity && 
+          productData.curb_weight && 
+          productData.cabin_type && 
+          productData.payload_capacity &&
+          productData.gvw && 
+          productData.production_date && 
+          productData.wheelbase
+        )
+      }
+    case 2:
+      if (isTrailerCategory.value) {
+        // Pour les trailers, pas de technical specs requis
+        return true
+      }
+      getProductName()
+      return true
+    case 3:
+      const hasValidPrice = productData.unit_price !== null && 
+                           productData.unit_price !== '' && 
+                           productData.unit_price !== undefined
+      return hasValidPrice && !!productData.disponibility
+    case 4:
+      return true
+    case 5:
+      return true
+    default:
+      return false
+  }
+})
+
+const canSubmit = computed(() => {
+  return !!(productData.name && 
+           productData.category_id && 
+           productData.subcategory_id && 
+           productData.unit_price !== null && 
+           productData.unit_price !== '' && 
+           Number(productData.unit_price) > 0)
+})
+
+const setMainImage = (index) => {
+  if (index === 0) return; // déjà l'image principale
+
+  const selected = productData.images[index]
+
+  // Retirer l'image de sa position
+  productData.images.splice(index, 1)
+
+  // La mettre en première position
+  productData.images.unshift(selected)
+}
+
+const getCategoryName = (id) => {
+  const category = categories.value.find(cat => cat.id === id)
+  return category ? category.name : ''
+}
+
+const getBrandName = (id) => {
+  const brand = brands.value.find(cat => cat.id === id)
+  return brand ? brand.name : ''
+}
+
+const getModelName = (id) => {
+  const model = availableModels.value.find(cat => cat.id === id)
+  return model ? model.name : ''
+}
+
+const availableColors = ref([
+  { name: 'Black', value: '#000000' },
+  { name: 'White', value: '#FFFFFF' },
+  { name: 'Gray', value: '#808080' },
+  { name: 'Red', value: '#FF0000' },
+  { name: 'Blue', value: '#0000FF' },
+  { name: 'Green', value: '#008000' },
+  { name: 'Yellow', value: '#FFFF00' },
+  { name: 'Orange', value: '#FFA500' },
+  { name: 'Pink', value: '#FFC0CB' },
+  { name: 'Purple', value: '#800080' },
+  { name: 'Brown', value: '#8B4513' },
+  { name: 'Gold', value: '#FFD700' }
+])
+
+const availableUnitTypes = ref([
+  { value: 'quantity', label: 'Quantité (unités)' },
+  { value: 'weight_t', label: 'Poids (T)' },
+  { value: 'weight_kg', label: 'Poids (kg)' },
+  { value: 'weight_g', label: 'Poids (g)' },
+  { value: 'volume_l', label: 'Volume (L)' },
+  { value: 'volume_ml', label: 'Volume (mL)' },
+  { value: 'length_m', label: 'Longueur (m)' },
+  { value: 'length_cm', label: 'Longueur (cm)' },
+  { value: 'area_m2', label: 'Surface (m²)' }
+])
+
+const availability = ref([
+  { value: 'available', label: 'Available' },
+  { value: 'unavailable', label: 'Unavailable' },
+  { value: 'on_order', label: 'On Order' },
+])
+
+watch(singleVin, (newVal) => {
+  productData.vin = newVal ? [newVal] : []
+})
+
+watch(singleTrim, (newVal) => {
+  productData.trim_numbers = newVal ? [newVal] : []
+})
+
+// Méthodes
+const fetchCategories = async () => {
+  try {
+    categoriesLoading.value = true
+    categoriesError.value = null
+    
+    const response = await categoriesApi.getCategories()
+    categories.value = response.data || []
+    
+  } catch (err) {
+    categoriesError.value = 'Impossible to load categories. Try again please.'
+  } finally {
+    categoriesLoading.value = false
+  }
+}
+
+const calculateYearFromProductionDate = () => {
+  if (productData.production_date) {
+    const date = new Date(productData.production_date)
+    return date.getFullYear()
+  }
+  return null
+}
+
+const fetchMakes = async () => {
+  try {
+    brandsLoading.value = true
+    brandsError.value = null
+    
+    const response = await brandsApi.getBrands()
+    brands.value = response.data || []
+  } catch (err) {
+    brandsError.value = 'Impossible to load categories. try again please.'
+  } finally {
+    brandsLoading.value = false
+  }
+}
+
+const formatText = (command) => {
+  document.execCommand(command, false, null)
+  wysiwygEditor.value.focus()
+}
+
+const formatHeading = (event) => {
+  const heading = event.target.value
+  if (heading) {
+    document.execCommand('formatBlock', false, heading)
+    event.target.value = ''
+    wysiwygEditor.value.focus()
+  }
+}
+
+const updateDetailedDescription = () => {
+  productData.description = wysiwygEditor.value.innerHTML
+}
+const updateOtherDescription = () => {
+  productData.description_plus = wysiwygEditor2.value.innerHTML
+}
+
+const updateSubcategories = () => {
+  productData.subcategory_id = ''
+  productData.subsubcategory_id = ''
+  productData.subsubsubcategory_id = ''
+}
+
+const updateSubSubcategories = () => {
+  productData.subsubcategory_id = ''
+  productData.subsubsubcategory_id = ''
+}
+
+const updateSubSubSubcategories = () => {
+  productData.subsubsubcategory_id = ''
+}
+
+
+const updateModelid = () => {
+  productData.vehicle_model_id = ""
+  productData.fuel_type = ""
+}
+const updateFuelType = () => {
+  productData.fuel_type = availableFuelType.value
+}
+
+
+const toggleColor = (color) => {
+  const index = productData.colors.indexOf(color)
+
+  if (index > -1) {
+    productData.colors.splice(index, 1)
+    productData.colors_names.splice(index, 1)
+  } else {
+    productData.colors.push(color)
+    const colorObj = availableColors.value.find(c => c.value === color)
+    if (colorObj) {
+      productData.colors_names.push(colorObj.name)
+    } else {
+      productData.colors_names.push('Personnalisé')
+    }
+  }
+}
+
+
+const addCustomColor = () => {
+  if (customColor.value.name && customColor.value.value) {
+    const exists = availableColors.value.some(color => 
+      color.value === customColor.value.value || 
+      color.name.toLowerCase() === customColor.value.name.toLowerCase()
+    )
+    
+    if (!exists) {
+      availableColors.value.push({
+        name: customColor.value.name,
+        value: customColor.value.value
+      })
+      productData.colors.push(customColor.value.value)
+      productData.colors_names.push(customColor.value.name)
+    }
+    
+    customColor.value = { name: '', value: '#000000' }
+  }
+}
+
+
+
+const handleImageUpload = (event) => {
+  const files = Array.from(event.target.files)
+  const remainingSlots = 8 - productData.images.length
+  
+  files.slice(0, remainingSlots).forEach(file => {
+    if (file.size <= 10 * 1024 * 1024) {
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        productData.images.push({
+          file: file,
+          preview: e.target.result,
+          uploading: false,
+          uploadProgress: 0,
+          uploaded: false,
+          url: null
+        })
+      }
+      reader.readAsDataURL(file)
+    }
+  })
+}
+
+const removeImage = (index) => {
+  productData.images.splice(index, 1)
+  if (productData.imageUrls[index]) {
+    productData.imageUrls.splice(index, 1)
+  }
+}
+
+const handleVideoUpload = (event) => {
+  const file = event.target.files[0]
+  if (file && file.size <= 50 * 1024 * 1024) {
+    const reader = new FileReader()
+    reader.onload = (e) => {
+      productData.video = {
+        file: file,
+        preview: e.target.result,
+        uploading: false,
+        uploadProgress: 0,
+        uploaded: false,
+        url: null
+      }
+    }
+    reader.readAsDataURL(file)
+  }
+}
+
+const removeVideo = () => {
+  productData.video = null
+  productData.videoUrl = ''
+}
+
+const getProductName = () => {
+  if (isTrailerCategory.value) {
+    // Génération du nom pour les trailers
+    const conditionFormatted = productData.trailer_condition 
+      ? productData.trailer_condition.charAt(0).toUpperCase() + 
+        productData.trailer_condition.slice(1).toLowerCase()
+      : ''
+    
+    productData.name = [
+      conditionFormatted,
+      productData.trailer_type,
+      productData.trailer_axle ? `${productData.trailer_axle} Axles` : '',
+      productData.trailer_max_payload ? `${productData.trailer_max_payload}T` : ''
+    ].filter(Boolean).join(' - ')
+  } else {
+    // Génération du nom pour les trucks (code existant)
+    productData.vehicle_condition = productData.vehicle_condition.charAt(0).toUpperCase() + 
+                                   productData.vehicle_condition.slice(1).toLowerCase()
+    
+    productData.name = [
+      productData.vehicle_condition,
+      productData.vehicle_year,
+      getBrandName(productData.vehicle_brand_id),
+      getModelName(productData.vehicle_model_id),
+      getCategoryName(productData.category_id),
+      productData.drive_type
+    ].filter(Boolean).join(' ')
+  }
+
+  return productData.name
+}
+
+const handleNextStep = async () => {
+  error.value = null
+  
+  if (!canProceedToNextStep.value) {
+    if (currentStep.value === 3) {
+      error.value = 'Please correctly enter the unit price and stock before continuing.'
+    } else {
+      error.value = 'Please fill in all required fields.'
+    }
+      
+    
+    setTimeout(() => {
+      error.value = null
+    }, 3000)
+    
+    return
+  }
+  
+  if (currentStep.value < steps.length - 1) {
+    currentStep.value++
+    await nextTick()
+  }
+}
+
+const handlePreviousStep = async () => {
+  if (currentStep.value > 0) {
+    currentStep.value--
+    error.value = null
+    await nextTick()
+  }
+}
+
+const handleCloseModal = () => {
+  closeModal()
+}
+
+const closeModal = () => {
+  currentStep.value = 0
+  error.value = null
+  emit('close')
+}
+
+const uploadImageToCloudinary = async (image, index) => {
+  try {
+    productData.images[index].uploading = true
+    productData.images[index].uploadProgress = 0
+    
+    const fileName = `product_${Date.now()}_${index}_${image.file.name.replace(/\s+/g, '_')}`
+    
+    const formData = new FormData()
+    formData.append('file', image.file)
+    formData.append('upload_preset', cloudinaryConfig.uploadPreset)
+    formData.append('api_key', cloudinaryConfig.apiKey)
+    formData.append('public_id', fileName)
+    
+    const response = await axios.post(cloudinaryConfig.imageUploadUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        productData.images[index].uploadProgress = percentCompleted
+      }
+    })
+    
+    if (response.data && response.data.secure_url) {
+      productData.images[index].url = response.data.secure_url
+      productData.imageUrls[index] = response.data.secure_url
+    } else {
+      throw new Error('Réponse Cloudinary invalide')
+    }
+    
+    productData.images[index].uploading = false
+    productData.images[index].uploaded = true
+    
+    return true
+  } catch (error) {
+    productData.images[index].uploading = false
+    return false
+  }
+}
+
+//  Updated video upload to use Cloudinary
+const uploadVideoToCloudinary = async (video) => {
+  try {
+    productData.video.uploading = true
+    productData.video.uploadProgress = 0
+    
+    const fileName = `product_video_${Date.now()}_${video.file.name.replace(/\s+/g, '_')}`
+    
+    const formData = new FormData()
+    formData.append('file', video.file)
+    formData.append('upload_preset', cloudinaryConfig.uploadPreset)
+    formData.append('api_key', cloudinaryConfig.apiKey)
+    formData.append('public_id', fileName)
+    formData.append('resource_type', 'video')
+    
+    const response = await axios.post(cloudinaryConfig.videoUploadUrl, formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data'
+      },
+      onUploadProgress: (progressEvent) => {
+        const percentCompleted = Math.round((progressEvent.loaded * 100) / progressEvent.total)
+        productData.video.uploadProgress = percentCompleted
+      }
+    })
+    
+    if (response.data && response.data.secure_url) {
+      productData.video.url = response.data.secure_url
+      productData.videoUrl = response.data.secure_url
+    } else {
+      throw new Error('Réponse Cloudinary invalide')
+    }
+    
+    productData.video.uploading = false
+    productData.video.uploaded = true
+    
+    return true
+  } catch (error) {
+    productData.video.uploading = false
+    return false
+  }
+}
+
+const uploadAllMedia = async () => {
+  loadingMessage.value = 'Loading media...'
+  
+  const imagePromises = []
+  for (let i = 0; i < productData.images.length; i++) {
+    imagePromises.push(uploadImageToCloudinary(productData.images[i], i))
+  }
+  
+  await Promise.all(imagePromises)
+  
+  if (productData.video && productData.video.file) {
+    await uploadVideoToCloudinary(productData.video)
+  }
+  
+  loadingMessage.value = 'Media successfully downloaded!'
+}
+
+//  Updated prepareDataForSubmission to include new fields
+const prepareDataForSubmission = () => {
+  const formData = {
+    name: productData.name,
+    description: productData.description,
+    description_plus: productData.description_plus,
+    category_id: productData.category_id,
+    subcategory_id: productData.subcategory_id,
+    subsubcategory_id: productData.subsubcategory_id,
+    subsubsubcategory_id: productData.subsubsubcategory_id,
+    unit_price: parseFloat(productData.unit_price),
+    wholesale_price: productData.hasWholesalePrice ? parseFloat(productData.wholesale_price) : null,
+    wholesale_min_qty: productData.hasWholesalePrice ? parseInt(productData.wholesale_min_qty) : null,
+    stock: parseInt(productData.stock) || 1,
+    unit_type: productData.unit_type || 'unité',
+    disponibility: productData.disponibility,
+    tags: productData.tags,
+    is_active: productData.is_active,
+    colors: productData.colors,
+  }
+
+  // ✅ Ajout des champs selon le type
+  if (isTrailerCategory.value) {
+    // Champs trailers
+    Object.assign(formData, {
+      trailer_condition: productData.trailer_condition,
+      trailer_type: productData.trailer_type,
+      trailer_brand: productData.trailer_brand,
+      trailer_use: productData.trailer_use,
+      trailer_size: productData.trailer_size,
+      trailer_axle: productData.trailer_axle,
+      trailer_suspension: productData.trailer_suspension,
+      trailer_tire: productData.trailer_tire,
+      trailer_king_pin: productData.trailer_king_pin,
+      trailer_main_beam: productData.trailer_main_beam,
+      trailer_max_payload: productData.trailer_max_payload,
+      trailer_place_of_origin: productData.trailer_place_of_origin,
+      trailer_material: productData.trailer_material,
+      trailer_function: productData.trailer_function,
+      trailer_landing_gear: productData.trailer_landing_gear,
+      trailer_color: productData.trailer_color,
+      trailer_axle_brand: productData.trailer_axle_brand
+    })
+  } else {
+    // Champs trucks (existants)
+    Object.assign(formData, {
+      vehicle_condition: productData.vehicle_condition,
+      vehicle_make: getBrandName(productData.vehicle_brand_id),
+      vehicle_model: getModelName(productData.vehicle_model_id),
+      drive_type: props.dataduplicate.drive_type ? props.dataduplicate.drive_type.toLowerCase() : '',
+      vehicle_year: productData.vehicle_year,
+      fuel_type: productData.fuel_type,
+      transmission_type: productData.transmission_type,
+      engine_brand: productData.engine_brand,
+      trim_numbers: productData.trim_numbers.filter(num => num.trim() !== ''),
+      vin: productData.vin.filter(num => num.trim() !== ''),
+      engine_number: productData.engine_number,
+      power: productData.power,
+      engine_emissions: productData.engine_emissions,
+      vehicle_mileage: productData.vehicle_mileage,
+      production_date: productData.production_date,
+      country_of_origin: productData.country_of_origin,
+      wheelbase: productData.wheelbase,
+      gvw: productData.gvw,
+      payload_capacity: productData.payload_capacity,
+      cabin_type: productData.cabin_type,
+      suspension_type: productData.suspension_type,
+      brake_system: productData.brake_system,
+      tyre_size: productData.type_size,
+      curb_weight: productData.curb_weight,
+      fuel_tank_capacity: productData.fuel_tank_capacity,
+      dimensions: productData.dimensions_length || productData.dimensions_width || productData.dimensions_height
+        ? `${productData.dimensions_length || 0}x${productData.dimensions_width || 0}x${productData.dimensions_height || 0}`
+        : null
+    })
+  }
+  
+  // Images et vidéo
+  formData.images = productData.imageUrls.map((url, index) => ({
+    url: url,
+    alt_text: `${productData.name} - Image ${index + 1}`,
+    is_primary: index === 0 ? 1 : 0,
+    sort_order: index
+  }))
+  
+  if (productData.videoUrl) {
+    formData.video = productData.videoUrl
+  }
+  
+  return formData
+}
+
+const handleSubmit = async () => {
+  if (!canSubmit.value) return
+  
+  try {
+    isLoading.value = true
+    error.value = null
+    
+    await uploadAllMedia()
+    
+    loadingMessage.value = 'Préparation des données...'
+    const formData = prepareDataForSubmission()
+    
+    // <CHANGE> Ajout de l'année calculée et valeurs par défaut
+    formData.vehicle_year = calculateYearFromProductionDate()
+    formData.stock = 1
+    formData.unit_type = 'unité'
+    
+    loadingMessage.value = 'Finalisation...'
+    emit('save', formData)
+    
+  } catch (err) {
+    error.value = 'Error tpo load medias. Please try again.'
+  } finally {
+    isLoading.value = false
+  }
+}
+
+const handleBackdropClick = (event) => {
+  if (event.target === event.currentTarget) {
+    handleCloseModal()
+  }
+}
+
+onMounted(() => {
+  fetchCategories(),
+  fetchMakes()
+})
+
+</script>
+
+<style scoped>
+
+ .specifications-table {
+    display: flex;
+    gap: 24px;
+  }
+
+  .spec-group {
+    flex: 1 1 0;
+    min-width: 0;
+    border: 1px solid #e8e8e8;
+    border-radius: 8px;
+    overflow: hidden;
+  }
+
+  .spec-group-title {
+    padding: 12px 16px;
+    background: #f5f5f5;
+    font-size: 16px;
+    font-weight: 600;
+    color: #333;
+    margin: 0;
+  }
+  
+  .spec-row {
+    display: flex;
+    border-top: 1px solid #e8e8e8;
+  }
+  
+  .spec-row:first-of-type {
+    border-top: none;
+  }
+  
+  .spec-name,
+  .spec-value {
+    padding: 12px 16px;
+    font-size: 14px;
+  }
+  
+  .spec-name {
+    width: 40%;
+    background: #fafafa;
+    color: #666;
+    border-right: 1px solid #e8e8e8;
+  }
+  
+  .spec-value {
+    width: 60%;
+    color: #333;
+  }
+
+/* Amélioration pour les interactions tactiles */
+.touch-manipulation {
+  touch-action: manipulation;
+}
+
+/* Styles pour l'éditeur WYSIWYG */
+[contenteditable="true"]:empty:before {
+  content: attr(placeholder);
+  color: #9CA3AF;
+  font-style: italic;
+}
+
+[contenteditable="true"]:focus {
+  outline: none;
+}
+
+/* Styles pour le contenu formaté */
+[contenteditable="true"] h1 {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable="true"] h2 {
+  font-size: 1.25rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable="true"] h3 {
+  font-size: 1.125rem;
+  font-weight: bold;
+  margin: 0.5rem 0;
+}
+
+[contenteditable="true"] ul {
+  list-style-type: disc;
+  margin-left: 1.5rem;
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}
+
+[contenteditable="true"] ol {
+  list-style-type: decimal;
+  margin-left: 1.5rem;
+  margin: 0.5rem 0 0.5rem 1.5rem;
+}
+
+[contenteditable="true"] li {
+  margin: 0.25rem 0;
+}
+
+[contenteditable="true"] strong {
+  font-weight: bold;
+}
+
+[contenteditable="true"] em {
+  font-style: italic;
+}
+
+[contenteditable="true"] u {
+  text-decoration: underline;
+}
+
+/* Transitions fluides */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Effet de verre dépoli */
+.backdrop-blur-sm {
+  backdrop-filter: blur(4px);
+}
+
+/* Scrollbar personnalisée */
+.overflow-y-auto::-webkit-scrollbar {
+  width: 6px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb {
+  background: #c1c1c1;
+  border-radius: 3px;
+}
+
+.overflow-y-auto::-webkit-scrollbar-thumb:hover {
+  background: #a8a8a8;
+}
+
+/* Animation pour l'overlay */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.bg-black\/60 {
+  animation: fadeIn 0.3s ease-out;
+}
+
+/* Responsive pour très petits écrans */
+@media (max-width: 375px) {
+  .px-4 {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+
+  .py-3 {
+    padding-top: 0.75rem;
+    padding-bottom: 0.75rem;
+  }
+}
+
+/* Amélioration pour les boutons sur mobile */
+@media (max-width: 640px) {
+  button {
+    min-height: 44px; /* Taille minimale recommandée pour les boutons tactiles */
+  }
+}
+</style>

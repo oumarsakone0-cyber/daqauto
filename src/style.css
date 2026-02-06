@@ -1,0 +1,348 @@
+@import "tailwindcss";
+@import "flowbite/src/themes/default";
+@plugin "flowbite/plugin";
+:root {
+  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+
+  color-scheme: light dark;
+  color: #ffffffde;
+  background-color: #242424;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 500;
+  text-decoration: inherit;
+}
+a:hover {
+  color: #fe7900;
+}
+
+body {
+  margin: 0;
+  display: contents;
+  place-items: center;
+  min-width: 320px;
+  min-height: 100vh;
+  background-color: #f2f3f7;
+}
+
+h1 {
+  font-size: 3.2em;
+  line-height: 1.1;
+}
+
+button {
+  border-radius: 25px;
+  border: 1px solid transparent;
+  /* font-size: 1em; */
+  font-weight: 500;
+  font-family: inherit;
+  background-color: #8f8f8f;
+  cursor: pointer;
+  transition: border-color 0.25s;
+}
+button:hover {
+  border-color: transparent;
+}
+button:focus,
+button:focus-visible {
+  outline: 4px auto -webkit-focus-ring-color;
+}
+
+.card {
+  padding: 2em;
+}
+
+#app {
+  max-width: 100%;
+  margin: 0;
+}
+
+@media (prefers-color-scheme: light) {
+  :root {
+    color: #213547;
+    background-color: #ffffff;
+  }
+  a:hover {
+    color: #fe7900;
+  }
+  button {
+    background-color: #f9f9f9;
+  }
+}
+
+/* les couleurs de bases */
+.bg-black {
+  background-color: black;
+}
+.bg-white{
+  background-color: white;
+}
+.primary-color{
+  color: #fe7900;
+}
+.bg-orange{
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white;
+}
+
+.bg-degrade-orange {
+ background: linear-gradient(160deg, black , #fc4618 , black);
+ color:white
+
+}
+  .bg-lightgray {
+    background-color: #F9FAFB;
+    color: #fe7900;
+    font-weight: 500;
+  }
+  .bg-lightgray:hover {
+    background-color: #F3F4F6;
+    border: 1px solid #D1D5DB;
+  }
+
+.success-color{
+  color: #52c41a;
+}
+.bg-step-color{
+  background-color: #10B981;
+}
+.green-color{
+  color: #10B981;
+}
+
+.blue-color{
+  color: #1890ff;
+}
+
+.error-color{
+  color: #ec0202;
+}
+.error-background-color{
+  background-color: #ff0000;
+  color: white;
+}
+
+.warning-color{
+  color:#ffb300
+}
+
+.purple-color{
+  color: #7C3AED;
+}
+
+/* Les styles de bouton avec dégradé */
+
+.btn-degrade-orange, .btn-gray,.btn-deconnexion,.btn-outline ,
+.btn-outline-with-background, .submit-btn,.btn-whatsapp{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 0.5rem 0.75rem; 
+  border-radius: 25px;
+  transition: background 0.3s;
+}
+
+.btn-degrade-orange {
+  background: linear-gradient(90deg, #fe7900, #ff5a01);
+  color: white; 
+}
+.btn-degrade-orange:hover {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+  border-color: #ff5a01;
+  opacity: 0.8;
+}
+.btn-degrade-orange:disabled {
+  background: linear-gradient(90deg, #ff5a01, #fe7900);
+  color: white;
+  border-color: #ff5a01;
+  opacity: 0.5;
+}
+
+.btn-gray {
+  background: #e6e9ed;
+  color: #374151;
+}
+.btn-gray:hover {
+  background: #b7b6b6;
+  border-color: #b7b6b6;
+}
+.btn-gray:disabled {
+  background: #b7b6b6;
+  border-color: #b7b6b6;
+  opacity: 0.5;
+}
+
+.btn-deconnexion{
+  background: #ec0202;
+  color: white ;
+  }
+  .btn-deconnexion:hover{
+  background:#ff0000;
+  border-color:#ff0000;
+  }
+  .btn-deconnexion:disabled{
+  background:#ff0000;
+  border-color:#ff0000;
+  opacity: 0.5;
+  }
+
+  /* .btn-outline ,
+  .btn-outline-with-background {
+    background-color: none;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 12px;
+    
+  } */
+
+  .btn-outline:hover{
+    color: white;
+    background-color: #fe7900;
+  
+  }
+  .btn-outline:disabled{
+    color: white;
+    background-color: #fe7900;
+    opacity: 0.5;
+  
+  }
+.btn-outline{
+    color: #fe7900;
+    background-color: white;
+    border: 1px solid #fe7900;
+    font-weight: 500;
+  }
+  .btn-outline-with-background{
+    color: white;
+    background-color: #fe7900;
+    font-weight: 500;
+    /* font-size: 12px; */
+  }
+  .btn-outline-with-background:hover{
+    color: #fe7900;
+    background-color: white;
+    border: 1px solid #fe7900;
+  }
+  .btn-outline-with-background:disabled{
+    color: #fe7900;
+    background-color: white;
+    border: 1px solid #fe7900;
+    opacity: 0.5;
+  }
+  .submit-btn{
+  background:#10B981 ;
+  color: white;
+  }
+  .submit-btn:hover{
+    background-color: #039e6a;
+    opacity: 0.8;
+  }
+  .submit-btn:disabled{
+    background-color: #039e6a;
+    opacity: 0.5;
+  }
+
+  .btn-whatsapp{
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    
+    border: none;
+    background: #25D366;
+    color: white;
+  }
+  .btn-whatsapp:hover {
+    background: #22c55e;
+    color: white;
+  }
+
+  .btn-premium-style{
+  background: white;
+  color: #fe7900;
+  border-radius: 25px;
+  transition: background 0.3s;
+}
+.btn-premium-style:hover{
+  background: #f8f7f7;
+  color: #fe7900;
+  border-color: white;
+}
+.btn-premium-style:disabled{
+  background: #f8f7f7;
+  color: #fe7900;
+  border-color: white;
+  opacity: 0.5;
+}
+
+/* Les styles de bordures */
+
+.focus\:border-orange-500:focus {
+  border-color: #fe7900;
+}
+
+.border-orange-500 {
+  border-color: #fe7900;
+}
+
+.focus\:ring-orange-500:focus {
+  --tw-ring-color: #fe7900;
+}
+
+.ring-orange-500 {
+  --tw-ring-color: #fe7900;
+}
+
+/* les inputs styles */
+.input-style {
+  width: 100%;
+  color: black ; 
+  border: 1px solid #d1d5db; 
+  border-radius: 25px;
+  padding: 0.7rem 0.75rem; 
+  padding-left: 2.5rem;
+  transition: border-color 0.2s, box-shadow 0.2s; 
+  resize: none;
+}
+.input-style:focus {
+  border-color: #fe7900; 
+  box-shadow: 0 0 0 0.5px #fe7900; 
+}
+.checkbox-style {
+  width: 1.25rem; 
+  height: 1.25rem; 
+  border: 1px solid #d1d5db; 
+  border-radius: 0.25rem; 
+  color: #fe7900 ;
+  transition: background-color 0.2s, border-color 0.2s; 
+}
+.checkbox-style:focus {
+  box-shadow: 0 0 0 1px #fe7900;
+  border-color: #fe7900; 
+}
+.checkbox-style:checked {
+  background-color: #fe7900; 
+  border-color: #fe7900; 
+}
+
+/* Transitions fluides */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 300ms;
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
