@@ -41,8 +41,3 @@ Thumbs.db
 *.bak
 *.swp
 *~
-
-# Redundant / duplicate project copies (do not commit)
-node_modules - 副本
-node_modules - 副本 (2)
-.vscode - 副本 (2)

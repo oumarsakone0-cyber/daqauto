@@ -1,8 +1,7 @@
-import axios from "axios"
+﻿import axios from "axios"
 
-// Configuration de base de l'API
-// 开发环境使用相对路径，通过 Vite 代理到远程后端，避免 CORS / 本地开发用相对路径，由 Vite 代理到 sastock.com
-const API_BASE_URL = import.meta.env.VITE_API_BASE_URL ?? "https://sastock.com/api_adjame"
+// 开发环境走 Vite 代理 /api_adjame，避免跨域导致 decodeVIN2 等请求失败
+const API_BASE_URL = import.meta.env.DEV ? "/api_adjame" : "https://sastock.com/api_adjame"
 
 // Créer une instance Axios avec configuration par défaut
 const apiClient = axios.create({
@@ -754,6 +753,25 @@ export const productsApi = {
   },
 
   /**
+   * Décoder VIN via products.php decodeVIN2 (POST, base 先查库再调外部 API)
+   * @param {string} vin - 17 位 VIN
+   * @returns {Promise<{ success: boolean, data?: object, source?: string, error?: string }>}
+   */
+  async decodeVIN2(vin) {
+    try {
+      const response = await apiClient.post(
+        "/products.php",
+        { vin: String(vin).trim() },
+        { params: { action: "decodeVIN2" } }
+      )
+      return response.data
+    } catch (error) {
+      const msg = error.response?.data?.error || error.message
+      return { success: false, error: msg }
+    }
+  },
+
+  /**
    * Créer une nouvelle commande
    * @param {Object} orderData - Données de la commande
    * @returns {Promise} Commande créée
@@ -1010,33 +1028,6 @@ async getFavorites(userId) {
       return response.data
     } catch (error) {
       throw this.handleError(error, "Erreur lors de la récupération des statistiques")
-    }
-  },
-
-  /**
-   * Decode VIN - Check database first, then call external API if not found
-   * 解码VIN - 先检查数据库，如果不存在则调用外部API
-   * @param {string} vin - 17-character VIN code
-   * @returns {Promise} VIN decoded data
-   */
-  async decodeVIN2(vin) {
-    try {
-      // Add boutique_id and user_id to parameters / 添加boutique_id和user_id到参数
-      const baseParams = boutiqueUtils.buildBaseParams()
-
-      const response = await apiClient.post(
-        "/products.php",
-        { vin: vin },
-        {
-          params: {
-            action: "decodeVIN2",
-            ...baseParams,
-          },
-        }
-      )
-      return response.data
-    } catch (error) {
-      throw this.handleError(error, "Erreur lors du décodage du VIN")
     }
   },
 

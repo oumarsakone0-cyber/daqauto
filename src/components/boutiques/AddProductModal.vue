@@ -2916,15 +2916,7 @@
 
         <!-- Content Area / 内容区域 -->
         <div class="p-4 sm:p-6 relative">
-          <!-- 选择车型后的加载遮罩，点击即有反馈，避免“反应慢” -->
-          <div v-if="modelSelectionLoading" class="absolute inset-0 z-20 bg-white/80 backdrop-blur-sm flex flex-col items-center justify-center rounded-xl">
-            <svg class="w-10 h-10 text-orange-500 animate-spin mb-3" fill="none" viewBox="0 0 24 24">
-              <circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle>
-              <path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
-            </svg>
-            <p class="text-gray-700 font-medium">Filling vehicle data...</p>
-          </div>
-          <div class="space-y-3" :class="{ 'pointer-events-none opacity-60': modelSelectionLoading }">
+          <div class="space-y-3">
             <div 
               v-for="(model, index) in vinModelOptions" 
               :key="index"
@@ -2974,8 +2966,7 @@
 <script setup>
 import { ref, reactive, computed, onMounted, nextTick, watch } from 'vue'
 import axios from 'axios'
-import { categoriesApi , brandsApi, trailersApi, vinDataApi, productsApi  } from '../../services/api'
-import { vinDecodeApi } from '../../services/vinDecodeApi'
+import { categoriesApi , brandsApi, trailersApi, vinDataApi, productsApi } from '../../services/api'
 import {formatPrice} from '../../services/formatPrice'
 import { 
   Plus as PlusIcon,
@@ -3011,12 +3002,9 @@ const singleTrim = ref('')
 const trailerTypes = ref([])
 // VIN decode multiple model selection / VIN解码多个车型选择
 const showModelSelectionModal = ref(false)
-const modelSelectionLoading = ref(false)
 const vinModelOptions = ref([])
 const pendingVINData = ref(null)
-const pendingVINModelList = ref(null)
-// 保存英文版 model_list，写入数据库时用，保证库中只存英文
-const pendingVINModelListEnglish = ref(null)
+const pendingVINModelList = ref(null) // Save original model_list / 保存原始的model_list
 const trailerBrands = ref([])
 const trailerTypesLoading = ref(false)
 const trailerBrandsLoading = ref(false)
@@ -4020,15 +4008,8 @@ const saveTranslationCache = () => {
 // Detect if text is English / 检测文本是否为英文
 const isEnglish = (text) => {
   if (!text || typeof text !== 'string') return true
+  // Simple English detection: Check if contains Chinese characters / 简单的英文检测：检查是否包含中文字符
   return !/[\u4e00-\u9fa5]/.test(text)
-}
-
-// 要求界面与数据库均为英文：若翻译失败仍含中文，则用占位符，避免显示中文
-const ensureEnglishDisplay = (text, index) => {
-  const s = String(text || '').trim()
-  if (!s) return `Model ${index + 1}`
-  if (!/[\u4e00-\u9fa5]/.test(s)) return s
-  return `Model ${index + 1}`
 }
 
 // Translate single text / 翻译单个文本
@@ -4036,41 +4017,40 @@ const translateText = async (text, sourceLang = 'zh', targetLang = 'en') => {
   if (!text || typeof text !== 'string' || text.trim() === '') {
     return text
   }
-  // 源语言与目标语言相同时不调用 API，否则 MyMemory 返回 "PLEASE SELECT TWO DISTINCT LANGUAGES"
-  if (sourceLang === targetLang) {
-    return text
-  }
+  
+  // If already English, return directly / 如果已经是英文，直接返回
   if (isEnglish(text)) {
     return text
   }
+  
+  // Check cache / 检查缓存
   const cacheKey = `${text}_${sourceLang}_${targetLang}`
   if (translationCache.has(cacheKey)) {
     return translationCache.get(cacheKey)
   }
+  
   try {
-    // Use MyMemory via Vite proxy in dev to avoid ERR_PROXY_CONNECTION_FAILED / 开发环境走代理，避免代理连接失败导致卡顿
-    const base = import.meta.env.DEV ? '/api/translate' : 'https://api.mymemory.translated.net'
-    const url = `${base}/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`
-    const controller = new AbortController()
-    const timeoutId = setTimeout(() => controller.abort(), 8000)
-    const response = await fetch(url, { signal: controller.signal })
-    clearTimeout(timeoutId)
+    // Use MyMemory Translation API (free, no API key required) / 使用MyMemory Translation API（免费，无需API key）
+    const url = `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=${sourceLang}|${targetLang}`
+    
+    const response = await fetch(url)
+    
     if (!response.ok) {
       console.warn('Translation API error:', response.status)
-      return text
+      return text // Translation failed, return original text / 翻译失败，返回原文
     }
+    
     const result = await response.json()
-    let translatedText = result.responseData?.translatedText || text
-    // MyMemory 在语言相同时返回此提示，视为无效，保留原文
-    if (String(translatedText).toUpperCase().includes('PLEASE SELECT TWO DISTINCT LANGUAGES')) {
-      translatedText = text
-    }
+    const translatedText = result.responseData?.translatedText || text
+    
+    // Save to cache / 保存到缓存
     translationCache.set(cacheKey, translatedText)
     saveTranslationCache()
+    
     return translatedText
   } catch (error) {
-    if (error.name !== 'AbortError') console.warn('Translation error:', error.message)
-    return text
+    console.error('Translation error:', error)
+    return text // 翻译失败，返回原文
   }
 }
 
@@ -4079,11 +4059,10 @@ const translateBatch = async (texts, sourceLang = 'zh', targetLang = 'en') => {
   if (!Array.isArray(texts) || texts.length === 0) {
     return []
   }
-  // 源语言与目标语言相同时不调用 API，直接返回原文，避免显示 "PLEASE SELECT TWO DISTINCT LANGUAGES"
-  if (sourceLang === targetLang) {
-    return [...texts]
-  }
+  
+  // Filter out empty values and already English text / 过滤掉空值和已经是英文的文本
   const textsToTranslate = texts.filter(text => text && !isEnglish(text))
+  
   if (textsToTranslate.length === 0) {
     return texts
   }
@@ -4182,9 +4161,10 @@ const saveVinDataToDatabase = async (vin, carData) => {
       data_source: 'api',
       api_provider: 'TanshuAPI',
       decoded_at: new Date().toISOString(),
-      language: 'en',
-      // 要求数据库只存英文：优先使用英文版 model_list，保证同 VIN 只保存一次（后端 ON DUPLICATE KEY UPDATE）
-      model_list: carData.car_model_list_english || carData.car_model_list || null
+      language: 'en', // Mark as English data / 标记为英文数据
+      // Save model_list for later use when retrieving from database / 保存model_list以便后续从数据库获取时可以使用
+      // Prefer carData.model_list, if not available use carData.car_model_list / 优先使用carData.model_list，如果没有则使用carData.car_model_list
+      model_list: carData.model_list || carData.car_model_list || null
     }
     
     // Debug: Print model_list / 调试：打印model_list
@@ -4435,201 +4415,18 @@ const decodeVIN = async (vin) => {
   productData.car_vin_decoded = false
 
   try {
-    // First check if VIN data already exists in database / 首先检查数据库中是否已有此VIN的数据
-    console.log('🔍 Checking if VIN exists in database / 检查数据库中是否存在VIN:', vin)
-    const cachedData = await vinDataApi.getVinData(vin)
-    
-    if (cachedData.success && cachedData.data) {
-      console.log('✅ Found VIN data in database, using directly / 从数据库中找到VIN数据，直接使用:', cachedData.data)
-      
-      // 将数据库中的数据映射到productData
-      const dbData = cachedData.data
-      
-      // Check if model_list needs processing (similar to API response data handling) / 检查是否有model_list需要处理（类似API返回数据的处理）
-      if (dbData.model_list && typeof dbData.model_list === 'object') {
-        console.log('📋 Found model_list in database, checking if model selection needed... / 数据库中找到model_list，检查是否需要选择车型...')
-        const modelListRaw = Array.isArray(dbData.model_list) 
-          ? dbData.model_list 
-          : Object.values(dbData.model_list)
-        
-        // 提取车型名称
-        const modelNames = modelListRaw.map(item => {
-          if (typeof item === 'object' && item !== null) {
-            return String(item.name || item.version || item.car_trim_level || '').trim()
-          } else {
-            return String(item || '').trim()
-          }
-        }).filter(name => name)
-        
-        if (modelNames.length > 1) {
-          const translatedNames = await translateBatch(modelNames, 'en', 'en')
-          const modelOptions = modelNames.map((modelName, index) => {
-            const translatedName = ensureEnglishDisplay(translatedNames[index] || modelName, index)
-            const modelData = typeof modelListRaw[index] === 'object' && modelListRaw[index] !== null
-              ? { ...dbData, ...modelListRaw[index] }
-              : { ...dbData }
-            return {
-              ...modelData,
-              name: modelName,
-              translatedName,
-              version: modelName,
-              car_trim_level: modelName
-            }
-          })
-          const seen = new Set()
-          const uniqueOptions = modelOptions.filter((opt) => {
-            const key = (opt.translatedName || opt.name || '').trim()
-            if (seen.has(key)) return false
-            seen.add(key)
-            return true
-          })
-          vinModelOptions.value = uniqueOptions
-          pendingVINData.value = vin
-          pendingVINModelList.value = dbData.model_list
-          pendingVINModelListEnglish.value = uniqueOptions.map((m) => ({
-            ...m,
-            name: m.translatedName || m.name,
-            version: m.translatedName || m.version,
-            car_trim_level: m.translatedName || m.car_trim_level
-          }))
-          showModelSelectionModal.value = true
-          productData.car_vin_decoding = false
-          return
-        } else if (modelNames.length === 1) {
-          // 只有一个车型，直接使用
-          const singleModelName = modelNames[0]
-          if (typeof modelListRaw[0] === 'object' && modelListRaw[0] !== null) {
-            Object.assign(dbData, modelListRaw[0])
-          }
-          dbData.version = singleModelName
-          dbData.car_trim_level = singleModelName
-        }
-      }
-      
-      // 基本信息
-      productData.car_make = dbData.brand_name || ''
-      productData.car_model = dbData.series_name || ''
-      productData.car_trim_level = dbData.model_name || dbData.version || dbData.car_trim_level || ''
-      productData.car_year = dbData.year || null
-      productData.car_vin = vin
-      
-      // 发动机和传动系统
-      productData.car_fuel_type = dbData.fuel_type || ''
-      productData.car_transmission = dbData.transmission || ''
-      productData.car_drivetrain = dbData.drivetrain || ''
-      productData.car_engine_size = dbData.engine_size || null
-      productData.car_engine_cylinders = dbData.engine_cylinders || null
-      
-      // 车身信息
-      productData.car_body_type = dbData.body_type || ''
-      productData.car_doors = dbData.doors || null
-      productData.car_seats = dbData.seats || null
-      
-      // 尺寸和重量
-      productData.car_length = dbData.length || null
-      productData.car_width = dbData.width || null
-      productData.car_height = dbData.height || null
-      productData.car_wheelbase = dbData.wheelbase || null
-      productData.car_curb_weight = dbData.curb_weight || null
-      productData.car_gross_weight = dbData.gross_weight || null
-      
-      // 性能数据
-      productData.car_max_power = dbData.max_power || null
-      productData.car_max_torque = dbData.max_torque || null
-      productData.car_acceleration = dbData.acceleration || null
-      
-      // 燃油经济性
-      productData.car_mpg_city = dbData.mpg_city || null
-      productData.car_mpg_highway = dbData.mpg_highway || null
-      productData.car_mpg_combined = dbData.mpg_combined || null
-      productData.car_co2_emissions = dbData.co2_emissions || null
-      
-      // 颜色
-      productData.car_exterior_color = dbData.exterior_color || ''
-      productData.car_interior_color = dbData.interior_color || ''
-      productData.car_interior_material = dbData.interior_material || ''
-      
-      // 其他信息
-      productData.car_manufacturer = dbData.manufacturer || ''
-      productData.car_market_date = dbData.market_date || null
-      productData.car_stop_date = dbData.stop_date || null
-      
-      // 轮胎和制动
-      productData.car_front_tyre_size = dbData.front_tyre_size || ''
-      productData.car_rear_tyre_size = dbData.rear_tyre_size || ''
-      productData.car_front_brake_type = dbData.front_brake_type || ''
-      productData.car_rear_brake_type = dbData.rear_brake_type || ''
-      productData.car_parking_brake_type = dbData.parking_brake_type || ''
-      
-      // 标记为已解码
-      productData.car_vin_decoded = true
-      productData.car_data_source = 'database'
-      productData.car_vin_decoded_at = dbData.decoded_at || new Date().toISOString()
-      productData.car_api_provider = dbData.api_provider || 'Database'
-      
-      // 自动生成产品名称
-      if (productData.car_make && productData.car_model && productData.car_year) {
-        let productName = `${productData.car_year} ${productData.car_make}`
-        if (productData.car_model) {
-          productName += ` ${productData.car_model}`
-        }
-        if (productData.car_trim_level) {
-          productName += ` ${productData.car_trim_level}`
-        }
-        productData.name = productName
-      }
-      
-      productData.car_vin_decoding = false
-      return // 直接返回，不需要调用API
+    // 使用 products.php decodeVIN2：先查库再调外部 API，符合后端约定
+    console.log('🔍 Calling products.php decodeVIN2 / 调用 products.php decodeVIN2:', vin)
+    const result = await productsApi.decodeVIN2(vin)
+    if (!result.success || !result.data) {
+      const errMsg = result.error || (result.message && String(result.message)) || 'VIN decode failed'
+      throw new Error(errMsg)
     }
-    
-    console.log('📡 VIN data not found in database, calling external VIN API... / 数据库中未找到VIN数据，调用外部VIN API查询...')
+    const carData = result.data
+    const dataSource = result.source || 'api'
+    console.log('✅ decodeVIN2 response, source:', dataSource)
 
-    // 如果数据库中没有，则调用独立的外部 VIN 解码服务
-    const result = await vinDecodeApi.decodeVin(vin)
-    
-    // 调试：打印API返回的数据
-    console.log('VIN API Response:', result)
-
-    // 检查API返回的数据格式
-    // API可能返回格式: { code: 1, msg: "操作成功", data: {...} }  (code:1表示成功)
-    // 或者: { code: 200, msg: "操作成功", data: {...} }  (code:200表示成功)
-    // 或者直接返回数据对象: { brand_name: "...", ... }
-    
-    let carData = null
-    
-    // 如果API返回了标准格式（有code字段）
-    if (result && typeof result.code !== 'undefined') {
-      // code为1或200表示成功（根据实际API文档，code:1表示成功）
-      if (result.code === 1 || result.code === 200 || result.code === '1' || result.code === '200') {
-        // 数据在data字段中
-        carData = result.data || result
-      } else {
-        // code不是成功状态，表示错误
-        throw new Error(result.msg || result.message || 'API返回错误')
-      }
-    } else {
-      // 没有code字段，直接使用result作为数据
-      carData = result
-    }
-    
-    // 检查返回的数据是否是数组（多个车型）
-    // 如果data字段是数组，说明有多个车型
-    if (Array.isArray(carData) && carData.length > 1) {
-      // 有多个车型，显示选择对话框
-      vinModelOptions.value = carData
-      pendingVINData.value = vin
-      showModelSelectionModal.value = true
-      productData.car_vin_decoding = false
-      return
-    }
-    
-    // 如果返回的是数组但只有一个元素，使用第一个元素
-    if (Array.isArray(carData) && carData.length === 1) {
-      carData = carData[0]
-    }
-    
-    // 检查是否有有效的车辆数据
+    // 检查是否有有效的车辆数据（products.php 返回对象，含 brand_name / model_list 等）
     if (carData && (carData.brand_name || carData.name || carData.series_name)) {
       // Save original model_list (save before processing to ensure not lost) / 保存原始的model_list（在处理之前保存，确保不会丢失）
       let originalModelList = carData.model_list || null
@@ -4637,7 +4434,7 @@ const decodeVIN = async (vin) => {
       
       // Check if model_list has multiple models requiring selection / 检查model_list是否有多个车型需要选择
       if (carData.model_list && typeof carData.model_list === 'object') {
-        const modelListRaw = Object.values(carData.model_list)
+        const modelListRaw = Array.isArray(carData.model_list) ? carData.model_list : Object.values(carData.model_list)
         
         // 提取车型名称：如果model_list的值是对象，提取name字段；如果是字符串，直接使用
         const modelNames = modelListRaw.map(item => {
@@ -4650,45 +4447,48 @@ const decodeVIN = async (vin) => {
           }
         }).filter(name => name) // Filter out empty values / 过滤掉空值
         
+        // If model_list has multiple values, user needs to select / 如果model_list有多个值，需要用户选择
         if (modelNames.length > 1) {
-          const translatedNames = await translateBatch(modelNames, 'zh', 'en')
+          // Translate all model names（数据库多为英文，API 多为中文）
+          console.log('Translating model names:', modelNames)
+          const translatedNames = await translateBatch(modelNames, dataSource === 'database' ? 'en' : 'zh', 'en')
+          console.log('Translated names:', translatedNames)
+          
+          // 创建多个车型选项，每个选项基于原始数据但使用不同的name
           const modelOptions = modelNames.map((modelName, index) => {
-            const translatedName = ensureEnglishDisplay(translatedNames[index] || modelName, index)
+            // 确保翻译后的名称是字符串
+            const translatedName = String(translatedNames[index] || modelName).trim()
+            console.log(`Model ${index}: Original="${modelName}", Translated="${translatedName}"`)
+            
+            // If original data is object, merge it; otherwise use carData / 如果原始数据是对象，合并它；否则使用carData
             const modelData = typeof modelListRaw[index] === 'object' && modelListRaw[index] !== null
-              ? { ...carData, ...modelListRaw[index] }
-              : { ...carData }
+              ? { ...carData, ...modelListRaw[index] } // Merge object data / 合并对象数据
+              : { ...carData } // Use original carData / 使用原始carData
+            
+            // Ensure each option contains original model_list / 确保每个选项都包含原始的model_list
             modelData.model_list = originalModelList
+            
             return {
-              ...modelData,
-              name: modelName,
-              translatedName,
-              version: modelName,
-              car_trim_level: modelName
+              ...modelData, // 使用合并后的数据
+              name: modelName, // Use extracted name (original, for later filling) / 使用提取的名称（原始，用于后续填充）
+              translatedName: translatedName, // Translated English name (for display) / 翻译后的英文名称（用于显示）
+              version: modelName, // Also set version / 也设置version
+              car_trim_level: modelName // Set trim_level / 设置trim_level
             }
           })
-          const seen = new Set()
-          const uniqueOptions = modelOptions.filter((opt) => {
-            const key = (opt.translatedName || opt.name || '').trim()
-            if (seen.has(key)) return false
-            seen.add(key)
-            return true
-          })
-          vinModelOptions.value = uniqueOptions
+          
+          console.log('Model options created:', modelOptions)
+          vinModelOptions.value = modelOptions
           pendingVINData.value = vin
+          // Save original model_list to pendingVINData for later use / 保存原始的model_list到pendingVINData中，以便后续使用
           pendingVINModelList.value = originalModelList
-          pendingVINModelListEnglish.value = uniqueOptions.map((m) => ({
-            ...m,
-            name: m.translatedName || m.name,
-            version: m.translatedName || m.version,
-            car_trim_level: m.translatedName || m.car_trim_level
-          }))
           showModelSelectionModal.value = true
           productData.car_vin_decoding = false
           return
         } else if (modelNames.length === 1) {
           // Only one model, translate and use directly / 只有一个车型，翻译后直接使用
           const singleModelName = modelNames[0]
-          const translatedName = await translateText(singleModelName, 'zh', 'en')
+          const translatedName = await translateText(singleModelName, dataSource === 'database' ? 'en' : 'zh', 'en')
           
           // If original data is object, merge it / 如果原始数据是对象，合并它
           if (typeof modelListRaw[0] === 'object' && modelListRaw[0] !== null) {
@@ -4710,10 +4510,67 @@ const decodeVIN = async (vin) => {
       }
       console.log('📋 Final model_list to save / 最终保存的model_list:', originalModelList)
       
-      // Fill data (async translation) - Ensure wait for translation to complete / 填充数据（异步翻译）- 确保等待翻译完成
-      console.log('📝 Starting to fill vehicle data (translate to English)... / 开始填充车辆数据（翻译为英文）...')
-      await fillCarDataFromAPI(carData, vin)
-      console.log('✅ Vehicle data filling completed, ready to save to database / 车辆数据填充完成，准备保存到数据库')
+      // 按数据来源填表：数据库直接映射，API 走翻译填充
+      if (dataSource === 'database') {
+        // 数据库数据多为英文，直接映射到 productData
+        productData.car_make = carData.brand_name || ''
+        productData.car_model = carData.series_name || ''
+        productData.car_trim_level = carData.model_name || carData.version || carData.car_trim_level || ''
+        productData.car_year = carData.year || null
+        productData.car_vin = vin
+        productData.car_fuel_type = carData.fuel_type || ''
+        productData.car_transmission = carData.transmission || ''
+        productData.car_drivetrain = carData.drivetrain || ''
+        productData.car_engine_size = carData.engine_size || null
+        productData.car_engine_cylinders = carData.engine_cylinders || null
+        productData.car_body_type = carData.body_type || ''
+        productData.car_doors = carData.doors || null
+        productData.car_seats = carData.seats || null
+        productData.car_length = carData.length || null
+        productData.car_width = carData.width || null
+        productData.car_height = carData.height || null
+        productData.car_wheelbase = carData.wheelbase || null
+        productData.car_curb_weight = carData.curb_weight || null
+        productData.car_gross_weight = carData.gross_weight || null
+        productData.car_max_power = carData.max_power || null
+        productData.car_max_torque = carData.max_torque || null
+        productData.car_acceleration = carData.acceleration || null
+        productData.car_mpg_city = carData.mpg_city || null
+        productData.car_mpg_highway = carData.mpg_highway || null
+        productData.car_mpg_combined = carData.mpg_combined || null
+        productData.car_co2_emissions = carData.co2_emissions || null
+        productData.car_exterior_color = carData.exterior_color || ''
+        productData.car_interior_color = carData.interior_color || ''
+        productData.car_interior_material = carData.interior_material || ''
+        productData.car_manufacturer = carData.manufacturer || ''
+        productData.car_market_date = carData.market_date || null
+        productData.car_stop_date = carData.stop_date || null
+        productData.car_front_tyre_size = carData.front_tyre_size || ''
+        productData.car_rear_tyre_size = carData.rear_tyre_size || ''
+        productData.car_front_brake_type = carData.front_brake_type || ''
+        productData.car_rear_brake_type = carData.rear_brake_type || ''
+        productData.car_parking_brake_type = carData.parking_brake_type || ''
+        productData.car_vin_decoded_at = carData.decoded_at || new Date().toISOString()
+        productData.car_api_provider = carData.api_provider || 'Database'
+      } else {
+        // API 数据需翻译后填充
+        console.log('📝 Starting to fill vehicle data (translate to English)... / 开始填充车辆数据（翻译为英文）...')
+        await fillCarDataFromAPI(carData, vin)
+        console.log('✅ Vehicle data filling completed, ready to save to database / 车辆数据填充完成，准备保存到数据库')
+        productData.car_vin_decoded_at = new Date().toISOString()
+        productData.car_api_provider = 'TanshuAPI'
+        if (originalModelList) {
+          productData.car_model_list = originalModelList
+        }
+        // API 解码后可选择保存到本地库（与原有逻辑一致）
+        console.log('💾 Starting to save VIN data to database (English format)... / 开始保存VIN数据到数据库（英文格式）...')
+        const saveResult = await saveVinDataToDatabase(vin, productData)
+        if (saveResult && saveResult.success) {
+          console.log('✅✅✅ VIN数据已成功保存到数据库！', saveResult)
+        } else {
+          console.error('❌❌❌ VIN数据保存失败！', saveResult?.error || '未知错误')
+        }
+      }
 
       // 自动生成产品名称
       if (productData.car_make && productData.car_model && productData.car_year) {
@@ -4728,36 +4585,7 @@ const decodeVIN = async (vin) => {
       }
 
       productData.car_vin_decoded = true
-      productData.car_data_source = 'api'
-      productData.car_vin_decoded_at = new Date().toISOString()
-      productData.car_api_provider = 'TanshuAPI'
-      
-      // Ensure original model_list is passed to productData / 确保原始的model_list被传递到productData中
-      if (originalModelList) {
-        productData.car_model_list = originalModelList
-        console.log('✅ model_list saved to productData.car_model_list / 已将model_list保存到productData.car_model_list')
-      }
-      
-      // Immediately save VIN data to database (English format) / 立即保存VIN数据到数据库（英文格式）
-      console.log('💾 Starting to save VIN data to database (English format)... / 开始保存VIN数据到数据库（英文格式）...')
-      console.log('💾 Data preview to save / 要保存的数据预览:', {
-        vin: vin,
-        brand_name: productData.car_make,
-        series_name: productData.car_model,
-        year: productData.car_year,
-        fuel_type: productData.car_fuel_type,
-        transmission: productData.car_transmission,
-        model_list: originalModelList // Use saved original model_list / 使用保存的原始model_list
-      })
-      
-      const saveResult = await saveVinDataToDatabase(vin, productData)
-      
-      if (saveResult && saveResult.success) {
-        console.log('✅✅✅ VIN数据已成功保存到数据库！', saveResult)
-      } else {
-        console.error('❌❌❌ VIN数据保存失败！', saveResult)
-        console.error('❌ 错误详情:', saveResult?.error || '未知错误')
-      }
+      productData.car_data_source = dataSource
     } else {
       // 没有找到有效的车辆数据
       console.warn('VIN API返回的数据格式不正确:', carData)
@@ -4779,226 +4607,14 @@ const decodeVIN = async (vin) => {
   }
 }
 
-// 🚗 Decode VIN using unified backend API (decodeVIN2) - Check database first, then external API
-// 使用统一后端API解码VIN (decodeVIN2) - 先检查数据库，然后调用外部API
-const decodeVIN2 = async (vin) => {
-  if (!vin || vin.length !== 17) {
-    productData.car_vin_error = 'VIN must be exactly 17 characters'
-    return
-  }
-
-  productData.car_vin_decoding = true
-  productData.car_vin_error = ''
-  productData.car_vin_decoded = false
-
-  try {
-    console.log('🔍 Calling decodeVIN2 API (database check + external API if needed) / 调用decodeVIN2 API（数据库检查+外部API如果需要）:', vin)
-    
-    // Call unified backend API that handles both database check and external API call
-    // 调用统一的后端API，它会处理数据库检查和外部API调用
-    const result = await productsApi.decodeVIN2(vin)
-    
-    console.log('✅ decodeVIN2 API Response:', result)
-    
-    // Check API response format / 检查API响应格式
-    if (!result || !result.success) {
-      throw new Error(result?.error || result?.message || 'VIN decode failed')
-    }
-    
-    // Extract car data from response / 从响应中提取车辆数据
-    let carData = result.data || result
-    
-    // Handle case where data might be wrapped in another layer / 处理数据可能被包装在另一层的情况
-    if (carData && carData.data) {
-      carData = carData.data
-    }
-    
-    // Check if response indicates data source / 检查响应是否指示数据来源
-    const dataSource = result.source || (result.data ? 'database' : 'api')
-    console.log('📊 Data source / 数据来源:', dataSource)
-    
-    // Check if model_list exists and needs processing / 检查是否存在model_list需要处理
-    if (carData && carData.model_list && typeof carData.model_list === 'object') {
-      const modelListRaw = Array.isArray(carData.model_list) 
-        ? carData.model_list 
-        : Object.values(carData.model_list)
-      
-      // Extract model names / 提取车型名称
-      const modelNames = modelListRaw.map(item => {
-        if (typeof item === 'object' && item !== null) {
-          return String(item.name || item.version || item.car_trim_level || '').trim()
-        } else {
-          return String(item || '').trim()
-        }
-      }).filter(name => name)
-      
-      // Show selection dialog when there is at least one model (1 or more)
-      if (modelNames.length >= 1) {
-        const translatedNames = await translateBatch(modelNames, dataSource === 'database' ? 'en' : 'zh', 'en')
-        const modelOptions = modelNames.map((modelName, index) => {
-          const translatedName = ensureEnglishDisplay(translatedNames[index] || modelName, index)
-          const modelData = typeof modelListRaw[index] === 'object' && modelListRaw[index] !== null
-            ? { ...carData, ...modelListRaw[index] }
-            : { ...carData }
-          return {
-            ...modelData,
-            name: modelName,
-            translatedName,
-            version: modelName,
-            car_trim_level: modelName
-          }
-        })
-        // 去重：相同显示名只保留一项，避免“相同车名”
-        const seen = new Set()
-        const uniqueOptions = modelOptions.filter((opt) => {
-          const key = (opt.translatedName || opt.name || '').trim()
-          if (seen.has(key)) return false
-          seen.add(key)
-          return true
-        })
-        vinModelOptions.value = uniqueOptions
-        pendingVINData.value = vin
-        pendingVINModelList.value = carData.model_list
-        // 供保存到数据库用，保证库中只存英文
-        pendingVINModelListEnglish.value = uniqueOptions.map((m) => ({
-          ...m,
-          name: m.translatedName || m.name,
-          version: m.translatedName || m.version,
-          car_trim_level: m.translatedName || m.car_trim_level
-        }))
-        showModelSelectionModal.value = true
-        productData.car_vin_decoding = false
-        return
-      }
-    }
-    
-    // Check if we have valid vehicle data / 检查是否有有效的车辆数据
-    if (!carData || (!carData.brand_name && !carData.name && !carData.series_name)) {
-      throw new Error('Invalid vehicle data received from API')
-    }
-    
-    if (!carData.model_list || typeof carData.model_list !== 'object' || Object.keys(carData.model_list).length === 0) {
-      const rawName = carData.model_name || carData.version || carData.car_trim_level || carData.series_name || carData.brand_name || 'Vehicle'
-      const singleName = isEnglish(rawName) ? rawName : (await translateText(rawName, 'zh', 'en')) || ensureEnglishDisplay(rawName, 0)
-      const displayName = ensureEnglishDisplay(singleName, 0)
-      const singleOption = {
-        ...carData,
-        name: rawName,
-        translatedName: displayName,
-        version: rawName,
-        car_trim_level: rawName
-      }
-      vinModelOptions.value = [singleOption]
-      pendingVINData.value = vin
-      pendingVINModelList.value = null
-      pendingVINModelListEnglish.value = [{ ...singleOption, name: displayName, version: displayName, car_trim_level: displayName }]
-      showModelSelectionModal.value = true
-      productData.car_vin_decoding = false
-      return
-    }
-    
-    // Fill form data (with translation if needed) / 填充表单数据（如果需要则翻译）
-    console.log('📝 Starting to fill vehicle data (translate to English if needed)... / 开始填充车辆数据（如果需要则翻译为英文）...')
-    
-    // If data is from database, it should already be in English / 如果数据来自数据库，应该已经是英文
-    // If from external API, translate from Chinese to English / 如果来自外部API，从中文翻译为英文
-    if (dataSource === 'api') {
-      await fillCarDataFromAPI(carData, vin)
-    } else {
-      // Data from database, already in English, just map directly / 数据来自数据库，已经是英文，直接映射
-      // Map database fields to productData / 将数据库字段映射到productData
-      productData.car_make = carData.brand_name || ''
-      productData.car_model = carData.series_name || ''
-      productData.car_trim_level = carData.model_name || carData.version || carData.car_trim_level || ''
-      productData.car_year = carData.year || null
-      productData.car_vin = vin
-      
-      // Engine and drivetrain / 发动机和传动系统
-      productData.car_fuel_type = carData.fuel_type || ''
-      productData.car_transmission = carData.transmission || ''
-      productData.car_drivetrain = carData.drivetrain || ''
-      productData.car_engine_size = carData.engine_size || null
-      productData.car_engine_cylinders = carData.engine_cylinders || null
-      
-      // Body information / 车身信息
-      productData.car_body_type = carData.body_type || ''
-      productData.car_doors = carData.doors || null
-      productData.car_seats = carData.seats || null
-      
-      // Dimensions and weight / 尺寸和重量
-      productData.car_length = carData.length || null
-      productData.car_width = carData.width || null
-      productData.car_height = carData.height || null
-      productData.car_wheelbase = carData.wheelbase || null
-      productData.car_curb_weight = carData.curb_weight || null
-      productData.car_gross_weight = carData.gross_weight || null
-      
-      // Performance data / 性能数据
-      productData.car_max_power = carData.max_power || null
-      productData.car_max_torque = carData.max_torque || null
-      productData.car_acceleration = carData.acceleration || null
-      
-      // Fuel economy / 燃油经济性
-      productData.car_mpg_city = carData.mpg_city || null
-      productData.car_mpg_highway = carData.mpg_highway || null
-      productData.car_mpg_combined = carData.mpg_combined || null
-      productData.car_co2_emissions = carData.co2_emissions || null
-      
-      // Colors / 颜色
-      productData.car_exterior_color = carData.exterior_color || ''
-      productData.car_interior_color = carData.interior_color || ''
-      productData.car_interior_material = carData.interior_material || ''
-      
-      // Other information / 其他信息
-      productData.car_manufacturer = carData.manufacturer || ''
-      productData.car_market_date = carData.market_date || null
-      productData.car_stop_date = carData.stop_date || null
-      
-      // Tires and brakes / 轮胎和制动
-      productData.car_front_tyre_size = carData.front_tyre_size || ''
-      productData.car_rear_tyre_size = carData.rear_tyre_size || ''
-      productData.car_front_brake_type = carData.front_brake_type || ''
-      productData.car_rear_brake_type = carData.rear_brake_type || ''
-      productData.car_parking_brake_type = carData.parking_brake_type || ''
-    }
-    
-    // Auto-generate product name / 自动生成产品名称
-    if (productData.car_make && productData.car_model && productData.car_year) {
-      let productName = `${productData.car_year} ${productData.car_make}`
-      if (productData.car_model) {
-        productName += ` ${productData.car_model}`
-      }
-      if (productData.car_trim_level) {
-        productName += ` ${productData.car_trim_level}`
-      }
-      productData.name = productName
-    }
-    
-    // Mark as decoded / 标记为已解码
-    productData.car_vin_decoded = true
-    productData.car_data_source = dataSource
-    productData.car_vin_decoded_at = carData.decoded_at || new Date().toISOString()
-    productData.car_api_provider = carData.api_provider || (dataSource === 'database' ? 'Database' : 'TanshuAPI')
-    
-    console.log('✅ VIN decode completed successfully / VIN解码成功完成')
-    
-  } catch (error) {
-    console.error('❌ VIN decode error / VIN解码错误:', error)
-    productData.car_vin_error = error.message || 'VIN decode failed. Please enter details manually.'
-  } finally {
-    productData.car_vin_decoding = false
-  }
-}
-
 // 处理用户选择车型
 const selectModel = async (selectedModel) => {
-  if (modelSelectionLoading.value) return
-  modelSelectionLoading.value = true
   const vin = pendingVINData.value
-  const originalModelList = pendingVINModelList.value
+  const originalModelList = pendingVINModelList.value // 获取保存的原始model_list
   
-  try {
   console.log('📋 用户选择的车型，原始model_list:', originalModelList)
+  
+  // 使用相同的填充函数（翻译并填充数据）
   console.log('📝 用户选择车型，开始填充数据（翻译为英文）...')
   await fillCarDataFromAPI(selectedModel, vin)
   console.log('✅ 数据填充完成，准备保存到数据库')
@@ -5020,14 +4636,13 @@ const selectModel = async (selectedModel) => {
   productData.car_vin_decoded_at = new Date().toISOString()
   productData.car_api_provider = 'TanshuAPI'
   
+  // 确保原始的model_list被传递到productData中
   if (originalModelList) {
     productData.car_model_list = originalModelList
-  }
-  // 数据库只存英文：使用英文版 model_list
-  if (pendingVINModelListEnglish.value) {
-    productData.car_model_list_english = pendingVINModelListEnglish.value
+    console.log('✅ 已将原始model_list保存到productData.car_model_list')
   }
 
+  // 立即保存VIN数据到数据库（英文格式）
   console.log('💾 开始保存VIN数据到数据库（用户选择车型后，英文格式）...')
   console.log('💾 要保存的数据:', {
     vin: vin,
@@ -5046,36 +4661,34 @@ const selectModel = async (selectedModel) => {
     console.error('❌ 错误详情:', saveResult?.error || '未知错误')
   }
 
+  // 关闭对话框
   showModelSelectionModal.value = false
   vinModelOptions.value = []
   pendingVINData.value = null
-  pendingVINModelList.value = null
-  pendingVINModelListEnglish.value = null
+  pendingVINModelList.value = null // 清除保存的model_list
 
   // 自动跳转到Vehicle Info步骤（step 1）
   // 对于Car类别，step 1是Vehicle Info
   await nextTick()
   if (isCarCategory.value) {
+    // Car类别：跳转到Vehicle Info（step 1）
     currentStep.value = 1
     console.log('✅ 已跳转到Vehicle Info步骤（step 1）')
   } else {
+    // 其他类别：跳转到下一步
     if (currentStep.value < steps.value.length - 1) {
       currentStep.value++
     }
   }
   await nextTick()
-  } finally {
-    modelSelectionLoading.value = false
-  }
 }
 
+// 取消选择车型
 const cancelModelSelection = () => {
-  modelSelectionLoading.value = false
   showModelSelectionModal.value = false
   vinModelOptions.value = []
   pendingVINData.value = null
-  pendingVINModelList.value = null
-  pendingVINModelListEnglish.value = null
+  pendingVINModelList.value = null // 清除保存的model_list
   productData.car_vin_decoding = false
 }
 
