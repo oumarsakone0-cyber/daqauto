@@ -2914,8 +2914,8 @@
           </div>
         </div>
 
-        <!-- Content Area / 内容区域 -->
-        <div class="p-4 sm:p-6 relative">
+        <!-- Content Area / 内容区域：限制高度并允许内部滚动，避免车型过多时显示不全 -->
+        <div class="p-4 sm:p-6 relative max-h-[60vh] overflow-y-auto">
           <div class="space-y-3">
             <div 
               v-for="(model, index) in vinModelOptions" 
@@ -4018,6 +4018,12 @@ const translateText = async (text, sourceLang = 'zh', targetLang = 'en') => {
     return text
   }
   
+  // MyMemory 在 sourceLang === targetLang 时会返回
+  // \"PLEASE SELECT TWO DISTINCT LANGUAGES\"，这里直接跳过调用，返回原文
+  if (sourceLang === targetLang) {
+    return text
+  }
+  
   // If already English, return directly / 如果已经是英文，直接返回
   if (isEnglish(text)) {
     return text
@@ -4026,7 +4032,12 @@ const translateText = async (text, sourceLang = 'zh', targetLang = 'en') => {
   // Check cache / 检查缓存
   const cacheKey = `${text}_${sourceLang}_${targetLang}`
   if (translationCache.has(cacheKey)) {
-    return translationCache.get(cacheKey)
+    const cached = translationCache.get(cacheKey)
+    // 旧缓存里如果存的是 MyMemory 的错误提示，直接忽略并返回原文
+    if (typeof cached === 'string' && cached.toUpperCase().includes('PLEASE SELECT TWO DISTINCT LANGUAGES')) {
+      return text
+    }
+    return cached
   }
   
   try {
@@ -4041,7 +4052,12 @@ const translateText = async (text, sourceLang = 'zh', targetLang = 'en') => {
     }
     
     const result = await response.json()
-    const translatedText = result.responseData?.translatedText || text
+    let translatedText = result.responseData?.translatedText || text
+    
+    // MyMemory 返回的错误提示，视为翻译失败，使用原文
+    if (String(translatedText).toUpperCase().includes('PLEASE SELECT TWO DISTINCT LANGUAGES')) {
+      translatedText = text
+    }
     
     // Save to cache / 保存到缓存
     translationCache.set(cacheKey, translatedText)
@@ -4058,6 +4074,12 @@ const translateText = async (text, sourceLang = 'zh', targetLang = 'en') => {
 const translateBatch = async (texts, sourceLang = 'zh', targetLang = 'en') => {
   if (!Array.isArray(texts) || texts.length === 0) {
     return []
+  }
+  
+  // 源语言和目标语言相同，直接返回原文，避免 MyMemory 提示
+  // \"PLEASE SELECT TWO DISTINCT LANGUAGES\"
+  if (sourceLang === targetLang) {
+    return [...texts]
   }
   
   // Filter out empty values and already English text / 过滤掉空值和已经是英文的文本
