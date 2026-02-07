@@ -58,18 +58,23 @@
 
 
       <div class="quantity-selector mb-15">
-        <div v-if="product?.vin_numbers?.[0]?.length > 5">
-          <span class="flex-1 capitalize">
+        <!-- VIN和Stock ID并排显示 -->
+        <div class="vin-stock-row">
+          <!-- VIN显示：优先显示car_vin（car类），否则显示vin_numbers（truck类） -->
+          <div v-if="product?.car_vin || (product?.vin_numbers?.[0]?.length > 5)" class="vin-stock-item">
             <span class="text-gray-500">VIN: </span>
-            {{ product.vin_numbers[0] }}
-          </span>
-        </div>
+            <span class="capitalize">{{ product?.car_vin || product.vin_numbers[0] }}</span>
+          </div>
+          <div v-else class="vin-stock-item">
+            <span class="text-gray-500">VIN: </span>
+            <span>N/A</span>
+          </div>
 
-        <div>
-          <span class="flex-1">
+          <!-- Stock ID显示 -->
+          <div class="vin-stock-item">
             <span class="text-gray-500">Stock ID: </span>
-            {{ product?.stock_number || "N/A" }}
-          </span>
+            <span>{{ product?.stock_number || "N/A" }}</span>
+          </div>
         </div>
       </div>
       <div class="action-buttons">
@@ -359,6 +364,22 @@ const handleOrderClick = async () => {
   gap: 20px;
 }
 
+/* VIN和Stock ID并排显示样式 */
+.vin-stock-row {
+  display: flex;
+  gap: 24px;
+  flex-wrap: wrap;
+  width: 100%;
+}
+
+.vin-stock-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex: 1;
+  min-width: 200px;
+}
+
 .quantity-label {
   font-size: 16px;
   font-weight: 600;
@@ -607,6 +628,16 @@ const handleOrderClick = async () => {
   
   .quantity-selector {
     margin-bottom: 16px;
+  }
+  
+  /* 移动端：VIN和Stock ID垂直排列 */
+  .vin-stock-row {
+    flex-direction: column;
+    gap: 12px;
+  }
+  
+  .vin-stock-item {
+    min-width: 100%;
   }
   
   .quantity-label {
